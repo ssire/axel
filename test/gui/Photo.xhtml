@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL Interactive (GUI) test case : 'photo' primitive editor plugin</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="Root">   
+
+  </xt:head>
+
+	<script type="text/javascript">
+//<![CDATA[	
+    //////////////////////////
+    // Photo upload script  //
+    //////////////////////////
+    
+		function finishTransmission(status, msg) { 
+      // var pwin = window.parent; // iframe version
+			var pwin = window; // standalone version
+			var manager = pwin.xtiger.factory('upload').getInstance(document);
+			if (manager) {
+				manager.reportEoT(status, msg);
+			}
+		}
+//]]>
+	</script>
+	
+  <link rel="stylesheet" href="../../axel/bundles/photo/photo.css" type="text/css"></link> 	
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+
+  <script type="text/javascript">
+    var form;
+    function init() {
+      form = new xtiger.util.Form('../../axel/bundles');
+      form.setTemplateSource(document);
+      form.enableTabGroupNavigation();
+      if (! form.transform()) { alert(this .form.msg); }
+    }
+    xtdom.addEventListener(window,  'load', init, false);
+  </script>
+
+  <!-- Template styling -->
+  <style type="text/css">
+  	p.explic {
+  		font-size: 90%;
+  	}
+  	.avertissement {
+  		color: green;
+  	}				
+  	/* documentId is visible only on fly over */
+  	span.docid {
+  		text-align: right;
+  		float: right;
+  		width: 300px;
+  		padding: 10px;
+  		font-size: 12px;
+  		color: red;
+  	}		
+  	h1:hover span.docid {
+  		visibility: visible;
+  	}
+  	span.docid {
+  		visibility: hidden;
+  	}	 
+  	p.photo {
+  	} 
+  </style>   
+	
+</head>
+<body>                  
+  
+<h1>Interactive (GUI) test case for <tt>'photo'</tt> editor</h1>
+
+<h2><xt:use types="text" label="Title">Click to edit a title</xt:use> 
+	<span class="docid">
+		<xt:attribute types="text" label="DocumentId" param="filter=documentId" default="docid" name="documentId"/>
+	</span>
+</h2>	
+
+<p class="explic avertissement">Pour utiliser ce template vous devez le lancer depuis le serveur Web fourni en exemple dans <tt>scripts/server.rb</tt> seul moyen d'activer la sauvagarde des photos et d'afficher les photos, leur URL étant définie par rapport au serveur d'exemple.</p>
+
+<!-- Test Case 1 -->
+
+<h2>Display <tt>'inline'</tt> and Trigger <tt>'mouseover'</tt></h2>
+
+<p class="photo">Photo : 
+  <xt:use types="photo" label="Photo1"
+          param="display=inline;trigger=mouseover;photo_URL=/formUpload"/></p>
+
+<!-- Test Case 2 -->
+
+<h2>Display <tt>'inline'</tt> and Trigger <tt>'click'</tt></h2>
+
+<p class="photo">Photo : 
+  <xt:use types="photo" label="Photo1"
+          param="display=inline;trigger=click;photo_URL=/formUpload"/></p>
+
+<!-- Test Case 3 -->
+
+<h2>Display <tt>'above'</tt> and Trigger <tt>'mouseover'</tt></h2>
+
+<p class="photo">Photo : 
+  <xt:use types="photo" label="Photo1"
+          param="display=above;trigger=mouseover;photo_URL=/formUpload"/></p>
+
+<!-- Test Case 3 -->
+
+<h2>Display <tt>'above'</tt> and Trigger <tt>'click'</tt></h2>
+
+<div class="photo">Photo : 
+  <xt:use types="photo" label="Photo1"
+          param="display=above;trigger=click;photo_URL=/formUpload"/></div>
+
+<p>End of the test</p>
+</body>	
+</html>

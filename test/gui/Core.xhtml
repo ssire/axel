@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+    <head>                  
+        <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+        <meta name="description" content="XTiger XML document template" />
+        <meta name="keywords" content="template, XTiger" />
+        
+        <title>Release Tests :: Core Features</title>
+        
+        <xt:head version="1.1" templateVersion="1.0" label="Root">    
+            
+            <xt:component name="myComponent1">  
+                <p>A component</p>
+            </xt:component> 
+            
+        </xt:head>
+        
+        <!-- Optional AXEL Preview Mode -->
+        <link rel="stylesheet" type="text/css" href="../../templates/Preview.css" />
+        <link rel="stylesheet" type="text/css" href="../../axel/axel.css" />
+        
+        <!-- Place here optional AXEL code for making the template auto-editable -->
+        <script type="text/javascript" src="../../axel/axel.js"></script>
+        <script type="text/javascript">
+          var form;
+          function init() {
+            form = new xtiger.util.Form('../../axel/bundles');
+            form.setTemplateSource(document);
+            form.enableTabGroupNavigation();
+            if (! form.transform()) { alert(this .form.msg); }
+          }
+          xtdom.addEventListener(window,  'load', init, false);
+        </script>
+        
+        <style type="text/css">
+            body {
+                width: 90%;
+                margin-left: 5%
+            }
+            .instruction {
+                width: 90%;
+                border: thin solid black;
+                padding: 10px;
+                margin-left: 5%;
+            }
+            .test {
+                width: 70%;
+                border: thin solid grey;
+                padding: 10px;
+                margin-left: 15%
+            }
+            .test > li {
+                 list-style: none   
+            }
+        </style>
+        
+    </head>
+    <body>
+        <h1>Release Tests :: Core Features</h1>
+        
+        <p>This template provides test cases for the AXEL gui in the following contexts</p>
+        
+        <ul>
+            <li>Esc and return keys</li>
+            <li>Default content, auto-selection and empty inputs</li>
+            <li>Auto-check for optional elements</li>
+            <li>'Select' editor and the popup device</li>
+        </ul>
+        
+        <h2>Esc and return keys</h2>
+        
+        <p>Here are tested the following features. First, while in an edition process, the Esc key must allow the user to cancel his current operation, that is, to restore the editor into the state prior to the user's last editing action.</p>
+        
+        <p class="instruction">Try the following operation. Click on one of the editor bellow. Enter some text and press on Esc (while the editor is being edited). The content of the editor must still be the one before you start this operation</p>
+        
+        <ul class="test">
+            <li>String: <xt:use types="string" label="string_1">default content</xt:use></li>
+            <li>Text: <xt:use types="text" label="text_1">default content</xt:use></li>
+            <li>Select: <xt:use types="select" label="select_1" name="select1" values="default_content other_content" i18n="default_content other_content" default="default_content">default_content</xt:use></li>
+        </ul>
+        
+        <p class="instruction">To test the validation of a field trough the "return" key. Perform the following operations : Click on an editor, edit its content and press the "return" key. The editor must return into its "visualizing" state (not an input field) and must contain your new input</p>
+        
+        <ul class="test">
+            <li>String: <xt:use types="string" label="string_2">default content</xt:use></li>
+            <li>Text: <xt:use types="text" label="text_2">default content</xt:use></li>
+            <li>Select: <xt:use types="select" label="select_2" values="default_content other_content" i18n="default_content other_content" default="default_content">default_content</xt:use></li>
+        </ul>
+        
+        
+        <h2>Default content, text auto-selection and empty inputs</h2>
+        
+        <p>Here are tested the following features: First, the content prior to the editon must be the one specified in the template</p>
+        
+        <p class="instruction">Here the content of the editor must match "default content". Then you can perform the following test. If the content match the default content, when you click on the editor, the text must automaticaly be selected.</p>
+        
+        <ul class="test">
+            <li>String: <xt:use types="string" label="string_3">default content</xt:use></li>
+            <li>Text: <xt:use types="text" label="text_3">default content</xt:use></li>
+            <li>Select: <xt:use types="select" label="select_3" values="default_content other_content" i18n="default_content other_content" default="default_content">default_content</xt:use></li>
+        </ul>
+        
+        <p class="instruction">Then, you can test the following behavior. First, changes the content of the editor. The edit again the editor and validate an empty input. The content must fall back to the default content.</p>
+        
+        <ul class="test">
+            <li>String: <xt:use types="string" label="string_4">default content</xt:use></li>
+            <li>Text: <xt:use types="text" label="text_4">default content</xt:use></li>
+        </ul>
+        
+        <h2>Auto-check testing</h2>
+        
+        <p>In this part is displayed several cases involving optional elements. Optional elements may either be "true" optional ones (with the option attribute) or elements embedded into repeatitions "0:1".</p>
+        
+        <p class="instruction">There, try to edit the following optional editor. They are unset by default. When you edit them, they must be set automatically <em>if and only if</em> their content was changed.</p>
+        
+        <ul class="test">
+            <li>String: <xt:use types="string" label="string_5" option="unset">Try to edit me</xt:use></li>
+            <li>Text: <xt:use types="text" label="text_5" option="unset">Try to edit me</xt:use></li>
+            <li>Select: <xt:use types="select" label="select_5" values="content_1 content_2" i18n="content_1 content_2" default="content_1" option="unset">content_1</xt:use></li>
+        </ul>
+        
+        <p class="instruction">Same test, but now the editors are embedded into a repeat 0:1.</p>
+        
+        <ul class="test">
+            <li>String: <xt:repeat minOccurs="0" maxOccurs="1"><xt:use types="string" label="string_6">Try to edit me</xt:use></xt:repeat></li>
+            <li>Text: <xt:repeat minOccurs="0" maxOccurs="1"><xt:use types="text" label="text_6">Try to edit me</xt:use></xt:repeat></li>
+            <li>Select: <xt:repeat minOccurs="0" maxOccurs="1"><xt:use types="select" label="select_6" values="content_1 content_2" i18n="content_1 content_2" default="content_1">content_1</xt:use></xt:repeat></li>
+        </ul>
+        
+        <p class="instruction">Now, try to edit the following editor by giving them an empty input. It should unselect them.</p>
+        
+        <ul class="test">
+            <li>String: <xt:use types="string" label="string_7" option="set">Try to clear me</xt:use></li>
+            <li>Text: <xt:use types="text" label="text_7" option="set">Try to clear me</xt:use></li>
+        </ul>
+        
+        <p class="instruction">Now, the editors are optional <em>and</em> embedded into a repeat 0:1. The auto-check must be chained.</p>
+        
+        <ul class="test">
+            <li>String: <xt:repeat minOccurs="0" maxOccurs="1">
+                <span>Here's the repeat body... </span>
+                <xt:use types="string" label="string_8" option="unset">Try to edit me</xt:use>
+            </xt:repeat></li>
+            <li>Text: <xt:repeat minOccurs="0" maxOccurs="1">
+                <span>Here's the repeat body... </span>
+                <xt:use types="text" label="text_8" option="unset">Try to edit me</xt:use>
+            </xt:repeat></li>
+            <li>Select: <xt:repeat minOccurs="0" maxOccurs="1">
+                <span>Here's the repeat body... </span>
+                <xt:use types="select" 
+                    label="select_8" 
+                    values="content_1 content_2" 
+                    i18n="content_1 content_2" 
+                    default="content_1"
+                    option="unset">content_1</xt:use>
+            </xt:repeat></li>
+        </ul>
+        
+        <p class="instruction">Finally, let's try a situation where two repeats 0:1 surrond an optional editor. The auto-checking must be chained.</p>
+        
+        <ul class="test">
+            <li>String: <xt:repeat minOccurs="0" maxOccurs="1">
+                <span>Here's the first repeat body... </span> 
+                <xt:repeat minOccurs="0" maxOccurs="1">
+                    <span>Here's the second repeat body... </span>
+                    <xt:use types="string" label="string_9" option="unset">Try to edit me</xt:use>
+                </xt:repeat>
+            </xt:repeat></li>
+            <li>Text: <xt:repeat minOccurs="0" maxOccurs="1">
+                <span>Here's the first repeat body... </span> 
+                <xt:repeat minOccurs="0" maxOccurs="1">
+                    <span>Here's the second repeat body... </span>
+                    <xt:use types="text" label="text_9" option="unset">Try to edit me</xt:use>
+                </xt:repeat>
+            </xt:repeat></li>
+            <li>Select: <xt:repeat minOccurs="0" maxOccurs="1">
+                <span>Here's the first repeat body... </span> 
+                <xt:repeat minOccurs="0" maxOccurs="1">
+                    <span>Here's the second repeat body... </span>
+                    <xt:use types="select" 
+                        label="select_9" 
+                        values="content_1 content_2" 
+                        i18n="content_1 content_2" 
+                        default="content_1"
+                        option="unset">content_1</xt:use>
+                </xt:repeat>
+            </xt:repeat></li>
+        </ul>
+        
+        <h2>Popup device usage and positionment</h2>
+        
+        <p>This part tests the correct behavior of the popup device. Popups usage occurs (among others) when a select editor is used.</p>
+        
+        <p>As the select editor is already used in the previous parts, we only test here the correct positionment of the device in a scrollable context</p>
+        
+        <div class="test" style="height: 200px; overflow-y: scroll; max-height: 200px;margin-bottom: 200px">
+            <p style="margin-bottom: 150px">See below</p>
+            <xt:use types="select" 
+                label="select_10" 
+                values="content_1 content_2" 
+                i18n="content_1 content_2" 
+                default="content_1">content_1</xt:use>
+            <xt:use types="select" 
+                label="select_10" 
+                values="10 20 30 40 50 60" 
+                default="content_1">20</xt:use>                
+            <p style="margin-top: 150px">See above</p>
+        </div>
+    </body>
+</html>               

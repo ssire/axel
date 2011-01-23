@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL Interactive (GUI) test case : 'video' primitive editor plugin</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="Root">
+  </xt:head>
+    
+    <style type="text/css">
+      body {
+      width: 80%;
+      margin-left: 10%;
+      border: 1px solid grey;
+      padding: 15px;
+      }
+      .xtt-editable {
+      padding: 5px;
+      border: 1px dashed green;
+      }  
+      .decoration {
+        color: GoldenRod;
+      }
+    </style> 
+    
+    <link rel="stylesheet" href="../../axel/axel.css" type="text/css"/>
+    <script type="text/javascript" src="../../axel/axel.js"></script> 
+
+    <script type="text/javascript">
+      var form;
+      function init() {
+        form = new xtiger.util.Form('../../axel/bundles');
+        form.setTemplateSource(document);
+        form.enableTabGroupNavigation();
+        if (! form.transform()) { alert(this .form.msg); }
+      }
+      xtdom.addEventListener(window,  'load', init, false);
+    </script>
+
+  </head>
+  <body style="width: 80%;
+    border: thin solid #7D9AC7;
+    margin-left: 10%;
+    padding: 15px">  
+    
+    <h1>Interactive (GUI) test case for <tt>'video'</tt> editor</h1>
+
+    <p>This is the test page for the video editor. It currently supports only YouTube videos but will (hopefully) soon support DailyMotion's as well. Feel free to modifiate this template in order to test more case, even if it's pretty exhaustive yet.</p>
+
+    <h2>Plain editors</h2>
+
+    <p>This is a plain video editor, put inside a paragraph. It's empty by default.</p>
+    
+    <p class="decoration">Ut at erat odio,<xt:use types="video" label="video1"/> eu fermentum nunc.</p>
+
+    <p>Now the editor default content is set to a YouTube video URL. To test the positioning algorithm, it is put inside a floating div with random text around.</p>
+             
+    <p class="decoration">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.
+    </p>  
+      
+      <div
+        style="border: thin solid black;
+        margin: 50px;
+        vertical-align: center;
+        text-align: center;
+        height: 400px max-width: 500px;
+        padding: 10px;
+        background-color: #7D9AC7;
+        float:right">
+        <xt:use types="video" label="video2">http://www.youtube.com/watch?v=VUVU14GmW18&amp;hl=fr_FR&amp;fs=1&amp;</xt:use>
+      </div>      
+        
+    <p class="decoration">
+      Proin eget ante vel magna imperdiet cursus. Phasellus consectetur hendrerit suscipit. Maecenas egestas volutpat erat nec tincidunt. Ut lorem magna, fermentum sit amet accumsan vehicula, tempor nec nibh. Morbi nec elit id leo placerat commodo. Duis turpis orci, eleifend nec ullamcorper eget, vulputate ac quam. Nunc egestas urna in arcu rutrum consequat. Integer porttitor, ligula in sollicitudin fermentum, arcu quam lobortis lectus, sit amet vehicula dolor diam vitae lectus. Vivamus porta congue imperdiet. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque quis est sit amet ligula tempus mattis. Donec velit urna, pellentesque condimentum condimentum ac, varius quis lacus. Maecenas euismod, purus iaculis ornare fermentum, erat dui ultricies tellus, ut ultrices sem elit vehicula orci. Nulla imperdiet sapien erat.
+    </p>
+    <p class="decoration">
+      Ut at erat odio, eu fermentum nunc. Pellentesque bibendum libero eget risus vestibulum aliquam. Proin egestas elit at risus elementum rhoncus. Quisque viverra, nulla nec cursus rhoncus, sapien quam aliquam felis, a sodales mauris tellus vitae odio. Proin ullamcorper ipsum a enim eleifend cursus. Curabitur a viverra orci. Nam orci ante, eleifend vel facilisis venenatis, luctus id elit. Mauris scelerisque scelerisque semper. Phasellus pretium scelerisque vehicula. Cras venenatis felis nec tortor ullamcorper adipiscing. Phasellus condimentum auctor sapien sit amet accumsan. 
+    </p>
+    
+    <!--<p>And now with the whole code snippet</p>
+   
+    <xt:use types="video" label="vid1">
+      <object width="425" height="344">
+        <param name="movie" value="http://www.youtube.com/v/gD6zhpHT0xM&amp;hl=fr_FR&amp;fs=1&amp;"/>
+        <param name="allowFullScreen" value="true"/>
+        <param name="allowscriptaccess" value="always"/>
+        <embed src="http://www.youtube.com/v/gD6zhpHT0xM&amp;hl=fr_FR&amp;fs=1&amp;"
+          type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true"
+          width="425" height="344"/>
+      </object>
+      </xt:use>-->
+
+    <h2>Repeatable editors</h2>         
+    
+    <p>This video editor is repeatable with a minimum repetition set to 1.</p>
+
+    <div style="border: thin solid black; padding: 10px; display: block; height: 300px">
+      <p>There is a video list</p>
+      <xt:repeat minOccurs="1" label="repeater1">
+        <div style="display: inline;
+          float: left;
+          margin: 5px;
+          border: this solid  #7D9AC7;
+          padding: 10px;
+          background-color: #7D9AC7;
+          ">
+          <p><xt:menu-marker/></p>
+          <p><xt:use types="video" label="video-rep1"/></p>
+        </div>
+      </xt:repeat>
+      <br/>
+    </div>
+
+    <p>This video editor is repeatable with a minimum repetition set to 0. Paste a valide You Tube URL in the first standalone video editor, then you can check that it becomes checked when you save it.</p>
+
+    <div style="border: thin solid black; padding: 10px; display: block; height: 300px">
+      <p>There is a video list</p>
+      <xt:repeat minOccurs="0" label="repeater2">
+        <div style="display: inline;
+          float: left;
+          margin: 5px;
+          border: this solid  #7D9AC7;
+          padding: 10px;
+          background-color: #7D9AC7;
+          ">
+          <p><xt:menu-marker/></p>
+          <p><xt:use types="video" label="video-rep2"/></p>
+        </div>
+      </xt:repeat>
+      <br/>
+    </div>
+
+    <h2>Optional editors</h2>
+    
+    <p>This video editor is optional but you can verify that it is checked by default (<tt>open="set"</tt>).</p>
+    
+    <xt:use types="video" label="video-opt1" option="set">Post your video here</xt:use>
+
+    <p>This video editor is optional but you can verify that it is unchecked by default (<tt>open="unset"</tt>). Paste a valide You Tube URL in it, then you can check that it becomes checked when you save it.</p>
+    
+    <xt:use types="video" label="video-opt2" option="unset">Guess what to do</xt:use>
+  </body>
+</html>
+

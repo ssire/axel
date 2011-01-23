@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Workpackage Description Template</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Workpackage" stylesheet="Workpackage.xsl">
+
+    <!-- /////////////////////////////////
+          Begin Structure Part component
+           (works with StructPart.css)
+       /////////////////////////////////// -->
+
+    <xt:component name="StructPart">                      
+        <div class="xtc-spart-row">
+            <xt:use types="Parag List" param="marker=xtc-spart-menu"/>
+        </div>   
+    </xt:component> 
+
+    <xt:component name="Parag">                      
+        <div class="xtc-spart-content">
+            <p class="xtc-spart-parag"><xt:use types="text" param="shape=parent;type=textarea" label="Fragment">Your paragraph.</xt:use></p>
+        </div>         
+    </xt:component> 
+
+    <xt:component name="List">                      
+        <div class="xtc-spart-content">
+            <ul class="xtc-spart-list">
+                <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="ListItem SubList">
+                    <li class="xtc-spart-listitemwrapper">                
+                        <xt:use types="ListItem SubList" param="marker=xtc-spart-menu"/>
+                    </li>
+                </xt:repeat>                  
+            </ul>
+        </div>         
+    </xt:component>  
+
+    <xt:component name="ListItem" i18n="Item">                      
+        <p class="xtc-spart-listitem"><xt:use types="text" param="shape=parent-100px;type=textarea">Your list item</xt:use></p>
+    </xt:component> 
+
+
+    <xt:component name="SubList">                      
+        <div class="xtc-spart-content">
+            <ul class="xtc-spart-list">
+                <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="SubListItem">
+                    <li class="xtc-spart-sublistitem"><xt:use types="text" param="shape=parent-70px;type=textarea" label="SubListItem">Your sublist item</xt:use><xt:menu-marker/></li>
+                </xt:repeat>
+            </ul>
+        </div>
+    </xt:component>      
+
+<!-- ////////////////////////////////////
+        End Structure Part component
+     ///////////////////////////////////// -->     
+      
+    <xt:component name="leader">
+      leaded by <xt:use label="PersonInCharge" types="text">name</xt:use> from <xt:use label="PartnerCode" types="text">PARTNER</xt:use>.
+    </xt:component>
+    
+    <xt:component name="dow">   
+      <h3>Introduction</h3>
+      <xt:repeat minOccurs="1" label="Introduction">
+        <xt:use types="StructPart"/>
+      </xt:repeat>    
+      <xt:repeat minOccurs="0" label="TaskList">
+        <fieldset style="margin-top: 10px">
+          <legend>Task <xt:menu-marker/></legend>
+          <xt:use types="task" label="Task"/>
+        </fieldset>
+      </xt:repeat>
+    </xt:component> 
+
+    <xt:component name="partner">         
+      <xt:use types="text" label="PartnerCode">PARTNER</xt:use> (leader: <xt:use types="text" label="TaskLeader">false</xt:use>, pm: <xt:use types="text" label="pm">NB</xt:use>)   
+    </xt:component> 
+    
+    <xt:component name="task">
+      <h3>T.<xt:use types="text" label="TaskNo">nb</xt:use>:
+      <xt:use types="text" label="Name">Write the task name here </xt:use></h3>
+      <p>This task starts at month <xt:use types="text" label="Start">M</xt:use> and ends at month <xt:use types="text" label="End">N</xt:use>.</p>
+      <h4>Description</h4>
+      <xt:repeat minOccurs="1" label="Description">
+        <xt:use types="StructPart"/>
+      </xt:repeat>      
+      <h4>Partners</h4>     
+      <p><xt:repeat minOccurs="0" label="PartnerList"><xt:use types="partner" label="Partner"/>,<xt:menu-marker/></xt:repeat></p>
+    </xt:component>     
+  
+    <xt:component name="deliverable">
+      <p><xt:use types="text" label="Code">Code</xt:use>: <xt:use types="text" label="Name">deliverable name</xt:use>, delivered at month <xt:use types="text" label="DeliveryMonth">M</xt:use>, is a <xt:use types="text" label="Nature">nature</xt:use>, which is <xt:use types="text" label="DisseminationLevel">public</xt:use> <xt:menu-marker/></p>
+    </xt:component>   
+
+    <xt:component name="milestone">
+      <p><xt:use types="text" label="Code">Code</xt:use>: <xt:use types="text" label="Name">deliverable name</xt:use>, delivered at month <xt:use types="text" label="DeliveryMonth">M</xt:use> <xt:menu-marker/></p>
+    </xt:component>   
+
+    <xt:component name="PartnerSet">
+      <xt:use types="string" label="No">Nb</xt:use> for <xt:use types="text" label="Name">Name</xt:use> <xt:menu-marker/>,
+    </xt:component> 
+              
+  </xt:head>  
+  
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  <link rel="stylesheet" type="text/css" href="StructPart.css" />
+  
+  <style type="text/css">
+    h2, h4 {
+        clear: left;
+    }
+    #partner-codes {
+      margin: 30px 40px 0 40px;
+      padding: 10px 20px;
+      border: 1px solid olive;      
+    }          
+    p#code-legend { 
+      text-decoration: underline;
+      color: olive;
+    }
+    p#code-list { 
+      margin-left: 2em;
+      margin-right: 2em;
+    }                   
+    fieldset {
+      clear: left;   /* for Safari */
+      margin-top: 10px;
+    }
+  </style>
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+<h1>
+  <xt:use types="text" label="Title">Workpackage title</xt:use>
+</h1> 
+
+<p>WP <xt:use label="Number" types="text" param="lookahead=0">NB</xt:use> is a <xt:use label="ActivityType" types="text">RTD</xt:use> workpackage <xt:use label="Leader" types="leader"/></p>
+
+<p>This WP starts at month <xt:use label="Start" types="text" param="lookahead=0">NB</xt:use></p>
+
+<h2>Objectives</h2>
+<xt:repeat minOccurs="1" label="Objectives">         
+  <xt:use types="StructPart"/>  
+</xt:repeat>
+
+<h2>Description of Work</h2>
+<xt:use types="dow" label="DescriptionOfWork"/>
+
+<h2>Deliverables</h2>
+<xt:repeat minOccurs="0" label="DeliverableList">
+  <xt:use types="deliverable" label="Deliverable"/>
+</xt:repeat>
+
+<h2>Milestones</h2>
+<xt:repeat minOccurs="0" label="MilestoneList">
+  <xt:use types="milestone" label="Milestone"/>
+</xt:repeat>
+
+<h2>Expected Results</h2>
+<xt:repeat minOccurs="0" label="ExpectedResults">
+  <xt:use types="StructPart"/>
+</xt:repeat>   
+
+<div id="partner-codes">  
+  <p id="code-legend">Partner codes :</p>   
+  <p id="code-list">
+  <xt:repeat minOccurs="0" label="Partners">
+    <xt:use types="PartnerSet" label="Partner"/>
+  </xt:repeat>  
+  </p>
+</div>  
+</body>
+</html>

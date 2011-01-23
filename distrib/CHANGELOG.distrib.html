@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>AXEL CHANGELOG</title>
+  <link rel="stylesheet" type="text/css" href="../docs/docu.css" />	
+</head>
+<body> 
+<pre>                   
+  
+2010-01-16	    1.1.2-beta
+
+- new code layout in src folder that maps the library architecture to the sub-folders structure (core, editor, devices, plugins, filters, services)
+- modularization of axel.css: it is now assembled from two files axel-core.css and axel-style.css in the stylesheets folder, the 'core' file containes CSS rules required for AXEL to function properly while the 'style' file contains look and feel rules you can customize
+- renaming of all AXEL CSS rules so that they starts with "axel-"
+- updated build.xml process, all the files to include in a library built are now configurable in ant.properties
+- many bug fixes in plugins
+  
+2010-08-26	    1.1.1-beta
+                               
+- new layout manager component introduced in lensdevice.js to isolate and improve lens insertion / positioning algorithm
+- improved 'text' device so that when clicked, the editing field "inherits" all of the visual style of the Handle including when it is used inside elements such as &lt;pre> (up to now it worked only for a few properties and not very well accross different browsers), as a consequence "float" layout with "parent" shape no longer appears at the parent left border, this is consistent with layout="placed" behavior, AXEL now uses the CSS "inherit" value that works on all browsers (including IE8) but not IE7
+- a drawback is that 'text' editing fields will no longer inherit the font size / color / weight on IE7, we may try to restore this in the future if needed
+- we are still considering to change the behaviour of the layout="float" parameter on 'text' device, we are discussing this issue (and uniformizing 'text' device and other lens device positioning) on the axel-dev group
+- added a photo_URL parameter to the 'photo' plugin to give the address of the POST action that receives uploads
+
+2010-08-09		1.1.0-beta
+
+Core :    
+          
+- improved documentation, all docs converted to html and a table of content (docs/toc.html) has been created
+- new filter architecture based on a Delegation/Mixin design pattern to allow chaining filters on primitive editor plugins
+- "documentid", "image", "wiki", "layout" and "video" filters have been rewritten with this API
+- new plugin standard API to write primitive editor plugins that can potentially share filters
+- "text", "video", "link" and "richtext" primitive editors rewritten with this API (but "string", "select" and "photo" plugins does not yet adhere to the new API)
+- new service element (i.e. &lt;xte:service>) available as an XTiger XML extension inside an "http://ns.media.epfl.ch/xtiger-extension" namespace; you can create new services using a Delegation/Mixin design pattern for adding functionalities to templates, each service is a Javascript object that can react to editing events, potential future applications are automatic tables of content, automatic bibliographic reference sections
+- improved test framework to simplify release process: automatic load / save tests defined in test/auto, interactive (GUI) tests defined in test/gui with instruction for manual testing
+- corrected a bug in DOMDataSource that caused infinite loop in some (rare) cases while loading XML data
+
+Plugins, Filters, Services + Extras :  
+
+- user experience improvements: "string" and "text" primitive editors select the whole input field content when it contains its default value, when the user's data entry is empty they reset their content to the default value and check themselves if they are optional
+- fixed bugs in automatic checking of optional repeaters (i.e. minOccurs="0") that enclose a "text" editor
+- demonstration service capitalize.js (shown in templates/Services.xhtml) to illustrate the service architecture   
+- new experimental "debugfilter" to log internal plugin API calls to the console
+- contrib/cvmachine contains a new kind of template that pushes the limits by directly generating an XHTML document with embedded semantic markup and CSS instructions which can directly displayed within a browser      
+
+
+2010-05-20		1.0.1-beta
+
+Core :
+
+- XML loading and serialization algorithms have been extracted from the generator; the default algorithms are in src/editor/classical/(xmlloader.js and xmlserializer.js)
+- corrected a bug with flows in the default xmlloader.js, the point at the top of the stack was duplicated when returning from a flow                                                                                          
+- a new xmlrobustserializer.js is available, it supports data migration in case of limited template evolutions that are documented elsewhere; to use this serializer instead of the default serializer, include xmlrobustloader.js instead of xmlloader.js in your project
+
+Plugins + Extras :
+                                           
+- a new contribs/xmlschemas tool to generate an XML Schema from an XTiger XML template by Vincent Quint
+- as an alternative to the unstable video lens plugin, an unstable videofilter for the "text" editor is also available (in src/plugins/videofilter); templates/YouTube.xhtml (and data/youtube.xml) allows to compare both
+- new OK button for the unstable richtext editor
+- fixed serialization/loading bug for the unstable video plugin
+- fixed save/cancel button behavior for the unstable video plugin
+- fix loading pb on IE for the unstable richtext editor
+
+
+2010-05-03			1.0.0-beta
+
+Core :
+
+- the generator now prints an alert 'Empty node in transformation, the template may contain XHTML errors, please correct it !' in case it encounters an empty node which is most probably caused by a &lt;repeat> (no namespace) or a &lt;span/> on IE
+- font size computation in text editor converts from 'em' to pixels, this is required since at least IE8 returns font size in 'em'
+- auto-selection of repeated components updwards the ancestors chain now works on IE for the text editor (and any editor that calls xtiger.editor.Repeat.autoSelectRepeatIter upon editing)
+
+Plugins + Extras :
+
+- all unstable lens devices use a new positioning algorithm in display="above" mode resisting to scroll (except on Opera in some cases for the video lens); improved lens width computation
+- unstable richtext editor cleans up it's XML output (double quotes are now supported in attributes, entities are encoded correctly); pasted text is filtered to be compatible with the rich text editor's content model; single quotes are no more coded as double-quotes
+- unstable video editor displays the default content instead of "null" if it's content is empty; new Save and Cancel buttons, delete link operational, baseline alignment problem resolved with FF, width computation resolved with IE
+- unstable link editor now cross-browser. Autoselect implemented with consistency toward other plugins.
+
+
+2010-04-02			1.0.0-preview
+
+- Developer's preview initial version
+</pre>
+</body>
+</html>

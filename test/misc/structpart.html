@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>XTiger Rich Text Component trials</title>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../templates/Preview.css" />
+	
+	<style>            
+body {
+    margin: 1em 2em;
+}	
+	
+/* AXEL copy */
+.axel-repeat-left {
+	padding: 0 2px 2px 5px;
+}
+
+.axel-repeat-right {
+	padding: 0 5px 2px 2px;
+}          
+
+/* UI */
+h2, hr {
+    clear: left;
+}
+
+/* ---- From HERE Structured Content style ----*/
+
+/* Top level */
+
+div.xtc-spart-row {
+    clear: left;
+    margin-bottom: 0.5em;
+/*    border: solid 1px green;    */
+} 
+                
+div.xtc-spart-inner-row:first-of-type {
+    clear: none;
+/*    border: solid 1px orange;*/
+}	                                   
+
+div.xtc-spart-inner-row {
+    clear: left;
+/*    border: solid 1px orange;*/
+}	
+             
+span.xtc-spart-menu {
+    float: left;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}                             
+
+/* 1st level content */
+
+.xtc-spart-content {
+    margin-left: 80px;     
+}         
+
+p.xtc-spart-parag {
+    margin: 0;
+/*    border: solid 1px yellow;*/
+}
+
+ul.xtc-spart-list {
+    padding: 0;
+    margin: 0;     
+}      
+
+li.xtc-spart-listitemwrapper:first-of-type {
+    clear: none;
+}                           
+
+li.xtc-spart-listitemwrapper {
+    clear: left;
+    list-style: none none inside;
+    margin-bottom: 0.5em;    
+} 
+
+/* 2nd level content */    
+
+p.xtc-spart-listitem {
+    margin: 0 0 0 70px; 
+    display: list-item; 
+    list-style: disc none inside
+}    
+
+li.xtc-spart-sublistitem {
+    margin-bottom: 0.5em;
+    /* Opera */
+    list-style: circle none inside;
+    margin-left: 1em;
+}              
+
+/* Preview mode */
+
+body.preview span.xtc-spart-menu {
+    display: none;
+}            
+
+body.preview .xtc-spart-content, p.xtc-spart-listitem {
+    margin-left: 0;
+}            
+
+body.preview li.xtc-spart-listitemwrapper, body.preview li.xtc-spart-sublistitem {
+    margin-bottom: 0.2em;
+}
+
+body.preview p.xtc-spart-parag {
+    margin-bottom: 1em;
+}                  
+
+/* ------------------------------*/
+
+/* Non related trials at the end */
+
+p.list {  p c
+    margin-top: 0;
+    margin-bottom: 5px;
+}         
+  
+ul.sublist {                        
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+	</style>      
+	
+  <script type="text/javascript">   
+  function toggle() {
+      $('body').toggleClass('preview');
+  }
+  function init() {  
+    $('span.top-menu').html(
+        '<img class="axel-repeat-left" src="../../axel/bundles/repeat/plus.png" height="16px"/><img class="axel-repeat-right" src="../../axel/bundles/repeat/minus.png" height="16px"/><br />\
+        <select>\
+            <option>Parag</option>\
+            <option>List</option>\
+        </select>'
+    );                    
+    $('span.list-menu').html(
+        '<img class="axel-repeat-left" src="../../axel/bundles/repeat/plus.png" height="16px"/><img class="axel-repeat-right" src="../../axel/bundles/repeat/minus.png" height="16px"/><br />\
+        <select>\
+            <option>Item</option>\
+            <option>SubList</option>\
+        </select>'
+    );                    
+  }          
+  
+  $(document).ready(function() {
+     init();
+   });	
+  </script>	
+</head>
+<body>    
+    <a href="javascript:toggle()">toggle preview</a>
+    <hr />
+    
+    <h1>Structured Text Trials</h1>
+    
+    <div class="xtc-richtext">  
+        
+        <h2>Three rows one of which is a list</h2>  
+               
+        <div class="xtc-spart-row">
+            <span class="xtc-spart-menu top-menu">MENU</span>
+            <div class="xtc-spart-content">
+                <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+            </div>         
+        </div>   
+        
+        <div class="xtc-spart-row">
+            <span class="xtc-spart-menu top-menu">MENU</span>
+            <div class="xtc-spart-content">
+                <ul class="xtc-spart-list">
+                    <li><span>Item content</span></li>
+                    <li><span>Item content</span></li>
+                    <li><span>Item content</span></li>
+                </ul>
+            </div>         
+        </div>        
+
+        <div class="xtc-spart-row">
+            <span class="xtc-spart-menu top-menu">MENU</span>
+            <div class="xtc-spart-content">
+                <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+            </div>         
+        </div>      
+        
+        <h2>One row that contains a list that contains list items that contain an inner row</h2>  
+        
+        <div class="xtc-spart-row">
+            <span class="xtc-spart-menu top-menu">MENU</span>
+            <div class="xtc-spart-content">
+                
+                <ul class="xtc-spart-list">
+                    <li class="xtc-spart-listitemwrapper">
+                            <span class="xtc-spart-menu list-menu">MENU</span>
+                            <p class="xtc-spart-listitem"><span>List item content</span></p>
+                    </li>                          
+
+                    <li class="xtc-spart-listitemwrapper">
+                            <span class="xtc-spart-menu list-menu">MENU</span>
+                            <p class="xtc-spart-listitem"><span>List item content</span></p>
+                    </li>                          
+
+                    <li class="xtc-spart-listitemwrapper">
+                            <span class="xtc-spart-menu list-menu">MENU</span>
+                            
+                            <div class="xtc-spart-content">
+                                <ul class="xtc-spart-list">
+                                    <li class="xtc-spart-sublistitem"><span>SubList item content</span></li>
+                                    <li class="xtc-spart-sublistitem"><span>Pour pouvoir créer un document XML il est utile dans un premier temps de définir les éléments pouvant être utilisés, ou plus exactement les informations que l'on désire utiliser</span></li>
+                                    <li class="xtc-spart-sublistitem"><span>SubList item content</span></li>
+                                </ul>
+                            </div>         
+                            
+                    </li>   
+
+                    <li class="xtc-spart-listitemwrapper">
+                            <span class="xtc-spart-menu list-menu">MENU</span>
+                            <p class="xtc-spart-listitem"><span>List item content</span></p>
+                    </li>                          
+                                           
+                    
+                </ul>      
+                
+            </div>         
+        </div>        
+        
+
+        <h2>One row that contains two inner rows</h2>  
+
+        <div class="xtc-spart-row">
+            <span class="xtc-spart-menu top-menu">MENU</span>
+            <div class="xtc-spart-content">
+                
+                <div class="xtc-spart-inner-row">
+                    <span class="xtc-spart-menu top-menu">MENU</span>
+                    <div class="xtc-spart-content">
+                        
+                        <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+                        
+                    </div>         
+                </div>      
+
+                <div class="xtc-spart-inner-row">
+                    <span class="xtc-spart-menu top-menu">MENU</span>
+                    <div class="xtc-spart-content">
+                        <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+                    </div>         
+                </div>      
+
+            </div>         
+        </div>           
+        
+        
+        <h2>One row that contains two inner rows one of which contains two rows</h2>  
+        
+        <div class="xtc-spart-row">
+            <span class="xtc-spart-menu top-menu">MENU</span>
+            <div class="xtc-spart-content">
+                
+                <div class="xtc-spart-inner-row">
+                    <span class="xtc-spart-menu top-menu">MENU</span>
+                    <div class="xtc-spart-content">
+                        
+                        <div class="xtc-spart-inner-row">
+                            <span class="xtc-spart-menu top-menu">MENU</span>
+                            <div class="xtc-spart-content">
+                                <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+                            </div>         
+                        </div>      
+                        
+                        <div class="xtc-spart-inner-row">
+                            <span class="xtc-spart-menu top-menu">MENU</span>
+                            <div class="xtc-spart-content">
+                                <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+                            </div>         
+                        </div>      
+                        
+                    </div>         
+                </div>      
+                
+                <div class="xtc-spart-inner-row">
+                    <span class="xtc-spart-menu top-menu">MENU</span>
+                    <div class="xtc-spart-content">
+                        <p class="xtc-spart-parag"><span>Paragraph content</span></p>
+                    </div>         
+                </div>      
+                
+
+            </div>         
+        </div>   
+        
+<hr/>        
+
+        <div>
+            <span style="float:left">menu 1</span>
+
+            <div style="margin-left: 70px;padding:0">              
+                                          
+            <div>
+            <span style="float:left; margin-bottom: 5px">menu 2<br />suite</span> 
+                <p class="list" style="display: list-item; margin-left: 70px; padding: 0">Pour pouvoir créer un document XML il est utile dans un premier temps de définir les éléments pouvant être utilisés, ou plus exactement les informations que l'on désire utiliser.</p>
+            </div>  
+
+            <div>
+            <span style="float:left; margin-bottom: 5px">menu 2<br />suite</span> 
+                <ul class="sublist" style="margin-left: 90px; padding: 0; list-style: circle none inside">
+                    <li>Pour pouvoir créer un document XML il est utile dans un premier temps de définir les éléments pouvant être utilisés, ou plus exactement les informations que l'on désire utiliser.</li>
+                    <li>The objective of this Work Package is twofold: (i) ensure the overall management activities, providing the legal, administrative and financial management framework of the project and a specific quality assurance process; (ii) monitor the progress of scientific and technical activities.</li>
+                </ul>
+            </div>  
+
+            <div>
+             <span style="float:left; margin-bottom: 5px">menu 2<br />suite</span> 
+                 <p class="list" style="display: list-item; margin-left: 70px; padding: 0">Pour pouvoir créer un document XML il est utile dans un premier temps de définir les éléments pouvant être utilisés, ou plus exactement les informations que l'on désire utiliser.</p>
+             </div>
+             <div>
+              <span style="float:left; margin-bottom: 5px">menu 2<br />suite</span> 
+                  <p class="list" style="display: list-item; margin-left: 70px; padding: 0">Pour pouvoir créer un document XML il est utile dans un premier temps de définir les éléments pouvant être utilisés, ou plus exactement les informations que l'on désire utiliser.</p>
+              </div>                         
+            
+            </div>                              
+                    
+        </div>       
+                                   
+<hr/>
+
+        <div>
+            <span style="float:left">menu 1</span>
+
+            <div style="margin-left: 70px;padding:0">        
+        
+        <ul style="padding: 0;">
+            <li style="list-style: none none inside"><span style="float:left; margin-bottom: 5px">FLOAT / <br />float</span><p class="list" style="margin-left: 70px; display: list-item; list-style: disc none inside">Pour pouvo'on désire utiliser</p></li>
+
+            <li style="clear: left;list-style: none none inside;"><span style="float:left; clear: left">FLOAT<br/>float</span>
+                <ul style="margin-left: 100px; padding: 0; margin-bottom: 5px; list-style-type: circle">
+                    <li>a</li>
+                    <li>b</li>
+                 </ul>
+            </li>
+            
+            <li style="clear: left; list-style: none none inside;"><span style="float:left; clear: left">FLOAT<br/>float</span><p class="list"  style="margin-left: 70px; display: list-item; list-style: disc none inside">Pour pouvoir créer un document XML il est utile dans un premier temps de définir les éléments pouvant être utilisés, ou plus exactement les informations que l'on désire utiliser</p></li>
+        </ul>  
+        </div>
+        
+    </div>           
+</body>
+</html>

@@ -1,0 +1,154 @@
+/*	Main document */
+    body {
+        counter-reset: sect1 sect2 sect3 figure code;
+        margin: 20px 25px;
+    }	
+    h1 {
+        text-align: center; 
+        font-family: sans-serif;
+    }
+    h2 {
+        counter-reset: sect2 sect3;
+    }
+    h2:before { 
+        content: counter(sect1) ". ";
+        counter-increment: sect1;
+    }
+    h3 {
+        counter-reset: sect3;
+    }
+    h3:before { 
+        content: counter(sect1) ". " counter(sect2) ". ";
+        counter-increment: sect2;
+    }
+	p.parag {
+	    margin-bottom: .5em; 
+	    margin-top: .5em;
+	}   
+	p.parag, li, div.authors {
+/*        line-height: 1.5;	    */
+	}
+	span.verbatim {
+		font-size: 75%;
+        font-family: "Bitstream Vera Sans Mono", "Lucida Console", monospace
+	}
+	span.important {
+	    font-style: italic;  
+	}
+    pre {
+		margin: 0;
+	}
+	p.heading {
+        font-size: 110%; 
+        font-weight: bold;	
+	    clear: both;
+	}
+	
+/*  Authors */
+    div.authors {
+        margin-left: 10%;
+        margin-right: 10%;
+        font-family: sans-serif;    
+        text-align: center;                
+    }
+    p.vcard {
+        float: left;
+        margin-left: 10%;
+    }
+	span.fn {
+        font-size: 110%;	
+	}    
+	span.addr {
+	}    
+	span.email {
+        font-size: 90%;	
+	}    
+    
+/*  Figures and Code Example  */
+    p.figure-caption {
+        margin-left: 10%;
+        margin-right: 10%;        
+    }
+    p.figure-caption, p.code-caption {
+        font-style: italic;
+        margin-top: 0.4em;
+        padding-top: 0;
+    }
+    p.code-caption {
+        text-align: left;
+    }    
+	p.figure-caption:before {
+		content: "Figure " counter(figure) ". ";
+	    counter-increment: figure;
+	    font-style: normal; 
+	}    
+	p.code-caption:before {
+		content: "Example " counter(code) ". ";
+	    counter-increment: code;		
+	    font-style: normal; 
+	}	
+    div.figure img {
+		border: 1px solid gray;
+    }
+	div.code, div.figure {
+		padding: 0;
+		margin-top: 1em;
+		margin-bottom: 1em;
+    }
+	div.figure {
+		text-align: center;
+    }
+    div.figure img {
+		max-width: 16cm;
+		max-height: 12cm;    
+    }	
+	
+/*	Bibliography */
+	div.biblio-entry, p.biblio-entry {
+        margin-bottom: 1.6em;
+	}	
+	p.biblio-entry > span.title {
+	    font-style: italic;
+	}	
+	
+/*	Printing Adjustments */
+ @media print {   
+	
+  	.noprint, #davmenubar, #preview { 
+		display: none
+	}
+    html {
+/*		This sets the margins on each page at least on Opera and Firefox, but not Safari */
+		margin-left: 1cm; 
+		margin-right: 0.5cm;
+		margin-top: 1cm;
+		padding: 0;
+	}
+	body {
+		font: 11pt geargia, serif;
+	}
+	p.parag {
+	    orphans: 2;
+	}
+    p.parag, li, dd {
+        text-align: justify;
+    }
+    pre {
+		font-size: 70%;
+	}	
+    h1 {
+        font-size: 150%;
+		page-break-after: avoid;
+	}
+    h2 {
+		font-size: 130%; margin-bottom: .2em; margin-top: .6em;
+		page-break-after: avoid;
+	}
+    h3 {
+		font-size: 120%; margin-bottom: .2em; margin-top: .6em;
+		page-break-after: avoid;
+	}
+	div.figure p, div.code p {
+		page-break-before: avoid;
+	}
+}

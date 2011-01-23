@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />	  
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Migration test case</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <xt:component name="type_a">
+      <p><span class="info">type_a</span></p>
+    </xt:component>
+    
+    <xt:component name="type_b">
+      <p><span class="info">type_b</span></p>
+    </xt:component>
+    
+    <xt:component name="type_c">
+      <p><span class="info">type_c</span></p>
+    </xt:component>
+  
+    <xt:component name="seq_complex">
+      <p><span class="info">A?</span> : <xt:use types="text" label="A" option="unset">a content</xt:use></p>
+      <p><span class="info new">New element</span> : <xt:use types="text" label="N">new content</xt:use></p>
+      <span class="info">type_a | type_b | type_c</span> : <xt:use types="type_a type_b type_c"/>
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="C">
+        <fieldset>
+          <label><xt:menu-marker/></label>
+          <p><span class="info">Element C</span> : <xt:use types="text" label="C">c content</xt:use></p>
+        </fieldset>
+      </xt:repeat>
+    </xt:component>
+    
+    <xt:component name="seq_simple">
+      <p><span class="info">Element D</span> : <xt:use types="text" label="D">d content</xt:use></p>
+      <xt:repeat minOccurs="1" maxOccurs="*" label="REPEAT">
+        <fieldset>
+          <label class="new"><xt:menu-marker/>New labelled repeat</label>
+          <p><span class="info new">New element</span> : <xt:use types="text" label="N">new content</xt:use></p>
+        </fieldset>
+      </xt:repeat>
+      <p><span class="info">Element E</span> : <xt:use types="text" label="E">e content</xt:use></p>
+      <p><span class="info">Element F</span> : <xt:use types="text" label="F">f content</xt:use></p>
+    </xt:component> 
+  
+  </xt:head>
+
+	<link rel="stylesheet" type="text/css" href="Case.css" />
+
+</head>
+<body>
+  <p class="subject">Complex series : complex addition</p>      
+
+  <h1>Migration test : <span name="case">case-2-1</span></h1>
+  
+  <p>This template is used to test the addition of an element (not a choice, not an option, not a repeat) in a more complex situation.</p>
+  
+  <p>
+    It also tests the addition of the following elements in a simple sequence : a labelled choice, a labelled repeat and a unlabelled one.
+  </p>
+  
+  <h2>Addition of a simple element in a complex sequence</h2>
+  
+  <h3 class="info">Simple uses</h3>
+  
+  <xt:use types="seq_complex"/>
+  
+  <h3 class="info">Labelled repeat 1 to *</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" label="R">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_complex"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">Unlabelled repeat 1 to *</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="A type_a type_b type_c"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_complex"/>
+    </fieldset>
+  </xt:repeat>
+  
+  
+  <!-- Part 2 -->
+  <hr style="margin-top: 40px"/>
+  <h2>Addition of a complex element in a simple sequence</h2>
+    
+  <h3 class="info">Simple uses</h3>
+  
+  <xt:use types="seq_simple"/>
+  
+  <h3 class="info">Labelled repeat 1 to *</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" label="R">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_simple"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">Unlabelled repeat 1 to *</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="D"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_simple"/>
+    </fieldset>
+  </xt:repeat>
+</body>
+</html>

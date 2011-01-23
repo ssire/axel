@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AXEL Version @VERSION@ (Rev @REV@)"
+         default="build.lib" basedir=".">
+<!--
+AXEL Library built file system
+==============================
+
+Use this file to generate axel.js with "ant". You can select the source files
+to include in the library by editing "ant.properties". See
+"docs/integrators-guide.txt".
+
+Main targets:
+
+build.lib: creates a minified axel.js inside axel folder
+
+build.debug: creates a non-minified axel.js inside axel folder so that it can     
+             be used for debug
+
+build.distrib: creates a new distribution from the version number in 
+               distrib/release-nb.txt do not forget to do svn update before so
+               that the distrib uses the latest revision number
+
+build.doc: generates JSDoc documentation (very few files have been properly 
+           commented). You must set the jsdoc.generator.dir property in
+           ant.properties to the path of an installed jsdoc-toolkit and
+           doc.build.dir to the folder where you want to generate the
+           documentation
+            
+Author(s) : Stephane Sire, Antoine Yersin (build.doc)    
+--> 
+
+  <!-- 
+     *****************************************************
+     **             Initializations                     **
+     *****************************************************
+  -->    
+  
+  <target name="-load.properties">
+    <property file="ant.properties"/>
+  </target>
+
+  <target name="-init.files" depends="-load.properties">
+    <!-- /////////////////////////////////////////////////////////
+         // AXEL source files to be included inside the library //
+         //           EDIT ant.properties to change it          //
+         /////////////////////////////////////////////////////////
+    -->         
+    <filelist id="files.core" dir="${core.src.dir}" 
+              files="${core.lib.files}"/>
+              
+    <filelist id="files.editor" dir="${editor.src.dir}" 
+              files="${editor.lib.files}"/>
+              
+    <filelist id="files.devices" dir="${devices.src.dir}"      
+              files="${devices.lib.files}"/>
+
+    <filelist id="files.plugins" dir="${plugins.src.dir}"     
+              files="${plugins.lib.files}"/>
+                  
+    <filelist id="files.filters" dir="${filters.src.dir}"
+              files="${filters.lib.files}"/>
+
+    <filelist id="files.services" dir="${services.src.dir}"
+              files="${services.lib.files}"/>
+
+    <filelist id="files.utils" dir="${util.src.dir}"
+              files="${util.lib.files}"/>
+  </target>
+
+  <target name="-init.release">
+    <!-- PLEASE update version number in "../distribution/release-nb.txt"
+    -->                     
+    <property name="release.number" value="@VERSION@"/>
+    <loadfile property="distrib.copyright"
+              srcFile="../distrib/copyright-header-js.txt"/>
+    <loadfile property="distrib.license"
+              srcFile="../distrib/license-header-js.txt"/>
+    <property name="release.dir" 
+              value="../${product.name}-${release.number}"/>
+  </target> 
+  
+  <target name="-init.revision">
+      <property name="revision.number" value="@REV@"/>
+  </target>
+
+  <!-- *****************************************************
+       **           Library build process                 **
+       *****************************************************
+  -->
+
+  <target name="-flatten" depends="-load.properties, -init.files">
+    <concat destfile="${build.dir}/${product.name}-tmp.js" force="no">
+      <filelist refid="files.core"/>
+      <filelist refid="files.editor"/>
+      <filelist refid="files.devices"/>
+      <filelist refid="files.plugins"/>
+      <filelist refid="files.filters"/>
+      <filelist refid="files.services"/>
+      <filelist refid="files.utils"/>
+    </concat>
+  </target>
+
+  <!-- Build minified axel.js 
+  --> 
+  <target name="build.lib" depends="-load.properties, -init.files, -init.release, -init.revision">
+    
+    <echo message="Creating minified AXEL library into ${build.dir}" />
+    <!-- FIXME : fail if not exist ${build.dir} -->
+
+    <antcall target="-flatten" />
+
+    <!-- Minify library file -->
+    <java jar="${javascript.compressor}" fork="true">
+      <arg line="-o ${build.dir}/${product.name}-min.js ${build.dir}/${product.name}-tmp.js" />
+    </java>
+
+    <!-- Add license notice and copy to dest -->
+    <filter token="COPYRIGHT" value="${distrib.copyright}"/>
+    <filter token="VERSION" value="${release.number}"/>
+    <filter token="LICENSE" value="${distrib.license}"/>
+    <filter token="REV" value="${revision.number}"/>
+    <!-- FIXME: we should include SVN revision number somewhere -->
+    <copy file="../distrib/library-header-js.txt"
+          tofile="${build.dir}/library-header-js.txt" filtering="true"/>
+
+    <concat destfile="${build.dir}/${product.name}.js" force="no">
+      <file file="${build.dir}/library-header-js.txt"/>
+      <file file="${build.dir}/${product.name}-min.js"/>
+    </concat>
+        <delete file="${build.dir}/${product.name}-tmp.js"/>
+    <delete file="${build.dir}/library-header-js.txt"/>
+    <delete file="${build.dir}/${product.name}-min.js"/>
+    
+    <echo message="Creating CSS file into ${build.dir}" />
+    
+    <concat destfile="${build.dir}/${product.name}.css">
+        <string>/**************************/
+/*  AXEL library CSS file */
+/**************************/
+</string>
+      <file file="${css.dir}/axel-core.css"/>
+      <file file="${css.dir}/axel-style.css"/>
+    </concat>
+  </target>
+
+  <!-- Build debug version of axel.js 
+       (simple concatenation of source files) 
+  -->
+  <target name="build.debug" depends="-load.properties, -init.files, -init.release, -init.revision">
+    <echo message="Creating debug AXEL library into ${build.dir}"/>
+    <!-- FIXME : fail if not exist ${build.dir} -->
+
+    <antcall target="-flatten"/>
+    <!-- Add license notice and copy to dest -->
+    <filter token="COPYRIGHT" value="${distrib.copyright}"/>
+    <filter token="VERSION" value="${release.number}"/>
+    <filter token="LICENSE" value="${distrib.license}"/>
+    <filter token="REV" value="${revision.number}"/>
+    <concat destfile="${build.dir}/${product.name}-brut.js" force="no">
+      <file file="../distrib/library-header-js.txt"/>
+      <file file="${build.dir}/${product.name}-tmp.js"/>
+    </concat>
+    <copy file="${build.dir}/${product.name}-brut.js" tofile="${build.dir}/${product.name}.js" filtering="true"/>
+    <delete file="${build.dir}/${product.name}-brut.js"/>
+    <delete file="${build.dir}/${product.name}-tmp.js"/>
+    <!-- FIXME: do VERSION filtering stuff -->
+  </target>
+
+  <!-- *****************************************************
+       **                 JS Documentation                **
+       *****************************************************
+  -->
+  <target name="build.doc" depends="-load.properties">
+    <echo message="Generating JSDoc documentation..."/>
+    <echo message="Paths are :"/>
+    <echo message=" - build.dir =  ${doc.build.dir}"/>
+    <echo message=" - jsdoc.generator = ${jsdoc.generator}"/>
+    <mkdir dir="${doc.build.dir}"/>
+    <exec executable="java">
+      <arg line='-jar ${jsdoc.generator.dir}/jsrun.jar ${jsdoc.generator.dir}/app/run.js ../src/ -r=4 -a -d=${doc.build.dir} -t=${jsdoc.generator.dir}/templates/jsdoc'/>
+    </exec>
+    <echo message="JSDoc documentation generated successfully"/>
+  </target>
+
+  <!-- *****************************************************
+       **                 Utilities                       **
+       *****************************************************
+  -->
+
+  <target name="clean" depends="-load.properties">
+   <delete dir="${build.dir}" quiet="true"/>
+  </target>  
+
+</project>

@@ -1,0 +1,454 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>How to use services in AXEL</title>
+  <link rel="stylesheet" type="text/css" href="docu.css" />	
+</head>
+<body> 
+<pre>
+----------------------------------------------------------------------
+---------------- How to use the Photo Plugin in AXEL  ----------------
+----------------------------------------------------------------------
+
+Stéphane Sire
+Last update: August 25th, 2010
+
+WARNING: 
+
+the photo upload editor only works in conjunction with a specific server-side POST handler to manage photo upload and with a proper configuration as described in this document.
+
+COMPATIBILITY: 
+
+Tested on Firefox (3.6), Safari, IE 8
+
+Summary
+=======
+</pre> 
+   
+<ul>
+<li><a href="#ie-issues">Internet Explorer Issues</a></li>
+<li><a href="#syntax">Photo plugin syntax in templates</a></li>
+<ul>                         
+  <li><a href="#declaration">Declaration</a></li>
+  <li><a href="#parameters">Parameters</a></li>
+  <li><a href="#content">XML target model</a></li>
+  <li><a href="#document-id">Attaching uploaded photo to a document with documentId</a></li>
+  <li><a href="#styling">Styling</a></li>
+</ul>  
+<li><a href="#deployment">Packaging and deployment</a></li>
+<ul>                         
+  <li><a href="#source-files">Source files</a></li>
+  <li><a href="#stylesheets">Style sheets</a></li>
+  <li><a href="#configuration">Configuration of the Photo upload POST URL</a></li>
+</ul>  
+<li><a href="#server">Server-side settings</a></li>
+<li><a href="#client">Client-Side settings</a></li>
+<ul>                         
+  <li><a href="#handle">Javascript setup to handle upload termination</a></li>
+</ul>  
+<li><a href="#customization">Photo Upload Lens Customization</a></li>
+<li><a href="#security">Security Limitations</a></li>
+<li><a href="#test">Local Testing</a></li>
+<li><a href="#pending">Pending Issues</a></li>
+<ul>                         
+  <li><a href="#validation">Client side file format checking</a></li>
+  <li><a href="#size">Client side file size limit</a></li>
+  <li><a href="#cancel">Cancel transmission</a></li>
+  <li><a href="#error">Detecting submission errors in Form multipart/form-data submission</a></li>
+  <li><a href="#i18n">Message i18n</a></li>
+  <li><a href="#ui">User Interface Issues</a></li>
+  <li><a href="#html5">HTML 5 version</a></li>
+  <li><a href="#debug">Debugging</a></li>
+</ul>  
+
+</ul>
+               
+<pre id="ie-issues">
+Internet Explorer Issues
+========================
+
+We have tested the photo plugin on IE8 and IE7  (emulated from IE8).
+
+On IE7, the load / save buttons are displayed outside of the lens in Complete state (you can see this from the design/photo/preview.html test application).
+
+On IE the lens positioning is wrong by a few pixels, you can see that with templates/Photos.xhtml. Currently the safest way to use it is with the display='above' and trigger='click' settings.
+
+To test photo upload do not forget to grant permission to access the upload URL. We managed to do it by manually adding the test server URL to the Trusted sites in the Tools > Internet Options > Security panel. 
+
+If your are using VirtualBox, you can configure the virtual machine to run a hosted network (see Périphériques / Carte réseau > Mode d'accès), this allows to test from the guest Windows OS with the script/server.rb running on the host computer even if it is not physically connected to the Web. In our case the host server was accesible from http://192.168.56.1:8042/editor/editor.xhtml.
+
+There may be a diffculty to test with the editor/editor.xhtml application on IE7 (not IE8 emulating IE7 which is okay with this) as it fails to inject the axel.css style sheet (see distrib/ISSUES), this is an issue because the .xtt-lens and .xtt-photo rules do not apply and then the lens display makes it unusable.
+</pre>   
+
+<pre id="syntax">    
+Photo plugin syntax in templates
+================================
+</pre>
+     
+<pre id="declaration">    
+Declaration
+~~~~~~~~~~~
+
+You can find some examples in templates/Photos.xhtml
+
+The photo plugin is a primitive editor which saves it's content (a plain Photo URL string as returned per the server) as text content in the target XML content model. That means you can use it within an &lt;xt:use> or an &lt;xt:attribute> element.
+
+You MUST leave it's default value to the empty string to display it in the "ready" state by default (i.e. ready to upload a photo). That means, if it is declared as an attribute:
+
+&lt;xt:attribute types="photo" name="Photo" default=""/>
+
+Or if it is declared as an element:
+
+&lt;xt:use types="photo" name="Photo"/>
+
+Not doing so could result in the photo editor beeing displayed in the "broken image" state if the default string value does not point to a valid photo file URL.
+
+Both declarations above will generate an attribute named "Photo" or an element named "Photo". If you serialize the XML without uploading a photo, their content will be the empty string, otherwise it will be the URL of the uploaded photo as returned by the server.
+</pre>
+     
+<pre id="parameters">    
+Parameters
+~~~~~~~~~~
+
+You MUST define at least the "photo_URL" parameter to point to the server URL of the form upload service (see below). By default it is defined as "/upload" but you should not rely on it.
+
+The photo plugin supports the classical lens parameters:
+
+* display="inline|above" [default: above]
+
+Defines where the lens will appear, "inline" means that it will be inserted dynamically inside the document in place of the edited component; "above" means that it will be dispayed above like a popup window
+
+* trigger="click|mouseover" [default: mouseover]
+
+Defines the user action to trigger the lens display. With "click" the user has to click, the lens will disappear if the user clicks outside of the lens or on the closing icon within the lens if there is one. With "mouseover" the lense will appear when the mouse fly over the editor handle and disappear when the mouse leaves the lens boundaries.
+
+* padding="??px" [default: 10px]
+
+That value shifts the lense to the top left by padding pixels. The value must correspond to the padding you set on the top div (class=""xtt-lens") that contains the lens. For instance the default axel.css sets it to 10px. In the future we may deprecate this attribute and automatically compute the lensShift by calculating the computed style of the lens just before displaying it.
+</pre>        
+
+<pre id="content">    
+XML target content model
+========================
+
+The photo plugin generates a text content corresponding to the URL of the uploaded photo, or an empty string in case no photo has been uploaded or there was an error while uploading. That text content will be copied inside the current element or the current attribute during serialization depending on the XTiger element used to insert the plugin (i.e. &lt;xt:use> or &lt;xt:attribute>).
+
+In addition, if the server also also returned a 'resource_id' key after upload, its value will be copied to a 'resource_id' attribute that will be added to the current target element during serialization. 
+
+In that later case, a declaration such as:
+
+&lt;xt:use types="photo" name="Photo"/>
+
+Will generate target XML content such as:
+&lt;Photo resource_id="35">/photos/3000/picture.jpg&lt;/Photo>
+</pre>
+     
+<pre id="document-id">    
+Attaching uploaded photo to a document with documentId
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is highly recommended to include the documentId filter inside your template and to set it to a unique identifier for the document beeing edited. The example below shows how to declare a documentId attribute:
+
+&lt;span style="display: none">&lt;xt:attribute types="text" label="DocumentId" param="filter=documentId" name="documentId" default="noid"/>&lt;/span>
+
+The example above also shows how to hide it with a style attribute so that the user cannot edit it. Consequently, since it will not be editable by the user, that means that you MUST generate it's value when creating a new XML document from the template. Typically the suggested way to do so is to include the documentId into the template which is generated when creating a new document. 
+
+For instance in Ruby you could use something like (note: my Ruby template syntax is hypothetical):
+
+&lt;span style="display: none">&lt;xt:attribute types="text" label="DocumentId" param="filter=documentId" name="documentId" default="&lt;%= #{generate-unique-document-id()} %>"/>&lt;/span>
+
+The documentId parameter is transmitted by the upload manager device each time a photo is uploaded to the server. This allows the server to keep track of an association between uploaded photos and documents. If the template contains no documentId filter, the upload manager device will set it to 'noid' by default. 
+</pre>
+     
+<pre id="styling">    
+Styling
+~~~~~~~
+
+The photo upload editor requires the two following elements to be styled. The best place place to declare the corresponding rules in the global AXEL CSS file which is included with library. The development version is in axel/axel.css
+
+Photo handler (photo image displayed within the document) : .xtt-photo
+
+The "xtt-photo" class attribute is set on the &lt;img> element created by the photo editor to display the photo handler. The development version sets the photo max-width and max-height to 100px so that the photo is displayed as a miniature, this may be different from the desired effect.
+
+Lens handler (photo lens div container) : .xtt-lens
+
+The "xtt-lens" attribute is set on the &lt;div> that serves as the photo editor lens container declared in bundles/photo/photo.xhtml. This class is supposed to be set on all the lenses in use in a template hence the styling rule contains generic rules to all lenses.
+
+For specific photo upload lens styling, as described below, you MUST also incorporate a specific CSS file into the host document that receives the transformed template. The development version of this file is in axel/bundles/photo/photo.css. See below how to include it.
+</pre>
+     
+<pre id="deployment">    
+Packaging and deployment
+========================
+</pre>
+     
+<pre id="source-files">    
+Source files
+~~~~~~~~~~~~
+
+The photo plugin editor is defined in src/plugins/photo.js; it also requires two devices: src/plugins/lensdevice.js and src/plugins/uploaddevice.js; it also requires one filter src/plugins/documentid.js. You must include these four files into the deployment version of the library (e.g. axel/axel.js) such as the one generated by the ant script build.xml in the scripts folder.
+
+If you include these 4 javascript files individually into your application, you must do it in the following order:
+
+&lt;script type="text/javascript" src="src/plugins/lensdevice.js">&lt;/script>
+&lt;script type="text/javascript" src="src/plugins/documentid.js">&lt;/script> 
+&lt;script type="text/javascript" src="src/plugins/uploaddevice.js">&lt;/script> 
+&lt;script type="text/javascript" src="src/plugins/photo.js">&lt;/script>
+
+The photo plugin editor also needs different resources at runtime which are in the bundles/photo folder. These are different icons used by the library, a photo.xhtml and a photo.css file that define the photo upload lens box (i.e. dialog box displayed to select and upload a photo).
+
+The simpler setup is to copy the bundles/photo folder inside the bundles folder which must be pointed to by the base PATH given to the xtiger.util.Form( base ) object that you use to transform the template.    
+</pre>
+     
+<pre id="stylesheets">    
+Style sheets
+~~~~~~~~~~~~
+
+The target document that contains the template must include the axel/bundles/photo/photo.css style sheet. For instance if you are using an iframe to host the template, it must include the previous style sheet such as in the following example (adapt the href path to your environment):
+
+&lt;link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css">&lt;/link> 	
+
+Alternatively you can also inject the style sheet inside the targer document at load time (see injectStyleSheet in xtiger.util.Form), or you can directly include the style sheet in the target document before importing the template.
+</pre>
+     
+<pre id="configuration">    
+Configuration of the Photo upload POST URL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The URL of the server upload service MUST be declared in a photo_URL parameter each time the plugin is used (e.g. "/upload").
+</pre>
+     
+<pre id="server">    
+Server-side settings
+==================== 
+
+Note that the photo plugin editor lens file (bundles/photo/photo.xhtml) is uploaded at runtime by an Ajax request the first time the user displays a photo lens.
+
+You server must handle the upload POST URL as a form submission with multipart/form-data encoding. 
+
+The uploaded data file is available in the "xt-photo-file" field of the form submission. The documentId is available in the "documentId" field.
+
+The do_POST handlers MUST reply with a "text/html" response containing some Javascript code specified below with a Ruby template syntax.
+
+In case of success:
+
+&lt;script type='text/javascript'>window.parent.finishTransmission(1,#{result})&lt;/script>
+
+Where 'result' can be either a string containing the URL of the uploaded photo, or a simple hash with a 'url' and a 'resource_id' key. In the later case the 'url' key contains the URL of the uploaded photo and the 'resource_id' key contains an id associated with the photo server-side.
+
+Note that the server may actually generates one or more photo files (e.g. different thumbnails), however in any case it must return only one URL which will used to display the photo inside the document with an img tag.
+
+In case of failure:
+
+&lt;script type='text/javascript'>window.parent.finishTransmission(0,'#{errormsg}')&lt;/script>
+
+Where #{errormsg} is an explanation of the failure that will be displayed to the user in the photo upload lens.
+
+You can see an example of a POST handler in the scripts/server/server.rb (FileUploadServlet : servlet number 3) file which has been used to test the plugin.
+
+Here is a dump of the content of a multipart/form-data POST message sent to the server from the photo upload editor (created with the Java utility tcpmon):
+
+POST /formUpload HTTP/1.1
+Host: localhost:8043
+User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; fr; rv:1.9.2) Gecko/20100115 Firefox/3.6
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 115
+Connection: keep-alive
+Referer: http://localhost:8042/templates/Photos.xtd
+Content-Type: multipart/form-data; boundary=---------------------------2111631616877819790304555640
+Content-Length: 50639
+
+-----------------------------2111631616877819790304555640
+Content-Disposition: form-data; name="documentId"
+
+docid
+-----------------------------2111631616877819790304555640
+Content-Disposition: form-data; name="xt-photo-file"; filename="plats-cuisines.jpg"
+Content-Type: image/jpeg
+
+ˇÿˇ‡ JFIF  H H  ˇ·hExif  MM * 
+
+As you can see the xt-photo-file field also contains a filename field and a Content-Type file header. These could be used server-side to validate the data before saving, however I didn't fing how to get these fields with Webricks so that I include it in the server.rb sample server (please let me know if you have a solution !).
+</pre>
+     
+<pre id="client">    
+Client-Side settings
+====================
+</pre>
+     
+<pre id="handle">    
+Javascript setup to handle upload termination
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The document hosting the transformed template MUST declare a finishTransmission Javascript method with two parameters status and msg. That method MUST be defined as below to relay the upload result to the upload manager device. 
+
+&lt;!-- Photo upload script -->
+&lt;script type="text/javascript">         
+//&lt;![CDATA[	                                                       
+	function finishTransmission(status, result) { 
+		var pwin = window.parent; // only if this template is run from inside an iframe !
+		var manager = pwin.xtiger.factory('upload').getInstance(document);
+		if (manager) {
+			manager.reportEoT(status, result);
+		}
+	}	
+//]]>		
+&lt;/script>
+
+In the code above super is set to window.parent because the host document is in an iframe whereas the AXEL library is loaded in the parent window, you must adapt it to your own settings, for instance if the host document is also the document that loaded the AXEL library you can directly use xtiger.factory('upload').getInstance(document).     
+
+NOTE: this is to be changed soon ! futur versions will simply listen to the frame 'load' event where a simple text content with a well defined answer will be used instead !
+</pre>
+     
+<pre id="customization">    
+Photo Upload Lens Customization
+===============================
+
+The source distribution of AXEL contains a design/photo folder where you can test and create alternative design for the photo upload editor (i.e. by opening the preview.html file to display the lens in different states). For instance you can change the icons or the visual appearance of the lens in the bundles/photo folder and test them with design/photo/preview.html. The buttons allow to simulate the different states. Note that this works only on browsers that allow to load local files, such as Firefox with security.fileuri.strict_origin_policy set to false.
+
+Be careful however to keep the icon file names, and to keep the id of the different parts of the dialog box. In case of doubt you can have a look at the xtiger.editor.PhotoViewer constructor function in src/plugins/photo.js, to see which HTML elements are used to control the lens appearance.
+
+In particular if you edit the bundles/photo/photo.xhtml file, you must be careful to keep the &lt;form> fields as they are. In particular keep the hidden HTML form field documentId which is used to transmit a unique identifier together with each photo uploaded to the server as explained above, it is currently declared with:
+
+&lt;input type="hidden" name="documentId" value="someDocumentId"/>
+</pre>
+     
+<pre id="security">    
+Security Limitations
+====================
+
+The POST URL must be in the same domain as the document that hosts the template. This is because photo upload uses an HTML form with a target redirected to an iframe, and the iframe needs to invoke a script on it's parent window (the window containing the template host document) to transmit the results returned by the server. This is possible only if the host document and the iframe are in the same domain.
+</pre>
+     
+<pre id="test">    
+Local Testing
+=============
+
+You can test the photo upload editor directly from the source distribution.
+
+1/ launch the scripts/server/server.rb Web server
+2/ points your browser at http://localhost:8042/editor/editor.xhtml
+3/ the distribution comes with a Photos.xtd template and a sample photos.xml document (type ../data/photos.xml in the editor to load it)
+
+The POST handler will save the files into the photos/ folder. You can change the documentid of the template when you place the mouse pointer over the document title (it appears on the right).
+
+NOTE that server.rb is very basic as it does not test the file type or the file size, also it always creates a generated *.jpg filename, hence assuming the uploaded file is jpg file !
+</pre>
+     
+<pre id="pending">    
+Pending Issues (ANY HELP WELCOME)
+==============
+</pre>
+     
+<pre id="validation">    
+Client side file format checking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The photo upload plugin should check the filename suffix to filter out files which are not in a well known image format (maybe jpg, png, this could be set with a plugin parameter such as params="filetype=jpg,png"). Currently this is not done. Of course the server should also do all the required cheks.
+</pre>
+     
+<pre id="size">    
+Client side file size limit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I didn't implement a file size limit on the client side. That would be great to have it (e.g. with a params="limit=512KB" parameter). However how to detect file size in a form input file ?
+</pre>
+     
+<pre id="cancel">    
+Cancel transmission
+~~~~~~~~~~~~~~~~~~~
+
+Currently the "Cancel" button does not really cancel the transmission as I didn't find a way to cancel a form.submit() in Javascript. Any help is welcome on that issue ! Form.reset() doesn't stop an ongoing transmission, and window.stop() is too violent as it stops everything including animated gifs in the page...
+
+NOTE: we will change a bit the implementation soon so that the file input, form and iframe are dynamically generated for each request, then removing the iframe could be a way to cancel transmission.
+</pre>
+     
+<pre id="error">    
+Detecting submission errors in Form multipart/form-data submission
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Currently if the Form submission fails, the target iframe should be in an error state. However I didn't find how to detect it in order to return the error to the user...
+</pre>
+     
+<pre id="i18n">    
+Message i18n 
+~~~~~~~~~~~~
+
+Currently the messages displayed in the photo upload lens are hard coded either into the library .js files. The button labels are hard coded into bundles/photo/photo.xhtml.
+
+We should find a way to i18n them. This issue is related to the i18n of the xtiger.bundles, that should be done some day at the library level ? Currently these bundles are not used for text but only for icon path URL.
+</pre>
+     
+<pre id="ui">    
+User Interface Issues
+~~~~~~~~~~~~~~~~~~~~~
+
+1/ Lens positioning
+
+We have to solve the case when the lens appears at the bottom of the document because this may require to scroll to reach the Save button, and in doing so may dismiss the lens if it appears on mouseover...
+
+2/ Lens styling
+
+Actually the lens dimensions are set by CSS in the photo uploader style sheet in axel/bundles/photo/photo.css
+
+div#xt-photo {
+	width: 300px;
+	height: 260px;
+}
+
+div#xt-photo img {			
+	max-height: 200px;
+	max-width: 280px;			
+}
+
+That would be much better to parameterize this, to be able to make some choices on a per-template basis. Another option is to compute the size from the current image handle size which can also be set through the .xtt-photo class based CSS rule (see next point).
+
+3/ Photo handler styling
+
+Currently the &lt;img> element has a "xtt-photo" class attribute, it only allows styling the photo upload editors on a per-template basis. It should be possible to syle it also on a per-editor basis. We could, as for the text primitive editor, support a "class=someclass" parameter to support this feature. 
+
+Meantime it is always possible to embed the photo within a &lt;span> element:
+
+&lt;span class="myPhoto">&lt;xt:use types="Photo" label="PhotoURL"/>&lt;/span>
+
+However in that case be careful to undeclare the ".xtt-photo" rule in the global XTiger style sheet.
+
+4/ Reset photo
+
+Find a way to reset photo (return to the "ready state")
+One suggestion is to put a small text link "Remove photo" under the photo
+
+5/ Undo "Save"
+
+Find a way to return to the previous state if a photo has been "Saved" and the lens is still opened
+One suggestion is to have a "Undo" button when the action is feasable 
+
+NOTE that point 4/ and 5/ could be implemented at the lens device level, as they seem to be common to all the primitive editor plugins that use a lens device for user interaction.
+</pre>
+     
+<pre id="html5">                                                                                   
+HTML 5 version
+~~~~~~~~~~~~~~
+
+The code is ready to also handle the new HTML 5 Drag and Drop and FileReader APIs, it will be activated soon so that drag and drop photo upload becomes possible on compatible browsers (FF 3.6). Note that this will also require a different POST handler on the server as data will be sent with XHR which does not support yet multipart/form-data.
+
+Note that with the HTML 5 version it is also possible to use the cross-domain XHR to remove the same domain security limitation.    
+</pre>
+     
+<pre id="debug">    
+Debugging
+~~~~~~~~~
+
+You can use design/photo/preview.html page for debugging at least the visual appearance of the lens in its different states. It uses the AXEL code to display the lens.  
+
+You can test with scripts/server.rb and templates/Photo.xhtml
+</pre>
+</body>
+</html>
+

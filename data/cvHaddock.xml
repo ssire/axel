@@ -1,0 +1,46 @@
+<curriculum email="haddock@moulinsart.fr">
+  <full_name>Capitaine Haddock</full_name>
+  <birth_day>Inconnue</birth_day>
+  <address>Chateau de Moulinsart</address>
+  <phone>04 56 78 30 20</phone>
+  <objectives>
+    <description>Capitaine au long cours</description>
+  </objectives>
+  <training>
+    <item>
+      <date>1965-1968</date>
+      <description>École de la marine</description>
+      <comment>Diplôme otbenu avec félicitations</comment>
+      <location>Brest</location>
+    </item>
+    <item>
+      <date>1961-1964</date>
+      <description>Lycée des cadets de marine</description>
+      <comment>Animateur du club des joyeux Bacchus</comment>
+      <location>La Rochelle</location>
+    </item>
+  </training>
+  <placements>
+    <employment start="1969" end="Aujourd'hui">
+      <description>Héro de bande dessinée</description>
+      <location>Moulinsart</location>
+    </employment>
+  </placements>
+  <languages>
+    <practice>
+      <language>Breton</language>
+      <pratice_level>Natif</pratice_level>
+    </practice>
+    <practice>
+      <language>Français</language>
+      <pratice_level>Natif</pratice_level>
+    </practice>
+  </languages>
+  <skills>
+    <a_skill>Expert en wiskhy et spiritueux</a_skill>
+    <a_skill>Navigation par tout temps</a_skill>
+  </skills>
+  <interests>
+    <description>Inventeur d'onomatopées</description>
+  </interests>
+</curriculum>

@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL automatic (load / save) test case : 'richtext' primitive editor plugin</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">
+  </xt:head>
+</head>
+<body>
+    <h1>Automatic (load / save) test case for <tt>'richtext'</tt> editor</h1>
+
+    <h2>Simple editors</h2>
+    
+    <p>There are tested editors outside any repeat or optional statements.</p>
+    
+    <h3>Simple editors, <code>trigger="click"</code>(default), <code>display="block"</code>(default)</h3>
+    <p>First loaded with unstyled content without a &lt;p&gt;</p>
+    <div style="width: 650px">
+      <xt:use types="richtext" label="richtext-1A">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.
+      </xt:use>
+    </div>
+    <p>Then loaded with unstyled content <em>with</em> a &lt;p&gt;</p>
+    <div style="width: 650px">
+      <xt:use types="richtext" label="richtext-1B">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.</p>
+      </xt:use>
+    </div>
+    <p>Then loaded with Firefox-styled content (reference format)</p>
+    <div style="width: 650px">
+      <xt:use types="richtext" label="richtext-1C">
+        <p><span style="font-weight: bold">Lorem ipsum dolor sit amet</span> consectetur adipiscing elit. <span
+          style="font-style: italic">Sed non diam sit amet libero</span>tristique pharetra non a erat. <span
+            style="text-decoration: underline">Sed enim purus</span> auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. <span style="font-style: italic; font-weight: bold">Praesent et dui</span> eu velit imperdiet euismod.</p>
+      </xt:use>
+    </div>
+    <p>Then loaded with Opera-styled content (use capital &lt;P&gt;)</p>
+    <div style="width: 650px">
+      <xt:use types="richtext" label="richtext-1D">
+        <P><STRONG>Lorem ipsum dolor sit amet</STRONG> consectetur adipiscing elit. <EM>Sed non diam sit amet libero</EM>tristique pharetra non a erat. <U>Sed enim purus</U> auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. <EM><STRONG>Praesent et dui</STRONG></EM> eu velit imperdiet euismod.</P>
+      </xt:use>
+    </div>
+    <p>Then loaded with IE-styled content</p>
+    <div style="width: 650px">
+      <xt:use types="richtext" label="richtext-1E">
+        <p><b>Lorem ipsum dolor sit amet</b> consectetur adipiscing elit. <i>Sed non diam sit amet libero</i>tristique pharetra non a erat. <u>Sed enim purus</u> auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. <i><b>Praesent et dui</b></i> eu velit imperdiet euismod.</p>
+      </xt:use>
+    </div>
+    
+    <h3>Simple editor, <code>trigger="mouseover"</code>, <code>display="block"</code>(default)</h3>
+    
+    <div style="width: 650px">
+      <xt:use types="richtext" label="richtext-2" param="trigger=mouseover">
+        <p><span style="font-weight: bold">Lorem ipsum dolor sit amet</span> consectetur adipiscing elit. <span
+          style="font-style: italic">Sed non diam sit amet libero</span>tristique pharetra non a erat. <span
+            style="text-decoration: underline">Sed enim purus</span> auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. <span style="font-style: italic; font-weight: bold">Praesent et dui</span> eu velit imperdiet euismod.</p>
+      </xt:use>
+    </div>
+
+    <h3>Simple editor, <code>trigger="click"</code>, <code>display="inline"</code></h3>
+    <p>Now, let's try an inlined editor. <xt:use types="richtext" param="display=inline;trigger=click"
+        label="richtext-3A">Here it is.</xt:use> What do you think of it?</p>
+
+    <h2>Repeatable editors</h2>
+
+    <p>Let's repeat some paragraphs now</p>
+
+    <p>First, inside a repeater with a label</p>
+
+    <xt:repeat minOccurs="1" label="repeater1">
+      <p>
+        <xt:menu-marker/>
+        <xt:use types="richtext" label="rep-p"> I'm repeatable ! </xt:use>
+      </p>
+    </xt:repeat>
+
+    <p>then, inside a repeater <em>without</em> a label</p>
+
+    <xt:repeat minOccurs="1">
+      <p>
+        <span style="float: left"><xt:menu-marker/></span>
+        <xt:use types="richtext" label="rep-p2"> I'm repeatable too ! </xt:use>
+      </p>
+    </xt:repeat>
+
+    <h2>Optional editor</h2>
+
+    <p>There is an optional editor build as a repeat 0:1 item</p>
+
+    <xt:repeat minOccurs="0" maxOccurs="1" label="repeater_opt">
+    	<p>This is some static part of the repetition</p>
+      <div><xt:use types="richtext" label="opt_1">
+        <p>You can repeat me zero or one time. Not much of a repetition, is it ?</p>
+      </xt:use></div>
+    </xt:repeat>
+
+    <p>Now a "true" optional editor</p>
+
+    <xt:use types="richtext" label="opt_2" option="set"> I'm set by default, but you can unset me. </xt:use>
+
+  </body>
+</html>

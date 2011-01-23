@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Suivi du projet CTI "city-guide"</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Suivi">    
+
+    <xt:component name="Acteur">
+      <div class="Acteur">
+        <h3 class="Acteur"><xt:attribute types="text" name="nom" default="Nom"/><xt:menu-marker/></h3>
+        <xt:use types="Actions"/> 
+      </div>
+    </xt:component> 
+
+    <xt:component name="Actions">
+      <ul class="Actions">
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Action">  
+          <li class="Action"><xt:use types="text" label="Action" param="type=textarea;layout=placed;shape=parent-50px">action</xt:use><xt:menu-marker/></li>
+        </xt:repeat>
+      </ul>
+    </xt:component> 
+  
+    <xt:component name="Semaine">
+      <div class="Semaine">
+        <h3 class="Semaine">Semaine <xt:attribute types="text" name="num" default="numéro"/> <xt:menu-marker/></h3>
+        <p class="period">[du <xt:attribute types="text" name="debut" default="début"/> au <xt:attribute types="text" name="fin" default="fin"/>]</p>
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Acteur">  
+          <xt:use types="Acteur" label="Acteur"/>
+        </xt:repeat>
+        <xt:use types="Groupe"/>
+      </div>
+    </xt:component> 
+  
+    <xt:component name="Groupe">
+      <div class="Groupe">
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Groupe">  
+          <h3><xt:menu-marker/>Tous</h3>
+          <xt:use types="Actions" label="Groupe"/>  
+        </xt:repeat>  
+      </div>
+    </xt:component> 
+
+    <xt:component name="Modification">
+        <p class="Modification">Denière modification par <xt:use types="text" label="nom">nom</xt:use> le <xt:use types="text" label="date">date</xt:use></p>
+    </xt:component> 
+  
+  </xt:head>
+
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <style src="text/css">
+  body {
+    margin: 10px;
+    padding: 0;
+    font-family: Helvetica;
+  }
+  h1 {
+    text-align: center;
+  }
+  h3 {
+    margin: 9px 0;    
+    font-size: 90%;
+  }
+  h3.Semaine {
+    font-size: 110%;
+    margin-bottom: 4px;
+  }
+  p.period {
+    float: right;;
+    margin: -20px 20px 0 0;
+    padding: 0;
+    font-style: italic;
+    margin-bottom: 9px;
+    font-family: courier;
+  }
+  div.Acteur, div.Groupe {
+    margin-left: 20px;
+    margin-bottom: 16px;
+    margin-top: 10px;
+  }
+  div.Semaine, div.Pile {
+    border: 1px solid gray;
+  }
+  div.Semaine {
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+  ul.Actions {
+    margin: 9px 0;
+  }
+  li.Action {
+    margin-bottom: 6px;
+  }
+  hr {
+    clear: both;
+  }
+  p.Modification {
+    float: right;
+    padding: 0;
+    margin: 0;
+  }
+  p.Modification > span {
+    color: brown;     
+  } 
+  </style>
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <xt:use types="Modification" label="Modification"/>
+  <hr/>
+      
+  <h1>Suivi du projet "<xt:attribute types="text" name="nom" default="nom"/>"</h1>
+  
+  <h2>"Pile" des actions à court terme ou en cours</h2>
+  <div class="Pile">
+    <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Acteur">  
+      <xt:use types="Acteur" label="Acteur"/>
+    </xt:repeat>
+    <xt:use types="Groupe"/>
+  </div>
+  
+  <h2>Temps écoulé</h2>
+  <div class="Calendrier">
+    <xt:repeat minOccurs="0" maxOccurs="*" label="Calendrier">  
+      <xt:use types="Semaine" label="Semaine"/>
+    </xt:repeat>
+  </div>
+</body>
+</html>

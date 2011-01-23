@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Fiche Projet</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Projet">
+
+    <xt:component name="ListItem" i18n="Item">
+      <div class="list-item"> 
+        <xt:use types="text" param="shape=parent-150px;type=textarea;layout=placed;filter=wiki">enter one list item here.</xt:use>
+      </div>
+    </xt:component>
+
+    <xt:component name="SubList">
+      <ul class="sub-list-item">
+        <xt:repeat minOccurs="1" pseudoLabel="SubListItem"><li><xt:use types="text" param="shape=parent;type=textarea;layout=float;filter=wiki" label="SubListItem">enter one sub list item here.</xt:use><xt:menu-marker/></li></xt:repeat>
+      </ul> 
+    </xt:component>                
+
+    <xt:component name="List">
+      <div class="row-content">
+        <p class="list-header"><xt:use types="text" param="shape=parent;type=textarea;layout=float" label="ListHeader">Enter the list header here:</xt:use></p>   
+        <ul class="list-content"><xt:repeat minOccurs="1" pseudoLabel="ListItem SubList"><span class="list-menu"><xt:menu-marker /></span><xt:use types="ListItem SubList"/></xt:repeat>
+        </ul>
+      </div>
+    </xt:component>
+
+    <xt:component name="Title">   
+      <div class="row-content">
+        <h3><xt:use types="text" param="shape=parent;type=textarea;layout=placed">Title</xt:use></h3>
+      </div>
+    </xt:component>                
+
+                    
+    <xt:component name="Parag">   
+      <div class="row-content">
+        <p><xt:use types="text" param="shape=parent;type=textarea;layout=placed;filter=wiki;class=editing">Describe the **project** here</xt:use></p>
+      </div>
+    </xt:component>                
+    
+  </xt:head>  
+           
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <style type="text/css">
+  #content {
+    margin: 0 60px;        
+    padding: 10px;
+    border: 1px solid olive;
+  }
+  
+  /* First Level : Title, List, List */
+  div.row {
+    clear: left;
+  }             
+  span.menu {
+    float: left;
+    clear: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  } 
+  span.menu img {
+    margin: 0 0 0 2px; 
+    padding: 0;               
+  }
+  div.row-content {
+    margin-left: 80px;
+  }
+  body.preview div.row-content {
+    margin-left: 0;
+  }
+  body.preview span.menu {
+    display: none;
+  }   
+  
+  /* Second Level : Item, SubList */  
+  span.list-menu {
+    float: left;
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  span.list-menu + select {
+    float: left;
+  } 
+  p.list-header {
+    margin-bottom: 6px; 
+  }   
+  ul.list-content {
+    padding-left: 0;
+    margin-left: 0;
+    margin-top: 0;  
+    clear: left;
+  }   
+  div.list-item { /* simulates level 1 list item */
+    margin-left: 150px;
+    display: list-item;
+    list-style-type: disc;    
+    margin-bottom: 0.5em;
+    min-height: 1.5em;
+  }
+  div.list-item span {
+    width: 100%;
+  } 
+  ul.sub-list-item {     
+    margin-left: 150px;
+    padding-bottom: 1em;    
+  }           
+  body.preview  div.list-item {   
+    margin-left: 20px;    
+    margin-bottom: 0.2em;
+    min-height: 1em;      
+  }
+  body.preview  ul.sub-list-item {   
+    padding-bottom: 0;
+    margin-left: 0px;   
+  } 
+  body.preview div.list-menu {
+      display: none;    
+  }
+  
+  /* Divers */
+  #contact > em:only-of-type, #contact > em:last-of-type {
+    display: none;
+  }                                   
+  </style>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>         
+  <h1><xt:use types="text" param="shape=parent;type=textarea;layout=placed" label="Title">Project title</xt:use></h1>
+  
+  <p>Project type: <xt:use types="string" label="ProjectType">master or semester</xt:use></p>     
+  
+  <div id="content">
+    <xt:repeat label="Description" minOccurs="1">
+      <div class="row">   
+        <xt:use types="Parag List Title" param="marker=menu"/>
+      </div>
+    </xt:repeat>                 
+  </div>
+
+  <p id="contact">Contact person: <xt:repeat minOccurs="1" pseudoLabel="ContactPerson"><xt:use types="string" label="ContactPerson">id</xt:use><xt:menu-marker/><em> or </em></xt:repeat></p> 
+</body> 
+</html>        

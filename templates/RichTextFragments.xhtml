@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger rich text fragments component library</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+  <!-- ////////////////////////////////////
+          Begin Structure Part component
+         (works with StructPart.css)
+       ///////////////////////////////////// -->
+  
+    <xt:component name="StructPart">                      
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Parag List">
+            <div class="xtc-spart-row">
+                <xt:use types="Parag List" param="marker=xtc-spart-menu"/>
+            </div>   
+        </xt:repeat>
+    </xt:component> 
+
+    <xt:component name="Parag">                      
+        <div class="xtc-spart-content">
+            <p class="xtc-spart-parag"><xt:use types="text" param="shape=parent;type=textarea" label="Fragment">Your paragraph.</xt:use></p>
+        </div>         
+    </xt:component> 
+
+    <xt:component name="List">                      
+        <div class="xtc-spart-content">
+            <p class="xtc-spart-listheader">
+              <xt:use types="text" label="ListHeader" option="unset"
+                param="shape=parent-50px;type=textarea"
+                >List header</xt:use><span class="nopreview"> :</span>
+            </p>        
+            <ul class="xtc-spart-list">
+                <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="ListItem SubList">
+                    <li class="xtc-spart-listitemwrapper">                
+                        <xt:use types="ListItem SubList" param="marker=xtc-spart-menu"/>
+                    </li>
+                </xt:repeat>                  
+            </ul>
+        </div>         
+    </xt:component>                                              .
+    
+    <xt:component name="ListItem" i18n="Item">                      
+        <p class="xtc-spart-listitem"><xt:use types="text" param="shape=parent-100px;type=textarea">Your list item</xt:use></p>
+    </xt:component> 
+
+
+    <xt:component name="SubList">                      
+        <div class="xtc-spart-content">  
+            <p class="xtc-spart-sublistheader">
+              <xt:use types="text" label="SubListHeader" option="unset"
+                param="shape=parent-50px;type=textarea"
+                >Sub list header</xt:use><span class="nopreview"> :</span>
+            </p>        
+            <ul class="xtc-spart-list">
+                <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="SubListItem">
+                    <li class="xtc-spart-sublistitem"><xt:use types="text" param="shape=parent-70px;type=textarea" label="SubListItem">Your sublist item</xt:use><xt:menu-marker/></li>
+                </xt:repeat>
+            </ul>
+        </div>
+    </xt:component>      
+    
+<!-- ////////////////////////////////////
+        End Structure Part component
+     ///////////////////////////////////// -->
+    
+  </xt:head>
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  <link rel="stylesheet" type="text/css" href="StructPart.css" />
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <h1>XTiger rich text fragments component library</h1>
+  
+  <p>This template contains XTiger XML component(s) that you may copy inside your templates. It also shows how to use some of the plugins available. The common goal of these components and plugins is to edit what we call rich text fragments, meaning not really semantically-structured content but more visually-structured content (styled text, paragraphs, lists, sublists, etc.). The main difficulty in that case is to play around with HTML and CSS to get an acceptable UI with AXEL.</p>
+  
+  <h2>Rich Text plugin</h2>
+  
+  <xt:repeat minOccurs="0" maxOccurs="*" label="SomeRepetition">
+    <xt:use types="richtext" label="Parag"><p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.
+    </p></xt:use>
+  </xt:repeat>
+  
+  <h2>Structured Part component</h2>
+  
+  <xt:use types="StructPart" label="Content" />
+  
+</body>
+</html>

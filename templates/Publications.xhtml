@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Bibliography</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Bibliography">
+  
+    <!-- Categories of bibliographic references  -->
+    <xt:union name="bibRef" include="Report Paper Proceedings Book EditedBook"/>    
+    
+    <xt:component name="Paper">
+      <span><xt:use types="paperRef"/></span>
+    </xt:component>   
+    
+    <xt:component name="Proceedings">
+      <span>Not implemented</span>
+    </xt:component>   
+
+    <xt:component name="Book">
+      <span>Not implemented</span>
+    </xt:component>   
+
+    <xt:component name="EditedBook">
+      <span>Not implemented</span>
+    </xt:component>   
+
+    <xt:component name="Report">
+      <span>Not implemented<!-- <xt:use types="link" label="aLink">insert link here</xt:use> --></span>
+    </xt:component>   
+    
+    <!-- Categories of Paper bibliographic references  -->
+    
+    <xt:union name="paperRef" include="Article ArticleInJournal ArticleInProceedings InBook"/>    
+    
+    <xt:component name="Article">
+      <span>Not implemented</span>
+    </xt:component>   
+
+    <xt:component name="ArticleInJournal">
+      <span>Not implemented</span>
+    </xt:component>   
+
+    <xt:component name="ArticleInProceedings">
+      <span>(<xt:use types="string" label="PublishingYear">Year</xt:use>) <strong><xt:use types="string" label="Title">Title</xt:use></strong>.</span>
+      <span><xt:use types="authorList"/> in <xt:use types="proceedingsForArticle" label="Proceedings"/>.</span>
+    </xt:component>
+
+    <xt:component name="InBook">
+      <span>Not implemented</span>
+    </xt:component>   
+
+    <!-- Other components  -->
+
+    <xt:component name="Publication">
+      <xt:menu-marker size="20"/>
+      <div style="border: solid 1px gray; margin-bottom: 10px">
+        <p>Publication (<xt:use types="string" label="PublicationId">id</xt:use>) : <xt:use types="bibRef"/></p>
+      </div>
+    </xt:component>
+    
+    <xt:component name="authorList">
+      <xt:repeat minOccurs="1" maxOccurs="30" label="Authors">
+        <use types="author" label="Author"/>
+      </xt:repeat>      
+    </xt:component>
+    
+    <xt:component name="proceedingsForArticle">
+(<xt:use types="string" label="PublishingYear">Year</xt:use>) <xt:use types="string" label="ProceedingsTitle">Conference name</xt:use> [<xt:use types="string" label="ShortName" option="unset">short name</xt:use>] <xt:use types="Location" label="Location"/>, <xt:use types="string" label="Dates">dates</xt:use>
+    </xt:component>
+
+    <xt:component name="Location">
+      <xt:use types="string" label="City">City</xt:use>, <xt:use types="string" label="State">Country</xt:use>
+    </xt:component>
+
+    <xt:component name="author">
+      <xt:use types="string" label="FirstName">First Name</xt:use> <xt:use types="string" label="LastName">Last Name</xt:use><xt:menu-marker/>,
+    </xt:component>
+        
+  </xt:head>
+  
+  <link rel="stylesheet" type="text/css" href="Preview.css" />  
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>  
+<blockquote style="font-style: italic">This is an unfinished template, it currently only defines Paper > ArticleInProceedings bibliographic entries.</blockquote> 
+<hr/> 
+<h1><xt:use types="string" label="TopicTitle">Publications</xt:use></h1>
+<xt:repeat minOccurs="1" maxOccurs="30" pseudoLabel="Publication">
+  <xt:use types="Publication" label="Publication"/>
+</xt:repeat>
+</body>
+</html>

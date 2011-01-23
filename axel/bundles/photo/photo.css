@@ -1,0 +1,36 @@
+/* XTiger Photo Plugin basic style */
+
+div#xt-photo {
+	width: 300px;
+	height: 260px;   
+}
+
+p#xt-photo-info {
+	text-align: center;
+	margin: 20px;
+}
+
+p#xt-photo-error {
+	display: none;	
+	text-align: center;
+	font-family: sans-serif;
+	color: red;
+	margin: 20px;
+}
+
+div#xt-photo-menu {
+	position: absolute;
+	bottom: 20px;
+	margin: 0 20px;
+	text-align: center;
+}
+
+div#xt-photo img {			
+	max-height: 200px;
+	max-width: 280px;			
+}
+
+iframe#xt-photo-target {
+	visibility: hidden;
+	height: 1px;
+}

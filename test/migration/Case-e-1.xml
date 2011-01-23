@@ -1,0 +1,33 @@
+<Root>
+  <A>a content#</A>
+  <type_c/>
+  <C>c content#</C>
+  <C>c content#</C>
+  <R>
+    <A>a content#</A>
+    <type_b/>
+    <C>c content#</C>
+    <type_a/>
+    <C>c content#</C>
+    <C>c content#</C>
+  </R>
+  <type_c/>
+  <C>c content#</C>
+  <D>d content#</D>
+  <E>e content#</E>
+  <F>f content#</F>
+  <R>
+    <D>d content#</D>
+    <E>e content#</E>
+    <F>f content#</F>
+    <D>d content#</D>
+    <E>e content#</E>
+    <F>f content#</F>
+  </R>
+  <D>d content#</D>
+  <E>e content#</E>
+  <F>f content#</F>
+  <D>d content#</D>
+  <E>e content#</E>
+  <F>f content#</F>
+</Root>

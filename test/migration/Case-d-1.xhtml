@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />	  
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Migration test case</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <xt:component name="seq_1a">
+      <p><span class="info">Element A1</span> : <xt:use types="text" label="A1">a1 content</xt:use></p>
+      <p><span class="info">Element B1</span> : <xt:use types="text" label="B1">b1 content</xt:use></p>
+      <p><span class="info">Element C1</span> : <xt:use types="text" label="C1">c1 content</xt:use></p>
+      <p><span class="info">Element D1?</span> : <xt:use types="text" label="D1" option="unset">d1 content</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="seq_1b">
+      <p><span class="info">Element A2</span> : <xt:use types="text" label="A2">a2 content</xt:use></p>
+      <p><span class="info">Element B2</span> : <xt:use types="text" label="B2">b2 content</xt:use></p>
+      <p><span class="info">Element C2</span> : <xt:use types="text" label="C2">c2 content</xt:use></p>
+      <p><span class="info">Element D2?</span> : <xt:use types="text" label="D2" option="unset">d2 content</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="lab_seq_1a">
+      <xt:use types="seq_1a" label="SEQ_1A"/>
+    </xt:component>
+    
+    <xt:component name="lab_seq_1b">
+      <xt:use types="seq_1b" label="SEQ_1B"/>
+    </xt:component>
+    
+    <xt:component name="seq_2">
+      <p><span class="info">Element E</span> : <xt:use types="text" label="E">e content</xt:use></p>
+      <p><span class="info">Element F</span> : <xt:use types="text" label="F">f content</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="seq_3">
+      <p><span class="info">Element G</span> : <xt:use types="text" label="G">g content</xt:use></p>
+      <p><span class="info">Element H</span> : <xt:use types="text" label="H">h content</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="seq_4">
+      <p><span class="info">Element I</span> : <xt:use types="text" label="I">i content</xt:use></p>
+      <p><span class="info">Element J</span> : <xt:use types="text" label="J">j content</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="seq_5">
+      <p><span class="info">Element K</span> : <xt:use types="text" label="K">k content</xt:use></p>
+      <p><span class="info">Element L</span> : <xt:use types="text" label="l">l content</xt:use></p>
+    </xt:component>
+  
+  </xt:head>
+
+	<link rel="stylesheet" type="text/css" href="Case.css" />
+
+</head>
+<body>
+  <p class="subject">Cardinality series</p>      
+
+  <h1>Migration test : <span name="case">case-d-1</span></h1>
+  
+  <p>This template is used to test change brought to cardinalities. We extend the cardinality notion by adding optionality to the usual "repeat" cardinality.</p>
+  
+  <h2>Optionality changes</h2>
+  
+  <p>This section tests optionality changes brought to element inside a sequence, the sequence being used a single time or is repeated with or without a label.</p>
+  
+  <p style="border: 1px dashed red"><strong>WARNING</strong> If whole sequences are repeated without being encompassed in a label(1), the robust algorithm <em>fails</em> to load the data correctly. This is due to the greedy property of the robust algorithm.</p>
+  
+  <p>(1)Here's is described the faulty situation, in regard with a non-faulty one.</p>
+  
+  <table style="margin-left: 1em; width:80%; border: thin solid grey;">
+    <thead>
+      <tr>
+        <th>Faulty situation (robust algorithm)</th>
+        <th>Non-faulty situation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <pre>
+REPEAT* / anonymous*
+    A
+    B?
+    C
+          </pre>
+        </td>
+        <td>
+          <pre>
+REPEAT* / anonymous*
+    label
+        A
+        B?
+        C
+          </pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <h3 class="info">In simple uses</h3>
+  
+  <p>Here, as the sequence is not repeated, no faulty situation may arise.</p>
+  
+  <xt:use types="seq_1a"/>
+  
+  <h3 class="info">In a labelled repeat (faulty situation)</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" label="R1">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_1a"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">In a labelled repeat (non-faulty situation)</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" label="R2">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="lab_seq_1a"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">In an unlabelled repeat (faulty sitation)</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="A2"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_1b"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">In an unlabelled repeat (non-faulty sitation)</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="SEQ_1B"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="lab_seq_1b"/>
+    </fieldset>
+  </xt:repeat>
+  
+  
+  <!-- part2 -->
+  <hr style="margin-top: 40px"/>
+  <h2>Increasing cardinality range</h2>
+    
+  <h3 class="info">For a labelled repeat</h3>
+  
+  <span>1:*</span>
+  <xt:repeat minOccurs="1" maxOccurs="*" label="R1">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_2"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <span>0:1</span>
+  <xt:repeat minOccurs="0" maxOccurs="1" label="R2">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_3"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">For a non-labelled repeat</h3>
+  
+  <span>1:*</span>
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="E"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_2"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <span>0:1</span>
+  <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="G"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_3"/>
+    </fieldset>
+  </xt:repeat>
+  
+  
+  <!-- Part 3 -->
+  <hr style="margin-top: 40px"/>
+  <h2>Reducing cardinality range</h2>
+  
+  <h3 class="info">For a labelled repeat</h3>
+  
+  <span>0:*</span>
+  <xt:repeat minOccurs="0" maxOccurs="*" label="R1">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_4"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <span>0:*</span>
+  <xt:repeat minOccurs="0" maxOccurs="*" label="R2">
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_5"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <h3 class="info">For a non-labelled repeat</h3>
+  
+  <span>0:*</span>
+  <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="I"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_4"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <span>0:*</span>
+  <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="K"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_5"/>
+    </fieldset>
+  </xt:repeat>
+</body>
+</html>

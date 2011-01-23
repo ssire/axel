@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xtiger template="../templates/PageWeb.xtd" version="1.0" ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <a href="../demos/launch.xhtml#t=../templates/PageWeb.xhtml&amp;d=../data/pageWeb.xhtml">edit</a>
+    <h1>Ecrire du HTML avec XTiger Forms</h1>
+    <p>Ce template experimental montre qu'il est possible de créer des documents XHTML directement comme langage cibles de XTiger Forms. Il est possible de créer par exemple:</p>
+    <ul>
+      <li>des titres (h1, h2, h3)</li>
+      <li>des listes simples (ul / li)</li>
+      <li>des paragraphes</li>
+    </ul>
+    <p>Bien sûr rien n'interdit de créer un template plus complexe avec tous les autres éléments. Il est aussi possible de mélanger édition de type Wiki et édition HTML pour introduire plus d'éléments typographiques. A cette fin nous allons rapidement développer un filtre "wikiweb". Par exemple il est indispensable d'introduire les liens hypertextes.</p>
+    <p>À moyen terme toute la documentation sur XTiger Forms devrait pouvoir être écrite avec XTiger Forms.</p>
+    <h3>Comment sauvegarder ce document</h3>
+    <ul>
+      <li>Vérifiez bien que dans la partie supérieure que le HEAD définit un namespace par défaut xhtml, et que le Content-Type soit text/html</li>
+      <li>Sauvegardez le fichier avec une extension .xhtml</li>
+      <li>Faîtes pointer le "Top anchor" sur une URL du type xhtml.xhtml#data=votre_nom_de_fichier, ceci est nécessaire si vous souhaitez insérer correctement le lien pour éditer le fichier</li>
+    </ul>
+    <p>Pour ouvrir votre document après sauvegarde, pointez le navigateur sur celui-ci en changeant l'URL dans la barre de navigation du navigateur.</p>
+    <h3>Idées</h3>
+    <p>Nous pourrions aussi développer la partie éditable dans la section HEAD pour permettre l'édition du style du document lui-même en utilisant un éditeur de type code source multiline (balise &lt;pre&gt; par exemple, cf. le template Article) pour saisir le style. Nous pourrions aussi utiliser un template avec les sélecteurs et les règles CSS, mais dans ce cas il faudrait inventer un filtre non terminal pour transformer le XML produit en syntaxe CSS.</p>
+    <h2>Sandbox</h2>
+    <p>Vous pouvez vous amuser à compléter ce document et à le sauvegarder pour voir le résultat.</p>
+  </body>
+</html>

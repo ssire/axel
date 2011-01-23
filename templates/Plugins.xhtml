@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML Catalog of Filters and Plugin Component Types</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Plugins">
+  
+    <xt:component name="plat">
+      <p class="plat"><xt:use types="text" param="type=input">Nom du plat</xt:use><xt:menu-marker/><br/>
+        <xt:attribute types="photoff36" name="Photo" default="empty"/></p>
+    </xt:component> 
+      
+  </xt:head>
+    
+  <!-- CSS file for the photo uploader wrapper -->
+  <link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css" />
+  
+  <!-- Photo upload script -->
+  <script type="text/javascript">//<![CDATA[                                                         
+  function finishTransmission(status, result) { 
+    var pwin = window.parent; // only if this template is run from inside an iframe !
+    var manager = pwin.xtiger.factory('upload').getInstance(document);
+    if (manager) {
+      manager.reportEoT(status, result);
+    }
+  } 
+//]]></script>             
+    
+  <style type="text/css">
+    body {
+    padding: 2em;
+    margin: 0;
+    color: black;
+    background: white;
+    font-family: sans-serif;
+    } 
+    h1, h2, h3 { 
+    font-weight: normal;
+    color: rgb(0, 90, 156); 
+    } 
+    h2.sample {
+    font-size: 180%;
+    padding-top: 20px;
+    }
+    .caption {
+    margin-bottom: 2px;
+    padding: 0;
+    font-size: 12px;
+    } 
+    .demo {
+    padding: 8px 10px;
+    background-color: #FFFFF0;
+    border-style: inset;
+    border-color: gray;
+    border-width: 1px;    
+    min-width: 400px;  
+    max-width: 700px;      
+    margin-bottom: 10px;
+    }
+    p.edit {  
+    font-family: arial, sans-serif;       
+    font-size: 16px;
+    color: brown;
+    }           
+    p.backref {
+    font-family: arial, sans-serif;       
+    font-size: 11px;
+    }
+    span.attribute {
+    color: orange;  
+    font-weight: 700;
+    }   
+    div.image, input.image {
+    border: 1px solid gray; 
+    padding: 10px;         
+    margin: 20px;
+    text-align: center;
+    vertical-align: middle;
+    } 
+    ul {
+    margin: 0;
+    } 
+    div.grid {
+    position: relative;
+    }
+    div.cell {
+    float: left;
+    margin: 0 10px 10px 0;
+    }
+    h2 {
+    clear: both;
+    }
+  </style>            
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <h1>AXEL Catalog of Filters and Plugin Component Types</h1> 
+  
+  <h2 class="sample">Primitive component type <code>types="photo"</code></h2>
+  
+  <p>The <samp>"photo"</samp> primitive editor uploads photos to a Web server. Photos are sent with a POST request, as described in <a href="../docs/photo-plugin-howto.txt" target="_blank"><tt>docs/photo-plugin-howto.txt</tt></a>.</p>
+  
+  <p>There are a few pre-conditions to use this editor:</p>
+  
+  <ul>
+    <li>embed a documentId filter in your document to set a <tt>"<xt:attribute types="text" label="DocumentId" param="filter=documentId" default="docid" name="documentId"/>"</tt> string that will be transmitted to the server together with the photos<br/>with <code>&lt;t:attribute types="text" label="DocumentId" param="filter=documentId" default="docid" name="documentId"/></code></li>
+    <li>include the photo upload script inside your template</li>
+    <li>include the photo lens CSS style sheet inside your template</li>
+  </ul> 
+  
+  <p>The photo displayed in the document has a <tt>class</tt> set to <samp>"xtt-photo"</samp>so that you can style it (e.g. setting max-width and/or max-height).</p>
+  
+  <p>The examples below put the photo inside an <samp>xt:use</samp> element to generate an element in the XML content model, but they could as well put it insiade an <samp>xt:attribute</samp> element to generate an attribute in the XML content model.</p>
+  
+  <div class="grid">
+    <div class="cell">
+      <h3>Default configuration</h3>    
+      <p class="caption"><code>&lt;xt:use types="photo" label="photo"/></code><br/> 
+        This is equivalent to <code>&lt;xt:use types="photo" label="photo" param="display=above;trigger=click;padding=10px"/></code></p>  
+      <div class="demo">
+        <p class="edit"><xt:use types="photo" label="photo"/></p>
+      </div>  
+    </div>
+    <div class="cell">
+      <h3>With <var>display</var> <samp>"inline"</samp> and <var>trigger</var> <samp>"click"</samp></h3>
+      
+      <p class="caption"><code>&lt;xt:use types="photo" label="photo" param="display=inline;trigger=click"/></code></p> 
+      <div class="demo">
+        <p class="edit"><xt:use types="photo" label="photo" param="display=inline;trigger=click"/></p>
+      </div>  
+    </div>
+    <div class="cell">
+      <h3>With <var>display</var> <samp>"inline"</samp> and <var>trigger</var> <samp>"mouseover"</samp></h3>
+      
+      <p class="caption"><code>&lt;xt:use types="photo" label="photo" param="display=inline;trigger=mouseover"/></code></p> 
+      <div class="demo">
+        <p class="edit"><xt:use types="photo" label="photo" param="display=inline;trigger=mouseover"/></p>
+      </div>  
+    </div>
+    <div class="cell">
+      <h3>With <var>display</var> <samp>"above"</samp> and <var>trigger</var> <samp>"click"</samp></h3>
+      
+      <p class="caption"><code>&lt;xt:use types="photo" label="photo" param="display=above;trigger=click"/></code></p>  
+      <p class="demo">
+        <p class="edit"><xt:use types="text" label="none" param="layout=float;type=textarea;shape=parent">Enter some text</xt:use></p>
+        <p class="edit"><xt:use types="photo" label="photo" param="display=above;trigger=click"/></p>
+      </p>  
+    </div>
+    <div class="cell">
+      <h3>With <var>display</var> <samp>"above"</samp> and <var>trigger</var> <samp>"mouseover"</samp></h3>
+      
+      <p class="caption"><code>&lt;xt:use types="photo" label="photo" param="display=above;trigger=mouseover"/></code></p>  
+      <div class="demo">
+        <p class="edit"><xt:use types="photo" label="photo" param="display=above;trigger=mouseover"/></p>
+      </div>  
+    </div>  
+  </div>  
+  
+  <h2 class="sample">Primitive component type <code>types="text"</code> with filter <code>filter="image"</code></h2>
+  
+  <p>The <samp>"image"</samp> filter of the <samp>"text"</samp> primitive editor is a quick-and-dirty hack to allow including images based on their URL within a document. It doesn't upload any image file on the server, it simply displays the existing file inside an <code>img</code> tag.</p>
+  
+  <p>The examples below are shown inside a <code>xt:repeat</code> element so that you can see how does look a freshly repeated element.</p>
+  
+  <p>The example below are configured to set an <samp>"image"</samp> class attribute on the image container and on the editing field, which is styled using the following rule:</p>
+  
+  <pre>
+    div.image, input.image {
+    border: 1px solid gray; 
+    padding: 10px;         
+    margin: 20px;
+    text-align: center;
+    vertical-align: middle;
+    }
+  </pre>
+  
+  <div class="grid">
+    <div class="cell">
+      <h3>With a default content that points to an image file with a <samp>base</samp> attribute</h3>    
+      <p class="caption"><code>&lt;xt:use types="text" handle="div" param="type=input;layout=placed;class=image;base=../editor/images/;filter=image" label="image">plus.png&lt;/xt:use></code></p>  
+      <div class="demo">
+        <xt:repeat minOccurs="0" maxOccurs="*">     
+          <p>Select an image<xt:menu-marker/></p>     
+          <xt:use types="text" handle="div" param="type=input;layout=placed;class=image;base=../editor/images/;filter=image" label="image">plus.png</xt:use>
+        </xt:repeat>        
+      </div>  
+    </div>
+    <div class="cell">
+      <h3>With a default content that points to an image file without a <samp>base</samp> attribute</h3>    
+      <p class="caption"><code>&lt;xt:use types="text" handle="div" param="type=input;layout=placed;class=image;filter=image" label="image">http://farm5.static.flickr.com/4015/4405670097_c6a31114c0.jpg&lt;/xt:use></code></p>  
+      <div class="demo">
+        <xt:repeat minOccurs="0" maxOccurs="*">     
+          <p>Select an image<xt:menu-marker/></p>     
+          <xt:use types="text" handle="div" param="type=input;layout=placed;class=image;filter=image" label="image">http://farm5.static.flickr.com/4015/4405670097_c6a31114c0.jpg</xt:use>
+        </xt:repeat>        
+      </div>  
+    </div>
+    <div class="cell">
+      <h3>With no default content</h3>        
+      <p class="caption"><code>&lt;xt:use types="text" handle="div" param="type=input;layout=placed;class=image;filter=image" label="image">insert an image file name&lt;/xt:use></code></p>  
+      <div class="demo">
+        <xt:repeat minOccurs="0" maxOccurs="*">     
+          <p>Select an image<xt:menu-marker/></p>     
+          <xt:use types="text" handle="div" param="type=input;layout=placed;class=image;filter=image" label="image">insert an image file name</xt:use>
+        </xt:repeat>        
+      </div>  
+    </div>
+    
+    
+  </div>
+  
+  <h2 class="sample">Primitive component type <code>types="video"</code></h2>
+  
+  <p>The <samp>video</samp> editor allows to embed a video player and to edit the url of the video. It currently supports only YouTube video, but aims to supports more video's hosting service.</p>
+  
+  <h3>Simple editor with no default content</h3>
+  
+  <div
+    style="border: thin solid #7D9AC7;
+    width: auto;
+    padding: 10px;
+    margin: 5px;
+    background-color: #7D9AC7;">
+    <xt:use types="video" label="video1"/>
+  </div>
+  
+  <h3>Simple editor with a default content specified with the video's <var>url</var>.</h3>
+  <div
+    style="border: thin solid #7D9AC7;
+    padding: 10px;
+    margin: 5px;
+    background-color: #7D9AC7;">
+    <xt:use types="video" label="video2">http://www.youtube.com/watch?v=VUVU14GmW18&amp;hl=fr_FR&amp;fs=1&amp;</xt:use>
+  </div>
+  
+  <h2 class="sample">Primitive componenet type <code>types="richtext"</code></h2>
+  
+  <p>The rich text editor's usage is shown in dedicated template testRichText.xhtml, as the editor does not support a .xtd extension at the moment (Firefox limitation).</p>
+</body> 
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>XTiger XML Demo Editor explanation file</title>
+	<style>
+		body {
+			margin: 5%;
+			padding: 1em 2em;
+			border: 2px solid lightgray;
+		}
+		h1 {
+			text-align: center;
+		}
+		#copyright {
+			text-align: center;
+			color: gray;
+		}
+		#copyright > a {
+			color: gray;			
+		}
+	</style>	
+</head>
+
+<body>
+	<h1>XTiger XML Demo Editor</h1>
+	<p>This is an application that can be run directly from your local file system (URL starting with <tt>file:///</tt>) with Firefox. 
+	<strong>For Firefox >= 3</strong> you need to authorize access to local URL from the XMLHTTPRequest object. To do this type 
+	<tt>about:config</tt> in the URL bar then click on <tt>security.fileuri.strict_origin_policy</tt> to set it to <tt>false</tt>
+(source: <a href="http://kb.mozillazine.org/Security.fileuri.strict_origin_policy" target="blank">mozillazine.org</a>). You most probably will 
+not be able to use it from the local file system on the other browsers (such as Safari or Internet Explorer) 
+as they will not allow the application to access local files. For instance Safari will just show them in the finder.</p>
+<p>On the contrary if you start the application from a Web server (URL starting with <tt>http://</tt>),
+including a WebDav server, it should work on most of the browsers. For instance it works for Internet Explorer, but only 
+if you use the version of the application that uses no iframe (see the window title bar).</p>
+	<ul>
+		<li>Page : enter a file URL to open a template file as a document to edit (or use Page shortcut)</li> 
+		<li>Page shortcut : select directly a predefined template file</li> 
+		<li>[Visualize] : open the selected template file</li>
+		<li>[Dump] : dump the XML content of the current document inside a popup window.</li> 
+		<li>[Input] : enter XML data from a popup window to the current document</li> 	
+		<li>[Save] : prompts a dialog to select a local XML file name and saves the XML content to it (Firefox only)</li>
+		<li>[Load] : prompts a dialog to select a local XML file name and loads XML data from it (Firefox only)</li>
+	</ul>
+	<p>The [Preferences] button opens a pannel with several actions</p>
+	<ul>
+		<li>Template repository [Ok] : enter the path for the default XTiger XML template folder (displayed in Page shortcut)</li> 
+		<li>File name [save] [load] [post]: save/load XML content in the current document, depending on the browser, [save] and [load] may work only if you have opened the application from a local server such as the one proposed in <kbd>scripts/server</kbd>. 
+		[post] asks the server to only dump the data without saving it.</li> 
+	</ul>	
+	<p>NOTE: you can use the application directly from a local volume (document URL starting
+	with <kbd>file://</kbd>), or you can copy it and launch it from a Web server such as the one in <kbd>scripts/server</kbd>.</p>
+
+	<p>By default template files listed in the "Page shortcut" popup menu are stored in the "templates" folder.</p>
+	
+	<p id="copyright">AXEL editor, by Stéphane Sire, <a href="http://media.epfl.ch" target="_new">Media Research</a></p>
+</body>
+</html>

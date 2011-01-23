@@ -1,0 +1,21 @@
+To install these demos on a Web server, just copy the following folders from the AXEL distribution to a target folder on the Web server: 
+
+axel/ 
+config/
+demos/
+data/
+templates/
+
+You can have a look inside config/templates (function getDemoTemplates) to see exactly which files from data/ and templates/ are needed.
+
+Eventually you need to rebuild the axel/axel.js Library using the build.xml ant script in scripts/ with the build.lib target and adjusting build.xml so that it includes the davmenubar.js utility which is required by launch.xhtml
+
+The demos use the utility davmenubar.js (see launcher.xhtml and launcher.js), so if you use a WebDAV server, the users will be able to save data to the WebDAV server by clicking on the "Save" button. 
+
+Internet Explorer special instructions
+--------------------------------------
+
+To run the demos from a Web server with Internet Explorer, index.html dynamically changes the links. It replaces launch.xhtml with launch.html, and it changes the template suffixes from .xhtml to .html. Hence you must copy launch.xhtml to launch.html and all the templates to their counterpart with an html extension after installation. Links are not changed if the files are opened from the local file system, because in that case IE uses the meta tag content-type for MIME-Type detection. However the demos doesn't work in that case on IE as it does not allow to open the template files inside an iframe.
+
+
+ 

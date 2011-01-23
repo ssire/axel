@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+<meta name="description" content="This page gives acces to several XTiger XML document templates for demonstration purpose. The templates are made editable with the AXEL (Adaptable XML Editing Library) Javascript library."></meta>
+<meta name="keywords" content="editor, XML, document template"></meta>
+<meta name="author" content="Stéphane Sire"></meta>
+<title>XTiger XML editing with AXEL demos</title>
+
+<style type="text/css">
+ body { 
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+ }
+ p.warning, span.warning {
+   color: orange;
+   font-size: 0.9em;   
+ } 
+span.ie-advice, p.ie-advice-localFS, p.ie-advice-WebServer {
+   display: none;
+ }
+ body.ieMode-localFS p.ie-advice-localFS,  {
+   font-size: 120%;
+   display: block !important;                   
+ }
+ body.ieMode-WebServer p.ie-advice-WebServer,  {
+   font-size: 120%;
+   display: block !important;
+ }
+ body.ieMode-localFS span.ie-advice, body.ieMode-WebServer span.ie-advice {
+   display: inline !important;
+ } 
+ body.ieMode-localFS li.not-on-ie, body.ieMode-WebServer li.not-on-ie {
+   display: none !important;
+ }
+</style>
+
+<script type="text/javascript" src="../config/templates.js"></script>
+<script type="text/javascript"> 
+  var navIE = false;
+                                     
+  // template is the file name for the template
+  function makeEntry (container, name, model) {
+    var n = document.createElement('li');  
+    var desc;
+    
+    // sets class attribute
+    if (model.compatibility) {
+      if (navIE) {
+        n.className = model.compatibility;
+      } else {
+        n.setAttribute('class', model.compatibility);
+      }
+    }        
+                        
+    // sets link to template and optional initial data     
+    desc = '<a href="launch.xhtml#t=../templates/' + name;
+    if (model.data) {
+      desc +=  '&d=../data/' + model.data;
+    }                                     
+    desc += '">' + name + '</a> ';   // FIXME: strip extension
+
+    // sets description
+    desc += model.description;
+
+    // creates element
+    n.innerHTML = desc;
+    
+    container.appendChild(n);
+  }
+
+  // For Internet Explorer template files must be served as "text/html"
+  // So we change every link to a template in the document to a link to the same file 
+  // but with an ".html" extension, this is a cheap content-type switching mechanism
+  // Also changes launch.xhtml into launch.html
+	function customize_for_IE () { 
+	  // sets class attribute on body
+	  var mode = (window.location.href.indexOf('file:') != -1) ? 'ieMode-localFS' : 'ieMode-WebServer'; 
+		var body = document.getElementsByTagName('body');
+		if (body) {
+		  body[0].className = mode;		  		  
+		}
+		// returns if when launched from local file system as the template MIME-Type will be taken from meta tag
+	  if (window.location.href.indexOf('file:') != -1) {
+	    return;
+	  }
+	  var links = document.getElementsByTagName('a');
+	  for (var i = 0; i < links.length; i++) {
+	    var l = links.item(i);
+	    var src = l.getAttribute('href');
+	    if (src.indexOf('xhtml') != -1) {
+	      src = src.replace(/xhtml/g, 'html');
+	      l.setAttribute('href', src);
+	    }
+	  }
+	}          
+	
+	function init () {                   
+	  var n = document.getElementById('list');
+	  if (n) {
+  	  var templates = (typeof(getDemoTemplates) != typeof(undefined))  ? getDemoTemplates() : undefined;   	  
+  	  if (templates)  {
+    	  for (var k in templates) {
+    	    makeEntry(n, k, templates[k]);
+    	  }
+    	} else {
+    	  n.innerHTML = '<li><em>initialization of example list failed !</em></li>';
+    	}
+  	} 
+  	if (navIE)   
+      customize_for_IE ();	
+	}
+	
+  if (window.navigator.appName == "Microsoft Internet Explorer")
+  {      
+    navIE = true;
+    window.attachEvent('onload', init);
+  } else {
+    window.addEventListener('load', init, false);
+  }
+</script>  
+</head>
+<body>
+
+<h1>XTiger XML editing with AXEL demos</h1>
+
+<p>By St&eacute;phane Sire</p>
+
+<p>This page shows some examples of editing applications created with XTiger XML document templates. 
+Each link opens a document template which is turned into an XML editor with AXEL Javascript code. 
+In some cases, the document is also loaded with XML data coming from an external file. 
+You can edit it, then using the menu bar, you can dump the current target XML content. 
+The save button works only in case the demos are run from a WebDAV server (which is not the case if you are seeing this page from <tt>media.epfl.ch</tt>).</p>
+
+<p>AXEL is beeing developped with Firefox. We do our best efforts to test it on Safari, 
+Internet Explorer (versions 8) and Opera. The library is still under development and not all templates 
+work on all browsers.</p>
+
+<blockquote><p class="ie-advice-WebServer warning">It seems you are using Internet Explorer. Consequently the page has been changed on the fly to alter all the links to XHTML documents into links to HTML documents served with the <tt>text/html</tt> MIME-Type (hopefully IE supports XHTML 1.0 in HTML compatiblity mode). This is necessary because Internet Explorer does not recognize the XHTML <tt>application/xhtml+xml</tt> MIME-Type (it is not compliant with W3C Web standards). These demonstrations will only work if the Web administrator has made some copies of all the XHTML files to HTML files after installation.</p></blockquote>
+
+<blockquote><p class="ie-advice-localFS warning">It seems you are using Internet Explorer and you have loaded these demos from the local file system. For unknown reasons in these conditions Internet Explorer will refuse to launch the demos, it will do it only if they are launched from a Web Server. If you know a fix please let us know. </p></blockquote>
+
+<p>Available documents:</p>
+
+<ul id="list">
+</ul>
+
+<p>Each of these templates generates a different XML content
+model. You may read the <a href="../docs/XTiger-XML-spec.html">XTiger XML Language specification</a>
+if you want to learn how to create templates for your
+own XML content model.&nbsp; </p>
+
+<p><a href="mailto:stephane.sire@epfl.ch?subject=AXEL%20demos%20feedback">Contact me</a> for any question.</p>
+
+<!-- Footer -->
+<hr style="width: 100%; height: 2px;">
+<p>AXEL and XTiger XML are the results of research efforts at the <a href="http://media.epfl.ch" target="_blank">MEDIA</a> research group at EPFL and in collaboration with <a href="http://wam.inrialpes.fr/" target="_blank">project WAM</a> at INRIA, Centre de Recherche Public <a href="http://www.tudor.lu/" target="_blank">Henri Tudor</a> and <a href="http://www.madeinlocal.com" target="_blank">Useful Web Sàrl</a>.</p>
+<p>Last update: <i>April 21, 2010</i></p>
+</body>
+</html>

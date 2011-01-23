@@ -1,0 +1,15 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ *
+ * @COPYRIGHT@
+ *
+ * This file contains files from the Adaptable XML Editing Library (AXEL)
+ * Version @VERSION@ (Rev @REV@)
+ *
+ * @LICENSE@
+ *
+ * Web site : http://media.epfl.ch/Templates/
+ * 
+ * Contributors(s) : Stephane Sire, Antoine Yersin, Jonathan Wafellmann, Useful Web Sàrl 
+ * 
+ * ***** END LICENSE BLOCK ***** */
+ 

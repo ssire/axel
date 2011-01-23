@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>AXEL CV Machine Readme</title>
+	<style>
+		body {
+			padding: 0em 2em;   
+			font-family: Tahoma, Helvetica, sans-serif;
+		}       
+		p { 
+			line-height: 1.4em;
+		}         
+		.center {
+			text-align: center;
+		}             
+		p.intro {
+		  font-size: 140%;
+		}
+	</style>	
+</head>
+
+<body>      
+  <p class="intro">AXEL CV Machine is a simple CV editor built with the <a href="http://media.epfl.ch/Templates">AXEL</a> library.</p>
+  
+  <p>Tu run the CV Machine open <a href="CVMachine.xhtml">CV Machine</a> in you browser. You can then edit your CV, click on a field to edit it. The <strong>Profile</strong> and <strong>Company</strong> fields are special fields that accept an input such as <tt>http://www.some.url[anchor]</tt> to enter a link. You can enlarge your browser window to get the top right menu on the side of your CV.</p>
+
+  <p>Tu save your CV, click on the <strong>Save</strong> button. You should see the source code of your CV in a plain window, copy and paste your CV in any text editor, then save it with an XHTML extension.</p>
+
+  <p>Tu load your CV (previously created with the CV Machine), click on the <strong>Load</strong> button. You should see a blank window with an empty text area in the center. Paste the source code of your CV in that window, then click on <strong>Load</strong>.</p>
+  
+  <p>You can print your CV or save it as a PDF file directly from the CV Machine, use the printing functionality of your browser. Use the <strong>Preview</strong> button first to hide all the controls.</p>
+  
+  <p>You can share your CV by saving it as an XHTML file and then generate a PDF file from a browser, or directly send it by email. The XHTML file should be viewable in any modern browser with support for HTML 5 (because they currently allow to define and style semantic XML elements, I do not know if this will last), however that option is much more risky. An alternative is to convert you CV (which contains plain semantic XML wrapped inside an XHTML envelope) to any format using an XSLT transformation.</p>
+  
+  <p>Reload the CV Machine page each time you want to start with a new CV. It is also advised to reload the page before you use the <strong>Load</strong> button.</p>
+  
+  <p>AXEL CV Machine is still under development. It has been tested with Firefox (> 3.5.7), Safari (> 4) and Opera (> 10.10).</p>  
+
+  <p>AXEL CV Machine doesn't work yet with Internet Explorer, there is also an issue with Chromium (> 5.0) that prevents using the Load / Save dialogs (calling Javascript method in parent window from window.opener doesn't work).</p>  
+</body>
+</html>

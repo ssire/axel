@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Mon menu illustré</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Menu">
+
+    <xt:component name="platPhotoEnOption">
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="@Photo">
+          <xt:menu-marker/><span>[ </span><xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload"/><span> ]</span>       
+      </xt:repeat>
+      <p>Les beignets sont une délicieuse patisserie cuite dans l'huile.</p>    
+    </xt:component> 
+
+    <xt:component name="plat">
+      <p><span class="plat"><xt:use types="text" param="type=input" label="Nom">Nom du plat</xt:use></span><xt:menu-marker/><br/>
+      <xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload"/></p>
+      <p><xt:use types="text" label="description" param="shape=parent-20px;type=textarea">Description</xt:use></p>
+    </xt:component> 
+
+  </xt:head>                         
+
+   <!-- CSS file for the photo uploader wrapper -->
+   <link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css" />
+
+  <!-- Photo upload script -->
+  <script type="text/javascript">
+//<![CDATA[                                
+    function finishTransmission(status, result) { 
+      var pwin = window.parent; // only if this template is run from inside an iframe !
+      var manager = pwin.xtiger.factory('upload').getInstance(document);
+      if (manager) {
+        manager.reportEoT(status, result);
+      }
+    }
+//]]>
+  </script>
+  
+  <style type="text/css">
+    p.beignets img {
+      vertical-align: top; 
+      position: relative;
+    }
+    p.explic {
+      font-size: 90%;
+    }
+    .avertissement {
+      color: green;
+    }       
+    div.plat {
+      float: left;
+      width: 400px;     
+      height: 300px;
+      margin: 0 20px 40px 0;
+    }
+    span.plat {
+      font-size: 150%;      
+      text-decoration: underline;
+    }   
+    /* documentId is visible only on fly over */
+    span.docid {
+      text-align: right;
+      float: right;
+      width: 300px;
+      padding: 10px;
+      font-size: 12px;
+      color: red;
+    }   
+    h1:hover span.docid {
+      visibility: visible;
+    }
+    span.docid {
+      visibility: hidden;
+    }   
+  </style>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+
+<h1><xt:use types="text" label="Title">Votre titre</xt:use> 
+  <span class="docid">
+    <xt:attribute types="text" label="DocumentId" param="filter=documentId noxml" default="3245" name="documentId"></xt:attribute>
+  </span>
+</h1> 
+
+<p class="explic avertissement">Pour utiliser ce template vous devez le lancer depuis le serveur Web fourni en exemple dans <tt>scripts/server.rb</tt> seul moyen d'activer la sauvagarde des photos et d'afficher les photos, leur URL étant définie par rapport au serveur d'exemple.</p>
+
+<h2>Les beignets sont illustrés par une photo en option</h2>
+
+<p class="beignets">Beignets <xt:use types="platPhotoEnOption" label="Beignets"/></p>
+
+<p class="explic">Comme le plugin photo plugin ne supporte pas l'attribut <tt>option</tt> vous devez utiliser un repeat avec <tt>maxOccurs="1"</tt> pour rendre une photo optionnelle, malheureusement le feedback n'est pas adpaté puisque l'icone ne se grise pas...</p>
+  
+<h2>Tous les autres plats ci-dessous ont une photo associée (chaine vide si non définie)</h2> 
+
+<xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Plat">
+  <div class="plat">
+      <xt:use types="plat" label="Plat"/>
+  </div>
+</xt:repeat>
+
+</body> 
+</html>

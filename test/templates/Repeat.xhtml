@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL test case : Repeat features</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <xt:component name="seq_1">
+      <p><span class="info">Element A</span> : <xt:use types="text" label="A">a content</xt:use></p>
+      <p><span class="info">Element B</span> : <xt:use types="text" label="B">b content</xt:use></p>
+      <p><span class="info">Element C</span> : <xt:use types="text" label="C">c content</xt:use></p>
+    </xt:component>
+  
+  </xt:head>
+
+  <link rel="stylesheet" type="text/css" href="Template.css" />
+</head>
+<body>
+  <p>This template contains XTiger XML declarations that stress the repeat editor of the AXEL library</p>
+  
+
+  <p><span class="info">Simple text field with label </span> : <xt:use types="text" label="First">content</xt:use></p>  
+  
+  <p><span class="info">Anonymous repetition from 1 to * at the end of the document </span></p>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="A"> 
+    <fieldset>
+      <label><xt:menu-marker/></label>
+      <xt:use types="seq_1"/>
+    </fieldset>
+  </xt:repeat>
+  
+  <p><span class="info">Simple text field with label </span> : <xt:use types="text" label="Second">content</xt:use></p>  
+  
+    
+</body>
+</html>

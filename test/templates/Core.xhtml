@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL test case : Core features</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="Tests">    
+
+    <xt:component name="Empty"></xt:component> 
+
+    <xt:component name="TextConstant">text-constant</xt:component> 
+
+    <xt:component name="HTMLConstant"><span>HTML-constant</span></xt:component> 
+
+    <xt:component name="TextEntry"><xt:use types="text">type something</xt:use></xt:component> 
+    
+    <xt:component name="EmptyOrTextConstant">
+      <p><span class="info">Choice between an empty component and a component with only text</span> : <span class="desactivated"> </span></p>  
+      <!-- <p><span class="info">Choice between an empty component and a component with only text></span> : <xt:use types="Empty TextConstant"/></p> -->
+    </xt:component> 
+
+    <xt:component name="RepeatEmpty">
+      <p><span class="info">xt:repeat of empty component</span> : <span class="desactivated"> </span></p>  
+      <!-- <p><span class="info">Choice between an empty component and a component with only text></span> : <xt:use types="Empty TextConstant"/></p> -->
+    </xt:component> 
+    
+    <xt:component name="Use"><xt:use types="TextEntry" label="Use"/></xt:component> 
+    
+    <xt:component name="Repeat"><xt:repeat minOccurs="0" maxOccurs="*" label="Repeat"><xt:use types="HTMLConstant" label="HTMLConstant"/></xt:repeat></xt:component> 
+    
+    <xt:component name="SingleRootA"><span>constant-A</span></xt:component> 
+
+    <xt:component name="SingleRootB"><span>constant-B</span></xt:component> 
+
+    <xt:component name="Choice"><xt:use types="TextConstant HTMLConstant TextEntry"/></xt:component> 
+
+    <xt:component name="ChoiceSingleRoot">
+      <p><span class="info">Choice between single root components</span> : <xt:use types="SingleRootA SingleRootB"/></p>      
+    </xt:component> 
+    
+    <xt:component name="Use1"><xt:use types="text" label="Content1">type something</xt:use></xt:component> 
+
+    <xt:component name="Use2"><xt:use types="text" label="Content2">type something else</xt:use></xt:component> 
+    
+    <xt:component name="ConstantA"><span>constant-A</span></xt:component> 
+
+    <xt:component name="ConstantB"><span>constant-B</span></xt:component> 
+
+    <xt:component name="ConstantC"><span>constant-C</span></xt:component> 
+
+    <xt:component name="ConstantD"><span>constant-D</span></xt:component> 
+
+    <xt:component name="Choice1"><xt:use types="ConstantA ConstantB"/></xt:component> 
+
+    <xt:component name="Choice2"><xt:use types="ConstantC ConstantD"/></xt:component> 
+
+    <xt:component name="Repeat1"><xt:repeat minOccurs="0" maxOccurs="*" label="InnerRepeat1"><xt:use types="ConstantA" label="ConstantA"/></xt:repeat></xt:component> 
+
+    <xt:component name="Repeat2"><xt:repeat minOccurs="0" maxOccurs="*" label="InnerRepeat2"><xt:use types="TextEntry" label="TextEntry"/></xt:repeat></xt:component> 
+
+  </xt:head>
+  
+  <style type="text/css"> 
+  body {
+      counter-reset: info;
+  }  
+  .info:before { 
+      content: counter(info) ". ";
+      counter-increment: info;
+  }  
+  .info {    
+    font-family: "Avant Garde", sans-serif;
+    font-weight: bold;
+  } 
+  .desactivated {
+    font-style: italic;
+  }
+  .desactivated:before {
+    content: "this test has been desactivated";
+  }
+  p.explain {
+    margin-top: -1em;
+    font-size: 80%;
+  }
+  </style>  
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <p>This template contains XTiger XML declarations that stress the core editors of the AXEL library</p>
+  
+  <p><span class="info">Empty component</span> : <xt:use types="Empty" label="Empty"/></p>
+
+  <p><span class="info">Component with text only</span> : <xt:use types="TextConstant" label="TextConstant"/></p>
+
+  <xt:use types="EmptyOrTextConstant" label="EmptyOrTextConstant"/>
+  
+  <xt:use types="RepeatEmpty" label="RepeatEmpty"/>
+  
+  <p><span class="info">xt:repeat of text only component</span> : <xt:repeat minOccurs="0" maxOccurs="*" label="RepeatTextConstant"><xt:use types="TextConstant" label="TextConstant"/></xt:repeat></p>
+  
+  <p><span class="info">xt:use and xt:use with same boundary</span> : <xt:use types="Use" label="UseOnUse"/></p>  
+  
+  <p><span class="info">xt:use and xt:repeat with same boundary</span> : <xt:use types="Repeat" label="UseOnRepeat"/></p>        
+
+  <p><span class="info">xt:use and choice with same boundary</span> : <xt:use types="Choice" label="UseOnChoice"/></p>        
+
+  <xt:use types="ChoiceSingleRoot" label="ChoiceSingleRoot"/>
+  <p class="explain">Components with a single root generate sub-trees with beginChoiceItem and endChoiceItem set on the same node</p>
+  
+  <p><span class="info">xt:repeat of choice between single root components</span> : <xt:repeat minOccurs="0" maxOccurs="*" label="RepeatChoiceSingleRoot"><xt:use types="SingleRootA SingleRootB"/></xt:repeat></p>     
+  
+  <p><span class="info">xt:repeat and xt:use with same boundary</span> : <xt:repeat minOccurs="0" maxOccurs="*" label="RepeatOnUse"><xt:use types="text" label="Use">type something</xt:use></xt:repeat></p>  
+  
+  <p><span class="info">xt:repeat and choice with same boundary</span> : <xt:repeat minOccurs="0" maxOccurs="*" label="RepeatOnChoice"><xt:use types="TextConstant HTMLConstant Use"/></xt:repeat></p>  
+
+  <p><span class="info">xt:repeat and xt:repeat with same boundary</span> : <xt:repeat minOccurs="0" maxOccurs="*" label="RepeatOnRepeat"><xt:repeat minOccurs="1" maxOccurs="*" label="Repeat"><xt:use types="TextConstant" label="TextConstant"/></xt:repeat></xt:repeat></p>  
+
+  <p><span class="info">Choice and xt:use with same boundary</span> : <xt:use types="Use1 Use2" label="ChoiceOnUse"/></p>  
+
+  <p><span class="info">Choice and xt:repeat xt:use with same boundary</span> : <xt:use types="Repeat1 Repeat2" label="ChoiceOnRepeat"/></p>  
+
+  <p><span class="info">Choice and choice with same boundary</span> : <xt:use types="Choice1 Choice2" label="ChoiceOnChoice"/></p>  
+    
+</body>
+</html>

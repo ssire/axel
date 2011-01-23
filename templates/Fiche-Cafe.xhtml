@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Madeinlocal sample template</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="place">
+
+    <xt:component name="contact">
+      <ul id="contact">
+        <li><span class="field">Adresse:</span><span class="entry"><xt:use types="string" label="street">Rue de Bellevue 12</xt:use></span></li>
+        <li><span class="field">Ville:</span><span class="entry"><xt:use types="string" label="city">Lausanne</xt:use></span></li>
+        <li><span class="field">Téléphone:</span><span class="entry"><xt:use types="string" label="phone">021.693.12.18</xt:use></span></li>
+        <li><span class="field">Fax:</span><span class="entry"><xt:use types="string" label="fax">021.693.12.18</xt:use></span></li>
+        <li><span class="field">e-mail:</span><span class="entry"><xt:use types="string" label="email">acevedo@madeinlocal.com</xt:use></span></li>
+      </ul> 
+    </xt:component> 
+
+    <xt:component name="une_description">
+      <p id="subTitle"><xt:menu-marker size="20"/><xt:use types="string" label="title" param="bbox=1">Un lien de détente privilégié</xt:use></p>
+      <xt:repeat label="items" minOccurs="0">
+        <p><xt:use types="string" label="item" param="bbox=1">Super café très chouette</xt:use><xt:menu-marker/></p>
+      </xt:repeat>
+    </xt:component>
+  
+    <xt:component name="ouvert">
+      <br/>
+      <xt:repeat label="slots">
+          <xt:use types="slot" label="slot"/>
+      </xt:repeat>        
+    </xt:component>
+    
+    <xt:component name="ferme">
+      <span></span>
+    </xt:component>
+
+    <xt:component name="slot">
+      <p><xt:use label="begin" types="string" param="lookahead=0">17:00</xt:use><span> - </span><xt:use label="end" types="string" param="lookahead=0">23:00</xt:use><xt:menu-marker/></p>
+    </xt:component>               
+    
+    <xt:component name="horaires">
+    <tr>
+      <td><xt:use label="lundi" types="ouvert ferme"/></td>
+      <td><xt:use label="mardi" types="ouvert ferme"/></td>
+      <td><xt:use label="mercredi" types="ouvert ferme"/></td>
+      <td><xt:use label="jeudi" types="ouvert ferme"/></td>
+      <td><xt:use label="vendredi" types="ouvert ferme"/></td>
+      <td><xt:use label="samedi" types="ouvert ferme"/></td>
+      <td><xt:use label="dimanche" types="ouvert ferme"/></td>
+    </tr>
+    </xt:component>       
+    
+  </xt:head>  
+
+  <style type="text/css">
+  #photo {
+    float: left;
+    border: solid 1px gray;
+    margin-right: 50px;
+    margin-bottom: 20px;
+  }
+  #content {
+  }
+  #subTitle {
+    clear: both;
+    color: orange;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  #contact {
+    list-style-type: none;
+  }
+  .field {
+    width: 200px;
+  }
+  .entry {
+    position: absolute;
+    left: 450px;
+  }
+  #timetable {
+    border-collapse: collapse;
+  }
+  td {
+    vertical-align: top;
+  }
+  
+  td p {
+    margin-top: 4px;
+    margin-bottom: 2px;
+    margin-right: 0;
+    margin-left: 0;
+  }
+    
+  </style>  
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>       
+<body>
+  <img id="photo" src="" alt="photo" width="250" height="250" />
+
+  <div id="content">
+    <h1><xt:use types="string" label="name">Café des brunes</xt:use></h1>
+
+    <p><xt:use types="string" label="mantra" param="bbox=1">Un instant, un café, une vie</xt:use></p>
+  
+    <xt:use types="contact" label="contact"></xt:use> 
+  </div>
+
+  <xt:repeat label="description">
+    <xt:use types="une_description" />
+  </xt:repeat>  
+
+  <h3>Horaires d'ouverture</h3>
+
+  <table id="timetable" border="1" cellpadding="10" frame="box">
+    <tbody>
+      <tr>
+        <th>lu</th>
+        <th>ma</th>
+        <th>me</th>
+        <th>je</th>
+        <th>ve</th>
+        <th>sa</th>
+        <th>di</th>
+      </tr>   
+      <xt:use label="timetable" types="horaires" />
+    </tbody>
+  </table>
+</body> 
+</html>

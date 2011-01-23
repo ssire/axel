@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" 
+   xmlns:xte="http://ns.media.epfl.ch/xtiger-extension" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+  
+  <title>Service test</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Event">    
+  
+    <xt:component name="Artist">  
+    <p>
+      Please enter your name : <xt:use types="text" label="Name" 
+        param="filter=service;
+               service_key=local:producer[Name] global:producer[Name];
+               service_trigger=auto;
+               service_label=suggest;
+               layout=placed">name</xt:use><xt:menu-marker/>
+      <span class="verif">
+        (Nickname : <xt:use types="text" label="Nickname" 
+        param="filter=service;
+               service_key=local:consumer[Name];
+               layout=placed">nickname</xt:use>)
+      </span>
+    </p>
+    </xt:component> 
+  
+  </xt:head>      
+  
+  <style type="text/css">
+  span.verif {
+    margin-left: 5em;
+  }   
+  </style>
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+</head>
+<body>
+  <h1>Service test</h1>
+  
+  <h2>Copy and Capitalize</h2>
+  
+  <xte:service key="global" types="copy capitalize debug"/>
+
+  <p>Extra event source :    <xt:use types="text" param="filter=noxml service;
+                                   service_key=global:producer[Name]">name</xt:use>
+  </p>
+  
+  <xt:repeat minOccurs="0" maxOccurs="*" label="Artists">
+    <xte:service key="local" types="copy debug" />  
+    <xt:use types="Artist" label="Artist" />
+  </xt:repeat>      
+  
+  <p>Our latest entry : <xt:use types="text"
+                            param="filter=noxml service;
+                                   service_key=global:consumer[Name];
+                                   layout=placed;
+                                   noedit=true;
+                                   class=noedit">name</xt:use>
+  </p>                                                 
+  
+  <h2>Translation</h2>   
+  
+  <p><em>This demo shows a) an asycnhronous service (translate) based on Google Translate API and b) the configurator role for configuring a service through user input.</em></p>
+  
+  <xte:service key="translate" types="copy translate debug"/>
+  
+  <p>
+    Say something in 
+    <xt:use types="select" defaut="english"
+            values="en fr de es" 
+            i18n="english french german spanish" 
+            param="filter=noxml service;
+                   service_key=translate:configurator[translate_from]">english</xt:use> :
+    <xt:use types="text" label="Story" 
+            param="filter=service;
+                   service_key=translate:producer[Text];
+                   service_trigger=button;
+                   service_label=translate;
+                   layout=placed">something</xt:use>
+  </p>
+
+  <p>
+    Translation in 
+    <xt:use types="select" defaut="french" 
+            values="en fr de es" 
+            i18n="english french german spanish"
+            param="filter=noxml service;
+                   service_key=translate:configurator[translate_to]">french</xt:use> : 
+    <xt:use types="text"
+            param="filter=service noxml;
+                   service_key=translate:consumer[Text];
+                   layout=placed;
+                   noedit=true">quelque chose</xt:use>
+  </p>    
+  
+  <h2>Optional unstored (noxml) read only field (noedit)</h2>     
+  
+  <p>Try loading some data with no Measure defined, you should see that the unit per the data will be updated inside the unselected optional read only unit field too</p>
+  
+  <p>Unit : <xt:use types="text" label="Unit"
+    param="filter=service;
+    service_key=global:producer[Unit];
+    service_trigger=load">mètre</xt:use></p>
+
+  <xt:repeat minOccurs="0" maxOccurs="*" label="Measures">
+    <p><xt:use types="text" label="Measure">0</xt:use> in <xt:use types="text"
+      param="filter=noxml service;
+      service_key=global:consumer[Unit];
+      service_trigger=load">mètre</xt:use><xt:menu-marker/></p>  
+  </xt:repeat>
+  
+  <h2>Double constraints</h2>  
+  
+  <xte:service key="date" types="copy date" param="date_default=20 12 2010"/>
+  
+  <p>Start:             
+    <xt:use types="select" label="day" values="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31" default="20"
+      param="filter=service;  
+             service_trigger=load;
+             service_key=date:producer[Day(floor)] date:consumer[Day(floor)]">20</xt:use>
+		<xt:use types="select" label="month" values="1 2 3 4 5 6 7 8 9 10 11 12" i18n="January February March April may June Juli August September October November Décembre" default="1"
+      param="filter=service;
+             service_trigger=load;
+             service_key=date:producer[Month(floor)] date:consumer[Month(floor)]">Décember</xt:use>
+		<xt:use types="select" label="year" values="2010 2011 2012 2013 2014" default="2010"
+      param="filter=service;
+             service_trigger=load;
+             service_key=date:producer[Year(floor)] date:consumer[Year(floor)]">2010</xt:use>
+  </p>		
+
+  <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="day">
+  <p><xt:menu-marker/> End: 
+    <xt:use types="select" label="day" values="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31" default="20"
+      param="filter=service;
+             service_trigger=load;
+             service_key=date:producer[Day(ceiling)] date:consumer[Day(ceiling)]">20</xt:use>
+		<xt:use types="select" label="month" values="1 2 3 4 5 6 7 8 9 10 11 12" i18n="January February March April may June Juli August September October November Décember" default="1"
+      param="filter=service;
+             service_trigger=load;      
+             service_key=date:producer[Month(ceiling)] date:consumer[Month(ceiling)]">Décember</xt:use>
+		<xt:use types="select" label="year" values="2010 2011 2012 2013 2014" default="2010"
+      param="filter=service;
+             service_trigger=load;
+             service_key=date:producer[Year(ceiling)] date:consumer[Year(ceiling)]">2010</xt:use>
+  </p>	
+  </xt:repeat>  	             
+  
+	<p>
+		  <xte:service key="fee" types="copycond"/>
+			<span>Min fee</span>
+			<xt:use types="text" label="min-fee"
+			  param="filter=service;
+		           service_key=fee:producer[Fee] fee:consumer[Fee(floor)];">0</xt:use>
+			<span>, Max fee</span>
+			<xt:use types="text" label="max-fee"
+			  param="filter=service;
+			         service_key=fee:producer[Fee] fee:consumer[Fee(ceiling)];">0</xt:use>
+	</p>    
+  
+</body>
+</html>               

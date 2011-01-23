@@ -1,0 +1,121 @@
+body {
+    padding: 2em;
+    margin: 0;
+    color: black;
+    background: white;
+    font-family: sans-serif;
+}
+h1, h2, h3 {
+    font-weight: normal;
+    color: rgb(0, 90, 156);
+     
+}
+h2.chapter:before {
+    content: counter(chapter) ". ";
+}
+h2.chapter {
+    counter-increment: chapter;
+}
+/* markup item inside a title */
+.language {
+    font-family: "Courier New",Courier,monospace;
+    font-weight: 500;
+}
+/* markup item inside text */
+.markup {
+    font-weight: bold;
+    font-family: "Times New Roman",Times,serif;
+    color: purple;
+}
+div.containBox .markup {
+    font-weight: normal;
+     
+}
+/* markup attribute */
+.attribute {
+    font-weight: bold;
+    font-family: "Times New Roman",Times,serif;
+    color: purple;
+}
+/* reference to a markup element or to an identifier in a code fragment */
+.identifier {
+    font-style: italic;
+}
+/* inline code sample */
+.sample {
+    font-family: "Courier New",Courier,monospace;
+}
+div.containBox {
+    border: 2px dotted gray;
+    padding: 10px;
+    margin-top: 20px;
+    margin-left: 80px;
+    margin-right: 80px;
+}
+p.contains {
+    margin: 0;
+    padding: 0;
+}
+p.containedin {
+    margin: 0;
+    padding: 0;
+}
+p.contains > span:first-child:after, p.containedin > span:first-child:after {
+    content: " :";
+}
+p.contains > span:first-child, p.containedin > span:first-child {
+    text-decoration: underline;
+    padding-right: 20px;
+}
+/* Code examples */
+pre.xml {
+    background-color: #F0F0F0;
+    border: thin solid blue;
+    padding: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+/* Tables */table {
+    border-collapse: separate;
+    border-style: double;
+    border-color: gray;
+    border-spacing: 2px;
+    border-width: 2px;
+}
+thead {
+     
+}
+tbody {
+}
+td, th {
+    padding: 5px;
+    background-color: #FFFFF0;
+    border-style: inset;
+    border-color: gray;
+    border-width: 1px;
+}
+th {
+    font-weight: bold;
+}
+/*	Printing Adjustments */
+ @media print {   
+  	.noprint { 
+		display: none
+	}	
+	body {
+		font: 11pt geargia, serif;
+	}
+    p, li, dd {
+        text-align: justify;
+    }
+    pre.xtf, code {
+		font-size: 70% !important;
+	}	
+	table {
+		border-collapse: collapse;
+	}
+	.sample {
+	    font-family: "Courier New",Courier,monospace;
+		font-size:75%;
+	}	
+}

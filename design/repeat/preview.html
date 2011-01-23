@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">                     
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Icon Visu Test</title>
+	<style type="text/css">
+	.menu {               
+		margin: 10px;
+/*		background: yellow;        */
+/*		background-color:#e4fbb8; 		*/
+/*		background-color: #eeeeee;		     */
+	background-color:	#696969;      		
+	}  
+	img {
+/*		vertical-align: -15%;*/
+		vertical-align: text-top;		
+	}         
+	.checked {
+		background-image: url(../../bundles/repeat/checked.png);  
+		background-repeat: no-repeat;   
+		background-position: center;
+	}  
+	.unchecked {
+		background-image: url(../../bundles/repeat/checked.png);  
+		background-repeat: no-repeat;   
+		background-position: center;
+	}	 
+	</style>
+</head>
+<body> 
+	<div class="menu">
+		<p><img src="../../bundles/repeat/checked.png"/>Checked</p>
+		<p><img src="../../bundles/repeat/unchecked.png"/>Unchecked</p>
+		<p><img src="../../bundles/repeat/plus.png" width="16px"/>Plus</p>
+		<p><img src="../../bundles/repeat/minus.png" width="16px"/>Minus</p>
+	</div>	   
+ 	<p><b id="message">Avec span (optimisation future)</b></p>
+	<div class="menu"><p><span class="checked">&nbsp;&nbsp;&nbsp;&nbsp;</span>Checked</p></div>	   	
+</body>
+</html>

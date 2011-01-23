@@ -1,0 +1,337 @@
+<?xml-stylesheet href="../../templates/Study.css"?>
+<?xml-stylesheet href="tiddly.xsl" type="text/xsl"?>
+<?xtiger template="../../templates/Study.xhtml"?>
+<Report>
+  <Title>TiddlyWiki-Like documents with AXEL</Title>
+  <Authors>
+    <Author>Stéphane Sire</Author>
+  </Authors>
+  <Timestamp>
+    <CreationDate>18th November  2010</CreationDate>
+    <LastUpdate>23rd November  2010</LastUpdate>
+  </Timestamp>
+  <Parag>
+    <Fragment>TiddlyAXEL is a contribution to the Adaptable XML Editing Library (</Fragment>
+    <Link>
+      <LinkText>AXEL</LinkText>
+      <LinkRef>http://media.epfl.ch/Templates/</LinkRef>
+    </Link>
+    <Fragment>) for creating standalone XML files which can be directly edited from a Web browser. It consists of a single XSLT file </Fragment>
+    <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+    <Fragment> to include with an </Fragment>
+    <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+    <Fragment> processing instruction at the begining of your file. </Fragment>
+  </Parag>
+  <Parag>
+    <Fragment>The current version works with Firefox, Safari and Opera. It works from a WebDAV server or from the local file system (Firefox only), but is easy to integrate in any Web server as it just need to support the PUT HTTP method. Deployment is fast and easy: you just need to copy an AXEL distribution (</Fragment>
+    <Fragment FragmentKind="verbatim">axel</Fragment>
+    <Fragment> folder), the XTiger XML template and the CSS file for your document, the </Fragment>
+    <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+    <Fragment> transformation stylesheet and your XML document on the same server (or on your local file system).</Fragment>
+  </Parag>
+  <Parag>
+    <Fragment>The name is derived from </Fragment>
+    <Link>
+      <LinkText>TiddlyWiki</LinkText>
+      <LinkRef>http://www.tiddlywiki.com/</LinkRef>
+    </Link>
+    <Fragment> which is a similar approach for creating editable single HTML files.</Fragment>
+  </Parag>
+  <Parag>
+    <Fragment>This document itself is an example of a document edited with TiddlyAXEL using a </Fragment>
+    <Fragment FragmentKind="verbatim">Study.xhtml</Fragment>
+    <Fragment> template and a </Fragment>
+    <Fragment FragmentKind="verbatim">Study.css</Fragment>
+    <Fragment> CSS file. You can check that by looking at the source of this page. It will display correctly only in Web browsers that can style XML content as explained below. </Fragment>
+    <Fragment FragmentKind="important">Note that you will get an error if you try to save the public version of this file which is placed on a non writable Web server</Fragment>
+    <Fragment>, the edit function is enabled only for a demonstration purpose.</Fragment>
+  </Parag>
+  <Section>
+    <Heading>Application</Heading>
+    <Parag>
+      <Fragment>TiddlyAXEL can be used to collect data from different users, by copying one or more originally empty XML file(s) on a WebDAV server and sending its URL to each author, then waiting for their contributions. This is similar in a way to </Fragment>
+      <Link>
+        <LinkText>Google Forms</LinkText>
+        <LinkRef>http://www.google.com/google-d-s/forms/</LinkRef>
+      </Link>
+      <Fragment> but for collecting structured document instead of spreadsheet entries.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>A scenario of this could be a teacher collecting student's home works by sending each of them a URL to the editor to use to create their document. The teacher can even use WebDAV access control rules to give access to each document only to his/her owner.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>TiddlyAXEL can also be used to maintain a set of XML files, together with scripts for generating and concatenating a published document each time this is required. This allows to develop very low cost </Fragment>
+      <Fragment FragmentKind="important">personal XML editorial chains</Fragment>
+      <Fragment>. </Fragment>
+    </Parag>
+  </Section>
+  <Section>
+    <Heading>Syntax</Heading>
+    <Parag>
+      <Fragment>The </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> processing instruction can be used to add CSS styling rules to an XML document. This is quite convenient to display plain XML documents directly within a Web browser as explained in </Fragment>
+      <Link>
+        <LinkText>Styling XML</LinkText>
+        <LinkRef>http://www.w3.org/Style/styling-XML</LinkRef>
+      </Link>
+      <Fragment>. In addition, if your document has been created with an XTiger XML template, you can also declare the association with an </Fragment>
+      <Fragment FragmentKind="verbatim">xtiger</Fragment>
+      <Fragment> processing instruction pointing to the template that served to create the document.</Fragment>
+    </Parag>
+    <Code>
+      <CodeLegend>
+        <Fragment>Styled XML document with a link to its original XTiger XML template</Fragment>
+      </CodeLegend>
+      <Snippet>&lt;?xml-stylesheet href="../templates/Study.css"?&gt;
+&lt;?xtiger template="../templates/Study.xhtml"?&gt;
+&lt;Report&gt;
+  ...
+&lt;/Report&gt;</Snippet>
+    </Code>
+    <Parag>
+      <Fragment>A document like in the previous example is visible in any Web browser supporting the </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> instruction (e.g. Firefox, Safari, Opera). It will just ignore the </Fragment>
+      <Fragment FragmentKind="verbatim">xtiger</Fragment>
+      <Fragment> instruction (which is required for the next step). To make it editable you need to add another </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> processing instruction pointing to the </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> transformation as in the following example.</Fragment>
+    </Parag>
+    <Code>
+      <CodeLegend>
+        <Fragment>Styled editable XML document with TiddlyAXEL</Fragment>
+      </CodeLegend>
+      <Snippet>&lt;?xml-stylesheet href="../templates/Study.css"?&gt;
+&lt;?xml-stylesheet href="../libs/tiddly.xsl" type="text/xsl"?&gt;
+&lt;?xtiger template="../templates/Study.xhtml"?&gt;
+&lt;Report&gt;
+  ...
+&lt;/Report&gt;</Snippet>
+    </Code>
+    <Parag>
+      <Fragment>If you open the previous document in a browser, </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> will transform it to an HTML 5 document with a </Fragment>
+      <Fragment FragmentKind="verbatim">link</Fragment>
+      <Fragment> instruction to load the original CSS stylesheet as specified in the first </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> instruction. It will also add an </Fragment>
+      <Fragment FragmentKind="important">edit</Fragment>
+      <Fragment> and a </Fragment>
+      <Fragment FragmentKind="important">save</Fragment>
+      <Fragment> buttons and the necessary code to call the AXEL library to edit and to save the document. </Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>To create a new document you just need to set it's XML content to an empty root element with the CSS </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> and  </Fragment>
+      <Fragment FragmentKind="verbatim">xtiger</Fragment>
+      <Fragment> instructions pointing to the CSS / template files you want to use for the document.</Fragment>
+    </Parag>
+  </Section>
+  <Section>
+    <Heading>Installation</Heading>
+    <Parag>
+      <Fragment>The TiddlyAXEL contribution consists of a single </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> XSLT file.  You need to copy the AXEL library (the </Fragment>
+      <Fragment FragmentKind="verbatim">axel</Fragment>
+      <Fragment> folder of the distribution) and the </Fragment>
+      <Fragment FragmentKind="verbatim">tiddy.xls</Fragment>
+      <Fragment> transformation file somewhere accessible from the single XML file you want to edit. You also need to make the XTiger XML document template and CSS file corresponding to it available.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>Due to complex cross-domain policies and browsers interpretation of it, you need to access all the resources (AXEL library, XTiger XML template, CSS files, TiddlyAXEL transformation, XML document) on the same domain (e,g, </Fragment>
+      <Fragment FragmentKind="verbatim">http://www.example.com</Fragment>
+      <Fragment> or </Fragment>
+      <Fragment FragmentKind="verbatim">file://</Fragment>
+      <Fragment> if you are working from your local file system).</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>Note that once you have deployed the </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> file and the AXEL library, you need to set the </Fragment>
+      <Fragment FragmentKind="verbatim">axelBase</Fragment>
+      <Fragment> parameter in </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> to the path (or URL) leading to your AXEL library (the </Fragment>
+      <Fragment FragmentKind="verbatim">axel</Fragment>
+      <Fragment> folder in the distribution), such as in the following example:</Fragment>
+    </Parag>
+    <Code>
+      <CodeLegend>
+        <Fragment>Sample configuration for the </Fragment>
+        <Fragment FragmentKind="verbatim">axelBase</Fragment>
+        <Fragment> parameter in </Fragment>
+        <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+        <Fragment> for a local file system setup</Fragment>
+      </CodeLegend>
+      <Snippet>&lt;xsl:param name="axelBase"&gt;/usr/local/lib/axel&lt;/xsl:param&gt;</Snippet>
+    </Code>
+    <Parag>
+      <Fragment>If you use a relative </Fragment>
+      <Fragment FragmentKind="verbatim">axelBase</Fragment>
+      <Fragment> path, it will be relative to the editable XML file location.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>The </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> transformation extracts the CSS file and XTiger template paths from the corresponding </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> and </Fragment>
+      <Fragment FragmentKind="verbatim">xtiger</Fragment>
+      <Fragment> instructions each time you open the XML file inside your browser. Consequently relative paths are relative to the XML file location. </Fragment>
+    </Parag>
+  </Section>
+  <Section>
+    <Heading>Conventions for writing XTiger XML templates and CSS files</Heading>
+    <Parag>
+      <Fragment>Usually, an XML editorial chain based on AXEL requires an XTiger XML template file for generating the editor, a CSS file for styling this template, an XSLT transformation for publishing the saved XML data to an HTML document which can be viewed inside a browser, and finally a CSS file for styling this published version.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>TiddlyAXEL requires that you follow special conventions when writing the XTiger XML template for editing an XML file. The goal of these conventions is to remove the need for an intermediate XSLT transformation for publishing the saved XML data. In fact, the saved XML data and the published version of it </Fragment>
+      <Fragment FragmentKind="important">contain the same markup</Fragment>
+      <Fragment>. </Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>To achieve this result you can use semantic markup in the template as described in this </Fragment>
+      <Link>
+        <LinkText>note</LinkText>
+        <LinkRef>http://groups.google.com/group/axel-dev/web/beyond-html-5-semantic-markup-css-editable-with-axel</LinkRef>
+      </Link>
+      <Fragment>. In summary, all you need to do is to include all the target content markup in the XTiger component definitions inside your template. </Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>For instance, if you declare the </Fragment>
+      <Fragment FragmentKind="verbatim">advantage</Fragment>
+      <Fragment> element in the target XML content model with this component type inclusion:</Fragment>
+    </Parag>
+    <Code>
+      <Snippet>&lt;xt:use types="advantage" label="advantage" /&gt;</Snippet>
+    </Code>
+    <Parag>
+      <Fragment>The </Fragment>
+      <Fragment FragmentKind="verbatim">advantage</Fragment>
+      <Fragment> component declaration should include an &lt;advantage&gt; element as a presentational element:</Fragment>
+    </Parag>
+    <Code>
+      <Snippet>&lt;xt:component name="advantage"&gt;  
+  &lt;advantage&gt;
+    &lt;xt:use types="text" param="shape=self;layout=placed"&gt;discribe one advantage&lt;/xt:use&gt;
+    &lt;xt:menu-marker/&gt;
+  &lt;/advantage&gt;
+&lt;/xt:component&gt;</Snippet>
+    </Code>
+    <Parag>
+      <Fragment>By following this convention you are able to style all these </Fragment>
+      <Fragment FragmentKind="important">foreign</Fragment>
+      <Fragment> tags in your template with a unique CSS file common to the template and to the published data, as in the next example: </Fragment>
+    </Parag>
+    <Code>
+      <Snippet>advantage {
+  display: list-item;
+  list-style-type: square;
+  list-style-position: inside;
+  font-family: Helvetica, sans-serif; 
+  font-weight: medium;  
+}</Snippet>
+    </Code>
+    <Parag>
+      <Fragment>In fact, the same CSS rules will apply to the XTiger template generated editor AND to the saved XML data. Of course the XTiger template may contain extra XHTML markup to help improve the user experience and some specific CSS rules. TiddlyAXEL currently requires that you put all these rules in the same CSS file.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>You can have a look to the </Fragment>
+      <Link>
+        <LinkText>Study.xhtml</LinkText>
+        <LinkRef>http://media.epfl.ch/Templates/Latest/templates/Study.xhtml</LinkRef>
+      </Link>
+      <Fragment> source code and to the </Fragment>
+      <Link>
+        <LinkText>Study.css</LinkText>
+        <LinkRef>http://media.epfl.ch/Templates/Latest/templates/Study.css</LinkRef>
+      </Link>
+      <Fragment> files used for editing this document to get a better idea.</Fragment>
+    </Parag>
+  </Section>
+  <Section>
+    <Heading>Customization</Heading>
+    <Parag>
+      <Fragment>As you can see the </Fragment>
+      <Fragment FragmentKind="verbatim">tiddly.xsl</Fragment>
+      <Fragment> transformation mainly copies the source XML file. It just interprets some specific markup for Images and Links (in provenance of AXEL's </Fragment>
+      <Fragment FragmentKind="verbatim">image</Fragment>
+      <Fragment> plugin and </Fragment>
+      <Fragment FragmentKind="verbatim">wiki</Fragment>
+      <Fragment> filter), because these cannot be render with CSS only.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>Your are free to add more custom transformation rules to the </Fragment>
+      <Fragment FragmentKind="verbatim">tiddy.xsl</Fragment>
+      <Fragment> transformation that may be specific to your document models / templates. Unfortunately at that moment browsers do not seem to support the </Fragment>
+      <Fragment FragmentKind="verbatim">xsl:import</Fragment>
+      <Fragment> statement, so you must directly write them inside the </Fragment>
+      <Fragment FragmentKind="verbatim">tiddy.xsl</Fragment>
+      <Fragment> transformation.</Fragment>
+    </Parag>
+  </Section>
+  <Section>
+    <Heading>TiddlyAXEL Javascript version</Heading>
+    <Parag>
+      <Fragment FragmentKind="important">NOT YET IMPLEMENTED</Fragment>
+      <Fragment> ! Replaces the </Fragment>
+      <Fragment FragmentKind="verbatim">tidly.xsl</Fragment>
+      <Fragment> transformation with a </Fragment>
+      <Fragment FragmentKind="verbatim">tiddy.js</Fragment>
+      <Fragment> Javascript library. The goal is to be compatible with browsers that do not support the </Fragment>
+      <Fragment FragmentKind="verbatim">xml-stylesheet</Fragment>
+      <Fragment> processing instruction. Will require to place XML content within an XHTML envelope to be able to use a &lt;script&gt; element.</Fragment>
+    </Parag>
+  </Section>
+  <Section>
+    <Heading>Mac OS X Apache WebDAV configuration</Heading>
+    <Parag>
+      <Fragment>To be written (sample </Fragment>
+      <Link>
+        <LinkText>tutorial</LinkText>
+        <LinkRef>http://www.gregwestin.com/webdav_for_ical.php</LinkRef>
+      </Link>
+      <Fragment>).</Fragment>
+    </Parag>
+  </Section>
+  <References>
+    <RefUrl>
+      <Key>SemanticMarkup</Key>
+      <Link>
+        <linkRef>http://groups.google.com/group/axel-dev/web/beyond-html-5-semantic-markup-css-editable-with-axel</linkRef>
+        <linkText>Beyond HTML 5 = semantic markup + CSS   </linkText>
+      </Link>
+      <Comment>axel-dev Google group page</Comment>
+    </RefUrl>
+    <RefUrl>
+      <Key>StylingXML</Key>
+      <Link>
+        <linkRef>http://www.w3.org/Style/styling-XML</linkRef>
+        <linkText>Styling XML</linkText>
+      </Link>
+      <Comment>Note by Bert Bos, 29th February 2000</Comment>
+    </RefUrl>
+    <RefUrl>
+      <Key>TiddlyWiki</Key>
+      <Link>
+        <linkRef>http://www.tiddlywiki.com/</linkRef>
+        <linkText>Tiddly Wiki a reusable non-linear personal Web notebook</linkText>
+      </Link>
+      <Comment>Visited 18th November 2010</Comment>
+    </RefUrl>
+    <RefUrl>
+      <Key>XTigerXML</Key>
+      <Link>
+        <linkRef>http://media.epfl.ch/Templates/XTiger-XML-spec.html</linkRef>
+        <linkText>XTiger XML Language Specification</linkText>
+      </Link>
+    </RefUrl>
+  </References>
+</Report>

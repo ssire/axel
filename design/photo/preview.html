@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>Photo Lens Designer</title>
+	
+	<!-- You need to include this stylesheet in your application to use the Photo lens wrapper -->	
+  	<link rel="stylesheet" type="text/css" href="../../axel/bundles/photo/photo.css"></link>
+  	<link rel="stylesheet" type="text/css" href="../../axel/axel.css"></link>
+
+	<!-- Minimal AXEL files to load to execute the test -->
+	<script type="text/javascript" src="../../src/core/loader.js"></script>
+	<script type="text/javascript" src="../../src/core/defaultbrowser.js"></script>
+	<script type="text/javascript" src="../../src/core/dom.js"></script>
+	<script type="text/javascript" src="../../src/editor/classical/generator.js"></script>
+	<script type="text/javascript" src="../../src/plugins/lensdevice.js"></script>
+	<script type="text/javascript" src="../../src/plugins/photo.js"></script>
+	<script type="text/javascript" src="../../src/util/ioutils.js"></script>
+	<script type="text/javascript" src="../../src/core/iebrowser.js"></script>
+	
+	<!-- Script to inject Photo lens wrapper into the document -->	
+	<script text="text/javascript">
+		var VIEW; 
+	
+		function installLensWrapper () {
+			try {
+			  var n = document.getElementById('lens-container');			  
+				xtiger.resources.setBase('../../axel/bundles');
+				VIEW = new xtiger.editor.PhotoViewer(xtiger.bundles.photo.lensBoxURL, document, n);
+				VIEW && VIEW.show();
+			} catch (e) {
+				alert(e.toString());
+			}
+		}
+		
+		xtdom.addEventListener(window, 'load', installLensWrapper);
+	</script>
+</head>
+<body>	
+	<p>This file is a test for the photo uploader device. It allows to test the lens wrapper design which is stored in the <tt>bundles/photo</tt> folder. Please note that as it uses an Ajax request to get the photo lens dialog box, this may be consider as a security violation error in some browsers unless you open it from behind a Web server.</p>
+	<hr/>
+	<input type="button" value="Hide" onclick="VIEW && VIEW.hide()"/>
+	<input type="button" value="Show" onclick="VIEW && VIEW.show()"/>	
+	<span>–</span>
+	<input type="button" value="Ready" onclick="VIEW && VIEW.ready()"/>
+	<input type="button" value="Complete" onclick="VIEW && VIEW.complete('sample.jpg')"/>
+	<input type="button" value="Loading" onclick="VIEW && VIEW.loading()"/>
+	<input type="button" value="Error" onclick="VIEW && VIEW.error('Something went wrong !')"/>
+	<input type="button" value="Busy" onclick="VIEW && VIEW.busy()"/>
+	<span>–</span>
+	<input type="button" value="Activate" onclick="VIEW && VIEW.activateUpload()"/>
+	<input type="button" value="Deactivate" onclick="VIEW && VIEW.deactivateUpload()"/>
+	<hr/>
+	<div id="lens-container" style="position:relative">
+	</div>
+</body>	
+</html>

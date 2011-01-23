@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<Bibliography>
+  <TopicTitle>Publications</TopicTitle>
+    <Publication>
+      <PublicationId>0</PublicationId>
+      <Paper>
+        <ArticleInProceedings>
+          <PublishingYear>2008</PublishingYear>
+          <Title>Developing Interoperable Collaboration Services to Sustain Activities of Communities of Practice</Title>
+          <Authors>
+            <Author>
+              <FirstName>L.</FirstName>
+              <LastName>Esnault</LastName>
+            </Author>
+            <Author>
+              <FirstName>N.</FirstName>
+              <LastName>Karacapilidis</LastName>
+            </Author>
+            <Author>
+              <FirstName>D.</FirstName>
+              <LastName>Gillet</LastName>
+            </Author>
+            <Author>
+              <FirstName>C.</FirstName>
+              <LastName>Vanoirbeek</LastName>
+            </Author>
+          </Authors>
+          <Proceedings>
+            <PublishingYear>2008</PublishingYear>
+            <ProceedingsTitle>Proceedings of the International Conference on Information Resources Management</ProceedingsTitle>
+            <ShortName>IRM</ShortName>
+            <Location>
+              <City>Ontario</City>
+              <State>Canada</State>
+            </Location>
+            <Dates>18-20 May</Dates>
+          </Proceedings>
+        </ArticleInProceedings>
+      </Paper>
+    </Publication>
+    <Publication>
+      <PublicationId>0</PublicationId>
+      <Paper>
+        <ArticleInProceedings>
+          <PublishingYear>2008</PublishingYear>
+          <Title>Bridging the Gap Between Technical and Pedagogical Project Partners' Perspectives on the Modelling of Communities of Practice</Title>
+          <Authors>
+            <Author>
+              <FirstName>A.</FirstName>
+              <LastName>Elghali</LastName>
+            </Author>
+            <Author>
+              <FirstName>A.</FirstName>
+              <LastName>Giboin</LastName>
+            </Author>
+            <Author>
+              <FirstName>C.</FirstName>
+              <LastName>Vanoirbeek</LastName>
+            </Author>
+          </Authors>
+          <Proceedings>
+            <PublishingYear>2008</PublishingYear>
+            <ProceedingsTitle>Proceedings of the Sixth International Conference on Networked Learning</ProceedingsTitle>
+            <ShortName>NLC</ShortName>
+            <Location>
+              <City>Halkidiki</City>
+              <State>Greece</State>
+            </Location>
+            <Dates>5-6 May</Dates>
+          </Proceedings>
+        </ArticleInProceedings>
+      </Paper>
+    </Publication>
+    <Publication>
+      <PublicationId>0</PublicationId>
+      <Paper>
+        <ArticleInProceedings>
+          <PublishingYear>2007</PublishingYear>
+          <Title>Efficient Static Analysis of XML Paths and Types</Title>
+          <Authors>
+            <Author>
+              <FirstName>P.</FirstName>
+              <LastName>Genevès</LastName>
+            </Author>
+            <Author>
+              <FirstName>N.</FirstName>
+              <LastName>Layaida</LastName>
+            </Author>
+            <Author>
+              <FirstName>A.</FirstName>
+              <LastName>Schmidt</LastName>
+            </Author>
+          </Authors>
+          <Proceedings>
+            <PublishingYear>2007</PublishingYear>
+            <ProceedingsTitle>Proceedings of the ACM SIGPLAN Conference on Programming Language Design and Implementation</ProceedingsTitle>
+            <ShortName>PLDI</ShortName>
+            <Location>
+              <City>San Diego</City>
+              <State>California</State>
+            </Location>
+            <Dates>10-13 June</Dates>
+          </Proceedings>
+        </ArticleInProceedings>
+      </Paper>
+    </Publication>
+    <Publication>
+      <PublicationId>0</PublicationId>
+      <Paper>
+        <ArticleInProceedings>
+          <PublishingYear>2004</PublishingYear>
+          <Title>Sustaining collaboration within a learning community in flexible engineering education</Title>
+          <Authors>
+            <Author>
+              <FirstName>A.V.</FirstName>
+              <LastName>Nguyen-Ngoc</LastName>
+            </Author>
+            <Author>
+              <FirstName>D.</FirstName>
+              <LastName>Gillet</LastName>
+            </Author>
+            <Author>
+              <FirstName>S.</FirstName>
+              <LastName>Sire</LastName>
+            </Author>
+          </Authors>
+          <Proceedings>
+            <PublishingYear>2004</PublishingYear>
+            <ProceedingsTitle>Proceedings of the World Conference on Educational Multimedia, Hypermedia and Telecommunications (ED-MEDIA)</ProceedingsTitle>
+            <Location>
+              <City>Lugano</City>
+              <State>Switzerland</State>
+            </Location>
+            <Dates>21-26 June</Dates>
+          </Proceedings>
+        </ArticleInProceedings>
+      </Paper>
+    </Publication>
+</Bibliography>

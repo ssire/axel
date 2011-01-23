@@ -1,0 +1,762 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="Curriculum XTiger XML document template" />
+  <meta name="keywords" content="curriculum, template, XTiger" />
+
+  <title>Curriculum Editor</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="html">
+  
+    <xt:component name="head">                 
+      <span class="noshow"><xt:use types="meta" label="meta"/></span>
+      <div><span class="head">TITLE</span> <xt:use types="text" label="title"/></div>
+      <div class="noshow"><span class="head">STYLE</span><xt:use types="style" label="style"/></div>
+    </xt:component>
+  
+    <xt:component name="meta">
+      <strong><xt:attribute types="text" name="http-equiv" default="Content-Type"/></strong> : <xt:attribute types="text" name="content" default="application/xml+xhtml; charset=utf-8"/>
+    </xt:component> 
+    
+    <xt:component name="style">
+      <span class="noshow"><strong>type: </strong><xt:attribute types="text" name="type" default="text/css"/></span><span id="styleToggle" class="button">hide</span>
+      <p id="style">    
+      <xt:use param="type=textarea;layout=placed;enablelinebreak=true;shape=parent-150px"
+        types="text" handle="pre">   
+      /* two-columns */          
+
+      body {
+      	font-family: Arial, Arial, Helvetica, sans-serif; 
+      	line-height: 1.3em;
+      }	
+
+      header {
+        display: block;
+      	float: left;
+      	width: 20%;
+      	padding: 1em;
+      /*  border: solid 1px gray;*/
+      }
+
+      curriculum {
+      	display: block;
+      	float: left;
+      	margin: 0 auto 0 2.5em;    
+      	width: 70%;              
+      }       
+
+      footer {
+        clear: left;
+        display: block;
+        border-top: dashed 1px black;
+        margin: 1em auto;       
+        padding: 1em 0 0 0;
+        text-align: center;  
+        font-size: 80%;
+      }           
+
+      @media print {    
+        header {        
+          margin-top: 1em;
+        	width: 10em;
+        }
+        curriculum {      
+          margin-left: 2em;
+          margin-top: 1em;
+        }       
+        body {
+          font-size: 10pt;        	
+        }   
+        footer {
+          display: none;
+        } 
+        a {
+          border-style: none !important;
+        }       
+        publication > url:before, publication > url, publication > url:after {
+          display: none;
+        }
+      }
+
+      /******************/
+      /* header content */
+      /******************/
+
+      name {
+      	display: block;
+      	margin: 1em auto 1em auto;
+      	font: normal 2em Tahoma, sans-serif;
+      	letter-spacing: 0.2ex;
+      }                       
+
+      header > role {
+        display: block;
+        margin: 1.6em auto 1em auto;  
+      	font: italic 1.4em Helvetica;
+      	letter-spacing: 0.2ex;
+      } 
+
+      expertise {
+        display: list-item;
+        margin: 1em auto 1em auto;
+      	list-style: disc;
+        list-style-position: inside;	
+      	font: italic 1.2em/1.3em Helvetica;
+      }
+
+      email {
+        display: block;
+        margin: 2em auto;  
+        font-size: 0.9em;
+      }
+
+      phone {
+        display: block;
+        margin: 2em auto;  
+        font-size: 0.9em;
+      } 
+
+      profile {
+        display: block;
+        margin: 2em auto;  
+        font-size: 0.9em;
+      } 
+
+      address {
+        display: block;
+        margin: 2em auto;        
+        font-style: normal;
+        font-size: 0.9em;
+      } 
+
+      street, city, country {
+        display: block;
+      }
+
+      contact {
+      	display: block;
+      }       
+
+      mantra:before {    
+      	content: "« ";
+      }          
+
+      mantra:after {   
+      	content: " »";
+      }      
+
+      mantra { 
+      	display: block;
+        margin: 2em auto; 
+        font: 1.3em/1.4em cursive;
+      } 
+
+      /**********************/
+      /* curriculum content */  
+      /**********************/
+
+      experience, education, languages, skills, publications, distinctions {
+        display: block;
+        margin-bottom: 1.5em;
+      }
+
+      experience:before, education:before, languages:before, skills:before, publications:before, distinctions:before {    
+      	content: attr(category);
+        font: normal small-caps normal 1.4em/2em Monaco;
+        text-transform: capitalize;
+      }        
+
+      experience:before:first-letter {    
+        font-weight: bild;
+      }        
+
+      /* Experience */
+
+      placement {
+        display: block; 
+        margin-top: 0.4em;
+      }                
+
+      placement > date, placement > role, placement > company, placement > place  {
+        display: inline;
+        font: bold 1.1em/1.6em Helvetica;
+      }
+
+      placement > date:after {
+        content: ":";
+      }
+
+      placement > role:after, placement > company:after {
+        content: ", ";
+      }
+
+      activity { 
+        display: list-item;
+      	list-style: disc inside;
+        font-family: Helvetica, sans-serif; 
+        font-weight: medium;  
+        line-height: 1.4em;
+      }             
+
+      /* Education */
+
+      diploma {
+        display: list-item;
+      	list-style: disc inside;
+        line-height: 1.4em;      	
+      }     
+
+      degree:after {
+        content: ",";
+        font-weight: normal;
+      }      
+
+      degree, school, comment {
+        display: inline;  
+      }              
+
+      diploma > degree {
+        font-weight: bold;
+        font-size: 1.1em;
+      }             
+
+      diploma > comment {
+       white-space: pre-wrap;
+      }
+
+      diploma > comment:before {
+        content: "\A";
+      }
+
+      /* Language practices */               
+
+      practice {
+        display: list-item;
+      	list-style: disc inside;
+        line-height: 1.4em;      	
+      }
+
+      language, pratice_level {
+        display: inline;  
+      }          
+
+      language:after {
+        content: ":";
+      }
+
+      /* Skills */                      
+
+      a_skill {
+        display: list-item;
+      	list-style: disc inside;
+        line-height: 1.4em;      	
+      }
+
+      /* Publications */
+
+      publication {
+        display: list-item;
+      	list-style: disc inside;
+        line-height: 1.4em;      	
+      }           
+
+      publication > title {
+        font-style: italic;
+      }
+
+      title, authors, conference, journal, book, publisher, url {
+        display: inline;  
+      }           
+
+      title:after {
+        content: ".";
+      }      
+
+      authors:after, conference:after, journal:after, book:after  {
+        content: ",";
+      }      
+
+      journal, conference, book {
+        font-weight: normal;
+      }            
+
+      publication > url:before {
+          content: "(";
+      }  
+
+      publication > url:after {
+        content: ")";  
+      }  
+
+      /* Distinctions */               
+
+      distinction {
+        display: list-item;
+      	list-style: disc inside;
+        line-height: 1.4em;      	
+      }
+
+      distinction > role,  distinction > title, distinction > date {
+        display: inline;  
+      }                 
+
+      distinction > role {
+        font-weight: bold;
+      }                              
+
+      distinction > title:after {
+        content: ",";
+      }
+
+      distinction > role:after {
+        content: ",";          
+        font-weight: normal;
+      }
+
+      /* Common to several categpries*/
+
+      a {
+        text-decoration: none;    
+        color: black;
+        border-bottom: dashed 1px blue;
+      }
+
+      comment {
+        font-style: italic;
+      }
+      </xt:use>
+      </p>    
+    </xt:component>        
+    
+    <xt:component name="body">       
+      <xt:use types="header" label="header" />
+      <xt:use types="curriculum" label="curriculum" />    
+      <xt:use types="footer" label="footer" />
+    </xt:component>           
+    
+    <!-- ////////////
+          HEADER
+         //////////// -->
+    
+    <xt:component name="header">       
+      <header>
+        <xt:use param="type=textarea;layout=placed;shape=self;class=name"
+         handle="name" label="name" types="text">Name</xt:use>
+        
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="role" label="role" types="text">Role</xt:use>
+        
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="expertise">
+          <xt:use label="expertise" types="expertise" />
+        </xt:repeat>
+        
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="email" label="email" types="text">Email</xt:use>
+        
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="phone" label="phone" types="text">Phone</xt:use>
+        
+        <xt:use param="type=textarea;layout=placed;shape=self;filter=wiki;wiki_lang=html"
+          handle="profile" label="profile" types="text">Profile</xt:use>
+        
+        <xt:use types="address" label="address" />
+        
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="mantra" label="mantra" types="text">Mantra</xt:use>
+      </header>        
+    </xt:component>                   
+    
+    <xt:component name="expertise">
+      <expertise>
+         <xt:use types="text" param="type=textarea;layout=placed;shape=self">expertise</xt:use>  
+         <xt:menu-marker />
+      </expertise>
+    </xt:component>
+
+    <xt:component name="address">
+      <address>               
+        <xt:use types="text" param="type=textarea;layout=placed;shape=self"
+          handle="street" label="street">street</xt:use>
+          
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="city" label="city" types="text">City</xt:use>
+          
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="country" label="country" types="text">Country</xt:use>
+      </address>
+    </xt:component>      
+    
+    <!-- ////////////
+          CURRICULUM
+         //////////// -->
+    
+    <xt:component name="curriculum">       
+      <curriculum>
+        <xt:repeat minOccurs="1" maxOccurs="*" 
+          pseudoLabel="experience education skills languages publications distinctions">
+          <div class="line">
+            <xt:use param="class=menu"
+              types="experience education skills languages publications distinctions"  />
+          </div>
+        </xt:repeat>
+      </curriculum>        
+    </xt:component>       
+    
+    
+    <!-- ////////////
+          Experience
+         //////////// -->
+
+    <xt:component name="experience">        
+      <div class="row">     
+        <p class="section-category">
+          <xt:attribute param="type=input;layout=placed;shape=self"
+            name="category" default="Experience" types="text"  />
+        </p>            
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="placement">
+          <xt:use types="placement" label="placement" />
+        </xt:repeat>  
+      </div>
+    </xt:component>                
+
+    <xt:component name="placement">
+      <placement>    
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          label="date" handle="date" types="text" >Date</xt:use>        
+          
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          label="role" handle="role" types="text">Role</xt:use>
+          
+        <xt:use param="type=textarea;layout=placed;shape=self;filter=wiki;wiki_lang=html"
+          label="company" handle="company" types="text">Company</xt:use>        
+          
+        <xt:use types="place" label="place" />        
+        
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="activity">
+          <xt:use types="activity" label="activity"/>
+        </xt:repeat>
+      </placement>        
+    </xt:component>       
+    
+    <xt:component name="place">
+      <place>        
+        <xt:use param="type=textarea;layout=placed;shape=self" types="text" >Place</xt:use>
+        <xt:menu-marker />        
+      </place>
+    </xt:component>    
+
+    <xt:component name="activity">
+      <activity>        
+        <xt:use param="type=textarea;layout=placed;shape=self;filter=wiki;wiki_lang=html"
+          types="text" >activity</xt:use>
+        <xt:menu-marker />
+      </activity>                      
+    </xt:component>        
+    
+    <!-- ////////////
+           Education
+         //////////// -->
+
+    <xt:component name="education">                                 
+      <div class="row">     
+        <p class="section-category">
+            <xt:attribute param="type=input;layout=placed;shape=self" 
+              name="category" default="Education" types="text" />
+        </p>            
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="diploma">
+          <xt:use types="diploma" label="diploma" />
+        </xt:repeat>  
+      </div>
+    </xt:component>       
+    
+    <xt:component name="diploma">       
+      <diploma>      
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="degree" label="degree" types="text">Degree</xt:use>
+          
+        <xt:use param="type=textarea;layout=placed;shape=self;filter=wiki;wiki_lang=html"
+          handle="school" label="school" types="text">School</xt:use>
+          
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="comment" label="comment" types="text" option="unset">Comment</xt:use>
+          
+        <xt:menu-marker />
+      </diploma>        
+    </xt:component>  
+    
+    <!-- ////////////
+           Languages
+         //////////// -->
+
+    <xt:component name="languages">                                 
+      <div class="row">     
+          <p class="section-category">
+            <xt:attribute param="type=input;layout=placed;shape=self"
+              name="category" default="Languages" types="text"  />
+        </p>            
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="practice">
+          <xt:use types="practice" label="practice" />
+        </xt:repeat>  
+      </div>
+    </xt:component>       
+    
+    <xt:component name="practice">       
+      <practice>      
+        <xt:use param="type=textarea;layout=placed;shape=self"
+          handle="language" label="language" types="text">Language</xt:use>
+
+        <xt:use types="pratice_level" label="pratice_level" />
+      </practice>        
+    </xt:component>  
+
+    <xt:component name="pratice_level">
+      <pratice_level>        
+        <xt:use types="text" param="type=textarea;layout=placed;shape=self">pratice_level</xt:use>
+        <xt:menu-marker />
+      </pratice_level>
+    </xt:component>              
+    
+    
+    <!-- ////////////
+           Skills             
+         //////////// -->
+
+         <xt:component name="skills">                                 
+           <div class="row">     
+               <p class="section-category">
+                 <xt:attribute param="type=input;layout=placed;shape=self"
+                  name="category" default="Skills" types="text" />
+             </p>            
+             <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="a_skill">
+               <xt:use types="a_skill" label="a_skill" />
+             </xt:repeat>  
+           </div>
+         </xt:component>       
+
+         <xt:component name="a_skill">
+           <a_skill>        
+             <xt:use types="text" param="type=textarea;layout=placed;shape=parent-80px">Skill</xt:use>
+             <xt:menu-marker />
+           </a_skill>
+         </xt:component>
+
+   <!-- ////////////////
+          Distinctions
+        //////////////// -->   
+        
+        <xt:component name="distinctions">                                 
+          <div class="row">     
+              <p class="section-category">
+                <xt:attribute param="type=input;layout=placed;shape=self"
+                  name="category" default="Distinctions" types="text"  />
+            </p>            
+            <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="distinction">
+              <xt:use label="distinction" types="distinction" />
+            </xt:repeat>  
+          </div>
+        </xt:component>       
+
+        <xt:component name="distinction">       
+          <distinction>      
+            <xt:use param="type=textarea;layout=placed;shape=self"
+              handle="role" label="role" types="text" option="set">Role</xt:use>
+              
+            <xt:use param="type=textarea;layout=placed;shape=self"
+              handle="title" label="title" types="text" option="unset">Title</xt:use>
+            
+            <xt:use param="type=textarea;layout=placed;shape=self;filter=wiki;wiki_lang=html"
+              handle="date" label="date" types="text" option="unset">Date</xt:use>
+            
+            <xt:menu-marker />
+          </distinction>        
+        </xt:component>  
+
+  <!-- ////////////////
+         Publications
+       //////////////// -->
+       
+       <xt:component name="publications">                                 
+         <div class="row">     
+             <p class="section-category">
+               <xt:attribute param="type=input;layout=placed;shape=self"
+                name="category" default="Selected publications" types="text"  />
+           </p>            
+           <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="publication">
+             <xt:use label="publication" types="publication" />
+           </xt:repeat>  
+         </div>
+       </xt:component>       
+
+       <xt:component name="publication">       
+         <publication>      
+           <xt:use param="type=textarea;layout=placed;shape=self"
+            handle="title" label="title" types="text" >Title</xt:use>
+            
+           <xt:use param="type=textarea;layout=placed;shape=self"
+            handle="authors" label="authors" types="text" >Authors</xt:use>
+            
+           <xt:use types="conference journal book"/>
+           
+           <xt:use param="type=textarea;layout=placed;shape=self"
+            handle="publisher" label="publisher" types="text">Publisher</xt:use>
+                        
+           <xt:use param="type=textarea;layout=placed;shape=self;filter=wiki;wiki_lang=html"
+            handle="url" label="url" types="text" option="unset">http://url[link]</xt:use>
+            
+           <xt:menu-marker />
+         </publication>        
+       </xt:component>  
+
+       <xt:component name="conference">
+         <conference>        
+           <xt:use param="type=textarea;layout=placed;shape=self"
+            types="text">Conference</xt:use>
+         </conference>
+       </xt:component>              
+
+       <xt:component name="journal">
+         <journal>        
+           <xt:use param="type=textarea;layout=placed;shape=self"
+            types="text">Journal</xt:use>
+         </journal>
+       </xt:component>              
+
+       <xt:component name="book">
+         <book>        
+           <xt:use param="type=textarea;layout=placed;shape=self"
+            types="text">Book</xt:use>
+         </book>
+       </xt:component>              
+       
+       <!-- ////////////
+             FOOTER
+            //////////// -->     
+
+       <xt:component name="footer">
+         <footer>
+             <xt:use types="text" label="span">Document created with </xt:use>
+             <xt:use types="axel-link" label="a" />
+         </footer>
+       </xt:component>          
+
+       <xt:component name="axel-link">
+         <span>
+           <xt:use types="text">AXEL CV Machine</xt:use> :        
+           <xt:attribute types="text" name="href" default="http://media.epfl.ch/Templates" />        
+         </span>
+       </xt:component>               
+      
+  </xt:head>  
+  
+  <style type="text/css">    
+body {
+	max-width: 900px;
+}
+.noshow {
+  display: none;
+}              
+p#style {
+  display: none;
+}         
+/* HEAD section */
+div.head {
+  padding: 0;
+  margin: 5px 0 10px 0;
+  border-bottom: 2px dashed gray;
+}     
+div.head > p {
+  padding: 0 0 5px 0;
+  margin: 0; 
+  font: small;
+}
+span.head {
+  font: small courier,monospace;
+  color: yellow;
+  background: blue;   
+  padding: 0 10px;   
+  margin-right: 20px;
+}    
+span.button {
+  font-size: 80%;
+  border-bottom: dotted 1px darkviolet;
+  color: darkviolet;
+}         
+/* Category sections */
+p.section-category {    
+  font: normal small-caps normal 1.5em/2em Monaco;
+  text-transform: capitalize;
+  margin: 0;                 
+  padding: 0;
+}              
+div.row {
+  margin-left: 120px
+  ;
+  margin-bottom: 2em;
+}              
+.menu {
+  float: left;
+  width: 120px;
+}                      
+/* Preview mode */
+body.preview div.row {
+  margin-left: 0;
+}                
+body.preview div.head, body.preview span.menu, body.preview .footer  {         
+  display: none;
+}            
+/* editor bar */
+div#menu { 
+  border: solid 1px blue;
+  position: fixed;
+  top: 2em;
+  right: 2em;
+  z-index: 10;    
+	padding: 0.5em;
+	background: #A0A0A0;
+	-moz-box-shadow: 2px 2px 1px #000;  
+  -webkit-box-shadow: 2px 2px 1px #000; 
+}  
+  </style> 
+  
+  <link rel="stylesheet" type="text/css" href="../../templates/Preview.css" />
+  <link rel="stylesheet" type="text/css" href="CVMachine.css" />                         
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css" />        
+  
+  <script type="text/javascript" src="../../axel/axel.js"></script>  
+  <script type="text/javascript" src="../../src/util/editorbar.js"></script>    
+  <script type="text/javascript" src="../../src/util/debug.js"></script>    
+  <script type="text/javascript">                                         
+    var guiTrans = { 'show' : ['block', 'hide'], 'hide' : ['none', 'show'] };
+    var targets = ['style'];  
+    function startup() {       
+      setTimeout(installButtons, 100); // waits for end of transformation..     
+      EditorBar({
+          bundles_URL: '../../axel/bundles', 
+					nofileapi_URL : "nofileapi.html",
+          menuId: 'menu', 
+          layout: 'vertical',
+          load: true,
+          save: true,
+          preview: true,
+          manual: true
+          }).install()    
+    }
+    window.addEventListener('load', startup, false);   
+  </script>  
+
+</head>
+<body>
+  <div id="menu">
+  </div>                        
+  <span class="noshow"><xt:attribute types="text" name="xmlns" default="http://www.w3.org/1999/xhtml"/></span>  
+  <div class="head">    
+    <xt:use types="head" label="head"/>
+  </div>  
+  <xt:use types="body" label="body"/> 
+</body>
+</html>

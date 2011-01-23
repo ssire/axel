@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Requirements</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="requirements">
+
+    <xt:component name="last">
+        <p class="last">Last edited by <xt:use types="text" label="name">name</xt:use> on <xt:use types="text" label="date">date</xt:use></p>
+    </xt:component>
+      
+    <xt:component name="requirement">
+      <div class="requirement">
+        <p class="description">
+          <xt:use types="text" param="shape=parent-50px;type=textarea;layout=placed;" label="description">Description.</xt:use>
+        </p>
+        <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="examples">
+          <div class="examples">
+            <p><xt:menu-marker/>e.g.:</p>
+            <xt:repeat minOccurs="1" maxOccurs="*" label="examples">          
+                <span class="code-repeater"><xt:menu-marker size="14"/></span>
+                    <pre class="code"><xt:use types="text" label="code" param="shape=parent;type=textarea;layout=placed;enablelinebreak=true">code</xt:use></pre>
+            </xt:repeat>
+          </div>        
+        </xt:repeat>
+        <div class="separator"/>
+        <span class="req-repeater"><xt:menu-marker/></span> 
+      </div>
+    </xt:component> 
+    
+  </xt:head>                         
+
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+
+  <style type="text/css">
+    body {
+          counter-reset: req;     
+      margin: 20px 10px;
+      padding: 0;     
+    }   
+    p {
+      padding: 8px 0 0 0;
+      margin: 0;      
+    }
+    p.last {
+      padding: 0;
+      margin-left: auto;
+      margin-right: 0;
+      width: 300px;     
+    }
+    p.last > span {
+      color: brown;     
+    }
+    p.description:before {
+      content: counter(req) ". ";
+          counter-increment: req;         
+    }
+    p.description {
+      font-family: Helvetica;
+    }
+    div.examples {
+      margin-left: 30px;
+    }
+    div.examples > pre.code:first-of-type {
+      margin-top: 2px;
+    }
+    pre.code {
+      margin-left: 60px;
+      padding: 0;
+    }   
+    div.xtt-repeat-unset > span, div.xtt-repeat-unset > pre {
+      display: none;
+    }
+    span.code-repeater {
+      float: left;
+      clear: left;
+      width: 50px;    
+      height: 10px;     
+    }
+    span.req-repeater {
+      position: relative;
+      top: -10px;
+      left: 60px;     
+    }
+    div.separator {
+      width: 50px;
+      height: 20px;
+      border-bottom: 1px dashed black;                  
+    }
+  </style>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <h1><xt:use types="text" label="title">Requirements</xt:use></h1> 
+
+  <xt:use types="last"/>
+
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="requirement">
+    <xt:use types="requirement" label="requirement"/>
+  </xt:repeat>
+</body> 
+</html>

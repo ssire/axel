@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL automatic (load / save) test case : 'video' primitive editor plugin</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">
+  </xt:head>
+</head>
+  <body>         
+    <h1>Automatic (load / save) test case for <tt>'video'</tt> editor</h1>
+
+    <h2>Simple editors</h2>
+
+    <p>This is a simple editor, put in a separate paragraph. It's empty by default.</p>
+    
+    <p><xt:use types="video" label="video1"/></p>
+
+    <p>Now the editor filed with an url. To test the layout management, the editor is drawn into a text as a float element.</p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.
+      <div
+        style="border: thin solid black;
+        margin: 50px;
+        vertical-align: center;
+        text-align: center;
+        height: 400px;
+        max-width: 500px;
+        padding: 30px;
+        background-color: #7D9AC7;
+        float:left">
+        <xt:use types="video" label="video2">http://www.youtube.com/watch?v=VUVU14GmW18&amp;hl=fr_FR&amp;fs=1&amp;</xt:use>
+      </div>
+       Proin eget ante vel magna imperdiet cursus. Phasellus consectetur hendrerit suscipit. Maecenas egestas volutpat erat nec tincidunt. Ut lorem magna, fermentum sit amet accumsan vehicula, tempor nec nibh. Morbi nec elit id leo placerat commodo. Duis turpis orci, eleifend nec ullamcorper eget, vulputate ac quam. Nunc egestas urna in arcu rutrum consequat. Integer porttitor, ligula in sollicitudin fermentum, arcu quam lobortis lectus, sit amet vehicula dolor diam vitae lectus. Vivamus porta congue imperdiet. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque quis est sit amet ligula tempus mattis. Donec velit urna, pellentesque condimentum condimentum ac, varius quis lacus. Maecenas euismod, purus iaculis ornare fermentum, erat dui ultricies tellus, ut ultrices sem elit vehicula orci. Nulla imperdiet sapien erat.
+    </p>
+    <p>
+      Ut at erat odio, eu fermentum nunc. Pellentesque bibendum libero eget risus vestibulum aliquam. Proin egestas elit at risus elementum rhoncus. Quisque viverra, nulla nec cursus rhoncus, sapien quam aliquam felis, a sodales mauris tellus vitae odio. Proin ullamcorper ipsum a enim eleifend cursus. Curabitur a viverra orci. Nam orci ante, eleifend vel facilisis venenatis, luctus id elit. Mauris scelerisque scelerisque semper. Phasellus pretium scelerisque vehicula. Cras venenatis felis nec tortor ullamcorper adipiscing. Phasellus condimentum auctor sapien sit amet accumsan. 
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod. Proin eget ante vel magna imperdiet cursus. Phasellus consectetur hendrerit suscipit. Maecenas egestas volutpat erat nec tincidunt. Ut lorem magna, fermentum sit amet accumsan vehicula, tempor nec nibh. Morbi nec elit id leo placerat commodo. Duis turpis orci, eleifend nec ullamcorper eget, vulputate ac quam. Nunc egestas urna in arcu rutrum consequat. Integer porttitor, ligula in sollicitudin fermentum, arcu quam lobortis lectus, sit amet vehicula dolor diam vitae lectus. Vivamus porta congue imperdiet. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque quis est sit amet ligula tempus mattis. Donec velit urna, pellentesque condimentum condimentum ac, varius quis lacus. Maecenas euismod, purus iaculis ornare fermentum, erat dui ultricies tellus, ut ultrices sem elit vehicula orci. Nulla imperdiet sapien erat.
+    </p>
+
+    <h2>Repeatable editors</h2>
+
+    <p>Let's use the video editor in a repeatable context.</p>
+
+    <p>First, inside a repeater with a label</p>
+
+    <div style="border: thin solid black; padding: 10px; display: block">
+      <p>There is a video list</p>
+      <xt:repeat minOccurs="1" label="repeater1">
+        <div style="
+          margin: 5px;
+          padding: 20px;
+          background-color: #7D9AC7;
+          ">
+          <p><xt:menu-marker/></p>
+          <p><xt:use types="video" label="video-rep1"/></p>
+        </div>
+      </xt:repeat>
+      <br/>
+    </div>
+
+    <h2>Optional editors</h2>
+    
+    <p>There are tested some cases involving an optional editor.</p>
+    
+    <xt:use types="video" label="video-opt1" option="set">Post your video here</xt:use>
+    
+    <xt:use types="video" label="video-opt2" option="unset">Guess what to do</xt:use>
+  </body>
+</html>
+

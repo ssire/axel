@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>How to use services in AXEL</title>
+  <link rel="stylesheet" type="text/css" href="docu.css" />	
+</head>
+<body> 
+<pre>
+--------------------------------------------------------------------------
+---------------- How to use the Rich Text Plugin in AXEL  ----------------
+--------------------------------------------------------------------------
+
+COMPATIBILITY:
+
+Tested on:
+	- Firefox (3.5)
+	- Opera (10)
+	- Chromium
+	- Safari
+	- Internet Explorer (7, 8)
+
+Summary
+=======
+</pre> 
+
+<ul>
+<li><a href="#syntax">Link plugin syntax in templates</a></li>
+<ul>                         
+  <li><a href="#declaration">Declaration</a></li>
+  <li><a href="#parameters">Parameters</a></li>
+  <li><a href="#styling">Styling</a></li>
+</ul>          
+<li><a href="#results">Rich text plugin serialization's results</a></li>
+
+<li><a href="#deployment">Packaging and deployment</a></li>
+<ul>                         
+  <li><a href="#source-files">Source files</a></li>
+  <li><a href="#stylesheets">Style sheets</a></li>
+</ul>    
+</ul>  
+
+<pre id="syntax">  
+Rich text plugin syntax in templates
+====================================
+</pre>
+     
+<pre id="declaration">    
+Declaration
+~~~~~~~~~~~
+
+Base usage is 
+
+&lt;xt:use types="richtext" label="mylabel">Some default content&lt;/xt:use>.
+
+"Some default content" could either be plain text or HTML styled content. Allowed tags are :
+ &lt;p>
+ &lt;br/>
+ &lt;span>
+
+However, the current implementation supports vintage-html styling tags (&lt;b>, &lt;u> and &lt;i>). They are converted at serialization time in the target language.
+
+Please note that the &lt;xt:use> element is converted by the template's transformation process into a &lt;div>. This means that such a declaration : &lt;p>&lt;xt:use types="richtext" label="mylabel">Some default content&lt;/xt:use>&lt;/p> would lead to something like &lt;p>&lt;div>... which is illegal and would make narrow-minded browsers (IE if you haven't guessed) fail.
+</pre>
+     
+<pre id="parameters">    
+Parameters
+~~~~~~~~~~
+
+You can use param="key1=value1;key2=value2..." to define some lens parameters.
+Supported parameters:
+
+ * display="block|single|inline" (default: block) The layout parameter controls how the editor's handle is rendered, and how the editor should behave on carriage returns.
+ 	layout="block" : The editor appears as a block (a div) and allows multiple paragraph as editable data
+ 	layout="single" : the editor appears as a block but does not accepts paragraphs. Carriage return yields line breaks instead
+ 	layout="inline" : the editor is inlined as a span in a paragraph. A return stroke ends the current edition process (still to be implemented)
+ * lens parameters
+</pre>
+     
+<pre id="styling">    
+Styling
+~~~~~~~       
+
+The editor's handle bears the .xtt-editable class name. It is recommended to apply specific CSS rules in order to distinct the editable areas from the non-editable ones.
+
+The lens bears the folowing classes in its class attribute : .xtt-lens, .xtt-lensstyle and .xtt.editing.
+
+You should avoid any modification of the xtt-lens class, as it implements rules for the correct placement of the lens. However, the lens is stylable through the .xtt-lensstyle and .xtt-editing classes.
+
+The .xtt-lensstyle customize the appearence of the lenses (the colors, for instance). The .xtt-editing class is used to superseed the rules of xtt-repeat-unset in case of optional parts of the template. This
+class should reproduce the "normal" text appearence rules. For instance, if all your text is blue, this rule must be rewritten to match this.
+
+In future the editor's handle will support a custom class name given through the "class" parameter of the &lt;xt:use> element. In meantime, you could encompass the &lt;xt:use> element within a div bearing the styling you want.    
+</pre>
+     
+<pre id="results">    
+Rich text plugin serialization's results
+========================================
+
+The rich text editor aims at producing HTML styled text. however, no two browsers could agree on *how* the text is styled. Thus, the choice was made to follow a coding close to the firefox one's, as Firefox tends to follow specifications
+quite well. Styling is therefore done using the style attribute of (possibly imbricated) &lt;span> elements.
+
+In order to avoid mixed content in the serialization's results, mixed content is put into a span element without any styling.
+</pre>
+     
+<pre id="deployment">    
+Packaging and deployment
+========================
+</pre>
+     
+<pre id="source-files">    
+Source files
+~~~~~~~~~~~~
+
+The rich text plugin editor is defined in src/plugins/richtext.js; It depends on the lens device declared in scr/plugins/lensdevice.js. Thus, the lens device must be included in any packaging form *before* richtext.js.
+
+Thus, if you include these 2 javascript files individually into your application, you must do it in the following order:
+
+&lt;script type="text/javascript" src="src/plugins/lensdevice.js">&lt;/script>
+&lt;script type="text/javascript" src="src/plugins/richtext.js">&lt;/script> 
+</pre>
+     
+<pre id="stylesheets">    
+Style sheets
+~~~~~~~~~~~~       
+
+None at the moment     
+</pre>
+</body>
+</html>

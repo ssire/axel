@@ -1,0 +1,214 @@
+Report {
+  display: block;
+}      
+Authors, Timestamp, Section, Illustrations, Heading, Figure, Code {
+  display: block;
+  margin: 1em 0 1em 0;
+}                                        
+Title, Timestamp, Parag, Section, Image, List, Source, RefUrl {    
+  display: block;
+  margin: 0.5em 0 0;                           
+}      
+Caption, CodeLegend {
+  display: block;
+  margin: 0;              
+  border-bottom: dotted 1px gray;
+}
+Figure > img, Snippet {
+  display: block;
+  margin: 0.5em 0;    
+}
+CreationDate:before {
+	content: "Creation date : ";
+}                                      
+CreationDate:after {
+	content: ", ";
+}                                      
+LastUpdate:before {
+	content: "Last update : ";
+}                                      
+Quote {    
+  display: block;
+  margin: 0.5em 1em;                           
+}   
+Snippet {
+	font-family: courier, monospace;
+	white-space: pre;
+	border: solid 1px gray;
+	padding: 0 0 0.5em 0;
+}               
+Source {
+  display: inline;
+}
+SubHeading {    
+  display: block;
+  margin: 1.5em 0 1em;                           
+}                                                  
+Item {
+	display: list-item;
+	list-style: decimal none inside;
+	margin: 0.5em 0;       
+}
+Authors, Fragment {
+  display: inline;  
+}       
+Title, Heading, SubHeading, Illustrations:before, References:before, Ref, CodeRef, CodeLegend:before, .deco {
+	color: #005A9C; 
+}
+Title {
+	font-size: 180%;
+}              
+Heading {
+	font-size: 140%; 
+}
+SubHeading {
+	font-size: 120%;
+}               
+Illustrations:before, References:before {   
+	clear: left;
+	display: block;
+	font-size: 140%;       
+    margin: 2em 0 1em;
+}                   
+Illustrations:before {
+	content: 'Illustrations';
+}	
+References:before {
+	content: 'References';
+}	   
+Snippet {
+	font-family: courier, monospace;
+	font-size: 80%;
+	white-space: pre-wrap;
+	border: solid 1px gray;
+	padding: 0.5em;   
+	background-color: #F2F7FF;
+}
+Figure {
+	margin-bottom: 2em;
+}
+Ref, CodeRef, CodeLegend:before {
+	font-weight: bold;
+}                
+Ref:before {
+	content: 'Figure ';
+}
+Ref:after {         
+	content: '. ';
+}               
+CodeLegend:before {
+	content: 'Example ';
+}
+CodeLegend > Fragment:before{         
+	content: ': ';
+}               
+Key:before {
+	content: '(';
+}
+Key:after {         
+	content: ') : ';
+}               
+Quote:before {
+	content: '<< ';
+}
+Quote:after {         
+	content: ' >>';
+}               
+Source:before {
+	content: ', (';
+}
+Source:after {         
+	content: ')';
+}               
+Fragment[FragmentKind="important"] {
+	font-style: italic;
+}
+Fragment[FragmentKind="verbatim"] {
+	font-family: Courier, monospace;
+	
+}             
+
+/******************
+ *** Editing UI ***
+ ******************/
+pre {  
+    /* FIXME: equivalent to Code in output */
+    margin:0;
+	font-family: courier, monospace;
+	font-size: 80%;
+	white-space: pre-wrap;
+	border: solid 1px gray;
+	padding: 0.5em;   
+	background-color: #F2F7FF;
+}       
+div.row, div.section, div.figure {
+    clear: left;
+}       
+div.image img {
+    border: 1px solid gray;
+    min-width: 50px;
+    min-height: 20px;
+}
+span.menu {
+    float: left;
+    width: 50px;     
+    margin-bottom: 0.5em;
+}  
+div.content {
+    margin-left: 80px;     
+}           
+ul {
+    padding: 0;
+}    
+li {
+    list-style: decimal none inside;
+    margin: 0.5em 0;
+}                   
+
+/********************
+ *** Preview Mode ***
+ ********************/
+body.preview span.menu {
+    display: none;
+}
+body.preview div.content {
+    margin-left: 0;
+}
+/* XHTML static view */
+body {
+ 	font-family: sans-serif;
+	padding:1.5em 2em 1em 2em;
+}
+img.figure {
+	max-height: 400px;
+}
+img.figure:hover {
+	max-height: none;
+}                      
+
+/****************
+ *** Printing ***
+ ****************/
+@media print {   
+ 	.noprint { 
+		display: none
+	}
+  html {
+		/*	sets the margins on each page at least on Opera and Firefox, but not Safari */
+		margin-left: 1cm; 
+		margin-right: 0.5cm;
+		margin-top: 1cm;
+		padding: 0;
+	}
+	body {
+		font-size: 11pt;
+	}     
+	Fragment {
+		font-family: georgia, serif;
+	}        
+	Caption, Heading, SubHeading, CodeLegend {
+		page-break-after: avoid;
+	}
+	
+}	
+

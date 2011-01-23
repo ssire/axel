@@ -1,0 +1,285 @@
+/* two-columns */          
+                          
+body {
+	font-family: sans-serif; 
+	line-height: 1.3em;
+}	
+
+header {
+  display: block;
+	float: left;
+	width: 20%;
+	padding: 1em;
+/*  border: solid 1px gray;*/
+}
+
+curriculum {
+	display: block;
+	float: left;
+	margin: 0 auto 0 2em;    
+	width: 70%;              
+}       
+
+footer {
+  clear: left;
+  display: block;
+  border-top: dashed 1px black;
+  margin: 1em auto;       
+  padding: 1em 0 0 0;
+  text-align: center;  
+  font-size: 80%;
+}           
+
+@media print {   
+  div#menu {
+    display: none;
+  }
+  header {        
+    margin-top: 1em;
+  	width: 10em;
+  }
+  curriculum {      
+    margin-left: 2em;
+    margin-top: 1em;
+  }       
+  body {
+    font-size: 10pt;        	
+  }   
+  publication > url:before, publication > url, publication > url:after {
+    display: none;
+  }
+  a {
+    border-bottom: none;   
+    text-decoration: none;        
+  }
+  footer {
+    display: none;
+  } 
+}
+                     
+/******************/
+/* header content */
+/******************/
+
+name {
+	display: block;
+	margin: 1em auto 1em auto;
+	font: 2em Geneva;
+	letter-spacing: 0.2ex;
+}                       
+
+header > role {
+  display: block;
+  margin: 2em auto 1em auto;  
+	font: 1.5em Helvetica;
+	letter-spacing: 0.2ex;
+} 
+
+expertise {
+  display: list-item;
+  margin: 1em auto 1em auto;
+	list-style: disc;
+  list-style-position: inside;	
+	font: 1.2em/1.3em Helvetica;
+}
+    
+email {
+  display: block;
+  margin: 2em auto;  
+}
+  
+phone {
+  display: block;
+  margin: 2em auto;  
+} 
+
+profile {
+  display: block;
+  margin: 2em auto;  
+} 
+
+address {
+  display: block;
+  margin: 2em auto;        
+  font-style: normal;
+  font-size: 1em;		
+} 
+
+street, city, country {
+  display: block;
+}
+
+contact {
+	display: block;
+}       
+
+mantra:before {    
+	content: "« ";
+}          
+
+mantra:after {   
+	content: " »";
+}      
+
+mantra { 
+	display: block;
+  margin: 2em auto; 
+  font: 1.5em/1.4em cursive;
+} 
+                  
+/**********************/
+/* curriculum content */  
+/**********************/
+
+experience, education, languages, skills, publications, distinctions {
+  display: block;
+  margin-bottom: 1.5em;
+}
+
+experience:before, education:before, languages:before, skills:before, publications:before, distinctions:before {    
+	content: attr(category);
+  font: normal small-caps bold 1.5em/2em Monaco;
+  text-transform: capitalize;
+}        
+
+/* Experience */
+
+placement {
+  display: block;
+}                
+
+placement > date  {
+  display: inline;
+  font: bold 1em/1.6em Helvetica;
+}
+
+placement > role, placement > company, placement > place  {
+  display: inline;
+  font: normal 1em/1.6em Helvetica;
+}
+
+placement > date:after {
+  content: ":";
+}
+
+placement > role:after, placement > company:after {
+  content: ", ";
+}
+
+activity { 
+  display: list-item;
+	list-style: disc inside;
+  font-family: Helvetica, sans-serif; 
+  font-weight: medium;  
+}             
+
+/* Education */
+        
+diploma {
+  display: list-item;
+	list-style: disc inside;
+}     
+
+degree:after {
+  content: ",";
+  font-weight: normal;
+}      
+
+degree, school, comment {
+  display: inline;  
+}              
+
+diploma > degree {
+  font-weight: bold;
+}             
+
+diploma > comment {
+ white-space: pre-wrap;
+}
+
+diploma > comment:before {
+  content: "\A";
+}
+
+/* Language practices */               
+
+practice {
+  display: list-item;
+	list-style: disc inside;
+}
+
+language, pratice_level {
+  display: inline;  
+}          
+
+language:after {
+  content: ":";
+}
+
+/* Skills */                      
+
+a_skill {
+  display: list-item;
+	list-style: disc inside;
+}
+      
+/* Publications */
+        
+publication {
+  display: list-item;
+	list-style: disc inside;
+}
+
+title, authors, journal, conference, publisher {
+  display: inline;  
+}           
+
+title:after {
+  content: ".";
+}      
+
+authors:after, conference:after, journal:after  {
+  content: ",";
+}      
+
+journal, conference {
+  font-style: italic;
+}
+
+/* Distinctions */               
+
+distinction {
+  display: list-item;
+	list-style: disc inside;
+}
+
+distinction > role,  distinction > title, distinction > date {
+  display: inline;  
+}                 
+
+distinction > role {
+  font-weight: bold;
+}                              
+
+distinction > title:after {
+  content: ",";
+}
+
+distinction > role:after {
+  content: ",";          
+  font-weight: normal;
+}
+       
+/* Common to several categpries*/
+
+a {
+  text-decoration: none;    
+  color: black;
+  border-bottom: dashed 1px blue;
+}
+
+comment {
+  font-style: italic;
+}       
+           
+

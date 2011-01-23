@@ -1,0 +1,59 @@
+<Projet>
+  <Title>Conception d'un environnement d'exécution de widgets W3C pour mobiles</Title>
+  <ProjectType>master</ProjectType>
+  <Description>
+    <Title>Contexte</Title>
+    <Parag>
+      <Fragment>Depuis sa création en 1987, le </Fragment>
+      <Fragment FragmentKind="important">Centre de Recherche Public Henri Tudor</Fragment>
+      <Fragment> affiche les technologies de l’information et de la communication (TIC) parmi ses technologies-clés. Pour ce faire, il s’appuie sur son département </Fragment>
+      <Fragment FragmentKind="important">Centre d’Innovation par les Technologies de l’Information</Fragment>
+      <Fragment> (CITI) qui compte plus de 120 ingénieurs. L’objectif du CITI est d’accompagner, par la recherche et le conseil en innovation, l’économie luxembourgeoise vers les applications TIC les plus prometteuses, notamment dans le domaine de la mobilité.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>L'avènement des « application stores » sur mobile pose désormais le problème de la portabilité des applications. En effet les principales plateformes mobiles actuelles sont toutes propriétaires et incompatibles entre elles. Une solution peut être entrevue du côté du web mobile qui permet de régler en partie le problème de l'interopérabilité. Cependant le web actuel ne permet pas de répondre à tous les défis de la mobilité, notamment les problèmes de connexion et de débits des réseaux GSM actuels. Une solution peut être alors d'étudier l'approche des </Fragment>
+      <Link>
+        <LinkText>widgets W3C</LinkText>
+        <LinkRef>http://www.w3.org/TR/2009/WD-widgets-20091029/</LinkRef>
+      </Link>
+      <Fragment>, dans laquelle l'application web est packagée, fonctionne localement et télécharge uniquement ses données sur Internet. Comme l'application est téléchargée une seule fois, sa réactivité perçue en est d'autant améliorée.</Fragment>
+    </Parag>
+    <Title>Description du stage</Title>
+    <Parag>
+      <Fragment>Dans ce contexte, l'objectif de ce stage sera de spécifier et d'implémenter un environnement d'exécution de widgets open source pour mobiles. Cet environnement devra être compatible avec les spécifications du W3C relatives aux Widgets et exposer des APIs JavaScript spécifiques aux environnements mobiles comme </Fragment>
+      <Link>
+        <LinkText>DCCI</LinkText>
+        <LinkRef>http://www.w3.org/TR/DPF/</LinkRef>
+      </Link>
+      <Fragment> ou </Fragment>
+      <Link>
+        <LinkText>BONDI</LinkText>
+        <LinkRef>http://bondi.omtp.org/default.aspx</LinkRef>
+      </Link>
+      <Fragment>  (ex: appareil photo, répertoire, sms, …). Une veille préalable sur ce type d'APIs et sur les usages associés sera nécessaire.</Fragment>
+    </Parag>
+    <Parag>
+      <Fragment>Cet environnement pourra s'appuyer sur la base de code du navigateur mobile </Fragment>
+      <Link>
+        <LinkText>Mozilla Fennec</LinkText>
+        <LinkRef>http://wiki.mozilla.org/Fennec</LinkRef>
+      </Link>
+      <Fragment> et sur le portail de widgets open source </Fragment>
+      <Link>
+        <LinkText>Ripple</LinkText>
+        <LinkRef>http://code.google.com/p/mywiwall/</LinkRef>
+      </Link>
+      <Fragment> développé au CRP Henri Tudor. Une collaboration avec le groupe de travail </Fragment>
+      <Link>
+        <LinkText>WebApps</LinkText>
+        <LinkRef>http://www.w3.org/2008/webapps/</LinkRef>
+      </Link>
+      <Fragment> du W3C pourra être envisagée.  </Fragment>
+    </Parag>
+    <Title>Compétences attendues</Title>
+    <Parag>
+      <Fragment>Bonnes connaissances en génie logiciel et conception d'interfaces utilisateur technologies web (XHTML, CSS, HTTP, REST) et dans les langages de développement classiques (C, C++, Java). Bonnes connaissances en JavaScript (programmation par prototype, POO, DOM, traitements XML, AJAX, Comet, JQuery). Bon rédactionnel et capacités d'intégration dans l'équipe projet des connaissances des contraintes liées au développement sur mobile seraient un plus.</Fragment>
+    </Parag>
+  </Description>
+  <ContactPerson>Stéphane</ContactPerson>
+</Projet>

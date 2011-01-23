@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="Curriculum Vitae XTiger XML document template" />
+  <meta name="keywords" content="employment" />
+  
+  <title>Curriculum Vitae</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="curriculum">    
+  
+    <xt:component name="training">  
+      <dl>      
+        <dt class="date">    
+          <xt:use types="text" param="type=input;shape=self" label="date">Start year - End year</xt:use>
+          <xt:menu-marker/>
+        </dt>
+        <dd class="content">
+           <strong class="label">
+            <xt:use types="text" label="description">Activity description</xt:use>
+           </strong>      
+           <span class="comment"><xt:use types="text" label="comment" option="unset">Comments</xt:use></span>
+           <span class="location"><xt:use types="text" label="location">Location</xt:use></span> 
+        </dd>
+      </dl>
+    </xt:component> 
+
+    <xt:component name="employment">
+      <dl>
+        <dt class="date">
+          <xt:attribute types="text" name="start" default="Start"/>
+          <span> - </span>
+          <xt:attribute types="text" name="end" default="End"/>
+          <xt:menu-marker/>
+        </dt>
+        <dd class="content">
+          <strong class="label">
+            <xt:use types="text" label="description" param="type=input">Job description</xt:use>
+          </strong>
+          <xt:use types="text" label="location">Location</xt:use>,
+          <xt:use types="text" label="url" option="unset">Associated URL</xt:use>
+          <!-- FIXME: should be replaced by a "url" plugin -->   
+        </dd>
+      </dl>
+    </xt:component>
+
+    <xt:component name="practice">
+      <dl>
+        <dt>
+          <xt:use types="text" label="language">English</xt:use><xt:menu-marker/>
+        </dt>
+        <dd>
+          <xt:use types="text" label="pratice_level">Level's description</xt:use>
+        </dd>
+      </dl>
+    </xt:component>
+   
+  </xt:head>
+
+  <!-- AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <style type="text/css">
+  body
+   {            
+    margin-top: 20px;
+    padding: 10px;
+    color: #6d5858;
+    background-color: #f9f8ea;
+    font-family: Times, "Times New Roman", serif;
+    font-size: 14px;
+   }
+
+  span
+   {
+   display: inline;
+   }           
+
+  /***************** XTiger Forms *****************/ 
+
+  .xtt-editable:hover {
+    border: 1.5px dashed blue !important;
+    padding: 2px;
+  }
+
+  /************** Top ***************/
+
+  .info 
+   { 
+    text-align: left;
+   }
+
+  .name
+   { 
+    font-weight: bold;
+    font-size: 140%;
+   }  
+
+  address
+   { 
+    text-align: left;  
+    margin-left: 4%;
+   }
+
+  /***************** Body *****************/
+  .body
+  { 
+    width: 70%;
+  }
+
+  .field
+  { 
+    padding: 10px;
+    margin: 10px;
+    border-style: solid;
+    border-color: #353175;
+    border-width: 1px 4px 4px 1px;
+    }
+
+  .label
+  { 
+    font-weight: bold;
+    display:block;
+    }
+
+  .comment:after
+  { 
+    content: ", "
+    }
+
+  .location:after
+  { 
+    content: ". "
+    }
+
+  p.list > span:after
+  {
+    content: ","
+    }
+
+  p.list > span:last-of-type:after, p.list > span:only-of-type:after
+  {
+      content: "."
+  }   
+  dd.content, dd.span {
+    vertical-align: bottom;
+  }
+
+
+  /***************** Menu ******************/
+  .menu 
+  { 
+    top: 0;
+    right: 4px;
+    position: absolute;
+    margin-top: 20px;
+    text-align: left;
+    color: #6d5858;
+    padding: 10px;
+    width: 20%;
+    }
+
+  .entry
+  { 
+    display: block;
+    color: #353175;
+    font-weight:normal;
+    font-size : 130%;
+    text-decoration: none;
+    text-align: center;
+    background-color: #f8ebc4;
+    margin: 4px;
+    border-style: solid;
+    border-color: #353175;
+    border-width: 1px 4px 4px 1px;
+   }
+
+  /**************** Page foot **********/
+
+  .footer
+  { 
+    clear:both;
+  }
+
+  h1 
+  {
+    padding: 2px;
+    border-style: solid;
+    border-color: #353175;
+    border-width: thin;
+    font-size : 130%;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+
+  h2
+  { 
+    padding-left: 17px;
+    font-size : 120%;
+    font-family: Arial, Helvetica, sans-serif;
+   }
+
+  p { margin-left: 4% }
+
+  dt { margin-left: 0px }
+  dd { margin-left: 30px}
+
+  img
+  { 
+    border: none;
+    }
+  
+  </style>  
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+  
+</head>
+<body>
+  <p class="info">
+    <strong class="name"><xt:use types="text" param="layout=placed" label="full_name">Name</xt:use></strong><br/>
+    <span class="birth_day">Date of birth: <xt:use types="string" label="birth_day">../../..</xt:use></span>
+  </p>              
+  
+  <address class="address">
+    <span><xt:use types="text" label="address">Address's body</xt:use></span><br/>
+    <span>Tel: <xt:use types="text" label="phone">number</xt:use></span><br/>
+    <a class="email">e-mail: <xt:attribute types="text" name="email" default="email@serveur"/></a>
+  </address>
+
+  <map id="menu" title="Menu" class="menu">
+    <a class="entry" href="#Objectives">Objectives</a>
+    <a class="entry" href="#Education">Education and training</a>
+    <a class="entry" href="#Employment">Employment and placements</a>
+    <a class="entry" href="#Language">Languages</a>
+    <a class="entry" href="#Skill">Skills</a>
+    <a class="entry" href="#Interest">Interests</a>
+  </map>
+
+  <div class="body">
+
+    <div class="field">
+    <h1 id="Objectives">Objectives</h1>
+    <xt:repeat minOccurs="0" maxOccurs="*" label="objectives">    
+      <p class="list">                         
+        <xt:menu-marker/>
+        <xt:use types="text" label="description" param="shape=placed-80px;type=textarea;layout=placed">Objectives description</xt:use>
+      </p>
+    </xt:repeat>
+    </div>
+
+    <div class="field">
+      <h1 id="Education">Education and training</h1>
+        <!-- <dl> : for IE <dl> cannot be separated from <dd> -->
+        <xt:repeat minOccurs="1" label="training">
+          <xt:use types="training" label="item"/>
+        </xt:repeat>
+        <!-- </dl> -->
+    </div>
+
+    <div class="field">                 
+      <h1 id="Employment">Employment and placements</h1>
+        <!-- <dl> : for IE <dl> cannot be separated from <dd> -->
+        <xt:repeat minOccurs="1" label="placements">
+          <xt:use types="employment" label="employment"/>
+        </xt:repeat>
+        <!-- </dl> -->
+    </div>
+
+    <div class="field">
+      <h1 id="Languages">Languages</h1>
+        <!-- <dl> : for IE <dl> cannot be separated from <dd> -->
+        <xt:repeat minOccurs="1" label="languages"> 
+          <xt:use types="practice" label="practice"/>
+        </xt:repeat>
+        <!-- </dl> -->
+    </div>
+
+    <div class="field">
+      <h1 id="Skill">Skills</h1>
+      <p class="list">
+        <xt:repeat minOccurs="1" label="skills">    
+          <xt:use types="text" label="a_skill">Description of knowlegdes</xt:use>
+        </xt:repeat>
+      </p>
+    </div>
+
+    <div class="field">
+      <h1 id="Interest">Interests</h1>
+      <p class="list">
+        <xt:repeat minOccurs="1" label="interests">                              
+          <xt:use types="text" label="description">Description of knowlegdes</xt:use>
+        </xt:repeat>
+      </p>
+    </div>  
+  </div>
+</body>
+</html>

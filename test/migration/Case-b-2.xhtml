@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />	  
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Migration test case</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <xt:component name="type_a">  
+      <p><span class="info">Element A1</span> : <xt:use types="text" label="A1">"a1"</xt:use></p>
+      <p><span class="info">Element A2</span> : <xt:use types="text" label="A2">"a2"</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="type_b">  
+      <p><span class="info">Element B1</span> : <xt:use types="text" label="B1">"b1"</xt:use></p>
+      <p><span class="info">Element B2</span> : <xt:use types="text" label="B2">"b2"</xt:use></p>
+    </xt:component> 
+    
+    <xt:component name="type_c">  
+      <p><span class="info">Element C1</span> : <xt:use types="text" label="C1">"c1"</xt:use></p>
+      <p><span class="info">Element C2</span> : <xt:use types="text" label="C2">"c2"</xt:use></p>
+    </xt:component> 
+    
+    <xt:component name="type_d">  
+      <p><span class="info">Element D1</span> : <xt:use types="text" label="D1">"d1"</xt:use></p>
+      <p><span class="info">Element D2</span> : <xt:use types="text" label="D2">"d2"</xt:use></p>
+    </xt:component> 
+  
+  </xt:head>
+
+	<link rel="stylesheet" type="text/css" href="Case.css" />
+
+</head>
+<body>
+  <p class="subject">Choice insertion / deletion series</p>      
+
+  <h1>Migration test : <span name="case">case-b-2</span></h1>
+  
+  <h2 class="info">Choice addition</h2>
+  
+  <p>
+    This part will test choice addition, that is, adding a possible choice in an existing one.
+  </p>
+  
+  <h3 class="info">Labelled choice</h3>
+                                       
+  <span class="add" style="float: left; margin-right: 1em">type_d addition (start)</span>  
+  <xt:use types="type_d type_a type_b type_c" label="CHOICE"/>
+  
+  <h3 class="info">Anonymous choice</h3>
+                                              
+  <span class="add" style="float: left; margin-right: 1em">type_d addition (middle)</span>    
+  <xt:use types="type_a type_d type_c type_b"/>
+  
+  <h3 class="info">Anonymous choices in a repeat (labelled)</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" label="REPEAT">
+    <div>
+      <span class="add" style="float: left; margin-right: 1em">type_d addition (end)</span>  
+      <xt:use types="type_a type_b type_c type_d"/>
+    </div>
+  </xt:repeat>
+  
+  <h2 class="info">Choice deletion</h2>
+  
+  <h3 class="info">Labelled choice</h3>                                                      
+
+  <span class="del" style="float: left; margin-right: 1em">type_c deletion (end)</span>      
+  <xt:use types="type_a type_b" label="CHOICE"/>
+  
+  <h3 class="info">Anonymous choice</h3>
+  
+  <span class="del" style="float: left; margin-right: 1em">type_c deletion (end)</span>      
+  <xt:use types="type_a type_b"/>
+  
+  <h3 class="info">Anonymous choices in a repeat (labelled)</h3>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" label="REPEAT">
+    <div>
+      <span class="del" style="float: left; margin-right: 1em">type_c deletion (end)</span>      
+      <xt:use types="type_a type_b"/>
+    </div>
+  </xt:repeat>
+    
+</body>
+</html>

@@ -1,0 +1,175 @@
+<html xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL Test for popup menu</title>
+
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  <!-- <script type="text/javascript" src="../../src/util/debug.js"></script> -->
+  
+  <script type="text/javascript">     
+    var popup;                                         
+    
+    var model = function (sel) {
+        var selection = sel;
+        return {
+           update : function(val) { selection = val },
+           getSelection : function() { return selection} 
+        }
+    }
+    
+    var models = {
+        'short' : model('maison'),
+        'long' : model('c'),
+        'segmented' : model('c')
+    }
+    
+    var options = {
+        'short' : [ {display: '<i>home</i>', value : 'maison'}, 'loft', 'appartment' ],
+        // 'long' : [ 'a', 'b', 'charlie', 'delta', 'e', 'f', 'g', 'h' ],
+        'long' : [ '10', '20', '30', '40', '50', '60', '70', '80'],
+        'segmented' : [
+            { section : [ 'a', 'b', 'c' ], header : 'First of a very long header'},
+            { section : [ 'Lorem ipsum dolor sit amet', 'e', 'Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero.', 'Vestibulum eget odio lacinia', 'h' ], header : 'Second'} 
+            ]
+        // 'segmented' : [
+        //     { section : [ 'a', 'b', 'c' ], header : 'First of a very long header'},
+        //     { section : [ 'd', 'e', 'f' ], header : 'Second of a very long header'},
+        //     { section : [ 'g', 'h'], header : 'Third of a very long header'}
+        //     ]
+    }         
+    
+    function xtdomgetStyle(n, name) {
+      var pname = name.replace(/\-(\w)/g, function (strMatch, p1){
+  			return p1.toUpperCase();
+  		});
+  		return n.style[pname];
+    }
+
+    function xtdomsetStyle(n, name, value) {
+      var pname = name.replace(/\-(\w)/g, function (strMatch, p1){
+  			return p1.toUpperCase();
+  		});
+      n.style[pname] = value;
+    }
+
+    function handleEvent(event, type) {  
+      showPopup(type);                                
+      xtdom.stopPropagation(event);
+      xtdom.preventDefault(event);
+    }   
+     
+    // Returns true if the browser "eats up" container space to display scroll bars
+    // This is the case on Safari, Firefox and IE
+    // FIXME: it may depend on mode in IE (quircks, IE7, standards, ...)
+    function isInsideSBTypeBrowser() {    
+      var res = xtiger.cross.UA.gecko || xtiger.cross.UA.webKit || xtiger.cross.UA.IE;
+    	return res;     
+    }      
+    
+    function adjustWidthToScrollbar(n) { 
+      if (n.scrollHeight > n.clientHeight) {
+          var tmp;
+          // detect if scroll bar would be out of the window 
+          var pos = xtdom.findPos(n);
+          var size = windowSize();             
+          var freeV = size[0] - pos[0] - 30;
+          xtiger.cross.log('debug', 'scrollbar free ' + freeV + ' scrollWidth ' + n.scrollWidth);
+          tmp = ((n.scrollWidth + 20) < freeV) ? n.scrollWidth + 20 : freeV;
+          n.style.width = tmp + 'px'; // adds space for scroll bar            
+          n.resizable = true;
+      }    
+    }   
+                     
+    // from http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
+    function windowSize() {  
+      var myWidth = 0, myHeight = 0;
+      if( typeof( window.innerWidth ) == 'number' ) {
+        //Non-IE
+        myWidth = window.innerWidth;
+        myHeight = window.innerHeight;
+      } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+        //IE 6+ in 'standards compliant mode'
+        myWidth = document.documentElement.clientWidth;
+        myHeight = document.documentElement.clientHeight;
+      } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+        //IE 4 compatible
+        myWidth = document.body.clientWidth;
+        myHeight = document.body.clientHeight;
+      }  
+      return [myWidth, myHeight];  
+    }      
+    
+    function adjustHeight(n, max) { 
+      var h, tmp;
+      h = xtdomgetStyle(n, 'max-height');
+      if (h != max) {
+        xtdomsetStyle(n, 'max-height', max);
+      }    
+      var pos = xtdom.findPos(n); // FIXME use another positionment algo
+      var size = windowSize();             
+      var freeH = size[1] - pos[1] - 10;
+      if ((freeH > max) && (n.scrollHeight > n.clientHeight)) {
+        // gives more vertical space
+        tmp = (n.scrollHeight > freeH) ? freeH : n.scrollHeight;
+        xtdomsetStyle(n, 'max-height', tmp);        
+      }
+      xtiger.cross.log('debug','To right ' + (size[0] - pos[0]) + 'curWidth ' + n.clientWidth);
+      xtiger.cross.log('debug','To bottom ' + (size[1] - pos[1]) + 'curHeight ' + n.clientHeight);      
+    }    
+    
+    function showPopup(type) {  
+        if (! popup)  
+            init();      
+        var n = popup.getHandle();
+        // This has been integrated into popupdevice.js
+        // n.style.width = ''; // resets before (?) layout computation
+        // n.style.maxHeight = '';
+        var h = document.getElementById(type);           
+        popup.startEditing(models[type], options[type], models[type].getSelection(), h);
+        // This has been integrated into popupdevice.js
+        // adjustHeight(n, 150);          
+        // if (isInsideSBTypeBrowser()) {
+        //   adjustWidthToScrollbar(n);
+        // }                
+    }        
+
+    function init() {
+        var n = document.getElementById('short');
+        xtdom.addEventListener(n, 'mousedown', function(ev) { handleEvent(ev, 'short') }, false);
+        n = document.getElementById('long');        
+        xtdom.addEventListener(n, 'mousedown', function(ev) { handleEvent(ev, 'long') }, false);
+        n = document.getElementById('segmented');        
+        xtdom.addEventListener(n, 'mousedown', function(ev) { handleEvent(ev, 'segmented') }, false);
+        kbd = new xtiger.editor.Keyboard ();
+        xtiger.session(document).save('keyboard', kbd);
+        popup = new xtiger.editor.PopupDevice(document);
+    }
+    
+    xtdom.addEventListener(window, 'load', init, false);        
+  </script>
+
+  	<style type="text/css">    
+  	.handle {
+  	    text-decoration: underline;
+  	}               
+    .axel-popup-container {
+    }  
+  	</style>
+  </head>	
+</head>
+
+<body>
+  <p>This test for investigating popup menu</p>
+  
+  <p>Click to make a choice : 
+      <span class="handle" id="short">short</span>, 
+      <span class="handle" id="long">long</span>,
+      <span class="handle" id="segmented">segmented</span>      
+  </p>
+
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>  
+</body>
+</html>

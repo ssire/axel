@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Tâches</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Assistanat">
+
+    <xt:component name="Niveau">
+      <xt:attribute types="select" name="Niveau" i18n="pas&nbsp;du&nbsp;tout un&nbsp;peu bien" values="pas&nbsp;du&nbsp;tout un&nbsp;peu bien" default="pas&nbsp;du&nbsp;tout"/>
+    </xt:component>
+  
+    <xt:component name="Connaissances">
+      <ul>
+        <li>Langage Java : <xt:use types="Niveau" label="Java"/></li>
+        <li>Toolkit GWT : <xt:use types="Niveau" label="GWT"/></li>
+      </ul> 
+    </xt:component> 
+  
+  </xt:head>
+  
+  <style src="text/css">
+  .field {
+    padding: 2px;
+    border: 1px solid gray; 
+  }
+  </style>
+
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+  
+</head>
+<body>
+  <h2>Fiche d'assistance</h2>
+
+  <h3>Identité</h3> 
+  <p>Nom : <xt:use types="text" label="Nom" param="class=field">Nom</xt:use></p>
+  <p>Prénom : <xt:use types="text" label="Prenom" param="class=field">Prénom</xt:use></p>
+  
+  <h3>Connaissances</h3>
+  
+  <p>Indiquez vos niveaux de connaissance:</p>
+  
+  <xt:use types="Connaissances" label="Connaissances"/>
+</body>
+</html>

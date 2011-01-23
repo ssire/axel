@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>AXEL roadmap</title>
+  <link rel="stylesheet" type="text/css" href="../docs/docu.css" />	
+</head>
+<body> 
+<pre>
+----------------------------------------------------------------------
+----------------           AXEL ROADMAP          ---------------------
+----------------------------------------------------------------------
+
+Last update: June 30, 2010 by S.Sire
+
+This documents describes features and/or functionalities that we would like to add to AXEL / XTiger XML in the future. As our resources and manpower are quite limited, we would like to encourage anybody interested in to contribute !
+
+1/ Embed a Rich Text Editor as a plugin editor to go beyond the "richtext" plugin editor. That would allow to edit "unconstrained" HTML fragments within a document. To some extent this could also lead to a partial implementation of the original XTiger xt:bag element
+
+2/ Transform the "richtext" plugin editor into a semantic editor with configurable buttons to micro-format text selections
+
+3/ Make the wiki filter configurable to support different output language models (contact S. Sire for a proposition of a configuration syntax)
+
+4/ Terminate the tab navigation so that it skips invisible choices when navigating
+
+5/ Support tab navigation between document and lens devices and within lens devices (for lens wrappers with multiple fields)
+
+6/ Implement a generic lens device that can turn any XTiger component into a lens. That would allow to define lens with XTiger XML directly within a template (no need to create a Javascript wrapper)
+
+7/ Extend the photo plugin to support HTML 5 drag and drop and to support parallel uploads (this is partially implemented but not activated)
+
+8/ Make an script (XSLT ? Javascript ?) that transforms an XTiger XML template into an XML Schema defining its target XML content model (Vincent Quint has already done it with a two-passes XSLT transformation)
+
+9/ Make an script (XSLT ? Javascript ?) that transforms an XTiger XML template into a corresponding XSLT stylesheet that publishes the XML data it can edit as a static XHTML page with the same appearance
+
+10/ Make a robust XML loading algorithm that is backward compatible with legacy data when evolving a template into a new one (we have started to investigate it). The idea is to "auto-magically" update legacy data when opening it and saving it with the new template
+
+11/ Find a way to display buttons to rearrange the order of a repetition (e.g. shift-over + / - buttons could turn them into up / down arrows). Ultimately that would be great to support DnD to reorder repeated items.
+
+12/ Do an XTiger XML template validator, that scripts would tell if a template is valid and can be rendered with AXEL (e.g. check for XHTML compatibility with HTML such as <span/> that should be written <span> </span>, check namespaces declaration, check xt:component are only first child of xt:head, etc.)
+
+13/ Internationalize and localize all internal AXEL error messages and the bundles
+
+14/ Add declarative submissions a-la "XForms for HTML" into XTiger XML and implement them in AXEL
+
+15/ Create a hint system that would use a document created with a given template to display hints about editing each terminal element in this template. The hint could be displayed on fly over. The hints would allow more explanations than the initial default content of each terminal element.
+
+16/ Do smart selection in text editors: the first time the user edit it the default content should appear as selected (as when doing shift + click)
+
+17/ Create an AXEL debug bar (like Web developer's bar) that could be loaded into a template and that would allow to inspect internals of a document when debugging [this is still unclear which functionalities would be most useful compared to Firebug]
+
+18/ Support an xt:tide element directly with XML content directly in the head section of a template to send the template and its initial data in the same file (maybe this could be done in the xforms:model / xforms:instance fashion ?) 
+
+19/ Evaluate the feasability of new XTiger XML processors based on jquery for DOM manipulation, XBL2 or XSLT, compare advantages and inconvenients
+
+20/ Make a new implementation with a separate editors tree (that tree is currently an annotation of the DOM tree) and that would factorize the component definitions instead of developping them into the DOM (using component caches to optimize memory), compare advantages and inconvenients with the actual implementation
+
+21/ Support some forms of XML content reuse when switching from a choice to another one (e.g. when changing a Parag into a List that would be natural to transfer the Parag content model into the List content model) : this opens up the structure tranformation pandora box !
+
+22/ Support a specific key (e.g. Ctrl + Return) to add a new item to a repetition while editing the last item. Together with Tab navigation that would allow to offer a mouseless interaction model. To be complete we would need to invent some keyboard controls to navigate into the hierarchy of components and to control the current selection in choices.
+
+23/ Implement an undo functionality with an undo stack shared between all the core editors and the plugin editors. Currently only each individual repeat has a pseudo-undo stack where it stores items which have been shift-deleted (shift-minus click) and that can be shift-recreated (shift-plus click).
+
+24/ Integrate HTML form directly within XTiger XML and AXEL in a similar way to "XForms for HTML": when AXEL would encounter HTML form elements in a template  it would serialize them at the current point in the target XML content, we could reuse the XTIger  label attribute if necessary to map them to XML elements or reuse existing HTML attributes when it makes sense, that should work both way to load XML content too. The benefits would be to directly offer radio buttons, check boxes, password protected input, etc. without having to implement them as plugins with a new syntax. That would achieve to merge the document and data -oriented editing paradigms.
+
+25/ Make a "W3C widget" plugin (or "OpenSocial Gadget" plugin). This supposes to define precisely how the widget will contribute to the document model 
+
+26/ Make a "component place holder" plugin, that plugin would allow to select an XTiger component dynamically to be inserted inside a template (for instance from an online component store)
+
+27/ Turn AXEL into a W3C widget (or OpenSocial gadget) with a mechanism to generate Create / Update / Delete events when editing different parts of a document, such events could be subscribed to by widgets around in a portal. Reciprocally define a mapping to subscribe the AXEL widget to widgets around. Example scenarios involve editing a trip report and creating new sections by selecting landmarks on a map widget, or editing a gift list by selecting items in an Amazon Store widget, or generating a preliminary meeting report by "connecting" the document with an IRC widget used during the meeting to transcribe it.
+
+28/ Make a new generation algorithm that generates an editor for annotating an existing document (or voting for the different parts of it). Such editor would allow collaborative discussion of a collaboratively edited document.
+
+29/ Make a new generation algorithm that generates an editor for creating semantic search queries to search for documents and retrieve parts of them based on the user input. The generated editor would be a kind of XQuery editor if the documents are stored inside an XML database.
+
+30/ Study how to convert some target XML content model into data graphs based on an ontology. Eventually create a script that transform a template into a script to converts its data to a data graph.
+
+31/ Remove the pseudoLabel attribute on the xt:repeat element. In fact the XML loading algorithm could deduce pseudo labels by analyzing the repeated sub-tree, that would alleviate template's authors work.
+
+32/ Find a way to edit processing instructions and style sheets (XSLT or CSS) saved with the target XML content with a template. One possible solution is to create an xtiger.util.Document abstraction to open target XML content files that preserve their PI and their style sheets when saving (thus they are not really editable with the template). This will allow AXEL to edit target documents direclty publishable on the Web (no need for an extra transformation step).
+
+33/ Clean up xtiger.util.Form API, eventually separate it into xtiger.util.Template / xtiger.util.Document abstractions to interact with a template, and to interact with the input / output of a template.
+
+34/ Create an SVG based plugin editor to test the integration of very specialized editors within the library (e.g. a clock to select a time or several periods of time, a highly graphical calendar, etc.). Maybe such types of plugins could be integrated as "Widgets" (to some extent maybe the plugin API could be merged with a widget API to come to a kind of refundation of OpenDoc like editing systems)
+
+35/ Try a new version of the library User Interface with a smaller footprints for the core editor menus (repetition and choice). For instance  choices could be rendered with a smaller popup menu (no label for the current choice, just a triangle) or by a right-click inside the currently selected choice. Nested choices (such sas Parag | (List > (ListItem | SubList ))) could be represented with a hierarchical popup menu. We could also use animations (fade out  / fade in) when deleting components or switching component types.
+
+36/ Make a new "richtext" user interface where the button bar menu would be dissociated from the lens and could be placed by the user at any position on the screen (fixed positioning). That menu bar would thus become a panel freely placed and available from all the "richtext" fields.
+
+37/ Do a generic auto-complete filter or plugin for text entry. Could based on the OASIS Code List Representation (http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=codelist) as suggested by Ken Holman at XML Prague.
+
+38/ Make an asynchronous incremental XML loading algorithm. That would allow for instance to display a progression bar while loading, and to avoid that some browsers say a slow script is running if loading time is too long. That could be especially useful for "big" XML documents. It has been reported that the library works in FF with 400~500KB xml documents, but the loading time is greater than 20 seconds.
+
+39/ Implement Find / Replace functionality within primitive editors             
+
+40/ Implement xml:event into AXEL using filters to allow template authors to use simple javascript snippets directly inside the template to customize it (http://www.w3.org/TR/xml-events/)
+</pre>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

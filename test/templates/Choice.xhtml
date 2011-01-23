@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL test case : Choice features</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="Tests">    
+
+    <xt:component name="Apple"><span>I like <em>apples</em></span></xt:component> 
+
+    <xt:component name="Banana"><span>I prefer <em>bananas</em></span></xt:component> 
+
+    <xt:component name="OrangeFruit"><span>I like <em>oranges</em></span></xt:component> 
+
+    <xt:component name="StrawberryFruit"><span>I prefer <em>strawberries</em></span></xt:component> 
+
+    <xt:component name="Orange"><xt:use types="OrangeFruit" label="fruit" /></xt:component> 
+
+    <xt:component name="Strawberry"><xt:use types="StrawberryFruit" label="fruit" /></xt:component> 
+
+  </xt:head>
+  
+  <style type="text/css"> 
+  body {
+      counter-reset: info;
+  }  
+  .info:before { 
+      content: counter(info) ". ";
+      counter-increment: info;
+  }  
+  .info {    
+    font-family: "Avant Garde", sans-serif;
+    font-weight: bold;
+  } 
+  .desactivated {
+    font-style: italic;
+  }
+  .desactivated:before {
+    content: "this test has been desactivated";
+  }
+  p.explain {
+    margin-top: -1em;
+    font-size: 80%;
+  }
+  </style>  
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <p>This template contains XTiger XML declarations that stress the choice editor of the AXEL library</p>
+  
+  <p><span class="info">Basic choice</span> : <xt:use types="Apple Banana"/></p>
+
+  <p><span class="info">Choice with outer label</span> : <xt:use types="Apple Banana" label="Favourite"/></p>
+
+  <p><span class="info">Choice with inner labels</span> : <xt:use types="Orange Strawberry"/></p>
+
+  <p><span class="info">Choice with inner labels and outer label</span> : <xt:use types="Orange Strawberry" label="Favourite"/></p>
+
+  <p><span class="info">Optional attribute</span> : <xt:attribute types="text" name="Name" option="unset" default="Stéphane"/></p>
+    
+</body>
+</html>

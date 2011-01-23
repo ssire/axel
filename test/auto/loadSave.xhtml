@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />
+	<title>AXEL load / save test</title>
+	<style type="text/css">
+	
+	/* Common */
+	
+	body {
+	  margin: 1em;
+	} 
+	p.side-button {
+	  float: right;
+	}
+	span.button-link {
+	  text-decoration: underline;
+	  color: blue;
+	}
+	
+	/* UI Slices */
+	
+	div#top {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  height: 12em;
+	  margin: 0 1em;
+	}
+	div#middle {
+	  position: fixed;
+	  top: 12em;
+	  left: 0;
+	  right: 0;
+	  bottom: 30%;
+	  margin: 0 1em;
+	}
+	div#bottom {
+	  position: fixed;
+	  top: 70%;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  margin: 0 1em;
+	}
+	
+	/* Top Slice */
+	
+	div#results {
+	  border: solid 1px gray;	  	  
+	  overflow: auto;
+	  height: 8em;
+	}	
+	div#results p, p.result {
+	  padding: 0;
+    margin: 0;
+	}
+	span.failed {
+		color: red;
+	}
+	span.passed {
+		color: green;
+	}	
+	span.action {
+	}
+	span.file {
+	  font-family: Courier, monospace;
+	  color: brown;
+	}
+	
+	/* Middle slice */
+	
+	.bug {
+	  color: red;
+	}	
+	p.status {
+	  font-style: italic;
+	}
+	p.file-info {
+	  margin-top: 1em;
+	}
+	.title {
+	  font-variant: small-caps;
+	  font-weight: bold;
+	}
+	div#src {
+	  position: absolute;
+	  top: 8em;
+	  left: 0;
+	  right: 55%;
+    bottom: 0;
+	  overflow: auto;
+	  border: solid 1px gray;	  
+	}	
+	div#src p, div#dest p {
+	  margin: 0;
+	  padding: 0;
+	}
+  div#dest {
+	  position: absolute;
+	  top: 8em;
+	  left: 50%;
+	  right: 0;
+	  bottom: 0;
+	  overflow: auto;
+	  border: solid 1px gray;
+	}	
+	
+	/* Bottom slice */
+	
+	span#load-template {
+	  display: none;
+	}
+	div#templateContainer {
+	  position: absolute;
+	  top: 3em;
+	  left: 0;
+	  bottom: 1em;
+	  right: 0;
+	  border: solid 1px gray;	  
+	  overflow: auto;
+	}
+	#resultContainer {
+	  display:none;
+	}
+	</style>
+	<link rel="stylesheet" href="../../axel/axel.css" type="text/css"/>		
+	<script type="text/javascript" src="../../axel/axel.js"></script>
+	<script type="text/javascript" src="../../src/util/debug.js"></script>		
+	<script types="text/javascript" src="assert.js"></script>
+	<script types="text/javascript" src="diff.js"></script>
+	<script types="text/javascript" src="configuration.js"></script>
+	<script types="text/javascript" src="loadSave.js"></script>
+	  <script types="text/javascript"><!--//--><![CDATA[//><!--
+		  // XML loading algorithms
+		  var basicLoader, robustLoader;
+	    
+    	function init() {
+  		  basicLoader = new xtiger.editor.BasicLoader();
+  		  robustLoader = new xtiger.editor.RobustLoader();
+    	}
+    	
+    	xtdom.addEventListener(window,  'load', init, false);
+//--><!]]></script>
+	
+</head>
+<body>    
+
+    <!-- test output area -->
+    <div id="top">
+      <p class="side-button">
+        <span style="margin-right: 60px; font-size: 80%">            
+				  <input id="robustChekbox" type='checkbox' value="Robust" name="robust" />
+				  <label for="robust">Robust XML loading</label>
+			  </span>
+			  <a href="javascript:runLoadSaveTest(tests['loadSave'])">Run test</a>
+			</p>
+      <h3>AXEL load / save test</h3>        
+      <div id="results">
+      </div>
+    </div>
+    
+    <!-- XML data area -->    
+    <div id="middle">
+      <h3>Inspector</h3>
+      <p id="status">status</p>
+      <p class="file-info"><span class="title">Data : </span><a id="xml-data-file" href="#" target="_blank">file</a></p>
+      <div id="src">
+      </div>
+      <div id="dest">
+      </div>
+    </div>
+
+    <!-- template area -->    
+    <div id="bottom">
+      <p class="side-button"><span id="load-template" class="button-link">Load template</span></p>
+      <p class="file-info"><span class="title">Template : </span><a id="template-file" href="#" target="_blank">file</a></p>
+      <div id="templateContainer">
+        No template
+      </div>
+      <div id="resultContainer">
+      </div>      
+    </div>
+    
+</body>
+</html>

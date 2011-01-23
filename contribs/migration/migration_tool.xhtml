@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"
+	xml:lang="en">
+	<head>
+		<!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=8;"/>
+		<title>AXEL's template migration tool</title>
+		<link type="text/css" href="migration_tool.css" rel="stylesheet"></link>
+		<link type="text/css" href="../../axel/axel.css" rel="stylesheet"></link>
+		<link type="text/css" href="../../test/migration/Case.css" rel="stylesheet"></link>
+		<script type="text/javascript" src="../../axel/axel.js"/>
+		<script type="text/javascript" src="../../src/util/debug.js"/>
+		<script type="text/javascript" src="../src/schemas/schemaserializer.js"/>
+		<script type="text/javascript" src="../src/schemas/schemalogger.js"/>
+		<script type="text/javascript" src="migration_tool.js"/>
+		<script type="text/javascript" src="minmax.js"></script>
+
+	</head>
+	<body>
+		<!-- test output area -->
+		<div id="top">
+			<label for="laoder">Use XML robust loader </label>
+			<input type="checkbox" id="loader" checked="checked" name="laoder"/>
+			<table style="width: 100%">
+				<tr>
+					<td style="padding: 0 1em">
+						<span class="side-button"><a href="javascript:schematize(0)">Load in left frame</a></span>
+						<span>
+							<label for="templateFile0">Template : </label>
+							<input id="templateFile0" type="text" name="templateFile" size="50"
+								value="../../templates/Article.xhtml"/>
+							
+						</span>
+					</td>
+					<td style="padding: 0 1em">
+						<span class="side-button"><a href="javascript:schematize(1)">load in right frame</a></span>
+						<span>
+							<label for="templateFile1">Template : </label>
+							<input id="templateFile1" type="text" name="templateFile" size="50"
+								value="../../templates/Article.xhtml"/>
+							
+						</span>
+					</td>
+				</tr>
+			</table>
+			<div id="log"> </div>
+		</div>
+		<!-- Schema area -->
+		<div id="middle">
+			<h2>The templates schemas<img src="img/arrow-minimize.png"
+				alt="minimize"
+				width="30px"
+				height="30px"
+				class="minmax"
+				onclick="minmax(this)"/></h2>
+			
+			<p class="file-info">
+				<span class="title">Schema</span> : <span id="status">status</span>
+			</p>
+			<div class="twocolcontainer">
+				<div id="src0" class="col1"> </div>
+				<div id="src1" class="col2"> </div>
+			</div>
+			<!-- <div id="dest"> </div> -->
+		</div>
+		
+		<div id="lower">
+			<h2>The transformed templates<img src="img/arrow-minimize.png"
+				alt="minimize"
+				width="30px"
+				height="30px"
+				class="minmax"
+				onclick="minmax(this)"/></h2>	
+			<div class="twocolcontainer">
+				<div id="template0" class="col1"> </div>
+				<div id="template1" class="col2"> </div>
+			</div>
+		</div>
+		
+		<div id="bottom">
+			<h2>XML Data<img src="img/arrow-minimize.png"
+				alt="minimize"
+				width="30px"
+				height="30px"
+				class="minmax"
+				onclick="minmax(this)"/></h2>
+			<div style="margin: 0 3em">
+				<table style="width: 100%; text-align: center; margin-bottom: 1em">
+				<tr>
+					<td>
+						<input id="load0" type="button" name="load0" onclick="xmlLoad(0)" value="Load in left frame"/>
+						<input id="save0" type="button" name="save0" onclick="xmlSave(0)" value="Save from left frame"/>
+					</td>
+					<td>
+						
+						<label for="xmlFile">XML Data : </label>
+						<input id="xmlFile" type="text" name="xmlFile" size="40" value="../../test/migration/"/>
+						<input id="xmlFileLoad" type="button" name="xmlFileLoad" onclick="xmlFileLoad()" value="Load file"/>
+						
+					</td>
+					<td>
+						<input id="load1" type="button" name="load1" onclick="xmlLoad(1)" value="Load in right frame"/>
+						<input id="save1" type="button" name="save1" onclick="xmlSave(1)" value="Save from right frame"/>
+					</td>
+				</tr>
+			</table></div>
+			
+			<textarea rows="30" cols="200" id="dataContainer"></textarea>
+		</div>
+		
+		<!-- this div is used to tranform the template -->
+		<div id="resultContainer"> </div>
+	</body>
+</html>

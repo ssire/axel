@@ -1,0 +1,54 @@
+<carte>
+  <title>La carte...</title>
+  <course>
+    <name>Entrées</name>
+    <choice>
+      <dish>
+        <name>Salade de crudités</name>
+        <price currency="EUR">6</price>
+      </dish>
+      <dish>
+        <name>Salade de cabécou</name>
+        <price currency="EUR">7.50</price>
+      </dish>
+      <dish>
+        <name>Salade de coeurs de canard</name>
+        <price currency="EUR">8</price>
+      </dish>
+    </choice>
+  </course>
+  <course>
+    <name>Plats</name>
+    <choice>
+      <dish>
+        <name>Brochette de veau au romarin</name>
+        <price currency="EUR">11</price>
+      </dish>
+      <dish>
+        <name>Cuisse de canette farcie aux raisins secs</name>
+        <price currency="EUR">12</price>
+      </dish>
+      <dish>
+        <name>Selle d'agneau grillée beurre maître d'hôtel</name>
+        <price currency="EUR">13.5</price>
+      </dish>
+    </choice>
+  </course>
+  <course>
+    <name>Desserts</name>
+    <choice>
+      <dish>
+        <name>Le café gourmand</name>
+        <price currency="EUR">4.8</price>
+      </dish>
+      <dish>
+        <name>Crème brulée au miel</name>
+        <price currency="EUR">4.8</price>
+      </dish>
+      <dish>
+        <name>Mi cuit au chocolat</name>
+        <price currency="EUR">4.8</price>
+      </dish>
+    </choice>
+  </course>
+</carte>

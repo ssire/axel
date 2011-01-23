@@ -1,0 +1,21 @@
+body {
+    counter-reset: info;
+}	 
+.info:before { 
+    content: counter(info) ". ";
+    counter-increment: info;
+}  
+.info {    
+  font-family: "Avant Garde", sans-serif;
+  font-weight: bold;
+}	
+.desactivated {
+  font-style: italic;
+}
+.desactivated:before {
+  content: "this test has been desactivated";
+}
+p.explain {
+  margin-top: -1em;
+  font-size: 80%;
+}

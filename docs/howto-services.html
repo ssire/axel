@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>How to use services in AXEL</title>
+  <link rel="stylesheet" type="text/css" href="docu.css" />	
+</head>
+<body> 
+<pre>
+--------------------------------------------------------------
+---------------- How to use services in AXEL  ----------------
+--------------------------------------------------------------   
+
+Stéphane Sire
+Last update: June 15th, 2010       
+
+Summary
+=======
+</pre> 
+   
+<ul>
+<li><a href="#intro">Introduction</a></li>
+<li><a href="#comparison">Comparison of services with filters</a></li>
+<li><a href="#producer">Producing events</a></li>
+<li><a href="#consumer">Consuming events</a></li>
+<li><a href="#producer-consumer">Producing and consuming events</a></li>
+<li><a href="#service-filter">Service filter</a></li>
+<li><a href="#connection">Connecting producers with consumers with service delegates</a></li>
+<li><a href="#chaining">Chaining delegate services </a></li>
+<li><a href="#inclusion">Including services in your template</a></li>
+<li><a href="#limitations">Current limitations</a></li>
+<li><a href="#architecture">Architecture Overview</a></li>
+<li><a href="#authoring">Writing a new service delegate</a></li>
+</ul>
+         
+<pre id="intro">    
+Introduction
+============
+  
+Service is a new experimental API in AXEL. It is based on an &lt;xte:service> element and on a 'service' filter. Services extend the template with an event communication mechanism that triggers events with a producer / consumer pattern. Any primitive editor can be set as a producer, as a consumer or as both by using the 'service' filter. Communication between producers and consumers is enabled with the instantiation of &lt;xte:service> elements inside the document tree. Some service delegate classes registered throught the 'types' attribute of the service element actually implement service functionalities.
+
+The &lt;xte:service> element is declared in an "http://ns.media.epfl.ch/xtiger-extension" namespace and an "xte" prefix.
+
+The 'service' filter can be set on the 'text' primitive editor and on the lens based editors (currently only on the 'video' lens based editor).
+
+You can experiment the service API with the templates/Services.xhtml template. Each time you update a Name, it's new value will be copied to the associated Nickname in a repeated block, and to a field at the end of the document that will also capitalize it. This example uses service delegates defined in services/capitalize.js.
+</pre>   
+     
+<pre id="comparison">    
+Comparison of services with filters
+===================================
+
+To some extent services are an extension of filters set on primitive editors. Filters can be seen as a producer and a consumer pair where the producer and the consumer are the same entity, and where the service delegate functionality is implemented directly within the filter.
+</pre>
+               
+<pre id="producer">    
+Producing events                                  
+================  
+
+Primitive editors can become event producers using the 'service' filter. The filter requires a 'service_key' parameter which is a whitespace separated list of strings of the form "{context}:producer[{resource}]" where {context} is a string defining a context key, producer is the "producer" string and {resource} is a string giving a name to the resource which is produced.                                            
+
+Some events will be generated each time the editor's content is updated. One event will be generated for each service_key in the list. Each event will be generated with the given context key, resource name, and it will be associated with the new editor's data content. 
+
+In the following example an event will be generated in the 'global' and in the 'local' context each time the user changes the name, it will be associated with the "Name" resource name, which in that case is the same as the target XML element generated from the editor: 
+
+Please enter your name : &lt;xt:use types="text" label="Name" param="filter=service; service_key=local:producer[Name] global:producer[Name];layout=placed">name&lt;/xt:use>
+</pre>
+               
+<pre id="consumer">
+Consuming events
+================            
+
+Primitive editors can become event consumers using the 'service' filter. The declaration is the same as for producing events, except for the "producer" string which is replaced by a "consumer" string. 
+
+Consuming events by itself does not have any effect, it works in conjunction with a service that implements side effect in service delegates (see below).
+
+In the following example the editor consumes events produce in the 'global' context with a resource 'Name':
+
+&lt;p>Our latest entry : &lt;xt:use types="text" label="Latest" param="filter=service;service_key=global:consumer[Name];layout=placed">name&lt;/xt:use>&lt;/p>
+</pre>
+               
+<pre id="producer-consumer">
+Producing and consuming events                                  
+============================== 
+
+You can mix 'producer' and 'consumer' roles on a primitive editor with the 'service' filter. In that case you just need to include several keys in the service_key parameter list with the different roles, context keys and resource names.
+
+However as mentioned above producing and consuming the same events is not very efficient, in that case it is better to use filters instead of services.
+</pre>       
+
+<pre id="service-filter">
+Service filter
+==============
+
+The service filter can be set on primitive editors to turn them into event producers and/or consumers. It's behavior is controlled by three parameters.
+
+The mandatory 'service_key' is a whitespace separated list of strings of the form "{context}:{role}[{resource}]" where {context} is a string defining a context key, {role} is either "producer" or "consumer" and {resource} is a string giving a name to the resource which is produced.
+
+The optional 'service_trigger' defines a set of conditions for triggering the service. It makes sense when at least one of the service_key is associated with a role of producer. The default condition is called "update"; it triggers the service each time the user edits the field and enters a new value different from the previous one. The "button" condition adds a button (currently an &lt;input> HTML form input button) next to the edit field; more precisely it is added as the next sibiling of the editor's handle. The associated condition triggers the service each time the user presses the button. You can concatenate both conditions with a whitespace separator to combine them. Finally there is a third "auto" condition that both acts as "update" and that displays a button if new data is loaded in the primitive editor without direct user entry (e.g. from a file). In that later case the button is displayed until either the users clicks on it to trigger the service, or the user updates the value of the field. The "auto" condition cannot be combined with the others. 
+
+The optional 'service_label' defines a text label to show in the service filter button. It works in association with the "button" and "auto" conditions of the 'service_trigger' parameter. It defaults to "suggest".                                              
+
+The button generated by setting 'service_trigger' to "button" or "auto" holds an 'axel-service-trigger' CSS class name. It's default style is set in 'axel-style.css'.
+
+In any case a service filter will not trigger the service when some data is loaded into the editing field from a file (i.e. using the load library call). 
+
+The service filter by itself does not do anything except sending events to trigger the service when used as a producer, or turning a primitive editor into an event consumer. It must be used in conjunction with a service instantiated with the '&lt;xte:service>' element as described in this document to actually have some side effects.
+</pre>
+               
+<pre id="connection">
+Connecting producers with consumers with service delegates
+==========================================================
+
+Services also declare a context key in the 'key' attribute of the service element as for instance: &lt;xte:service key="local" types="copy"/>  
+
+The events from a producer flow upwards to the document root and the left sibilings and left ancestors of the producer. Each time the context key of an event matches the context key of a service, the service searches in its next siblings and all their descendants if there are some consumers that match the context key. For each match, it checks if the resource name matches too, and if this is the case the service executes the onBroadcast function of its last delegate.
+
+The onBroadcast function is the place where a service delegate can implement functionalities with or without side effects on the document. It receives a reference to the consumer, the producer's data and the event resource name as parameters. Service delegates are associated with services through the 'types' attribute that contains a whitespace separated list of delegate names.
+
+The example shown above associates a 'copy' delegate with the service. This is a sample delegate defined in services/capitalize.js that simply copy the producer data to the consumer.
+</pre>
+               
+<pre id="chaining">
+Chaining delegate services 
+==========================
+
+The 'types' attribute contains a list of delegate identifiers (i.e. the string under which delegates register themselves when their Javascript source file is loaded). The service calls the onBroadcast method of the last delegate in the list when an event matches. Then depending on the way the delegate is written, it may or it may not call the onBroadcast function of its preceeding delegate, thus actually chaining delegate functionalities from the last one to the first one in the list.
+
+You should read the documentation of the service delegate you want to use to know if it will chain its functionality with the one of its preceeding delegate. 
+</pre>
+               
+<pre id="inclusion">
+Including services in your template
+===================================
+                                        
+The &lt;xte:service> element requires that you import 'service/service.js'.
+
+The 'service' filter requires that you import 'plugins/servicefilter.js'.
+
+Do not forget to include the service source file(s) for the service delegate type(s) you are using. For instance the demonstration templates/Services.xhtml template uses the 'copy' and the 'capitalize' delegate services which are defined in 'services/capitalize.js'.
+</pre>
+               
+<pre id="limitations">
+Current limitations           
+===================
+
+Sevices can be placed everywhere in the document tree. In particular they can be placed inside optional parts of the document tree or inside choices that may not be selected by the user at runtime and thus are hidden.
+
+The current implementation is limited in that services will be invoked even if the service or the consumer is inside an unselected or an hidden part of the document. In the future we will desactivate them, but meantime it is wised not to use services in document parts that may be unselected or hidden.
+</pre>            
+
+<pre id="architecture">
+Architecture Overview
+=====================
+
+(You may skip this section if you are not interested in service implementation)
+
+Services are implemented with two classes: 'xtiger.service.ServiceFactory' that implements the '&lt;xte:service>' element and 'xtiger.service.ServiceFilter' that implements the 'service' filter.
+
+To develop a new service, you need to write a service delegate class that defines methods that will be mixed in with the service instance created by the ServiceFatory. Your delegate will be identified with a unique type identifier (see infra).
+
+Usually the service delegate code will:
+
+- maintain some state based on data which have been entered or loaded inside all the producer editing fields
+- do some action on the consumer editing fields any time the state changes
+
+For simple delegates the state is the last data it received and is updated at each update of a producer.
+
+The action on the consumer editing fields is implemented inside an onBroadcast method of the delgate.
+
+You can create synchronous services that directly call the 'onBroadcast' method when they receive a notification from any one of the editing field they listen to. 
+
+You can also create asynchronous services that introduce a delay between the notification from any one of the editing field they listen to and the call to the 'onBroadcast' method.
+</pre>
+               
+<pre id="authoring">
+Writing a new service delegate 
+==============================
+
+Basically a service delegate is any object implementing an onBroadcast method and which has registered itself with an identifier string to the 'service' factory. For instance you can have a look at 'services/capitalize.js' to see how the 'copy' service delegate registers himself:
+
+xtiger.factory('service').registerDelegate('copy', _CopyService);
+
+When you write the onBroadcast function, do not forget to chain it to the onBroadcast function of the preceeding delegate. Ultimately if your delegate is in first position in the chain, it will call the onBroadcast of the service element itself. 
+
+The API uses a '->' hash variable that must be defined inside the delegate object. This variable allows to rename the onBroadcast method of the preceeding delegate in the chain with a new name so that the delegate object can call it without inducing a recursive call. Once again have a look at the example, it redefines the original onBroadcast method as a '__copySuperBroadcast' alias method with the following declaration:
+
+'->': {'onBroadcast': '__copySuperBroadcast'}
+
+Then it chains the call to onBroadcast by calling it at the end of its onBroadcast method:
+
+this.__copySuperBroadcast(aModel, aKey, aData); // chains service
+
+Do not forget to give a unique name to the alias method, otherwise chaining may not work. We advise you to include the service delegate name as in the example above.
+
+In addition to the onBroadcast method, it is possible to redefine other methods to create advanced delegates that also change the default communication mechanism between producers and consumers. These methods (most commons are 'init', 'notifyUpdate', 'askUpdate' and 'notifyRemove') are currently documented directly in the 'services/service.js' source file. For instance this allows to create service delegates that query a server with the producer's data before forwarding the event to consumers or not.
+</pre>
+</body>
+</html>
+

@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger">
+	<!-- 	
+Demonstration application for editing XTiger XML with AXEL library
+
+Author: Stephane Sire
+-->
+	<head>
+		<title>AXEL Editor (Version with iframe)</title>
+
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"></meta>
+		<meta http-equiv="X-UA-Compatible" content="IE=8;"></meta>
+		<meta name="description" content="XTiger XML based authoring application"></meta>
+		<meta name="keywords" content="template, XTiger, XML"></meta>
+
+		<!-- BEGIN XTiger Library Loading -->
+		<script type="text/javascript" src="../src/core/loader.js"></script>
+		<script type="text/javascript" src="../src/core/dom.js"></script>
+		<script type="text/javascript" src="../src/core/parser.js"></script>
+		<script type="text/javascript" src="../src/core/domdatasource.js"></script>
+		<script type="text/javascript" src="../src/core/defaultbrowser.js"></script>
+		<script type="text/javascript" src="../src/core/iebrowser.js"></script>
+		<script type="text/javascript" src="../src/core/filterable.js"></script>
+		<script type="text/javascript" src="../src/core/domlogger.js"></script>		
+		<script type="text/javascript" src="../src/core/forms.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/generator.js"></script>
+
+    <!-- alternative loaders and serializers -->
+		<script type="text/javascript" src="../src/editor/classical/htmlloader.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/xmlrobustloader.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/htmlserializer.js"></script>
+		
+    <script type="text/javascript" src="../src/editor/classical/xmlloader.js"></script>
+    <script type="text/javascript" src="../src/editor/classical/xmlserializer.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/repeat.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/choice.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/keyboard.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/tabgroupmgr.js"></script>
+		<script type="text/javascript" src="../src/editor/classical/string.js"></script>
+		
+		<!-- native plugins and devices -->
+		<script type="text/javascript" src="../src/plugins/text.js"></script>
+		<script type="text/javascript" src="../src/plugins/select.js"></script>
+		<script type="text/javascript" src="../src/devices/popup.js"></script>
+		<script type="text/javascript" src="../src/devices/text.js"></script>
+
+		<!-- optional devices -->
+		<script type="text/javascript" src="../src/devices/lens.js"></script>
+		<script type="text/javascript" src="../src/devices/upload.js"></script>
+		<script type="text/javascript" src="../src/devices/autocomplete.js"></script>
+		
+		<!-- optional plugins -->
+		<script type="text/javascript" src="../src/plugins/link.js"></script>
+		<script type="text/javascript" src="../src/plugins/richtext.js"></script>
+		<script type="text/javascript" src="../src/plugins/video.js"></script>          
+		<script type="text/javascript" src="../src/plugins/photo.js"></script>
+        
+    <!-- optional filters -->
+    <script type="text/javascript" src="../src/filters/common.js"></script>         
+		<script type="text/javascript" src="../src/filters/documentid.js"></script>
+		<script type="text/javascript" src="../src/filters/wiki.js"></script>
+    <script type="text/javascript" src="../src/filters/image.js"></script>  
+    <script type="text/javascript" src="../src/filters/layout.js"></script>         
+    <script type="text/javascript" src="../src/filters/video.js"></script>      
+		<script type="text/javascript" src="../src/filters/autocomplete.js"></script>
+		<script type="text/javascript" src="../src/filters/debug.js"></script>  
+		<script type="text/javascript" src="../src/filters/service.js"></script>		
+		
+		<!-- contributions -->
+		<script type="text/javascript" src="../contribs/src/schemas/schemalogger.js"></script>
+		<script type="text/javascript" src="../contribs/src/schemas/schemaserializer.js"></script>
+		
+		<!-- optional services -->
+    <!-- <script type="text/javascript" src="../src/filters/signature.js"></script> -->
+		<script type="text/javascript" src="../src/services/service.js"></script>
+		<script type="text/javascript" src="../src/services/common.js"></script>
+		<script type="text/javascript" src="../src/services/capitalize.js"></script>
+		<script type="text/javascript" src="../src/services/suggest.js"></script>
+ 		<script type="text/javascript" src="../src/services/translate.js"></script>
+		<script type="text/javascript" src="../src/services/toc.js"></script>
+		<script type="text/javascript" src="../src/services/debug.js"></script>
+		<script type="text/javascript" src="../src/services/date.js"></script>    
+		
+		<script type="text/javascript" src="../src/util/ioutils.js"></script>
+		<!-- optional goodies because editor.js uses xtiger.debug.loadDocument -->
+		<script type="text/javascript" src="../src/util/debug.js"></script>
+		<!-- END XTiger Library Loading -->
+
+		<!-- Demo Viewer Application Loading	 -->
+		<link rel="stylesheet" href="extras/editor.css" type="text/css"></link>
+
+		<!--[if IE 7]>    
+  <style type="text/css">
+	#frameContainer {
+		height: 85%;
+	}
+	</style>
+  <![endif]-->
+
+		<script type="text/javascript" src="extras/editor.js"></script>
+		<script type="text/javascript" src="../config/templates.js"></script>
+		<script type="text/javascript">
+		var appController;    
+		
+		function initApp () {                       
+		  var defaultTemplates = (typeof(getDefaultTemplates) != typeof(undefined))  ? getDefaultTemplates() : [];
+			// Application controller
+      appController = new viewerApp("../templates/", defaultTemplates);
+			appController.setBase('../axel/bundles')
+			appController.setXTigerStylesheet('../axel/axel.css'); 
+		}
+		xtdom.addEventListener(window, 'load', initApp, false);
+	</script>
+	</head>
+	<body>
+		<div id="formular">
+			<form id="formUrl" action="javascript:alert('Oops, something went wrong !')"
+				onsubmit="return appController.submitPage();">
+				<p>
+					<label>Page : <input id="url" type="text" name="url" maxlength="100" value=""/>
+					</label>
+					<input type="button" value="Browse"
+						onclick="appController.localFileDialog(&quot;open&quot;, &quot;*.xtd; *.xhtml; *.html; *.xml&quot;, &quot;Select an XTiger Forms template&quot; , &quot;url&quot;)"/>
+					<span style="position: absolute; right: 30px; margin-left: 5px">
+						<input type="submit" value="Visualize"/><input type="reset"
+							onclick="appController.resetView()"/>
+					</span>
+				</p>
+				<p>
+					<label>Page shortcut : <select id="templatesList"
+							onchange="appController.updateSelectedTemplate()"> </select>
+					</label>
+					<input type="button" value="Preferences"
+						onclick="appController.setPreferences();"/>
+					<span style="position: absolute; left: 46%">
+						<input type="button" id="previewToggle" value="Preview"
+							onclick="appController.doToggleViewMode();"/>
+					</span>
+					<span style="position: absolute; right: 30px">
+						<input type="button" value="Schema" onclick="appController.dumpSchema();"/>
+						<input type="button" value="Dump" onclick="appController.dump();"/>
+						<input type="button" value="Input"
+							onclick="appController.inputInstanceData();"/>
+						<input type="button" value="Save"
+							onclick="appController.localSaveInstanceData('fileName');"/>
+						<input type="button" value="Load"
+							onclick="appController.localLoadInstanceData('fileName');"/>
+					</span>
+				</p>
+				<p id="titleUrl" class="single-line">...</p>
+				<div id="preferences">
+					<p>
+						<label>Template repository : <input id="templateRepos" type="text"
+								name="templateRepos" maxlength="50" value=""/>
+						</label>
+						<input type="button" value="Browse"
+							onclick="appController.localFileDialog(&quot;folder&quot;, null, &quot;Select a folder that contains some XTiger Forms templates&quot;, &quot;templateRepos&quot;)"/>
+						<input type="button" value="Ok" onclick="appController.savePreferences()"/>
+						<input class="hide" type="button" value="Hide"
+							onclick="appController.hidePreferences()"/>
+						<span style="position: absolute; right: 30px">
+							<input type="radio" value="standard" name="algorithm" checked="true"/>
+							<label for="robust">Std</label>
+							<input type="radio" value="html" name="algorithm"/>
+							<label for="html">Html</label>
+							<input type="radio" value="robust" name="algorithm"/>
+							<label for="robust">Robust</label>
+						</span>
+					</p>
+					<p>
+						<label>File name <i>(paths relative to editor.xhtml)</i>: <input
+								id="fileName" type="text" name="fileName" maxlength="50" value=""/>
+						</label>
+						<input type="button" value="Save" onclick="appController.saveToFile()"/>
+						<input type="button" value="Load" onclick="appController.loadFromFile()"/>
+						<input type="button" value="Dump" onclick="appController.dumpToServer();"
+							disabled="disabled"/>
+						<i>(remote server only)</i>
+						<span style="position: absolute; right: 30px">
+							<input type="checkbox" value="Profile" name="profile"/>
+							<label for="profile">Profile</label>
+						</span>
+					</p>
+				</div>
+			</form>
+		</div>
+		<div id="frameContainer">
+			<iframe id="container" src="extras/intro.xhtml"> iframe content </iframe>
+		</div>
+	</body>
+</html>

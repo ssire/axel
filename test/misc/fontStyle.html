@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL Test for computing text metrics</title>
+	<style type="text/css">
+	body {
+		padding: 0;
+		margin: 20px;
+		margin-top: 20px;
+		background-color: lightgray;
+	}
+  .inputField {
+    font-size: 2em;
+  }             
+	</style>	
+    <!-- BEGIN AXEL block -->	
+  	<link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+    <!-- <script type="text/javascript" src="../../axel/axel.js"></script>
+    <script type="text/javascript" src="../../src/util/debug.js"></script> -->
+
+  	<script type="text/javascript">
+      function resize (n, w, h, text) {
+        if (w) { n.style.width = w; }
+        if (h) { n.style.height = h; }
+        n.value = text;
+      }
+        	
+  	  function adjustShape (n, text) {
+  	    var w = Math.max(n.offsetWidth, n.clientWidth, n.scrollWidth); 		
+    		var h = Math.max(n.offsetHeight, n.clientHeight, n.scrollHeight);
+  	    var n = document.getElementById('width');
+  	    n.firstChild.data = w + 'px';
+        n = document.getElementById('height');
+  	    n.firstChild.data = h + 'px';  	    
+  	    n = document.getElementById('targetInput');
+  	    resize(n, w + 'px', null, text);
+  	    n = document.getElementById('targetTextarea');
+  	    resize(n, w + 'px', h + 'px', text);
+  	  }
+  	
+  	  function setText (t) {
+  	    var n = document.getElementById('measure');
+  	    n.firstChild.data = t + 'm';
+  	    adjustShape (n, t);
+  	  }
+  	  
+  	  function handleKeyDown () {
+  	    var n = document.getElementById('input');
+  	    setText(n.value);
+  	  }
+  	
+  		function init () {
+  		  var n = document.getElementById('measure');
+  		  
+        n.style.maxWidth = '400px';
+        n.style.height = 'auto';
+    		var n = document.getElementById('input');
+    		xtdom.addEventListener(n, 'keydown', handleKeyDown, false);    		
+    	}    
+
+    	// not used : was used to test select + focus order    	
+    	function myCallback (n) { 
+        // n.target.nextSibling.style.display = 'inline';
+        n.target.nextSibling.setAttribute('class','doIt');
+        n.target.nextSibling.select();
+        n.target.nextSibling.focus();                 ;
+    	}
+
+      // xtdom.addEventListener(window,  'load', init, false);
+  	</script>
+     <!-- END AXEL block -->	
+  </head>	
+</head>
+
+<body>
+  <h1>Sample text (h1)</h1>
+  <p><input value="Text to edit (p no style)"/></p>
+  <h1><input value="Text to edit (h1 no style)"/></h1>
+  <p><input class="inputField" value="Text to edit (p styled)" /></p>
+  <h1><input class="inputField" value="Text to edit (h1 styled)" /></h1>  
+  <h1><input style="font-size: 32px" value="Text to edit (h1 forced 32px)" /></h1>  
+  <h1><input style="font-size: 2em" value="Text to edit (h1 forced 2em)" /></h1>  
+</body>
+</html>

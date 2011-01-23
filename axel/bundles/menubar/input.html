@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>XML data input</title>
+	<style>
+		body {
+			padding: 0.5em 2em;
+		}                
+		.center {
+			text-align: center;
+		}
+		#content {
+			position: absolute;
+			top: 4em;
+			left: 2em;
+			right: 2em;
+			bottom: 4em;
+		}
+		#input {
+			width: 100%;    
+			height: 100%;
+		}
+		#footer {
+			position: absolute;
+			left: 2em;
+			right: 2em;
+			bottom: 0em;
+		}
+	</style>	
+	
+	<script type="text/javascript">
+		function loadInstanceData() {		
+			var t = document.getElementById ('input');
+			var val = t.value;
+			if (! val.match(/^\s*$/)) {
+				if (window.opener) {
+					window.opener.handleInstanceData (val);
+				}
+			}
+		}
+	</script>
+</head>
+
+<body>      
+	<p class="center">Paste some XML data and press load to upload it to the template</p>
+	<div id="content">
+		<textarea id="input" rows="40" cols="20"></textarea>		
+	</div>	
+	<div id="footer">
+		<p class="center"><input type='button' value="Load" onclick="loadInstanceData();"/></p>	
+	</div>	
+</body>
+</html>

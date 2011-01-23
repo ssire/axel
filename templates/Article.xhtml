@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="This XTiger XML template defines the structure of an article for publication in the Proceedings of an ACM conference. The resulting XHTML document can be formatted by the ACM-Proc-Article.css style sheet, both for display and print. It can also be transformed into a LaTeX file (style sig-alternate.cls) with ACM-Proc-Article2latex.xsl"/>
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Article Template</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Article" stylesheet="Article.xsl">
+
+  <!--///////////////////////
+      Begin Rich Text block 
+    ///////////////////////-->            
+    
+    <xt:component name="Parag">                
+      <div class="content">
+        <xt:use types="text" handle="p" param="shape=parent;type=textarea;layout=float;filter=wiki">Describe the project here</xt:use>
+      </div>
+    </xt:component>            
+
+    <xt:component name="List">  
+      <p class="list-header"><xt:use types="text" param="shape=parent;type=textarea;layout=float" label="ListHeader">Enter the list header here:</xt:use></p>   
+      <ul class="main-list-block"><xt:repeat minOccurs="1" pseudoLabel="ListItem SubList"><div class="list-menu"><xt:menu-marker/></div><xt:use types="ListItem SubList"/></xt:repeat>
+      </ul>
+    </xt:component>       
+
+    <xt:component name="SubList">
+      <ul class="sub-list-item">
+        <xt:repeat minOccurs="1" pseudoLabel="SubListItem"><li><xt:use types="text" param="shape=parent;type=textarea;layout=float;filter=wiki" label="SubListItem">enter one sub list item here.</xt:use><xt:menu-marker/></li></xt:repeat>
+      </ul> 
+    </xt:component>       
+
+    <xt:component name="ListItem" i18n="Item">
+      <div class="list-item">   
+        <xt:use types="text" param="shape=parent;type=textarea;layout=float;filter=wiki">enter one list item here.</xt:use>
+      </div>
+    </xt:component>   
+
+  <!--///////////////////////
+       End Rich Text block 
+     ///////////////////////-->   
+    
+    <xt:component name="Figure">
+      <div class="figure">
+    <xt:use types="text" handle="div" param="type=input;layout=placed;class=image;filter=image" label="image">enter image file name</xt:use>
+        <p class="figure-caption"><xt:use types="text" label="caption">Caption</xt:use></p>
+      </div>
+    </xt:component>
+
+    <xt:component name="Code">
+      <div class="example">
+        <xt:use types="text" label="code" handle="pre" param="shape=parent;type=textarea;layout=placed;enablelinebreak=true">code</xt:use>
+        <p class="code-caption"><xt:use types="text" label="caption">Caption</xt:use></p>
+      </div>
+    </xt:component>                
+
+    <xt:component name="SubTitle">    
+      <div class="content">
+        <xt:use types="text" handle="h3" param="shape=parent;type=textarea;layout=float">Sub Section Title</xt:use>
+      </div>
+    </xt:component>
+
+  <xt:component name="descr">
+    <p class="left-repeater">                              
+      <xt:menu-marker/>
+    </p>                  
+    <div class="descr">    
+      <p class="heading">Categories and Subject Descriptors</p>
+      <xt:repeat minOccurs="0" label="categories">
+        <xt:use types="category" label="category" />
+      </xt:repeat>
+      <p class="heading">General Terms</p>
+      <p class="terms"><xt:use types="string" label="terms" option="unset"> </xt:use></p>
+      <p class="heading">Keywords</p>
+      <p class="keywords"><xt:use types="string" label="keywords" option="unset"> </xt:use></p>
+    </div>   
+  </xt:component>    
+
+    <xt:component name="bibauthor">
+      <span class="bibauthor"><xt:use types="string" label="name">Author</xt:use></span>,
+    </xt:component>
+    
+    <xt:component name="refbibtex">
+      <div class="refbibtex biblio-entry">
+        <xt:use types="text" handle="pre" param="shape=parent;type=textarea;layout=placed;enablelinebreak=true">@bibtex{ bibtex }</xt:use>
+      </div>
+    </xt:component>    
+
+    <xt:component name="refbook">
+      <p class="refbook biblio-entry">
+        <xt:repeat minOccurs="1" label="authors">
+          <xt:use types="bibauthor" label="author" />
+        </xt:repeat>
+        <span class="title"><xt:use types="string" label="title">Book title</xt:use></span>,
+        <span class="pub"><xt:use types="string" label="publisher">Publisher</xt:use></span>
+      </p>
+    </xt:component>
+
+    <xt:component name="refarticle">
+      <p class="refarticle biblio-entry">
+        <xt:repeat minOccurs="1" label="authors">
+          <xt:use types="bibauthor" label="author"/>
+        </xt:repeat>
+        <span class="title"><xt:use types="string" label="title">Article title</xt:use></span>,
+        <span class="conf"><xt:use types="string" label="conf">Conference</xt:use></span>
+      </p>
+    </xt:component>
+
+    <xt:component name="reporturl">
+      , <span class="url"><xt:use types="string" label="url">url</xt:use></span>
+    </xt:component>
+
+    <xt:component name="refreport">
+      <p class="refreport biblio-entry">
+        <xt:repeat minOccurs="1" label="authors">
+          <xt:use types="bibauthor" label="author"/>
+        </xt:repeat>
+        <span class="title"><xt:use types="string" label="title">Report title</xt:use></span>
+        <xt:use types="reporturl" label="url" option="set" />
+      </p>
+    </xt:component>
+
+    <xt:union name="bibref" include="refbibtex refbook refarticle refreport"></xt:union>
+
+    <xt:component name="author">
+      <p class="vcard">
+      <xt:menu-marker size="20"/><br />
+      <xt:repeat minOccurs="1" pseudoLabel="name">
+          <span class="fn">
+            <xt:use types="text" label="name">Author name</xt:use>
+          </span>
+          <xt:menu-marker/>
+          <br /> 
+      </xt:repeat>
+      <xt:repeat minOccurs="1" label="address">
+          <span class="addr"><xt:use types="text" label="line">Address line</xt:use></span><xt:menu-marker/>
+          <br />
+      </xt:repeat>
+      <span class="email">
+          <xt:use types="string" label="email">email</xt:use>
+      </span>
+      </p>
+    </xt:component>
+
+    <xt:component name="subsubcategory">
+       &#x2014;
+       <span class="catlevel4"><xt:use types="string" label="names">name, name</xt:use></span>
+    </xt:component>
+
+    <xt:component name="subcategory">
+      <span class="catlevel3"><xt:use types="string" label="name">name</xt:use></span>
+      <xt:use types="subsubcategory" label="sub_sub_category" option="set" />
+    </xt:component>
+
+    <xt:component name="category">
+      <p class="category">
+        <xt:menu-marker size="20"/> 
+        <span class="catnumlevel1and2"><xt:use types="string" label="NUM">X</xt:use>.<xt:use types="string" label="num">n</xt:use></span>
+        [<span class="catnamelevel1and2"><xt:use types="string" label="name">Name</xt:use></span>]:
+        <xt:repeat minOccurs="1" label="list">
+          <xt:use types="subcategory" label="sub_category" />
+        </xt:repeat>        
+      </p>
+    </xt:component>
+
+    <xt:component name="section">   
+      <div class="section">
+        <h2>
+          <xt:use types="text" label="heading">SECTION HEADING</xt:use>
+          <xt:menu-marker/>
+        </h2>     
+        <xt:repeat pseudoLabel="SubTitle Parag List Code Figure" minOccurs="1">    
+          <div class="row">          
+              <span class="left-repeater">                              
+              <xt:menu-marker/>
+            </span>            
+            <xt:use types="Parag List Code Figure SubTitle"/>
+          </div>      
+        </xt:repeat>
+      </div>
+    </xt:component>            
+
+    <xt:component name="aDay">
+      <xt:use types="string" label="month">Month</xt:use>,
+      <xt:use types="string" label="day">day</xt:use>
+    </xt:component>
+
+    <xt:component name="date">
+      from <xt:use types="aDay" label="begin"/> to <xt:use types="aDay" label="end"/>
+    </xt:component>
+
+    <xt:component name="loc">
+      <xt:use types="string" label="city">city</xt:use>,
+      <xt:use types="string" label="country">country</xt:use>
+    </xt:component>  
+
+  </xt:head>  
+  
+  <link rel="stylesheet" type="text/css" href="Article.css" ></link>
+
+  <style type="text/css">                                              
+
+  /***************** Left Margin *****************/       
+  ul.main-list-block, div.list-item, ul.sub-list-item, div.content, p.list-header, div.biblio-entry, p.biblio-entry {
+    margin-left: 150px;       
+  }                       
+
+  div.example, div.figure {
+    margin-left: 200px;
+  }
+  /***************** End Left Margin *****************/   
+
+  div.image, input.image { /* div around the img element created by the image filter */
+    border: 1px solid gray; 
+    padding: 5px;         
+    text-align: center;
+    vertical-align: middle;
+    min-width: 40px;    
+    min-height: 40px;       
+  }     
+  div.descr {
+    margin-left: 30px;      
+    padding-left: 20px;
+    border-left: 2px dashed gray;
+  }
+  div.example, div.figure {
+    margin-right: 1.2em;
+  }          
+  .row > select {    
+    float: left;       
+    margin-right: 5px;
+  } 
+  .left-repeater {            
+    float: left;        
+    clear: left;
+    width: 40px;    
+    height: 10px;
+  }              
+  p.left-repeater {
+    margin-top: 5px;
+    padding-top: 0;
+  }
+  .left-repeater > img {
+    margin: 0; 
+    padding: 0;           
+  }
+  div.list-menu {
+    clear: left;
+  }
+  div.list-menu, div.list-menu + select {
+    float: left;
+  }            
+  div.list-item {
+    display: list-item;
+    list-style-type: disc;
+  }
+  p.list-header {
+    margin-bottom: 6px; 
+  }  
+  ul.main-list-block {
+    padding-left: 20px;
+    margin-left: 0;
+    margin-top: 0;  
+  }   
+  textarea {
+    background-color: white ! important;      
+    border: 1px dashed grey;    
+  }                                  
+
+  /***************** Preview Mode *****************/ 
+  
+  body.preview ul.main-list-block, body.preview ul.sub-list-item, body.preview div.content, body.preview p.list-header, body.preview p.biblio-entry, body.preview div.biblio-entry {
+    margin-left: 0;       
+  }
+  
+  body.preview div.example, body.preview div.figure {
+    margin-left: 2em;           
+  }
+
+  body.preview div.image {
+    border: 0 none;
+    text-align: center;
+    padding: 0;
+    margin-bottom: 5px;
+  }
+  
+  body.preview div.list-item {
+    margin-left: 20px;
+  } 
+
+  body.preview div.list-menu {
+    display: none !important;   
+  }
+  
+  body.preview .left-repeater {
+    display: none;
+  }
+  </style>    
+
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css"></link>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>            
+  <p class="conferenceinfo">
+    <span class="conferencename"><xt:use types="string" label="name">Conference name</xt:use>,</span>
+    <span class="conferencedateandloc"><xt:use types="date" label="date"/>, <xt:use types="loc" label="loc"/>.</span>
+    Copyright
+    <span class="copyrightyear"><xt:use types="string" label="copyright_year">year</xt:use></span>
+  </p>
+
+  <h1><xt:use types="text" label="article_title">Article Title</xt:use></h1>
+
+  <div class="authors">
+    <xt:repeat minOccurs="1" label="authors">
+      <xt:use types="author" label="author" />
+    </xt:repeat>
+  </div>
+
+  <div class="body">
+    <div class="abstract">
+      <p class="heading">ABSTRACT</p>
+      <xt:repeat minOccurs="1" label="abstract">
+        <p>
+          <xt:use types="text" label="Parag" param="shape=parent-80px;type=textarea;layout=placed;filter=wiki">Enter abstract.</xt:use>
+          <xt:menu-marker/>
+        </p>    
+      </xt:repeat>
+    </div>
+
+    <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="categories terms keywords">
+      <xt:use types="descr"/>
+    </xt:repeat>  
+
+    <xt:repeat label="sections" minOccurs="1">
+      <xt:use types="section" label="a_section" />
+    </xt:repeat>                 
+
+    <div class="bibliography">
+      <h2>References</h2>
+        <div class="references">                      
+          <xt:repeat minOccurs="0" maxOccurs="*" label="references">
+            <div class="row">          
+              <span class="left-repeater">                              
+                <xt:menu-marker/>
+              </span>            
+              <xt:use types="bibref" label="reference"/>
+            </div>      
+          </xt:repeat>
+        </div>
+    </div>
+  </div>
+</body>
+</html>

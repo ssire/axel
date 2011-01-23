@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>
+	<meta name="description" content="This page show how to use the API to load XML content in a document template."/>
+	<meta name="keywords" content="editor, XML, document template"/>
+	<meta name="author" content="Stéphane Sire" />
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/> 
+  <meta http-equiv="X-UA-Compatible" content="IE=7;"/>
+	<title>AXEL miscellaneous test file</title>
+	<style type="text/css">
+	body {
+		padding: 0;
+		margin: 20px;
+		min-width: 650px;
+	}
+	div#universe {
+	  position: relative;
+	}	
+	div.cadre {
+	  border: solid 3px gray;
+	  padding: 10px;
+	}
+	div#test {
+	  position: absolute;
+	  top: 4em;
+	  left: 10em;
+	  background-color: #AAFFEE;
+	  max-width: 250px;
+	  overflow: hidden;
+	}	
+  textarea.xtt-text-placed {
+    vertical-align: bottom;
+	}	
+	input.custom, textarea.custom {
+	  background-color: yellow !important;
+	}		
+	p.big {
+	  font-weight: bold;
+	}	
+	textarea.xtt-text-float {
+	  vertical-align: bottom;
+	}
+	</style>
+
+  	<!-- BEGIN AXEL block -->	
+	<link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+	<script type="text/javascript" src="../../axel/axel.js"></script>
+	<script type="text/javascript" src="../../src/util/debug.js"></script>
+		
+	<script type="text/javascript">
+ 	  var FORM; 
+    // var XTD_FILE = "../../templates/Fiche-Cafe++.xhtml";
+    var XTD_FILE = "simpleTemplate.xhtml";
+	
+		function init () {
+			var result = new xtiger.util.Logger();
+      var xtDoc = xtiger.debug.loadDocument(XTD_FILE, result);
+			if (xtDoc) {
+				FORM = new xtiger.util.Form("../../axel/bundles");
+				FORM.setTemplateSource(xtDoc);
+				FORM.enableTabGroupNavigation();
+				FORM.setTargetDocument(document, 'template_container', true);
+				if (FORM.transform(result)) { 
+				}
+			}
+			if (result.inError()) { 
+				alert(result.printErrors()); 
+			}
+  	}
+  	
+		xtdom.addEventListener(window,  'load', init, false);
+	</script>
+   <!-- END AXEL block -->	
+</head>
+<body>
+  <p>This test different editors generating textarea and input fields and their interaction with mouse events, there are some subtile differences between IE7 and IE8 based on the background-color property (see this <a href="eventPassThrough.html">other test</a>)</p>
+  <div id="universe">
+    <p>
+      <!-- ********************* -->
+      <!-- Clickable background  -->
+      <!-- ********************* -->
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>      
+    </p>
+<!-- 
+  <div id="universe"> 
+-->
+  <!-- ********************* -->
+  <!-- Google Map background -->
+  <!-- ********************* -->
+ 
+<!-- <iframe width="800" height="900" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?f=q&amp;source=embed&amp;hl=fr&amp;geocode=&amp;q=bora+bora+island&amp;sll=37.0625,-95.677068&amp;sspn=84.512694,181.582031&amp;ie=UTF8&amp;hq=&amp;hnear=Bora-Bora,+%C3%8Eles+Sous-le-Vent,+Polyn%C3%A9sie+fran%C3%A7aise&amp;t=h&amp;ll=-16.49074,-151.737242&amp;spn=0.07407,0.068579&amp;z=14&amp;iwloc=A&amp;output=embed"></iframe><br /><small><a href="http://maps.google.com/maps?f=q&amp;source=embed&amp;hl=fr&amp;geocode=&amp;q=bora+bora+island&amp;sll=37.0625,-95.677068&amp;sspn=84.512694,181.582031&amp;ie=UTF8&amp;hq=&amp;hnear=Bora-Bora,+%C3%8Eles+Sous-le-Vent,+Polyn%C3%A9sie+fran%C3%A7aise&amp;t=h&amp;ll=-16.49074,-151.737242&amp;spn=0.07407,0.068579&amp;z=14&amp;iwloc=A" style="color:#0000FF;text-align:left">Agrandir le plan</a></small>  -->
+
+    <div id="test" class="cadre">
+      <h3>Div with some background-color</h3>
+        <div id="template_container">
+          <p>Failed to transform template (this test requires IE)</p>
+        </div>
+    </div>
+  </div>  
+</body>
+</html>

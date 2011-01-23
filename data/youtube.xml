@@ -1,0 +1,12 @@
+<Videos>
+  <Video1>http://www.youtube.com/v/IT7P7ijpAPY</Video1>
+  <Video2>http://www.youtube.com/v/IT7P7ijpAPY</Video2>
+  <Collection1>
+    <Video1>http://www.youtube.com/v/IzJlwWR_WHI</Video1>
+    <Video1>http://www.youtube.com/v/f6FarXsaZIw</Video1>
+  </Collection1>
+  <Collection2>
+    <Video2>http://www.youtube.com/v/IzJlwWR_WHI</Video2>
+    <Video2>http://www.youtube.com/v/f6FarXsaZIw</Video2>
+  </Collection2>
+</Videos>

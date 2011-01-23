@@ -1,0 +1,61 @@
+h1 {
+	margin-bottom: 0;
+}
+body {
+	counter-reset: sect1 sect2 sect3;
+}	               
+/*h2.info { 
+	counter-increment: sect1;
+	counter-reset: sect2;
+}
+h2.info:before { 
+	content: counter(sect1) ". ";
+}      
+*/h3.info {
+	counter-increment: sect2;
+	counter-reset: sect3;
+}
+h3.info:before { 
+	content: counter(sect2) ". ";
+/*	content: counter(sect1) ". " counter(sect2) ". ";*/
+}  
+span.info:before { 
+	content: counter(sect2) ". " counter(sect3) ". ";
+/*	content: counter(sect1) ". " counter(sect2) ". " counter(sect3) ". ";*/
+	counter-increment: sect3;
+}  
+.info {    
+	font-family: "Avant Garde", sans-serif;
+	font-weight: bold;
+}	
+.desactivated {
+	font-style: italic;
+}       
+.desactivated:before {
+	content: "this test has been desactivated";
+}
+.new, .add {
+    color: green;
+}
+.del {
+    color: red;
+}
+.changed {
+    color: orange;
+}
+p {
+    margin-left: 30px;
+}
+p.explain {
+  margin-top: -1em;
+  font-size: 120%;
+  color: blue;
+}   
+p.subject {       
+	margin-top: 0;
+  text-align: right;
+  font-size: 120%;
+  font-variant:small-caps;    
+	color: orange;   
+	float: right;
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>AXEL Known Issues</title>
+  <link rel="stylesheet" type="text/css" href="../docs/docu.css" />	
+</head>
+<body> 
+<pre>
+AXEL Known Issues
+=================              
+
+August 26th, 2010  
+
+Summary
+=======
+</pre> 
+   
+<ul>
+<li><a href="#namespace">Namespace prefixes</a></li>
+<li><a href="#option">option="set | unset" attribute of &lt;xt:use></a></li>
+<li><a href="#id-in-head">No IDs in &lt;xt:component> declared in the &lt;xt:head></a></li>
+<li><a href="#ie">Internet Explorer Known Issues with editor.xhtml</a></li>
+<li><a href="#templates">Some templates need to be loaded twice to be correctly styled</a></li>
+<li><a href="#display-mode">Not all display mode supported in lens-based plugins</a></li>
+</ul>
+                   
+<pre id="namespace">  
+Namespace prefixes
+------------------
+
+You must always use "xt:" as an XTiger XML namespace prefix and "xte:" as an XTiger XML extension prefix. This is a limitation in the Javascript code that tests if document nodes belong to the XTiger XML namespace from the DOM nodeName to be cross-browser. We will fix it in the future and use DOM namespace for the test.
+</pre>
+     
+<pre id="option">    
+option="set | unset" attribute of &lt;xt:use>
+------------------------------------------
+
+Currently the option attribute is implemented only on primitive editors such as 'string' or 'text'.
+
+It is not implemented if the &lt;xt:use> includes a compound type which is declared through an &lt;xt:component> in the &lt;xt:head> section, although this is allowed in XTiger XML.
+
+Our plan is to implement it in the future, with support for the &lt;xt:menu-marker/> element to position the checkbox in a way similar to repetitions.
+</pre>
+     
+<pre id="id-in-head">    
+No IDs in &lt;xt:component> declared in the &lt;xt:head>
+--------------------------------------------------
+
+Even if it is tempting to use the id attribute on elements which are defined in &lt;xt:component> elements inside the &lt;xt:head> section in the &lt;head> of a template, we warn you that this is inconsistent with XHTML. In fact as AXEL will copy these components inside the &lt;body> section of the document when transforming the template, you will end up with a document with duplicated IDs. 
+
+Although most browsers will not complain and you will obtained an editable document as usual after transformation, we have observed some limitations. For instance you cannot retrieve these elements with the DOM getElementById() function as it will return the first one which is declared in the &lt;head> section. As this one is not visible inside your document if you try to subscribe to it with addEventListener(), your handler will simply never be called !
+</pre>
+     
+<pre id="ie">    
+Internet Explorer Known Issues with editor.xhtml
+------------------------------------------------
+
+AXEL style sheet injection in injectStyleSheet in forms.js does not work on IE 7, head.appendChild(link) says invalid argument. Curiously this works on IE8 in IE7 emulation mode. Maybe a solution would be to inject a &lt;style> element instead of a &lt;link> element.
+</pre>
+<pre id="templates">    
+Some templates need to be loaded twice to be correctly styled
+-------------------------------------------------------------
+
+The "YouTube.xhml" template does not actually displays correctly the first time it is loaded inside the demonstration editor application (editor.html or editornoframe.html). You can get a correct result if you press the 'visualize' button a second time to reload it.
+</pre>  
+<pre id="display-mode">    
+Not all display mode supported in lens-based plugins
+----------------------------------------------------
+
+The 'richtext', 'video', 'link' and 'photo' plugins are all based on a lens (a kind of popup dialog).
+
+The 'display' parameter controls how to display the lens. When set to 'above' the lens is displayed on a layer that floats above the document, eventually hiding the document parts which are below if it is bigger than the content of the edited content. When set to 'inline' the lens inserts inself inside the document flow in place of the edited content and "pushes" the content around it.
+
+The 'inline' value is currently only supported for the 'photo' plugin.
+</pre>
+</body>
+</html>
+ 
+
+
+
+
+
+
+
+
+
+
+
+

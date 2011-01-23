@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL Test for the error logging functions</title>
+	<style type="text/css">
+	body {
+		padding: 0;
+		margin: 20px;
+		margin-top: 2em;
+		background-color: lightgray;
+	}
+	</style>	
+    <!-- BEGIN AXEL block -->	
+  	<link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  	<script type="text/javascript" src="../../axel/axel.js"></script>
+
+  	<script type="text/javascript">                     
+  	  var count = 0;
+  	
+      function testLog () {
+  			xtiger.cross.log('error', "This is an error messager number " + count);        
+  			count += 1;
+  			alert('Open the console to see the error message ' + count);
+      }
+
+      function testPrint () {
+  			xtiger.cross.print("This is message number " + count);
+  			count += 1;
+  			alert('Open the console to see the message ' + count);
+      }
+
+  		function init () {
+    	}
+
+  		xtdom.addEventListener(window,  'load', init, false);
+  	</script>
+     <!-- END AXEL block -->	
+  </head>	
+</head>
+
+<body>
+  <p>This test checks the <tt>xtiger.cross.log</tt> and <tt>xtiger.cross.print</tt> functions</p>
+  <p>Use it without the console enabled, when you click on the link below you should see an alert,
+    if not something wrong happend.</p>
+  <p><a href="javascript:testLog()">Test log</a> or <a href="javascript:testPrint()">Test print</a></p>
+</body>
+</html>

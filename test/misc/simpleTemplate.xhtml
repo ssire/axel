@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger">
+<head>
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"></meta>
+	<title>Test Template</title>
+  <xt:head version="1.1" templateVersion="1.0" label="test">
+  </xt:head>
+</head>
+<body>
+  <p>Textarea: <xt:use types="text" label="one" param="shape=self;type=textarea;layout=placed">un</xt:use></p>
+  <p class="big">Input: <xt:use types="text" label="un" param="shape=self;type=input;layout=placed">deux</xt:use></p>
+  <p>Textarea (w class): <xt:use types="text" label="one" param="shape=parent;type=textarea;layout=placed;class=custom">un</xt:use></p>
+  <p>Input (w class): <xt:use types="text" label="un" param="shape=self;type=input;layout=placed;class=custom">deux</xt:use></p>
+  <h3>Same with layout=fload</h3>
+  <p>Textarea: <xt:use types="text" label="one" param="shape=self;type=textarea;layout=float">un</xt:use></p>
+  <p class="big">Input: <xt:use types="text" label="un" param="shape=self;type=input;layout=float">deux</xt:use></p>
+  <p>Textarea (w class): <xt:use types="text" label="one" param="shape=parent;type=textarea;layout=float;class=custom">un</xt:use></p>
+  <p>Input (w class): <xt:use types="text" label="un" param="shape=self;type=input;layout=float;class=custom">deux</xt:use></p>
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* * AXEL style sheet * */
+
+/* This file decribes the visual styles used by the AXEL library to improve and decorate the transformed
+   template (the user interface). It includes (among others) color styles, borders and constomizable
+   margins.
+   
+   Feel free to customize the styles below to match your visual requirements */
+
+/*******************/
+/** Repeat editor **/
+
+/* style for the left button (-) */
+.axel-repeat-left {
+	padding-left: 5px;
+	padding-right: 2px;
+}
+
+/* style for the right button (+) */
+.axel-repeat-right {
+	padding-left: 2px;
+	padding-right: 5px;
+}
+
+/* style for the unset (repeated 0 time) element inside a repeat.
+   Greys out unrepeated content */
+.axel-repeat-unset,
+.axel-repeat-unset * {
+	font-style: italic !important;
+	color: gray !important;
+}
+
+/* "Ungreys" the greyed content when its contently being edited */
+.axel-repeat-unset .axel-core-editing,
+.axel-repeat-unset .axel-core-editing * {
+	font-style: normal !important;
+	color: black !important;
+}
+
+/* Greys out images and objects that are not repeated */
+img.axel-repeat-unset,
+object.axel-repeat-unset {
+	opacity: 0.3;
+}
+
+/*****************/
+/** Core styles **/
+
+/* Style for ediatble parts of the template */
+.axel-core-editable {
+	border: thin dashed #bbffdd;
+}
+
+/* Style for error message within the template as a result of a problem in the transformation process */
+.axel-generator-error {
+	font-family: sans-serif;
+	color: red;
+}
+
+/*************************************************/
+/** Optionality management (shared between plugins
+   supporting the option="set|unset" attribute) **/
+
+/* Style for the checkbox for optional editors */
+.axel-option-checkbox {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+/* Style for selected (set) optional elements */
+.axel-option-set {
+	font-style: inherit;
+	color: inherit;
+}
+
+/* Styles for greying out unset optional elements */
+.axel-option-unset {
+	font-style: italic;
+	color: gray !important;
+}
+img.axel-option-unset,
+object.axel-option-unset {
+	opacity: 0.3;
+}	
+
+/* ******************* */
+/* Popup menu device */
+
+.axel-popup-container {
+	font-size: 13px;
+	border:1px solid black;
+	color: blue;
+	background: white;
+	padding: 2px;
+}
+
+.axel-popup-container > ul {
+	border: 1px solid lightGrey;
+}
+
+.axel-popup-container li {
+	border-bottom: 1px solid lightGrey;
+}
+
+.axel-popup-container li.axel-popup-selectable {
+	padding: 5px;
+}
+
+.axel-popup-container li.axel-popup-selectable:hover {
+	color: white;
+	background: blue;
+}
+
+.axel-popup-container li.selected {
+	background: orange !important;
+}
+
+.axel-popup-sublistheader {
+	padding: 5px;
+	border: 1px solid lightGrey;
+	color: grey;
+	font-variant: small-caps;
+	font-weight: bold;
+	width: 25%;
+}
+
+.axel-popup-sublistbody {
+	border: 1px solid lightGrey;
+	width: 75%;
+}
+/* ********************/
+/* Lens based devices */
+
+.axel-lens-containerstyle {
+	border: 1px solid black;
+	background-color: rgb(115, 166, 42);
+}
+
+/*****************/
+/* Plugin "link" */
+
+/* Style for the link model's handle */
+.axel-link-handle {
+	color: blue;
+	font-family: verdana, arial;
+	text-decoration: underline;
+	font-size: 100%;
+}
+
+/****************/
+/* Photo plugin */
+
+/* Style for the photo model's handle */
+.axel-photo-handle {
+	max-width: 100px;
+	max-height: 100px;
+}
+
+/*************************/
+/* Servie filter trigger */
+.axel-service-trigger {
+	margin: 0 5px;
+}

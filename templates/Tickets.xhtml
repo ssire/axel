@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Basic Software Ticket Tracking System</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="tickets">
+  
+    <xt:component name="last">
+        <p class="last">Last edited by <xt:use types="text" label="name">name</xt:use> on <xt:use types="text" label="date">date</xt:use></p>
+    </xt:component> 
+  
+    <xt:component name="ticket">
+      <div class="ticket">
+        <div class="separator"/>
+        <div class="req-repeater"><xt:menu-marker/></div> 
+        <p class="name"><xt:use types="text" label="name" param="shape=parent;type=textarea;layout=placed">Name</xt:use></p>
+        <p class="infos"><xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="origine"><span>Signalé par </span><xt:menu-marker/><xt:use types="text" label="origine" param="type=input">Origine</xt:use></xt:repeat>, <xt:attribute types="select" name="statut" values="non_attribué attribué en_cours résolu non_pertinent" default="non_attribué" i18n="non&nbsp;attribué attribué&nbsp;à en&nbsp;cours résolu non&nbsp;pertinent"/> <xt:use types="text" label="developpeur" option="unset" param="type=input;class=developer">nom</xt:use></p>
+        <xt:repeat minOccurs="0" maxOccurs="*" label="description">
+          <div class="row">
+            <div class="left-repeater">
+              <xt:menu-marker/>
+            </div>
+            <xt:use types="parag code"/>
+          </div>
+        </xt:repeat>
+        <div class="separatorBottom"/>
+      </div>
+    </xt:component> 
+  
+    <xt:component name="parag">
+      <p class="parag">
+        <xt:use types="text" param="type=textarea;layout=placed;shape=parent">Description.</xt:use>
+      </p>
+    </xt:component> 
+
+    <xt:component name="code">
+      <div class="code">
+        <xt:use types="text" handle="pre" param="shape=parent;type=textarea;layout=placed;enablelinebreak=true">code</xt:use>
+      </div>      
+    </xt:component> 
+    
+  </xt:head>  
+
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+
+  <style type="text/css">
+    body {
+          counter-reset: req;     
+      margin: 20px 10px;
+      padding: 0;     
+    }
+    p.last {
+      padding: 0;
+      margin-left: auto;
+      margin-right: 0;
+      width: 300px;     
+    } 
+    p.last > span {
+      color: brown;     
+    }   
+    p.name {
+      margin: 0 0 0 10px;     
+      font-size: 120%;
+      font-family: Helvetica;
+      padding: 0;
+    }
+    p.infos {
+      margin-left: 10px;      
+    }
+    div.row {     
+      margin-left: 10px;      
+    } 
+    div.left-repeater {
+      display: inline;
+      float: left;
+      width: 50px;    
+      height: 10px;     
+    } 
+    div.row > select {
+      float: left;
+    }
+    p.parag {
+      padding: 0;
+      margin-left: 130px;     
+    }
+    p.description:before {
+      content: counter(req) ". ";
+          counter-increment: req;         
+    }
+    p.description {
+      font-family: Helvetica;
+    }
+    div.code {
+      margin-left: 140px;
+    }
+    div.req-repeater {
+      display: inline;
+      position: relative;
+      top: -10px;
+      left: 50%;      
+      padding: 8px 8px 0 8px;
+      border: 1px dashed black;                 
+    }
+    div.separator {
+      width: 50%;
+      height: 1;
+      border-bottom: 1px dashed black;                  
+    }
+    div.separatorBottom {
+      width: 50px;
+      height: 1;
+      border-bottom: 1px dashed black;                  
+    }   
+    div.ticket {
+      margin-top: 30px;
+      border-left: 1px dashed black;                  
+    }
+    span.developer {
+      color: green;
+    }
+  </style>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+  
+</head>
+<body>
+
+<h1><xt:use types="text" label="title">Requirements</xt:use></h1> 
+
+<xt:use types="last"/>
+
+<xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="ticket">
+  <xt:use types="ticket" label="ticket"/>
+</xt:repeat>
+
+</body> 
+</html>

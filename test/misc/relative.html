@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	
+	<title>AXEL Test for positioning editors</title>
+	
+  	<style type="text/css">       
+.xtt-layout-container {
+  position: relative;     
+  overflow: visible;    
+  display: block;
+  width: 0;
+  height: 0;  
+}  	
+.xtt-lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid green;
+}  	                 
+.handle1 {
+  margin-left: 150px;
+  margin-top: 100px;
+  border: 1px solid orange;
+}  
+.handle2 {
+  margin-left: 150px;
+  border: 1px solid orange;
+}   
+div.box {
+  float:left;
+  width:500px;  
+  margin-right: 50px;
+  margin-bottom: 50px;
+  border: 1px solid black;
+}     
+div.sbox {
+  float:left;
+  width:500px;  
+  height:300px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+  overflow: scroll; 
+  border: 1px solid black;
+}     
+div.sbox > h2 {
+  margin-bottom: 300px;
+}
+.explain {
+  color: blue;
+}        
+h1 {
+  color: blue;
+  clear: both;
+}
+  	</style>
+  		
+</head>
+<body>           
+  <p class="explain">This test shows the effects of inserting an absolute div inside a relative div before an element in the DOM. Different configuration are tested, enlarge your window to at least 1000 pixels to see the example before and after the div insertion at the same level. This test exemplifies the techniques used by AXEL layout manager to position the lenses in either 'absolute' or 'inline' mode.
+  </p>      
+  
+  <h1>NO SCROLL</h1>
+              
+  <div class="box">                
+    <h2>HANDLE ONLY</h2>
+    <h3>Simulation of 'above' with 'block' handle (DIV) with left-margin and top-margin but no 'auto' top margin</h3>
+                 
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <div class="handle1">Example of a potential Handle with margins</div> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>   
+   </div>     
+ </div> 
+
+  <div class="box">                
+    <h2>HANDLE and LENS</h2>
+    <h3>Simulation of 'above' with 'block' handle (DIV) with left-margin and top-margin but no 'auto' top margin</h3>
+                 
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <div class="xtt-layout-container">
+        <div class="xtt-lens">
+          Absolute inside relative !
+        </div>  
+      </div>
+      <div class="handle1">Example of a potential Handle with margins</div> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>   
+   </div>     
+ </div>   
+ 
+ <div class="box">
+   <h2>HANDLE ONLY</h2>   
+   <h3>Simulation of 'above' with 'block' handle (P) with left-margin and with 'auto' top margin (16)</h3>
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <p class="handle2">Example of a potential Handle with margins and top margin 'auto'</p> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>  
+   </div>  
+ </div> 
+
+ <div class="box">
+   <h2>HANDLE and LENS</h2>   
+   <h3>Simulation of 'above' with 'block' handle (P) with left-margin and with 'auto' top margin (16)</h3>
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <div class="xtt-layout-container">
+        <div class="xtt-lens">
+          Absolute inside relative !
+        </div>  
+      </div>
+      <p class="handle2">Example of a potential Handle with margins and top margin 'auto'</p> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>  
+   </div>  
+ </div>     
+ 
+  <h1>SCROLL</h1>
+              
+  <div class="sbox">                
+    <h2>HANDLE ONLY</h2>
+    <h3>Simulation of 'above' with 'block' handle (DIV) with left-margin and top-margin but no 'auto' top margin</h3>
+                 
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <div class="handle1">Example of a potential Handle with margins</div> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>   
+   </div>     
+ </div> 
+
+  <div class="sbox">                
+    <h2>HANDLE and LENS</h2>
+    <h3>Simulation of 'above' with 'block' handle (DIV) with left-margin and top-margin but no 'auto' top margin</h3>
+                 
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <div class="xtt-layout-container">
+        <div class="xtt-lens">
+          Absolute inside relative !
+        </div>  
+      </div>
+      <div class="handle1">Example of a potential Handle with margins</div> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>   
+   </div>     
+ </div>   
+ 
+ <div class="sbox">
+   <h2>HANDLE ONLY</h2>   
+   <h3>Simulation of 'above' with 'block' handle (P) with left-margin and with 'auto' top margin (16)</h3>
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <p class="handle2">Example of a potential Handle with margins and top margin 'auto'</p> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>  
+   </div>  
+ </div> 
+
+ <div class="sbox">
+   <h2>HANDLE and LENS</h2>   
+   <h3>Simulation of 'above' with 'block' handle (P) with left-margin and with 'auto' top margin (16)</h3>
+    <div style="margin-left: 80px">
+      <p>My Sample :</p>
+      <div class="xtt-layout-container">
+        <div class="xtt-lens">
+          Absolute inside relative !
+        </div>  
+      </div>
+      <p class="handle2">Example of a potential Handle with margins and top margin 'auto'</p> 
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+      </p> 
+      </div>  
+   </div>  
+ </div> 
+
+</body>
+</html>

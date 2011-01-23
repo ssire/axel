@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL test case : 'text' Filter features</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <!-- <xt:component name="seq_1">
+    </xt:component> -->
+  
+  </xt:head>
+
+  <link rel="stylesheet" type="text/css" href="Template.css" />
+</head>
+<body>
+  <p>This template contains XTiger XML declarations that stress the 'text' Filters of the AXEL library</p>
+  
+  <p><span class="info">'placed' 'textarea' 'text' editor with no filter </span> : <xt:use types="text" param="type=textarea;layout=placed" label="A">content</xt:use></p>  
+
+  <p><span class="info">'placed' 'textarea' 'text' editor with a wiki filter </span> : <xt:use types="text" param="type=textarea;layout=placed;filter=wiki" label="B">content</xt:use></p>  
+
+  <p><span class="info">'placed' 'textarea' 'text' editor with no filter </span> : <xt:use types="text" param="type=textarea;layout=placed" label="C">content</xt:use></p>    
+
+  <p><span class="info">'placed' 'textarea' 'text' editor with video filter </span> : <span style="display: inline-block; vertical-align: middle"><xt:use types="text" param="type=textarea;layout=placed;;filter=video" label="D">content</xt:use></span></p>    
+    
+</body>
+</html>

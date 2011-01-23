@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>
+	<meta name="description" content="This page show how to use the API to load XML content in a document template."/>
+	<meta name="keywords" content="editor, XML, document template"/>
+	<meta name="author" content="Stéphane Sire" />
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/> 
+  <meta http-equiv="X-UA-Compatible" content="IE=7;"/>
+	<title>AXEL miscellaneous test file</title>
+	<style type="text/css">
+	body {
+		padding: 0;
+		margin: 20px;
+		min-width: 650px;
+	}
+	div#universe {
+	  position: relative;
+	}	
+	div.cadre {
+	  border: solid 3px gray;
+	  padding: 10px;
+	}
+	div#test {
+	  position: absolute;
+	  top: 4em;
+	  left: 10em;
+	  background-color: #AAFFEE;
+	}	
+	.transparent {
+    background-color: transparent;
+	}
+  .inherit {
+      background-color: inherit;
+  }
+	textarea {
+	  overflow: hidden;  
+	}	
+	p.entry {
+	  margin: 0
+	  padding: 0 0 8px 0;
+	}
+	</style>
+</head>
+<body>
+  <p>This test different combinations of background-color with textarea and input field. The behavior is different on IE depending if you render it for IE7 or IE8 mode (see the X-UA-Compatible meta element). You can also try a <a href="eventPassThroughTemplate.html">similar test</a> with templates.</p>
+  <div id="universe">
+    <p>
+      <!-- ********************* -->
+      <!-- Clickable background  -->
+      <!-- ********************* -->
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>      
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>
+      <a href="javascript:alert('Got it !')">0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9</a><br/>            
+    </p>
+    <div id="test" class="cadre">
+      <h3>Div with some background-color</h3>
+      <p class="entry"><textarea cols="40" rows="3">textarea no background-color</textarea></p>
+      <p class="entry"><input size="40" value="input no background-color"/></p>
+      <p class="entry"><textarea class="transparent" cols="40" rows="3">textarea transparent</textarea></p>
+      <p class="entry"><input class="transparent" size="40" value="input background transparent"/></p>
+      <p class="entry"><textarea class="inherit" cols="40" rows="3">textarea inherit</textarea></p>
+      <p class="entry"><input class="inherit" size="40" value="input background inherit"/></p>
+    </div>
+  </div>
+</body>
+</html>

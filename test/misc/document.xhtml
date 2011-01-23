@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>AXEL API test : xtiger.util.Document</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <xt:component name="myComponent">  
+      <p>A component <xt:menu-marker /></p>
+    </xt:component> 
+  
+  </xt:head>
+  
+  <!-- AXEL -->
+  <link rel="stylesheet" type="text/css" href="../../axel/axel.css" />
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  <script type="text/javascript" src="../../src/util/document.js"></script>
+  <script type="text/javascript">                             
+    var d;
+    function readyCb(d) {
+        alert('Ready to Edit !');
+    }             
+    function saveCb(d) {
+        alert('XML Document Saved !');
+    }             
+    function init() { 
+      try {
+          d = new xtiger.util.Document({                        
+                  axel : '../../axel/bundles',
+                  // inframe : 'container',          
+                  // ??? targetFrame : [document, 'container', '../axel/axel.css'],
+                  // inframeCss : '../axel/axel.css',
+                  template : '../../templates/Hello-world.xhtml',
+                  filename : '../../examples/tutorial/sample.xml',            
+                  targetDocument : [document, 'editor', true]
+                  
+              }).load(readyCb);
+      } catch(e) {
+          alert(e.name + ' : ' + e.message);
+      }
+    }
+    function save() {
+        try {
+            d.save();
+        } catch(e) {
+            alert(e.name + ' : ' + e.message);
+        }
+    }
+    xtdom.addEventListener(window,  'load', init, false);
+  </script>
+  
+
+</head>
+<body>
+  <span style="float: right" ><span onclick="save()">SAVE</span> (<a href="../../examples/tutorial/sample.xml" target="_blank">view</a>)</span>   
+  <div id="editor">  
+      <h1>AXEL API test : xtiger.util.Document</h1>
+  
+      <xt:repeat minOccurs="0" maxOccurs="*" label="SomeRepetition">
+        <xt:use types="myComponent" label="SomeComponent" />
+      </xt:repeat>
+  
+      <div style="border:solid 1px black; padding: 1em; resize: both">
+          <iframe style="width:100%; height:100%" id="container" src="">
+          </iframe>
+      </div>     
+  </div>  
+</body>
+</html>               

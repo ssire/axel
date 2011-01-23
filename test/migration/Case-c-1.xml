@@ -1,0 +1,53 @@
+<Root>
+  <A>a content#</A>
+  <B>b content#</B>
+  <C>c content#</C>
+  <REPEAT>
+    <A>a content1#</A>
+    <B>b content1#</B>
+    <C>c content1#</C>
+    <A>a content2#</A>
+    <B>b content2#</B>
+    <C>c content2#</C>
+  </REPEAT>
+  <D>d content1#</D>
+  <E>e content1#</E>
+  <F>f content1#</F>
+  <D>d content2#</D>
+  <E>e content2#</E>
+  <F>f content2#</F>
+  <G>g content#</G>
+  <H>h content#</H>
+  <I>i content#</I>
+  <REPEAT>
+    <G>g content1#</G>
+    <H>h content1#</H>
+    <I>i content1#</I>
+    <G>g content2#</G>
+    <H>h content2#</H>
+    <I>i content2#</I>
+  </REPEAT>
+  <J>j content1#</J>
+  <K>k content1#</K>
+  <L>l content1#</L>
+  <J>j content2#</J>
+  <K>k content2#</K>
+  <L>l content2#</L>
+  <M>m content#</M>
+  <N>n content#</N>
+  <O>o content#</O>
+  <REPEAT>
+    <M>m content1#</M>
+    <N>n content1#</N>
+    <O>o content1#</O>
+    <M>m content2#</M>
+    <N>n content2#</N>
+    <O>o content2#</O>
+  </REPEAT>
+  <P>p content1#</P>
+  <Q>q content1#</Q>
+  <R>r content1#</R>
+  <P>p content2#</P>
+  <Q>q content2#</Q>
+  <R>r content2#</R>
+</Root>

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL Interactive (GUI) test case : 'link' primitive editor plugin</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="Root">
+  </xt:head>
+  
+	<style type="text/css">
+		.xtt-lens a img {
+			background-color: rgba(115, 166, 42, 0.75);
+			border-bottom: 2px solid rgba(0, 0, 0, 0.75);
+			border-top: 2px solid rgba(120, 120, 120, 0.75);
+			border-right: 2px solid rgba(0, 0, 0, 0.75);
+			border-left: 2px solid rgba(120, 120, 120, 0.75);
+		}
+	</style>
+
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"/>
+  <script type="text/javascript" src="../../axel/axel.js"></script> 
+
+  <script type="text/javascript">
+    var form;
+    function init() {
+      form = new xtiger.util.Form('../../axel/bundles');
+      form.setTemplateSource(document);
+      form.enableTabGroupNavigation();
+      if (! form.transform()) { alert(this .form.msg); }
+    }
+    function dump () {
+	    var log = new xtiger.util.LogWin ("XML instance data", 400, 600, true);	
+	    log.dump(form);
+    }
+    xtdom.addEventListener(window,  'load', init, false);
+  </script> 
+</head>
+<body>
+  <h1>Interactive (GUI) test case for <tt>'link'</tt> editor</h1>
+  
+  <p>There are tested various situation involving the link editor, that is (at the moment), the 3-tuple composed with the link model, the lens device and the link lens content.</p>
+
+  <h2>Simple editor</h2>
+  <p>This is a <xt:use types="link" label="l1" param="trigger=mouseover;"><a href="http://www.1.ch">link 1</a></xt:use>. Try to edit it.</p>
+
+  <h2>Consecutive editors</h2>
+  <p>Now test the succession of editors and the tab management. Here's a <xt:use types="text" label="t1">text</xt:use> editor, followed by a <xt:use types="link" label="l2"><a href="http://www.2.com">link 2</a></xt:use> one. Isn't tabbing fun ? <xt:use types="select" label="c2" values="yes no">no</xt:use>.
+  </p>
+
+  <h2>Repeatable editors</h2>
+  <p>Let's add more links</p>
+  <div>
+    <xt:repeat minOccurs="1" maxOccurs="30" label="Links">
+      <xt:use types="link" label="lr1"><a href="http://www.3.com">repeatable link</a></xt:use> <xt:menu-marker/><br/>
+    </xt:repeat>
+  </div>
+
+  <h2>Optional editor</h2>
+  <p>Well, the title is self-explanatory enough, isn't it?</p>
+  <p>First, a try with a repeat 0:1.</p>
+  <xt:repeat minOccurs="0" maxOccurs="1">
+    <xt:use types="link" label="or1"><a href="http://www.4.com">wanna use me ?</a></xt:use>
+  </xt:repeat>
+  <br/>
+  <p>Then, a try this the attribute option="set".</p>
+  <xt:use types="link" label="opt1" option="set"><a href="http://www.5a.com">another opt link set</a></xt:use>
+  <br/>
+  <p>and one with option="unset".</p>
+  <xt:use types="link" label="opt1" option="unset"><a href="http://www.5b.com">another opt link unset</a></xt:use>
+</body>
+</html>

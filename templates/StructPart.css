@@ -1,0 +1,101 @@
+/************************************************
+     Structured Part XTiger Component style
+
+ Parag | List{ ListItem | SubList{ SubListItem }}
+ ************************************************/
+
+/* Top level */
+
+div.xtc-spart-row {
+    clear: left;
+    margin-bottom: 0.5em;
+/*    border: solid 1px green;    */
+} 
+                             
+span.xtc-spart-menu {
+    float: left;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}                             
+
+/* 1st level content */
+
+.xtc-spart-content {
+    margin-left: 80px;     
+}         
+
+p.xtc-spart-parag {
+    margin: 0;
+/*    border: solid 1px yellow;*/
+}          
+
+p.xtc-spart-listheader {
+	margin: 0 0 0.4em 0;         	
+}
+
+ul.xtc-spart-list {
+    padding: 0;
+    margin: 0;     
+}          
+
+li.xtc-spart-listitemwrapper:first-of-type {
+    clear: none;
+}                           
+
+li.xtc-spart-listitemwrapper {
+    clear: left;
+    list-style: none none inside;
+    margin-bottom: 0.5em;    
+} 
+
+/* 2nd level content */    
+
+p.xtc-spart-listitem {
+    margin: 0 0 0 70px; 
+    display: list-item; 
+    list-style: disc none inside;
+}     
+
+p.xtc-spart-sublistheader {
+	margin: 0 0 0.4em 0;      
+  list-style: disc none inside;
+	color: green;	   	
+}
+
+li.xtc-spart-sublistitem {
+    margin-bottom: 0.5em;
+    /* Opera */
+    list-style: circle none inside;
+    margin-left: 1em;
+}              
+
+li.xtc-spart-sublistitem:last-of-type {
+	min-height: 2em;
+}	
+
+/* Preview mode */         
+
+span.axel-core-on[display = none] + body.preview .nopreview {
+	display : none;
+}
+
+body.preview span.xtc-spart-menu {
+    display: none;
+}            
+
+body.preview .xtc-spart-content, p.xtc-spart-listitem {
+    margin-left: 0;
+}            
+
+body.preview li.xtc-spart-listitemwrapper, body.preview li.xtc-spart-sublistitem {
+    margin-bottom: 0.2em;
+}
+
+body.preview p.xtc-spart-parag {
+    margin-bottom: 1em;
+}             
+            
+body.preview  li.xtc-spart-sublistitem:last-of-type {
+	min-height: 0;
+}	
+

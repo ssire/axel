@@ -1,0 +1,313 @@
+<html xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL Test for positioning editors</title>
+
+  <!-- BEGIN AXEL block -->	
+  <!-- <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  <script type="text/javascript" src="../../axel/axel.js"></script>    -->
+  <!-- <script type="text/javascript" src="../../src/util/debug.js"></script> -->
+     
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link> 
+  <!-- For .xtt-layout-container and .xtt-lens styling -->
+  
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  
+  <script type="text/javascript">             
+  var _layout;      
+  var _lensContent;                
+  
+  function insertAbove(ev, target) {     
+    xtiger.cross.log('debug', 'insertAbove ' + target.tagName);
+    // var target = xtdom.getEventTarget(ev);
+    _layout.insertAbove(target, _lensContent, 0);
+    xtdom.preventDefault(ev);
+    xtdom.stopPropagation(ev);
+  }
+
+  function insertInline(ev, target) {     
+    xtiger.cross.log('debug', 'insertInline ' + target.tagName);
+    // var target = xtdom.getEventTarget(ev);
+    _layout.insertInline(target, _lensContent, 0);
+    xtdom.preventDefault(ev);
+    xtdom.stopPropagation(ev);
+  }
+
+  function terminateEditing(ev) {   
+    xtiger.cross.log('debug', 'terminate ' + _layout.curHandle.tagName);
+    _layout.restoreHandle();
+  }                          
+  
+  function abovify (name) {
+    var n = document.getElementById(name);
+    xtdom.addEventListener(n, 'click', function (ev) { insertAbove(ev, n) }, true);
+    xtiger.cross.log('debug', 'abovify ' + n.tagName);
+    return abovify;
+  }
+
+  function inlinify (name) {
+    var n = document.getElementById(name);
+    xtdom.addEventListener(n, 'click', function (ev) { insertInline(ev, n) }, true);
+    xtiger.cross.log('debug', 'inlineify ' + n.tagName);
+    return inlinify;
+  }
+  
+  function init () {   
+    xtiger.bundles.lens.whiteIconURL = '../../axel/bundles/lens/white.png';
+     
+    _layout = new xtiger.editor.LayoutManager(document);
+    _lensContent = xtdom.createElement(document, 'div');
+    xtdom.addClassName(_lensContent, 'xtt-lens');
+    xtdom.addClassName(_lensContent, 'xtt-lensstyle');
+    _lensContent.innerHTML = "<img src='../../axel/bundles/photo/icons/photobroken.png'/>\
+    <p>Select your Image</p>";
+    abovify('above')('above2')('above3')('above4');
+    inlinify('inline')('inline2')('inline3')('inline4')
+    xtdom.addEventListener(_lensContent, 'click', function (ev) { terminateEditing(ev) }, true);
+  }
+           
+  xtdom.addEventListener(window, 'load', init, true);
+  </script>
+
+  	<style type="text/css">
+body {
+	padding: 0;
+	background-color: lightgray;
+}  	
+.container1 {  
+  position: relative;
+  overflow: visible;
+  display: inline;    
+  width: 0;
+  height: 0;       
+  /* FF only !!! */
+  /* border: 1px solid transparent;     */
+}  
+.content1 {   
+	position: absolute;     
+  z-index: 10;   
+  top: 0;
+  left: 0;    
+/*  vertical-align: top;   */
+}  	
+.container2 {  
+  position: relative;
+  overflow: visible;    
+  display: inline;    
+  width: 0;
+  height: 0;   
+  vertical-align: top;
+}  
+.content2 {   
+	position: absolute;     
+  z-index: 10;   
+  top: 0;
+  left: 0;
+/*  vertical-align: top;   */
+}  
+img {
+  border: 1px solid green;
+}      
+img.spacer {
+  width: 150px;
+  height: 120px;
+  border: 1px solid red;
+}
+img.handle {
+  border: 1px solid orange;         
+}      
+.explain {
+  color: blue;
+}
+  	</style>
+     <!-- END AXEL block -->	
+  </head>	
+</head>
+
+<body>
+  <p class="explain">This test for investigating lens positioning algorithm in lensdevice.js and associated wrappers</p>
+
+
+  <h1 style="clear: both;color: blue">STATIC TEST</h1>
+                  
+  <!-- *******************************
+                  Test 1
+       ******************************* -->
+  <div style="float:left;width:500px">
+  <h2>A. 1 SPAN</h2>
+  
+  <h3>Image with no vertical-align, no handle</h3>
+       
+  <p>Photos : 
+    <span class="container1">
+      <span class="content1">   
+        <img src="../../axel/bundles/photo/icons/photobroken.png"/>  
+      </span>
+    </span>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  
+  <h3>Image with vertical-align 'top', handle replace by whitespace</h3>
+       
+  <p>Photos : 
+    <span class="container2">
+      <span class="content2">   
+        <img src="../../axel/bundles/photo/icons/photobroken.png"/>
+      </span>
+    </span>                                                  
+    <img class="spacer" src="../../axel/bundles/lens/white.png"/>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p> 
+  
+  <h3>Image with no vertical-align, handle</h3>
+       
+  <p>Photos : 
+    <span class="container1">
+      <span class="content1">   
+        <img src="../../axel/bundles/photo/icons/photobroken.png"/>  
+      </span>
+    </span>                                                  
+    <img class="handle" src="../../axel/bundles/photo/icons/photo.png"/> 
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  </div>
+                    
+  <!-- *******************************
+                  Test 2
+       ******************************* -->
+  <div style="float:left;width:500px">
+  <h2>A. 2 DIV</h2>
+  
+  <h3>Image with no vertical-align, no handle</h3>
+       
+  <p>Photos : 
+    <div class="container1">
+      <div class="content1">   
+        <img src="../../axel/bundles/photo/icons/photobroken.png"/>  
+      </div>
+    </div>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  
+  <h3>Image with vertical-align 'top', handle replace by whitespace</h3>
+       
+  <p>Photos : 
+    <div class="container2">
+      <div class="content2">   
+        <img src="../../axel/bundles/photo/icons/photobroken.png"/>
+      </div>
+    </div>                                                  
+    <img class="spacer" src="../../axel/bundles/lens/white.png"/>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p> 
+  
+  <h3>Image with no vertical-align, handle</h3>
+       
+  <p>Photos : 
+    <div class="container1">
+      <div class="content1">   
+        <img src="../../axel/bundles/photo/icons/photobroken.png"/>  
+      </div>
+    </div>                                                  
+    <img class="handle" src="../../axel/bundles/photo/icons/photo.png"/> 
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>    
+  </div>       
+  
+  
+  <h1 style="clear: both;color: blue">DYNAMIC TEST (With Layout Manager, Handle is 'inline' level)</h1>    
+
+  <!-- *******************************
+                  Test 3
+       ******************************* -->
+  <div style="float:left;width:500px">             
+    
+  <h2>B. 1 HANDLE is an IMG (inline)</h2>
+    
+  <h3>Display 'above'</h3>
+       
+  <p>Photos : <img id="above" class="handle" src="../../axel/bundles/photo/icons/photo.png"/>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  
+  <h3>Display 'inline'</h3>
+       
+  <p>Photos : <img id="inline" class="handle" src="../../axel/bundles/photo/icons/photo.png"/>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p> 
+  </div>  
+          
+  <div style="float:left;width:500px">             
+    
+  <h2>B.2 HANDLE is a SPAN (inline)</h2>
+    
+  <h3>Display 'above'</h3>
+       
+  <p>Photos : <span id="above2" class="handle">EDIT ME</span>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  
+  <h3>Display 'inline'</h3>
+       
+  <p>Photos : <span id="inline2" class="handle">EDIT ME</span>
+  </p> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p> 
+  </div>            
+  
+
+  <h1 style="clear: both;color: blue">DYNAMIC TEST (With Layout Manager, Handle is 'block' level)</h1>    
+  <p class="explain">As a trick the handle also define a margin-left of 150px</p>
+      
+  <!-- *******************************
+                  Test 4
+       ******************************* -->
+  <div style="float:left;width:500px">             
+    
+  <h2>C.1 HANDLE is a DIV (block)</h2>
+  
+  <h3>Display 'above'</h3>
+       
+  <p>Photos :</p>
+  <div id="above3" class="handle" style="margin-left: 150px"><img src="../../axel/bundles/photo/icons/photo.png"/></div> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  
+  <h3>Display 'inline'</h3>
+       
+  <p>Photos :</p>
+  <div id="inline3" class="handle" style="margin-left: 150px"><img src="../../axel/bundles/photo/icons/photo.png"/></div> 
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p> 
+  </div>  
+          
+  <div style="float:left;width:500px">             
+    
+  <h2>C.2 HANDLE is a P (block)</h2>
+    
+  <h3>Display 'above'</h3>
+       
+  <p>Photos : </p>
+  <p id="above4" class="handle" style="margin-left: 150px">EDIT ME</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>         
+  
+  <h3>Display 'inline'</h3>
+       
+  <p>Photos : </p>
+  <p id="inline4" class="handle" style="margin-left: 150px">EDIT ME</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p> 
+  </div>  
+</body>
+</html>

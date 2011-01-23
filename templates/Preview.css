@@ -1,0 +1,19 @@
+/*	
+
+	This style sheet adds some rules to hide AXEL structural menus 
+	when the body element (that contains an XTiger XML transformed templates)
+	has a 'preview' class in its class attributes.
+	
+	It can be used in conjunction with utilities such as the WebDAV menu bar 
+	to easily create two display mode for documents based on templates
+	
+ */
+
+body.preview .axel-repeat-left, 
+body.preview .axel-repeat-right, 
+body.preview .axel-option-checkbox,        
+body.preview .axel-option-unset,          
+body.preview .axel-repeat-unset,
+body.preview select {
+	display: none !important;
+}	

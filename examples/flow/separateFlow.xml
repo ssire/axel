@@ -1,0 +1,33 @@
+<slots>
+  <timetable>
+    <lundi>
+      <ferme/>
+    </lundi>
+    <mardi>
+      <ferme/>
+    </mardi>
+    <mercredi>
+      <ouvert>
+        <slots>
+          <slot>
+            <begin>08:00</begin>
+            <end>19:00</end>
+          </slot>
+        </slots>
+      </ouvert>
+    </mercredi>
+    <jeudi>
+      <ferme/>
+    </jeudi>
+    <vendredi>
+      <ferme/>
+    </vendredi>
+    <samedi>
+      <ferme/>
+    </samedi>
+    <dimanche>
+      <ferme/>
+    </dimanche>
+  </timetable>
+</slots>
+

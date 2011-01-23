@@ -1,0 +1,30 @@
+<Root>
+  <l1>
+    <linkRef>http://www.lemonde.fr</linkRef>
+    <linkText>A</linkText>
+  </l1>
+  <t1>text</t1>
+  <l2>
+    <linkRef>http://www.epfl.ch</linkRef>
+    <linkText>B</linkText>
+  </l2>
+  <c2>no</c2>
+  <Links>
+    <lr1>
+      <linkRef>http://www.google.ch</linkRef>
+      <linkText>C</linkText>
+    </lr1>
+  </Links>
+  <or1>
+    <linkRef>http://www.apple.com</linkRef>
+    <linkText>D</linkText>
+  </or1>
+  <opt1>
+    <linkRef>http://www.microsoft.com</linkRef>
+    <linkText>E</linkText>
+  </opt1>
+  <opt1>
+    <linkRef>http://www.sun.com</linkRef>
+    <linkText>F</linkText>
+  </opt1>
+</Root>

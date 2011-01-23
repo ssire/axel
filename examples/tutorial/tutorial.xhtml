@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger">
+<head>
+  <title>AXEL Tutorial: making an auto-editable template</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="AXEL tutorial for rendering an XTiger XML template" />
+  <meta name="keywords" content="template, XTiger, XML" />
+  
+  <xt:head version="1.1" templateVersion="1.0" label="greetings">
+    <xt:component name="personList">
+      <ul>
+        <xt:repeat minOccurs="0" maxOccurs="*" label="persons">
+          <li><xt:use types="text" label="name" param="shape=parent-75px;type=textarea">name</xt:use><xt:menu-marker/></li>
+        </xt:repeat>
+      </ul>
+    </xt:component> 
+  </xt:head>    
+
+  <link rel="stylesheet" href="tutorial.css" type="text/css"/>
+  <!-- AXEL template manipulations illustrated in the tutorial   -->  
+  <script type="text/javascript" src="src/common.js"></script>
+  
+  <!-- AXEL block to turn the template into an editor  -->
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  <script type="text/javascript">                        
+    var form;
+    function init() {
+        form = new xtiger.util.Form('../../axel/bundles');
+        form.setTemplateSource(document);
+        form.enableTabGroupNavigation();
+        if (! form.transform()) { alert(this .form.msg); }
+    }
+    xtdom.addEventListener(window,  'load', init, false);
+  </script>
+
+  <!-- Non AXEL Javascript used for tutorial  --> 
+  <script type="text/javascript" src="src/tutorial.js"></script>
+  <script type="text/javascript">
+    var guiTrans = { 'show' : ['block', 'hide'], 'hide' : ['none', 'show'] };
+    var targets = ['template', 'include', 'feed',  'dump', 'explainTemplate', 'explainInclude', 'explainFeed', 'explainDump' ]
+    
+    xtdom.addEventListener(window, 'load', initTutorial, false);
+  </script>
+</head>
+
+<body>
+ <div class="content">
+  
+  <h1>XTiger XML with AXEL tutorial<br />Part 1 : making an auto-editable template</h1>
+
+  <p style="text-indent: 3em">The 3 most common ways to generate editors from document templates are to embed the template within a <em>standalone Web page</em>, in an iframe, or within an Ajax response object. In all the cases a few lines of Javascript codes are then necessary to actually turn the template into an editor.</p>
+    
+  <p>This document describes the first method. The <a href="tutorial2.html">part 2</a> and the <a href="tutorial3.html">part 3</a> of this tutorial describe the other methods. While reading this tutorial do not forget to look at the source code and the explanations (use the show/hide buttons). You may also have a look at the source of this page as it contains itself all the code examples.</p>
+  
+  <p class="noprint" style="text-align: center"><a href="javascript:showAll()" id="generalToggle">Show All</a> the code examples and explanations at once</p>
+  
+  <div id="document" style="padding: 20px 10px 10px 10px">
+      <p class="template">Template directly embedded within this page</p>
+      <p>List of persons to great:</p>
+
+      <xt:use types="personList"/>
+  </div>  
+  
+  <p class="step"><span class="stepTitle">Step 1: write your Web page as a document template</span></p>
+
+    <p>This Web page is based on a simple cross-browser template skeleton. As you can see the part of the page in the  box above is editable. You can also use the <a href="../../templates/Template.xhtml" target="_blank">Template.xhtml</a> file as a starting point (<span id="templateToggle" class="button">show</span> source)</p>   
+
+<div id="template" class="source">
+  <pre>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:xt="http://ns.inria.org/xtiger">
+&lt;head>                  
+  &lt;!-- Use UTF-8 and omit xml protocol at the top for IE -->
+  &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  &lt;meta http-equiv="X-UA-Compatible" content="IE=8;" />    
+  &lt;meta name="description" content="XTiger XML document template" />
+  &lt;meta name="keywords" content="template, XTiger" />
+
+  &lt;title>XTiger XML with AXEL tutorial&lt;/title>
+
+  &lt;xt:head version="1.1" templateVersion="1.0" label="greetings">
+    &lt;xt:component name="personList">
+      &lt;ul>
+        &lt;xt:repeat minOccurs="0" maxOccurs="*" label="persons">
+          &lt;li>
+            &lt;xt:use types="text" param="shape=parent-75px;type=textarea"
+               label="name">name&lt;/xt:use>&lt;xt:menu-marker/>
+          &lt;/li>
+        &lt;/xt:repeat>
+      &lt;/ul>
+    &lt;/xt:component> 
+  &lt;/xt:head>    
+
+  &lt;!-- See Step 2 -->
+  
+&lt;/head>
+&lt;body>
+  &lt;div id="document">
+      &lt;p class="template">Template directly embedded within this page&lt;/p>
+      &lt;p>List of persons to great:&lt;/p>
+
+      &lt;xt:use types="personList"/>
+  &lt;/div>
+&lt;/body>
+&lt;/html></pre> 
+<p class="explain noprint"><span id="explainTemplateToggle" class="button">show</span> explanation</p> 
+</div>      
+
+<div id="explainTemplate" class="explanation">   
+<p>The best compromise to be able to open your Web page in standard compliant browsers AND in Internet Explorer is to save the file as UTF-8 and to omit the xml protocol declaration (i.e. <tt>&lt;?xml version="1.0" encoding="UTF-8"?></tt>). So the file should start directly with an XHTML DOCTYPE declaration. It is recommended to read the <a href="http://www.w3.org/TR/xhtml1/#guidelines">HTML Compatibility Guidelines</a> from the XHTML 1.0 Recommendation before writing template files.</p>
+                             
+<p>It is wised to specify the content-type with a meta element, this improves MIME-Type sniffing when opening the file directly from a local file system on Internet Explorer. If you access the file from a Web server, you should serve it with a MIME TYPE set to application/xhtml+xml, except for Internet Explorer that only supports text/html when serving the template directly within a Web page. Eventually you can specify Microsoft <tt>X-UA-Compatible</tt> property to tell Internet Explorer to open the page in  a specific mode, currently AXEL works with IE 7 and IE 8.</p>
+</div>
+  
+  <p class="step"><span class="stepTitle">Step 2: include AXEL library and template transformation code inside your template</span></p>
+
+    <p>You can directly cut and paste the code fragment below into the &lt;head> element of the template document  (<span id="includeToggle" class="button">show</span> source)</p>   
+
+  <div id="include" class="source">
+    <pre>&lt;script type="text/javascript" src="{PATH-TO}/axel/axel.js">&lt;/script>
+&lt;link rel="stylesheet" href="{PATH-TO}/axel/axel.css" type="text/css">&lt;/link>
+&lt;script type="text/javascript">                        
+  var form;
+  function init() {
+      form = new xtiger.util.Form('{PATH_TO_BUNDLES}');
+      form.setTemplateSource(document);
+      form.enableTabGroupNavigation();
+      if (! form.transform()) { alert(this .form.msg); }
+  }
+  xtdom.addEventListener(window, 'load', init, false);
+&lt;/script>    
+</pre>  
+    <p class="explain noprint"><span id="explainIncludeToggle" class="button">show</span> explanation</p>
+  </div>  
+
+  <div id="explainInclude" class="explanation">   
+    <p>The src attribute of the script element must point to the location where you have copied the AXEL library file which is distributed inside the axel/ folder. You can generate a new AXEL library file with your own selection of plugins by editing the scripts/build.xml file and with a build.lib target with ant (<tt>cd scripts; ant build.lib</tt>).</p>
+    
+    <p>You must include the global AXEL CSS file which is available inside the axel/ folder with the other bundles that contain resources for the editors.</p>    
+    
+    <p>Usually the best place to transform the Web page into an editor is within an initialization function registered on the window load event. You can use the utility <tt>xtdom.addEventListener</tt> cross-browser method for registering the event handler or any other method.</p>
+        
+    <p>The xtiger.util.Form constructor needs to get the URL of the bundles/ folder that contains some resources such as icons for the library and which is distributed inside the axel/bundles folder</p>
+    
+    <p>The call to setTemplateSource defines the template to transform, in that case it is the document as the template is embedded inside the Web page.</p>
+    
+    <p>The call to enableTabGroupNavigation is optional as this features is not fully implemented nor supported, it's goal is to enable keyboard tab navigation between the document input fields</p>
+    
+    <p>The transform method takes an optional error logger as parameter, it returns true on success. In case of error you can use form.msg to print the latest error message.</p>
+  </div>      
+
+  <p class="step"><span class="stepTitle">Step 3 : <a href="javascript:feed(true)">Load</a> an XML document (<a href="sample.xml" target="Sample Document">sample.xml</a>) into the editor</span>  
+    (<span id="feedToggle" class="button">show</span> source)</p>
+    
+  <p>Click on load to feed the template with the XML file.</p>          
+  
+  <p>Currently an XML file can be loaded only once and just after the template has been transformed. This is a limitation with the library, you can try to load data files more than once inside the same template, but you may obtain unpredictable results. If you need to do this then you should reload the template and transform it first.</p>  
+  
+  <div id="feed" class="source">
+    <pre>var result = new xtiger.util.Logger();
+var data = xtiger.cross.loadDocument('sample.xml', result);
+if (data) {
+  var dataSrc = new xtiger.util.DOMDataSource(data);
+  if (form.loadData(dataSrc, result)) {
+    alert('Data loaded');
+  }
+}
+if (result.inError()) { alert(result.printErrors()); }
+</pre>
+        <p class="explain noprint"><span id="explainFeedToggle" class="button">show</span> explanation</p>
+  </div>
+  
+    <div id="explainFeed" class="explanation">
+        <p>The xtiger.util.Logger object is an optional error logger object that can be passed to some of the libarary functions to log errors.</p>
+        
+        <p>The most important part is to create an xtiger.util.DOMDataSource object initialized with an XML Document object containing the XML data to feed into the transformed template with the loadData method.</p>
+        
+        <p>You may use the xtiger.cross.loadDocument method to load an XML file from its URL, it uses an internal XMLHTTPRequest object to do the query (or an ActiveX object on Internet Explorer 7) and returns the response.XML parsed document, but you can also use any other method you prefer. You can also notice that depending on the browser that method may not work if it is called to load local files (URLs starting with the <tt>file://</tt> protocol)</p>
+    </div>    
+  
+  <p class="step"><span class="stepTitle">Step 4 : <a href="javascript:dump(true)">Dump</a> the XML document from the editor</span>  
+    (<span id="dumpToggle" class="button">show</span> source)</p>
+    
+  <p>Click on dump to print below the current content of the target XML document (you can edit it first). The content is dumped as a string.</p>
+    
+  <div id="dump" class="source">
+    <pre>var dump = new xtiger.util.DOMLogger ();
+form.serializeData (dump);
+var xmlString = dump.dump();
+var n = document.getElementById('content');
+n.firstChild.data = xmlString;
+</pre>
+        <p class="explain noprint"><span id="explainDumpToggle" class="button">show</span> explanation</p>
+  </div>
+
+    <div id="explainDump" class="explanation">
+        <p>You need to instantiate an xtiger.util.DOMLogger object first and pass it to the serializeData method to accumulate the XML content. Then you obtain a string representation of the XML content with the dump method, it is up to you to use that string as you want (e.g. send it through Ajax to a server).</p>
+    </div>  
+    
+  <div>
+<pre id="content">  
+</pre>      
+  </div>
+    
+  <hr />
+  <p style="text-align: right; margin-right: 10%">Last update: Stéphane Sire, June 3 2010</p>
+  
+ </div>   
+</body>
+</html>

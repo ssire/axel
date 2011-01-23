@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL Test for computing text metrics</title>
+	<style type="text/css">
+	body {
+		padding: 0;
+		margin: 20px;
+		margin-top: 14em;
+		background-color: lightgray;
+	}
+	textarea.text-entry {
+    overflow: hidden;
+	}
+  #measure {
+    border: solid 1px black;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    
+  }	
+  input#targetInput {
+    background-color: yellow;
+    overflow: hidden;
+  }
+  textarea#targetTextarea {
+    background-color: blue;
+    overflow: hidden;    
+  }
+  /* below is a trick from : http://labnol.blogspot.com/2006/10/html-css-trick-for-displaying-code.html  
+     to wrap long lines of text (note that it works in pre to display long lines of source code) */
+  #measure {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+  #width, #height {
+    color: green;
+  }
+	</style>	
+    <!-- BEGIN AXEL block -->	
+  	<link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  	<script type="text/javascript" src="../../axel/axel.js"></script>
+  	<script type="text/javascript" src="../../src/util/debug.js"></script>
+
+  	<script type="text/javascript">
+      function resize (n, w, h, text) {
+        if (w) { n.style.width = w; }
+        if (h) { n.style.height = h; }
+        n.value = text;
+      }
+        	
+  	  function adjustShape (n, text) {
+  	    var w = Math.max(n.offsetWidth, n.clientWidth, n.scrollWidth); 		
+    		var h = Math.max(n.offsetHeight, n.clientHeight, n.scrollHeight);
+  	    var n = document.getElementById('width');
+  	    n.firstChild.data = w + 'px';
+        n = document.getElementById('height');
+  	    n.firstChild.data = h + 'px';  	    
+  	    n = document.getElementById('targetInput');
+  	    resize(n, w + 'px', null, text);
+  	    n = document.getElementById('targetTextarea');
+  	    resize(n, w + 'px', h + 'px', text);
+  	  }
+  	
+  	  function setText (t) {
+  	    var n = document.getElementById('measure');
+  	    n.firstChild.data = t + 'm';
+  	    adjustShape (n, t);
+  	  }
+  	  
+  	  function handleKeyDown () {
+  	    var n = document.getElementById('input');
+  	    setText(n.value);
+  	  }
+  	
+  		function init () {
+  		  var n = document.getElementById('measure');
+        n.style.maxWidth = '400px';
+        n.style.height = 'auto';
+    		var n = document.getElementById('input');
+    		xtdom.addEventListener(n, 'keydown', handleKeyDown, false);    		
+    	}
+
+  		xtdom.addEventListener(window,  'load', init, false);
+  	</script>
+     <!-- END AXEL block -->	
+  </head>	
+</head>
+
+<body>
+  <p>This test for investigating how to adjust the TextMetrics object in textdevice.js</p>
+  <p>First, here is a textarea where you can enter text</p>
+  <p class="text-entry">
+    <textarea id="input" rows="4" cols="80">Enter some text here</textarea>
+  <p>
+  <p>The text is replicated in the div below to study how it grows</p>
+  <p>Width : <span id="width">?</span> / Height : <span id="height">?</span></p>
+  <div id="measure">empty</div>  
+  <p><input id="targetInput" value="target input"></input></p>  
+  <p><textarea id="targetTextarea">target textarea</textarea></p>  
+</body>
+</html>

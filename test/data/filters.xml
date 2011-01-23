@@ -1,0 +1,8 @@
+<Root>
+  <A>1</A>
+  <B>
+    <Fragment FragmentKind="verbatim">2</Fragment>
+  </B>
+  <C>**3**</C>
+  <D>http://www.youtube.com/v/IT7P7ijpAPY</D>
+</Root>

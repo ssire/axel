@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>AXEL alternative file input / output</title>
+	<style>
+		body {
+			padding: 0em 2em;   
+			font-family: Tahoma, Helvetica, sans-serif;
+		}       
+		p { 
+			line-height: 1.4em;
+		}         
+		.center {
+			text-align: center;
+		}
+		#content {       
+/*			position: absolute;
+			top: 7em;
+			left: 2em;
+			right: 2em;
+			bottom: 1em;
+*/		}
+		#input {
+			width: 100%;    
+			height: 100%;
+		}
+		.hint {
+			font-size: 75%;
+			color: #060606;
+		}
+		#load-dialog, #save-dialog {
+			display: none;
+		}
+	</style>	
+	
+	<script type="text/javascript">  
+		var NoFileAPI = function NoFileAPI (spec) {     
+			var n;             
+			
+			var select = function select (ev) {
+				var n = document.getElementById('input');
+				n.select();      
+			}                      
+			
+			// FIXME: make a copy to clipboard function
+			var copy = function copy () {
+			}
+			
+			var load = function load () {		   
+				var t = document.getElementById ('input');
+				var val = t.value;
+				if (val.search(/\S/) != -1) { // no empty
+					if (spec.callback)
+						spec.callback(val);
+					window.close();
+				}
+			}
+			
+			if (spec.load) { // configure as a load dialog
+				n = document.getElementById('load-dialog');
+				n.style.display = 'block';
+				n = document.getElementById('button');
+				n.addEventListener('click', load, false);
+			} else if (spec.save) { // configure as a save dialog
+				n = document.getElementById('save-dialog');
+				n.style.display = 'block';           
+				if (spec.data) {
+					var t = document.getElementById ('input');
+					t.value = spec.data;
+				}
+				// goodies: attempt to select on click
+				n = document.getElementById('input');
+				n.addEventListener('focus', select, false);
+			}
+	
+		  return {                  
+		      // no facade
+		  }
+		}		             
+		
+		window.addEventListener('load', function () { window.opener.editorBarPostMessage('loaded') }, false);
+	</script>
+</head>
+
+<body>      
+	<div id="load-dialog" class="center">
+		<p>
+			Copy & Paste you CV file in the area below and click the load button <br />
+			<span class="hint">(Your file must have been created with the CV machine to be compatible)</span>
+		</p>
+		<p>
+			<input id="button" type='button' value="Load"/ >
+		</p>			
+	</div>     
+	<p id="save-dialog" class="center">
+		Copy your CV source code from the area below and paste it into a text editor, 
+		then save it in an XHTML file that you can share with others
+	</p>     
+	<div id="content">
+		<textarea id="input" rows="40" cols="20"></textarea>		
+	</div>	
+</body>
+</html>

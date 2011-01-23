@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Content Editable Sandbox</title>
+    <script type="text/javascript">
+  //<![CDATA[                                
+
+    var DEBUG = 0;
+    var buffer;                   
+    var lastKey;
+    var markup = new RegExp("(<\/?\\w+\/?>)", "g");             
+    
+    
+    function msg(msg) {
+        if (window.console && window.console.log && (DEBUG == 1)) {
+            window.console.log('Insert parag');                        
+        }
+    }
+    
+    function dump () {
+    	var xmlString = buffer.innerHTML;
+    	var n = document.getElementById('content');
+    	n.firstChild.data = xmlString;
+    	buffer.focus();
+    }    
+                          
+    // not used
+    function isBufferEmpty() {
+        var content = buffer.innerHTML;               
+        var notagcontent = content.replace(markup,'');
+        return (notagcontent.search(/\S/) == -1);
+    }       
+       
+    // removes empty p elements
+    function cleanEntry(n) {
+        var cur = n;            
+        var next;
+        while(cur) {   
+            if (cur.firstChild && (cur.firstChild.nodeType == 1)) {                        
+                cleanEntry(cur.firstChild);
+            }
+            next = cur.nextSibling;   
+            if ((cur.nodeType == 1) && (cur.tagName.toLowerCase() == 'p') && (cur.innerHTML.replace(markup,'').search(/\S/) == -1)) {
+                cur.parentNode.removeChild(cur);
+            }
+            cur = next;
+        }              
+    }
+
+    function handleKey(ev) {  
+        if (ev.keyCode	== 27) {
+            ev.preventDefault();
+            ev.stopPropagation();                                                       
+            buffer.blur();                                                  
+            cleanEntry(buffer.firstChild);
+        }
+        if ((ev.keyCode == 13) && (lastKey == 13)) {
+            ev.preventDefault();
+            ev.stopPropagation();                                                       
+        }     
+        // no need for this on Safari
+        if (navigator.userAgent.indexOf('AppleWebKit/') > -1) {
+            return;
+        }               
+        if ((ev.keyCode == 8) || (ev.keyCode == 46)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            document.execCommand('delete', false, false);
+            var content = buffer.innerHTML;               
+            var notagcontent = content.replace(markup,''); 
+            if (notagcontent.length == 0) {
+                msg('Insert parag');                
+                document.execCommand('insertParagraph', false, false);
+            }           
+            // if (content.search("<br>") != -1) {
+                // msg('Cleaning up <br>');
+                // buffer.blur();                         
+                // removeBr(buffer.firstChild);
+                // buffer.focus();
+            // }
+        } else {                    
+            // setTimeout to schedule action after event handling
+            setTimeout(fixit, 0);
+        }  
+        lastKey = ev.keyCode;
+    }                              
+    
+    function fixit() {
+        var content = buffer.innerHTML;               
+        var notagcontent = content.replace(markup,''); 
+        // FIXME: keys can be grouped so we should test 
+        // if there are more than 1 too
+        if (notagcontent.length <= 1) {
+            if (notagcontent.length == 0) {
+                // empty input
+                if (buffer.firstChild.tagName.toLowerCase() == 'br') {
+                    buffer.removeChild(buffer.firstChild);
+                }                
+            }
+            document.execCommand('insertParagraph', false, false);
+        }                   
+    }
+  
+    function init() {   
+        buffer = document.getElementById('edit');
+        buffer.setAttribute('contentEditable', "true");        
+        // next line does not work :(
+        document.execCommand('insertBrOnReturn', false, false);
+        buffer.addEventListener('keydown', handleKey, true);   
+    }
+
+    window.addEventListener('load', init, false);  
+  //]]>
+    </script>  
+</head>     
+<body>      
+    <p>This test shows a way to control rich text editing on Firefox
+       so that the user cannot generate some &lt;br> elements when hitting return.
+       It is also controlled so that users should not be able to insert several 
+       line breaks in a row. Press Esc to stop editing.
+       Note that on Safari user can still hit Ctrl+RC to generate &lt;br> elements.</p>
+
+   <p>To do : I still need to find a way to remove &lt;br> elements from a paste.</p>
+   
+   <h3>Test :</h3>
+    
+    <div id="edit">
+        <p>I am content editable, lease <em>play</em> with me !</p>
+    </div>     
+
+    <!-- Dump area -->
+    <hr/>
+    <div id="diversion">                    
+        <a href="javascript:dump()">DUMP</a><br/>
+        <pre id="content">  
+        </pre>               
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Basic HTML Template</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="html">
+  
+    <xt:component name="head">
+      <xt:use types="meta" label="meta"/>
+    </xt:component>
+  
+    <xt:component name="meta">
+      <strong><xt:attribute types="text" name="http-equiv" default="Content-Type"/></strong> : <xt:attribute types="text" name="content" default="application/xml+xhtml; charset=utf-8"/>
+    </xt:component>   
+  
+    <xt:component name="body">       
+      <xt:use types="edit" label="a"/>
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="h1 h2 h3 p ul">
+        <span class="left-repeater"><xt:menu-marker/></span><xt:use types="h1 h2 h3 p ul"/>
+      </xt:repeat>                                
+    </xt:component>   
+
+    <xt:component name="h1">
+      <h1><xt:use types="text">Title1</xt:use></h1>
+    </xt:component>
+    
+    <xt:component name="h2">
+      <h2><xt:use types="text">Title2</xt:use></h2>
+    </xt:component>
+    
+    <xt:component name="h3">
+      <h3><xt:use types="text">Title3</xt:use></h3>
+    </xt:component>
+    
+    <xt:component name="p">
+      <p><xt:use types="text" param="type=textarea;layout=placed;shape=parent-150px">text</xt:use></p>
+    </xt:component>
+    
+    <xt:component name="li">
+      <li><xt:menu-marker/><xt:use types="text" label="li" param="layout=placed">item</xt:use></li>
+    </xt:component>
+    
+    <xt:component name="ul">
+      <ul>
+        <xt:repeat minOccurs="1" pseudoLabel="li">
+          <xt:use types="li"/>
+        </xt:repeat>
+      </ul>
+    </xt:component>
+    
+    <xt:component name="edit">
+      <p id="edit">
+          <strong>Top anchor</strong> : <xt:use types="text">edit</xt:use>, <strong>url</strong> : <i><xt:attribute types="text" name="href" default="xhtml.xtd#explications.xhtml"/></i> (this is a trick to insert an edit link for demo purpose)
+      </p>
+    </xt:component>
+      
+  </xt:head>  
+  
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+
+  <style type="text/css">  
+  body > select {    
+    float: left;       
+    margin-right: 10px;
+  } 
+  .left-repeater {            
+    float: left;        
+    clear: left;
+    width: 50px;    
+    height: 10px;
+  }    
+  ul {     
+    padding-left: 10px;
+  }        
+  ul li {
+    margin-left: 120px;
+  }
+  div.head {
+    padding: 0;
+    margin: 5px 0 10px 0;
+    border-bottom: 2px dashed gray;
+  }     
+  p#edit {
+    margin-bottom: 20px;
+    font-size: small;
+  }           
+  div.head > p {
+    padding: 0 0 5px 0;
+    margin: 0; 
+    font: small;
+  }
+  span.head {
+    font: small courier,monospace;
+    color: yellow;
+    background: blue;   
+    padding: 0 10px;   
+    margin-right: 20px;
+  }
+  </style>
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>  
+  <div class="head">    
+    <p><span class="head">HEAD</span><strong>xmlns</strong>: <xt:attribute types="text" name="xmlns" default="http://www.w3.org/1999/xhtml"/><xt:use types="head" label="head"/></p>
+  </div>  
+  <xt:use types="body" label="body"/> 
+</body>
+</html>

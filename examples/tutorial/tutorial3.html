@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger">
+<!--  
+AXEL tutorial for rendering an XTiger XML template
+
+Author: Stephane Sire
+-->
+<head>
+  <title>AXEL Tutorial: rendering a template within an Ajax response object to a div inside a Web page</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="AXEL tutorial" />
+  <meta name="keywords" content="template, XTiger, XML" />
+
+  <link rel="stylesheet" href="tutorial.css" type="text/css"/>
+  
+  <!-- AXEL library  -->
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  
+  <!-- AXEL template manipulations illustrated in the tutorial   -->  
+  <script type="text/javascript" src="src/common.js"></script>
+  <script type="text/javascript" src="src/part2.js"></script>
+
+  <!-- Non AXEL Javascript used for tutorial  --> 
+  <script type="text/javascript" src="src/tutorial.js"></script>
+  <script type="text/javascript">
+    var guiTrans = { 'show' : ['block', 'hide'], 'hide' : ['none', 'show'] };
+    var targets = ['include', 'load', 'transform', 'feed',  'dump', 'explainInclude', 'explainTransform', 'explainFeed', 'explainDump' ]
+    
+    xtdom.addEventListener(window, 'load', initTutorial, false);
+  </script> 
+</head>
+
+<body>
+ <div class="content">
+  
+  <h1>XTiger XML with AXEL tutorial<br />Part 3 : rendering a template within an Ajax response object to a div inside a Web page</h1>
+        
+  <p style="text-indent: 3em">The 3 most common ways to generate editors from document templates are to embed the template within a standalone Web page, in an iframe, or within an <em>Ajax response object</em>. In all the cases a few lines of Javascript codes are then necessary to actually turn the template into an editor.</p>
+    
+  <p>This document describes the second third. The <a href="tutorial.xhtml">part 1</a> and the <a href="tutorial2.html">part 2</a> of this tutorial describe the other methods. While reading this tutorial do not forget to look at the source code and the explanations (use the show/hide buttons). You may also have a look at the source of this page as it contains itself all the code examples.</p>
+  
+  <p class="noprint" style="text-align: center"><a href="javascript:showAll()" id="generalToggle">Show All</a> the code examples and explanations at once</p>
+  
+  <p class="step"><span class="stepTitle">Step 1: include AXEL library inside your Web page</span>
+    (<span id="includeToggle" class="button">show</span> source)</p>
+    
+    <p>In addition to the AXEL Javascript source code you must also include the global AXEL CSS file</p>    
+    
+  <div id="include" class="source">
+    <pre>&lt;script type="text/javascript" src="{PATH-TO}/axel/axel.js">&lt;/script>
+&lt;link rel="stylesheet" href="{PATH-TO}/axel/axel.css" type="text/css">&lt;/link>
+</pre>  
+    <p class="explain noprint"><span id="explainIncludeToggle" class="button">show</span> explanation</p>
+  </div>  
+    
+    <div id="explainInclude" class="explanation">         
+    <p>The src attribute of the script element must point to the location where you have copied the AXEL library file which is distributed inside the axel/ folder. You can regenerate a new AXEL library file with your own selection of plugins by editing the scripts/build.xml file and by using the build.lib target to rebuild the library with ant (<tt>cd scripts; ant build.lib</tt>).</p>                   
+    
+    <p>The global AXEL CSS file is available inside the axel/ folder with the other bundles that contain resources for the editors.</p>    
+    </div>  
+
+  <p class="step"><span class="stepTitle">Step 2 : <a href="javascript:load()">Load</a> a template within the iframe</span>
+    (<span id="loadToggle" class="button">show</span> source)</p>
+  <p>Click on load to load the template inside an XML document into the memory.</p>   
+  <div id="load" class="source">
+    <pre>var result = new xtiger.util.Logger();
+xtDoc = xtiger.cross.loadDocument(url, result);
+if (result.inError()) { 
+  alert(result.printErrors()); 
+}  else {
+  alert('Template loaded');
+}</pre>
+  </div>
+  
+  <p class="step"><span class="stepTitle">Step 3 : <a href="javascript:transform()">Transform</a> the template</span> 
+    (<span id="transformToggle" class="button">show</span> source)</p>
+  <p>Click on transform to transform the template and copy the resulting editor inside the div below</p>
+  <div id="transform" class="source">   
+    <pre>var form = new xtiger.util.Form('{PATH-TO}/axel/bundles');
+form = new xtiger.util.Form('{PATH-TO}/axel/bundles');
+form.setTemplateSource(xtDoc);
+form.setTargetDocument (document, 'container', true);
+form.enableTabGroupNavigation();
+if (! form.transform()) { 
+  alert(form.msg); // feedback about errors
+}</pre>
+        <p class="explain noprint"><span id="explainTransformToggle" class="button">show</span> explanation</p>
+    </div>        
+    
+  <div id="explainTransform" class="explanation">   
+    <p>There are only a few differences with the Step 2 of <a href="tutorial.xhtml">part 1</a></p>   
+    
+    <p>First, the XML document passed to setTemplateSource and that defines the template to transform is the XML document returned by the Ajax call in Step 2</p>
+
+    <p>Second, the call to setTargetDocument is essential as it tells the library where to copy the result of the transformation of the template. The first argument is the target document and the second argument is the id of an element of the target document (e.g. a div) that will receive the transformed template. If the last argument is set to true, then all the children of the target element will be removed first. This may be useful if you download multiple templates at different moments within the same Web page</p>  
+    
+    <p>Finally, note that since the AXEL global CSS file has been included in the target Web page in Step 1, it is not necessary to call injectStyleSheet as with the iframe method method described in <a href="tutorial2.html">part 2</a>. However the drawback of this method is that if your template file includes external CSS files, you must explicitely include them in the target Web page</p>
+  </div>
+
+<div id="document">
+    <p class="template">Template File copied to a div after transformation</p>
+    <div id="container">
+    </div>  
+</div>  
+
+  <p class="step"><span class="stepTitle">Step 4 : <a href="javascript:feed()">Load</a> an XML document (<a href="sample.xml" target="Sample Document">sample.xml</a>) into the editor</span> (<span id="feedToggle" class="button">show</span> source)</p>                                            
+  
+  <p>Click on load to feed the template with the XML file.</p>
+    
+  <p>Currently an XML file can be loaded only once and just after the template has been transformed. This is a limitation with the library, you can try to load data files more than once inside the same template, but you may obtain unpredictable results. If you need to do this then you should reload the template and transform it first.</p>    
+  
+  <div id="feed" class="source">
+    <pre>var result = new xtiger.util.Logger();
+var data = xtiger.cross.loadDocument('sample.xml', result);
+if (data) {
+  var dataSrc = new xtiger.util.DOMDataSource(data);
+  if (form.loadData(dataSrc, result)) {
+    alert('Data loaded');
+  }
+}
+if (result.inError()) { alert(result.printErrors()); }
+</pre>
+        <p class="explain noprint"><span id="explainFeedToggle" class="button">show</span> explanation</p>
+  </div>
+  
+    <div id="explainFeed" class="explanation">
+      <p>This is the same as in Step 3 of <a href="tutorial.xhtml">part 1</a></p>
+    </div>    
+  
+  <p class="step"><span class="stepTitle">Step 5 : <a href="javascript:dump()">Dump</a> the XML document from the editor</span>  
+    (<span id="dumpToggle" class="button">show</span> source)</p>
+    
+  <p>Click on dump to print below the current content of the target XML document (you can edit it first). The content is dumped as a string.</p>
+  
+  <div id="dump" class="source">
+    <pre>var dump = new xtiger.util.DOMLogger ();
+form.serializeData (dump);
+var xmlString = dump.dump();
+var n = document.getElementById('content');
+n.firstChild.data = xmlString;
+</pre>
+        <p class="explain noprint"><span id="explainDumpToggle" class="button">show</span> explanation</p>
+  </div>
+
+    <div id="explainDump" class="explanation">
+      <p>This is the same as in Step 4 of <a href="tutorial.xhtml">part 1</a></p>      
+    </div>      
+  <div>
+<pre id="content">  
+</pre>      
+  </div>  
+  
+  <hr />
+  <p style="text-align: right; margin-right: 10%">Last update: Stéphane Sire, June 3 2010</p>
+  
+ </div>   
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>My first template</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="greetings">
+
+    <xt:component name="personList">
+      <ul>
+        <xt:repeat minOccurs="0" maxOccurs="*" label="persons">
+          <li><xt:use types="text" label="name" param="shape=parent-75px;type=textarea">name</xt:use><xt:menu-marker/></li>
+        </xt:repeat>
+      </ul>
+    </xt:component> 
+
+  </xt:head>  
+  
+  <!-- AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+  
+</head>
+<body>
+  <p>List of persons to great:</p>
+
+  <xt:use types="personList"/>
+  
+</body> 
+</html>

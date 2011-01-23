@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="author" content="Stéphane Sire" />
+  <meta name="description" content="Index of the documentation files for the AXEL / XTiger XML editing Library distribution" />
+  <meta name="keywords" content="template, XTiger, XML, documentation" />
+  
+  <title>AXEL / XTiger XML documentation table of content</title>
+  <style type="text/css">
+body { 
+  margin-top: 20px;
+  margin-left: 30px;
+  margin-right: 30px;
+}    
+h1 {
+  text-align: center;
+}       
+p.header{
+  margin: 20px 40px 20px 40px;  
+}           
+div.credits {
+  margin: 0 40px 10px 40px;
+  border: solid 1px gray;
+  padding: 10px;        
+  background: #EFEFEF;
+}    
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+}    
+dd {
+  margin-bottom: 0.2em;  
+}
+  </style>
+</head>
+<body>
+  <h1>AXEL / XTiger XML documentation</h1>      
+                                                    
+  <dl>   
+
+    <dt><a href="XTiger-XML-spec.html">XTiger XML language specification</a></dt>
+    <dd>This is the XTiger XML language specification.</dd>
+    
+    <dt><a href="integrators-guide.html">Integrator's guide</a></dt>
+    <dd>A FAQ document targeting at developers that want to use AXEL in their Web application.</dd>
+
+    <dt><a href="AXEL-beta-userman.html">User's manuel</a></dt>
+    <dd>A very incomplete user's manual, however it can be quickly read as a follow up to the previous FAQ .</dd>
+
+    <dt><a href="howto-plugins.html">Howto plugins</a></dt>
+    <dd>This document describes the plugin API. Plugins are modules made of a registered factory object that can instantiate model objects that implement a primitive editor.</dd>
+
+    <dt><a href="howto-filters.html">Howto filters</a></dt>
+    <dd>This document describes the filter architecture. Filters are easy to write object classes that extend AXEL primitive editor plugins.</dd>
+
+    <dt><a href="howto-services.html">Howto services</a></dt>
+    <dd>This document describes the service architecture. Services are modules that can be instantiated inside a template to add functionalities beyond editing that can react to editing events.</dd>
+
+    <dt><a href="howto-photo-plugin.html">Howto photo plugin</a></dt>
+    <dd>This document describes the <tt>'photo'</tt> primitive editor plugin. This editor can be used to upload photos inside a template. It requires a server-side counterpart to manage received photo files.</dd>
+
+    <dt><a href="howto-link-plugin.html">Howto link plugin</a></dt>
+    <dd>This document describes the <tt>'link'</tt> primitive editor plugin. This editor can be used to edit link text and address. The handle only shows the link text, it triggers a lens showing the text and the address when selected.</dd>
+
+    <dt><a href="howto-video-plugin.html">Howto video plugin</a></dt>
+    <dd>This document describes the <tt>'video'</tt> primitive editor plugin. This editor can be used to edit YouTube URLs. The handle shows a YouTube video player, it triggers a lens showing the video URL when selected.</dd>
+
+    <dt><a href="howto-richtext-plugin.html">Howto richtext plugin</a></dt>
+    <dd>This document describes the <tt>'richtext'</tt> primitive editor plugin. This editor can be used to edit paragraphs with Italic, Bold and Underline formating. It's content model is saved as standard HTML code with CSS styling attributes. The handle shows the styled text, it triggers a lens with the Italic, Bold and Underline command buttons when selected.</dd>
+                                                  
+  </dl>    
+    
+</body>
+</html>

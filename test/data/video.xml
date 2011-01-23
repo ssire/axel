@@ -1,0 +1,10 @@
+<Root>
+  <video1>http://www.youtube.com/v/EP7T_h0alAE</video1>
+  <video2/>
+  <repeater1>
+    <video-rep1>http://www.youtube.com/v/w8-V1O2hbvk</video-rep1>
+    <video-rep1>http://www.youtube.com/v/LNMp_LneNCE</video-rep1>
+    <video-rep1/>
+  </repeater1>
+  <video-opt2>http://www.youtube.com/v/LNMp_LneNCE</video-opt2>
+</Root>

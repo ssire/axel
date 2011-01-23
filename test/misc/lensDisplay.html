@@ -1,0 +1,158 @@
+<html xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL Test for positioning lenses</title>
+
+  <!-- BEGIN AXEL block -->	
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  <!-- <script type="text/javascript" src="../../src/util/debug.js"></script> -->
+  
+  <script type="text/javascript">     
+var handle;
+var lens, lensContent;
+var _fakeDiv;
+
+var _initFakeDiv = function () {
+  if (! _fakeDiv) {
+  	_fakeDiv = xtdom.createElement(document, 'img');
+  	_fakeDiv.setAttribute('src', '../../axel/bundles/lens/white.png');
+  	_fakeDiv.style.verticalAlign = "top"; // FIXME: style should be "copied" from the replaced handle in startEditing
+  	_fakeDiv.style.width = "310px"; // in case dynamic size computation does not work in startEditing
+  	_fakeDiv.style.height = "300px";			
+  }
+}
+  
+function install(ev) {  
+  var n;       
+  var target = document.getElementById('handle');
+  if (! handle) {         
+    if (! lens) { // lazy creation
+      n = document.getElementById('dyn-demo');
+      var m = xtdom.createElement(document, 'div');
+      var c = xtdom.createElement(document, 'div');
+      var img = xtdom.createElement(document, 'img');
+    	c.innerHTML = "<img id='xt-photo-icon' src='../../axel/bundles/photo/icons/photo.png' />\
+      <p id='xt-photo-error'>Broken Image</p>\
+      <p id='xt-photo-info'>Message</p>"
+      xtdom.addClassName(m,'lens-container');
+      xtdom.addClassName(c,'lens-content');
+      m.appendChild(c);  
+      lens = m;      
+      lensContent = c;
+    }
+    _initFakeDiv(); 
+  	target.parentNode.insertBefore(_fakeDiv, target);
+  	target.parentNode.insertBefore(lens, _fakeDiv);
+  	handle = target;       
+    // target.parentNode.removeChild(handle);
+    lensContent.appendChild(handle);
+    lens.style.display = 'inline';    
+		var bb = lensContent.getBoundingClientRect();
+		var w = _fakeDiv.style.width = (bb.right - bb.left) + 'px';
+		var h = _fakeDiv.style.height = (bb.bottom - bb.top) + 'px';
+		xtiger.cross.log('debug', 'setting dimenstions to ' + w + '/' + h);
+  } else {
+    n = document.getElementById('dyn-demo');    
+    n.insertBefore(handle, lens);
+    n.removeChild(lens);
+    handle = undefined;    
+    lens.style.display = 'none';
+    n.removeChild(_fakeDiv);
+  }
+}      
+  </script>
+
+  	<style type="text/css">
+body {
+	padding: 0;
+/*  margin: 20px;   */
+	background-color: lightgray;
+}  	
+div.lens-container {  
+  position: relative;
+  overflow: visible;    
+  display: inline;   
+  width: 0;
+  height: 0;
+                                   
+  /* FF only !!! */
+  border: 1px solid transparent;   
+}  
+div.lens-content {   
+/*  margin: inherit;
+  padding: inherit;
+  color: inherit;
+  font-style: inherit;
+  font-size: inherit;
+  font-weight: inherit;                    
+  font-family: inherit;   
+  vertical-align: inherit;       
+  line-height: inherit;
+  background-color: inherit;   */
+  
+	position: absolute;     
+	display: inline;      
+	
+	border: 1px solid green; 
+  width: 100;
+  height: 100px;   
+  z-index: 10; 
+/*  vertical-align: top;   */
+	
+/*  position: absolute;    
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100;
+  height: 100px;
+  border: 1px solid green;
+  background-color: red;   
+  margin: 0;
+  padding: 0;   */  
+}  	       
+  	</style>
+     <!-- END AXEL block -->	
+  </head>	
+</head>
+
+<body>
+  <p>This test for investigating lens positioning algorithm in lensdevice.js and associated wrappers</p>
+  
+  <h2>Static construction</h2>
+       
+  <div>
+  <p>Lens : 
+    <div class="lens-container">
+      <div class="lens-content">   
+        <span>Hello World</span>  
+        <img src="../../axel/bundles/photo/icons/photo.png"/>
+      </div>
+    </div>
+  </p> 
+  </div>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>      
+
+  <br/>
+  <br/>
+  <br/>
+  
+  <h2>Display <tt>'inline'</tt> and Trigger <tt>'mouseover'</tt></h2>
+
+  <p class="photo">Photo : <img id="handle" src="../../axel/bundles/photo/icons/photo.png" onclick="javascript:install(event)" /></p>
+
+  <!-- Test Case 2 -->
+
+  <h2>Display <tt>'inline'</tt> and Trigger <tt>'click'</tt></h2>  
+  
+  <h2>Dynamic construction</h2>
+      
+  <!-- <p id="dyn-demo">Lens : <img id="handle" src="../../axel/bundles/photo/icons/photo.png" onclick="javascript:install(event)" /> -->
+  </p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.    
+  </p>
+  
+</body>
+</html>

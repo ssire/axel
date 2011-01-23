@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Tâches</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Taches">   
+
+    <xt:component name="Tache">
+      <h1><xt:use types="text" label="Nom">Tâche</xt:use><xt:menu-marker/></h1>
+      <xt:use types="Description"/>
+      <xt:use types="Notes"/>
+      <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="SousTache">
+        <xt:use types="SousTache" label="SousTache"/>
+      </xt:repeat>
+    </xt:component>
+
+    <xt:component name="Description"> 
+      <p class="Description"><xt:use types="text" label="Description" param="shape=parent;type=textarea">Description</xt:use></p>
+    </xt:component>     
+
+    <xt:component name="Notes">
+      <div class="Notes">
+        <xt:repeat minOccurs="0" maxOccurs="*" label="Notes">
+          <p class="Note"><xt:use types="text" label="Note" param="shape=parent-50px;type=textarea">Note</xt:use><xt:menu-marker/></p>
+        </xt:repeat>
+      </div>
+    </xt:component>
+
+    <xt:component name="SousTache">
+      <div class="SousTache">
+        <h2><xt:use types="text" label="Nom">Sous-Tâche</xt:use><xt:menu-marker/></h2>
+        <xt:use types="Description"/>     
+        <xt:use types="Notes"/>
+        <p><xt:attribute types="select" name="Priorite" values="aucune faible moyenne haute urgente" i18n="Pas&nbsp;de Faible Moyenne Haute Très&nbsp;Grande" default="aucune" param="class=Priorite"/> priorité<xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Responsable"><span>, attribuée à </span><xt:use types="Responsable"/><span></span></xt:repeat><xt:use types="Liaison"/><xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Fini"><xt:use types="Fini" label="Fini"/></xt:repeat>.</p>
+        <div class="row">
+          <xt:use types="PasDeTemps GestionDuTemps"/>
+        </div>      
+      </div>
+    </xt:component> 
+
+    <xt:component name="Fini" i18n="Terminée"><span>, </span><xt:menu-marker/><span class="Fini">Terminée</span></xt:component>
+
+    <xt:component name="Responsable">
+      <xt:menu-marker/><xt:use types="text" param="class=Responsable" label="Responsable">Nom</xt:use>    
+    </xt:component> 
+
+    <xt:component name="Liaison">
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Liaison">
+  <span>, liée au </span><xt:menu-marker/> <xt:use types="Workpackage" label="Liaison"/>
+      </xt:repeat>
+    </xt:component> 
+
+    <xt:component name="Workpackage">
+      <xt:attribute types="select" name="Workpackage" values="1.1 1.2 1.3 2.1 2.2 2.3 2.4 3.1 3.2 3.3 3.4 3.5 4.1 4.2 4.3" i18n="WP&nbsp;1.1 WP&nbsp;1.2 WP&nbsp;1.3 WP&nbsp;2.1 WP&nbsp;2.2 WP&nbsp;2.3 WP&nbsp;2.4 WP&nbsp;3.1 WP&nbsp;3.2 WP&nbsp;3.3 WP&nbsp;3.4 WP&nbsp;3.5 WP&nbsp;4.1 WP&nbsp;4.2 WP&nbsp;4.3" default="1.1"/> 
+    </xt:component> 
+
+    <xt:component name="PasDeTemps" i18n="Pas de ">
+      <p class="PasDeTemps">gestion du temps</p>
+    </xt:component>
+
+    <xt:component name="GestionDuTemps" i18n="Gestion du">
+      <fieldset>
+        <legend>Temps</legend>      
+        <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Estimation">
+          <xt:use types="Estimation" label="Estimation"/>
+        </xt:repeat>
+        <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Realisation">
+          <xt:use types="Realisation" label="Realisation"/>
+        </xt:repeat>
+        <ul>
+          <xt:repeat minOccurs="0" maxOccurs="*" label="Efforts">
+            <li><xt:use types="Personne" label="Personne"/><xt:menu-marker/></li>
+          </xt:repeat>
+        </ul>
+      </fieldset>
+    </xt:component> 
+
+    <xt:component name="Estimation">
+      <p><span class="noshow"><xt:menu-marker size="20"/></span>Devrait <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Duree"><span>prendre </span><xt:menu-marker/><xt:use types="string" label="Duree">nb</xt:use><span> jour(s)</span> </xt:repeat><xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="LimiteDebut"><span class="virgule">, </span><span>commencer avant le </span><xt:menu-marker/><xt:use types="text" label="LimiteDebut">jj mois</xt:use><span></span> </xt:repeat><xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="LimiteFin"><span class="virgule">et </span><span>se terminer avant le </span><xt:menu-marker/><xt:use types="text" label="LimiteFin">jj mois</xt:use><span></span></xt:repeat>.</p><span></span> 
+    </xt:component> 
+
+    <xt:component name="Realisation">
+      <p><span class="noshow"><xt:menu-marker size="20"/></span>Est <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Debut"><span>commencée depuis le </span><xt:menu-marker/><xt:use types="text" label="Debut">jj mois</xt:use><span></span> </xt:repeat><xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Taux"><span class="virgule">et </span><span>avancée à </span><xt:menu-marker/><xt:use types="string" label="Taux">x</xt:use><span> %</span><span></span></xt:repeat>.</p><span></span>    
+    </xt:component> 
+
+    <xt:component name="Personne">
+      <xt:use types="text" param="class=Personne">Nom</xt:use> a travaillé <xt:attribute types="string" name="Effort" default="n"/> jour(s)
+    </xt:component> 
+  </xt:head>
+  
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <style src="text/css">
+  h1, h2 {
+    margin: 0;
+    padding: 0;
+  }
+  p.Description {
+    margin: 0.2em 0 0.5em 0;
+    font-style: italic;
+  }
+  div.Notes {
+    margin-left: 0em;
+    padding-left: 1em;
+    border-left: 2px dashed grey;
+  } 
+  p.Note {
+    margin: 0;
+  } 
+  div.SousTache {
+    margin: 0.8em 1em 0.5em 4em;
+    border-bottom: 1px solid olive;
+  }
+  span.Priorite {
+    color: orange;
+  }
+  span.Fini {
+    color: green;
+  }
+  span.Responsable, span.Personne {
+    color: blue;
+  }
+  /* Put choice menu on the left */
+  div.row > select {
+    float: left;
+    vertical-align: top;
+    margin-right: 1em;
+  } 
+  fieldset {
+    border-color: black;
+  }
+  /* Rules depending on XTiger editing state (see also Preview.css) */
+  span.xtt-repeat-unset + span.virgule {
+    display: none;
+  }
+  body.preview p.PasDeTemps {
+    display: none;
+  }
+  </style>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+      
+</head>
+<body>
+  <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Tache"> 
+    <xt:use types="Tache" label="Tache"/>
+  </xt:repeat>
+</body>
+</html>

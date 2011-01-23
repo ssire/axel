@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger Catalog of Primitive Component Types</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="editors">
+    <xt:component name="repeat">
+      <p class="edit"><xt:menu-marker/>
+        <xt:use types="text" label="test" param="type=textarea;shape=parent-40px;layout=placed">Repeat me.</xt:use>   
+      </p>
+    </xt:component>
+    <xt:component name="banana">
+      <fieldset class="banana">
+        <legend>Banana component</legend>
+        <p class="edit">
+          <xt:use types="text" label="description" param="type=textarea;shape=parent;layout=placed">Banana.</xt:use>    
+        </p>     
+      </fieldset>   
+    </xt:component>
+    <xt:component name="orange">
+      <fieldset class="orange">
+        <legend>Orange component</legend>
+        <p class="edit">
+          <xt:use types="text" label="description" param="type=textarea;shape=parent;layout=placed">Orange.</xt:use>    
+        </p>     
+      </fieldset>   
+    </xt:component>
+    <xt:component name="apple">
+      <fieldset class="apple">
+        <legend>Apple component</legend>
+        <p class="edit">
+          <xt:use types="text" label="description" param="type=textarea;shape=parent;layout=placed">Apple.</xt:use>   
+        </p>     
+      </fieldset>   
+    </xt:component>
+    <xt:component name="attributes">
+      <p class="edit">I am called "<xt:attribute types="string" name="name" default="my name"/>".</p>
+      <p class="edit">But my friends call me "<xt:attribute types="text" name="nickname" default="my nickname"/>".</p>   
+      <p class="edit">I was born in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania"/>.</p>
+    </xt:component>
+    <xt:component name="optionalAttributes">
+      <p class="edit">My brother is called "<xt:attribute types="string" name="name" default="his name" option="unset"/>".</p>
+      <p class="edit">But his friends call him "<xt:attribute types="text" name="nickname" default="his nickname" option="unset"/>".</p>
+      <p class="edit">He was born in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/>.</p>
+    </xt:component>
+  </xt:head>  
+
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  <style type="text/css">
+  body {
+    padding: 2em;
+    margin: 0;
+    color: black;
+    background-color: white;
+    font-family: sans-serif;
+  } 
+  h1, h2, h3 { 
+    font-weight: normal;
+    color: rgb(0, 90, 156); 
+  } 
+  .caption {
+    margin-bottom: 2px;
+    padding-bottom: 0;
+    font-size: 12px;
+  } 
+  .demo {
+    padding: 8px 10px;
+    background-color: #FFFFF0;
+    border-style: inset;
+    border-color: gray;
+    border-width: 1px;    
+    min-width: 400px;  
+    max-width: 700px;      
+    margin-bottom: 10px;
+  }
+  p.edit {  
+    font-family: arial, sans-serif;       
+    font-size: 16px;       
+/*    color: brown;*/
+  }           
+  p.backref {
+    font-family: arial, sans-serif;       
+    font-size: 11px;
+  }
+  span.attribute {
+    color: orange;  
+    font-weight: 700;
+  }   
+  .banana {
+    margin: 10px 20px 0 20px;
+    padding: 5px 20px 0px 20px;   
+  } 
+  .orange {
+    margin: 10px 50px 0 50px;
+    padding: 5px 20px 0px 20px;   
+  } 
+  .apple {
+    margin: 10px 1000px 0 100px;
+    padding: 5px 20px 0px 20px;   
+  } 
+  </style>       
+
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+  
+</head>
+<body>      
+<h1>XTiger Catalog of Primitive Component Types</h1>  
+    
+<p>This template shows different ways to use the primitive editors provided with XTiger Forms. Examples are shown within a <code>&lt;p></code> within a <code>&lt;div></code> with a <var>min-width</var> set to <samp>400px</samp> and a <var>max-width</var> set to <samp>700px</samp>.</p>
+
+<p>The basic <code>&lt;p></code> which contains the editors has been styled so that you can see how the primitive editors interfer with the current style of the edited field.</p>
+                 
+<!-- string -->       
+
+<h2>Primitive component type <code>types="string"</code></h2>   
+
+<p>The <samp>"string"</samp> primitive editor is very basic. It has remained for historical reason, the <samp>"text"</samp> primitive editor is preferred.</p>
+
+<p class="caption"><code>&lt;xt:use types="string" label="test">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="string" label="test">your content here</xt:use></p>
+</div>  
+
+<p class="caption"><code>&lt;xt:use types="string" label="test" param="lookahead=0">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="string" label="test" param="lookahead=0">your content here</xt:use></p>
+</div>                           
+
+<!-- text -->       
+
+<h2>Primitive component type <code>types="text"</code></h2>
+
+<h3>Default configuration</h3>    
+
+<p class="caption"><code>&lt;xt:use types="text" label="test">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test">your content here</xt:use></p>
+</div>  
+
+<!-- type=textarea -->
+
+<h3>With <var>type</var> set to <samp>"textarea"</samp></h3>
+
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=textarea;shape=self;layout=placed">your content here&lt;/xt:use></code></p> 
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=textarea;shape=self;layout=placed">your content here</xt:use></p>
+</div>  
+        
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=textarea;shape=self;layout=float">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=textarea;shape=self;layout=float">your content here</xt:use></p>
+</div>
+
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=textarea;shape=parent;layout=placed">your content here&lt;/xt:use></code></p> 
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=textarea;shape=parent;layout=placed">your content here</xt:use></p>
+</div>
+
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=textarea;shape=parent;layout=float">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=textarea;shape=parent;layout=float">your content here</xt:use></p>
+</div>
+           
+<!-- type=input -->   
+
+<h3>With <var>type</var> set to <samp>"input"</samp></h3>  
+
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=input;shape=self;layout=placed">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=input;shape=self;layout=placed">your content here</xt:use></p>
+</div>  
+        
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=input;shape=self;layout=float">your content here&lt;/xt:use></code></p> 
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=input;shape=self;layout=float">your content here</xt:use></p>
+</div>
+
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=input;shape=parent;layout=placed">your content here&lt;/xt:use></code></p>  
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=input;shape=parent;layout=placed">your content here</xt:use></p>
+</div>
+
+<p class="caption"><code>&lt;xt:use types="text" label="test" param="type=input;shape=parent;layout=float">your content here&lt;/xt:use></code></p> 
+<div class="demo">
+  <p class="edit"><xt:use types="text" label="test" param="type=input;shape=parent;layout=float">your content here</xt:use></p>
+</div>    
+
+<h3>With a <var>class</var> parameter to improve styling</h3>             
+
+<p>To be done</p>
+
+<!-- select -->   
+
+<h2 id="select">Primitive component type <code>type="select"</code></h2>      
+
+<p>The <samp>"select"</samp> primitive editor currently function only with the <code>xt:attribute</code> XTiger element to genere XML attributes in the content model. You can use an <samp>i18n</samp> attribute to choose the labels displayed in the popup menu independently of the generated XML content.</p>
+             
+<p class="caption"><code>&lt;xt:attribute types="select" name="season" default="Autumn" values="Winter Spring Summer Autumn"/></code><br/>
+<code>&lt;xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/></code>  <br/>
+<code>&lt;xt:attribute types="select" name="currency" default="EUR" values="EUR USD CHF" i18n="Euro Dollar Franc-Suisse"/></code>
+</p>  
+<div class="demo">
+  <p class="edit">
+    I prefer the <xt:attribute types="select" name="season" default="Autumn" values="Winter Spring Summer Autumn"/> season.
+  </p>           
+  <p class="edit">
+    I prefer it in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="set"/>.
+  </p>           
+  <p class="edit">
+    I prefer to pay with <xt:attribute types="select" name="currency" default="EUR" values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/>.
+  </p>           
+</div>                
+
+<!-- repeat -->   
+
+<h2>Repetition editor <code>xt:repeat</code></h2>
+                                      
+<h3>Default configuration</h3>    
+
+<p class="caption"><code>&lt;xt:repeat>...&lt;/xt:repeat></code></p>  
+<div class="demo">
+  <xt:repeat label="repetition1">
+    <xt:use types="repeat" label="repeat"/>
+  </xt:repeat>
+</div>
+
+<h3>With different combinations of <var>minOcccurs</var> and <var>maxOccurs</var></h3>    
+            
+<p>It is possible to create optional content by setting <var>minOccurs</var> to <samp>0</samp> and <var>maxOccurs</var> to <samp>1</samp> (*). Currently <var>minOccurs</var> can only be set to <samp>0</samp> or <samp>1</samp>. Similarly <var>maxOccurs</var> can only be set to <samp>0</samp> or <samp>*</samp>, all the other values are treated as <samp>*</samp> (unbounded).</p>
+
+<p>(*) we plan to better support optional content in the future by supporting the <var>option</var> attribute inside an <code>xt:use</code> XTiger elements that includes non native primitive component types.</p>
+
+<p class="caption"><code>&lt;xt:repeat minOccurs="0" maxOccurs="1">...&lt;/xt:repeat></code></p>  
+<div class="demo">
+  <xt:repeat minOccurs="0" maxOccurs="1" label="repetition2">
+    <xt:use types="repeat" label="repeat"/>
+  </xt:repeat>
+</div>
+
+<p class="caption"><code>&lt;xt:repeat minOccurs="1" maxOccurs="*">...&lt;/xt:repeat></code></p>  
+<div class="demo">
+  <xt:repeat minOccurs="1" maxOccurs="*" label="repetition3">
+    <xt:use types="repeat" label="repeat"/>
+  </xt:repeat>
+</div>
+
+<p class="caption"><code>&lt;xt:repeat minOccurs="0" maxOccurs="*">...&lt;/xt:repeat></code></p>  
+<div class="demo">
+  <xt:repeat minOccurs="0" maxOccurs="*" label="repetition4">
+    <xt:use types="repeat" label="repeat"/>
+  </xt:repeat>
+</div>    
+
+<!-- choice -->   
+
+<h2>Choice editor <code>xt:use</code> with <var>types</var> listing more that one component types</h2> 
+
+<p class="caption"><code>&lt;xt:use types="banana orange apple"/></code></p>  
+<div class="demo">
+  <xt:use types="banana orange apple" label="fruit"/>
+</div>    
+
+<!-- attribute -->      
+
+<h2>XML attribute editor <code>xt:attribute</code></h2>  
+
+<p>The edition of XML attributes uses the same primitive editors as the XML elements. The only difference is that the primitive component type must be inserted inside the <var>type</var> attribute of an <code>xt:attribute</code> XTiger element.</p>
+  
+<p class="caption">
+  <code>&lt;xt:attribute types="string" name="name" default="my name"/></code><br/>
+  <code>&lt;xt:attribute types="text" name="nickname" default="my nickname"/></code><br/> 
+  <code>&lt;xt:attribute types="select" name="place" default="Europe" values="America Africa Asia Europe Oceania"/></code>
+</p>  
+<div class="demo">
+  <xt:use types="attributes" label="attributes"/> 
+</div>        
+
+<!-- option -->    
+
+<h2>Optional primitive editor with the <var>option</var> attribute</h2>
+
+<p>You can make any primitive component type optional by using an <var>option</var> attribute when you insert it with an <code>xt:use</code> or an <code>xt:attribute</code> XTiger element.</p> 
+
+<p>Currently you cannot use the <var>option</var> attribute on an <code>xt:use</code> XTiger element that includes a list of component types, or a component type which is not a primitive component type.</p>
+                     
+<h3>With an XML element content model (<code>xt:use</code>)</h3>    
+
+<p class="caption">
+  <code>&lt;xt:use types="string" label="test" option="set">your content here&lt;/xt:use></code><br/>
+  <code>&lt;xt:use types="text" label="test" option="set">your content here&lt;/xt:use></code>
+</p>  
+<div class="demo">
+  <p class="edit"><xt:use types="string" label="test" option="unset">your content here</xt:use></p>
+  <p class="edit"><xt:use types="text" label="test" option="unset">your content here</xt:use></p> 
+</div>
+
+<h3>With an XML attribute content model (<code>xt:attribute</code>)</h3>    
+
+<p class="caption">
+  <code>&lt;xt:attribute types="string" name="name" default="his name" option="unset"/></code><br/>
+  <code>&lt;xt:attribute types="text" name="nickname" default="his nickname" option="unset"/></code><br/> 
+  <code>&lt;xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/></code>
+</p>  
+<div class="demo">
+  <xt:use types="optionalAttributes" label="optionalAttributes"/> 
+</div>
+
+</body> 
+</html>

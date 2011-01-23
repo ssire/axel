@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Study Editor</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Report">    
+  
+    <xt:component name="Title">
+        <Title>        
+            <xt:use param="type=input;layout=placed;shape=self"
+                label="Title" types="text" >Study Title</xt:use>        
+        </Title>
+    </xt:component>
+
+    <xt:component name="Authors">  
+      <Authors> 
+          <xt:repeat minOccurs="1" maxOccurs="*" label="Authors">
+            <Author>
+              <xt:use param="type=input;layout=placed;shape=self"
+                  label="Author" types="text" >author name</xt:use>        
+            </Author>
+          </xt:repeat>
+      </Authors>
+    </xt:component>    
+    
+    <xt:component name="Timestamp">            
+        <Timestamp>
+            <CreationDate>
+                <xt:use param="type=input;layout=placed;shape=self"
+                    label="CreationDate" types="text" option="unset">date</xt:use>        
+            </CreationDate>
+            <LastUpdate>
+                <xt:use param="type=input;layout=placed;shape=self"
+                    label="LastUpdate" types="text">date</xt:use>        
+            </LastUpdate>
+        </Timestamp>
+    </xt:component>        
+
+    <xt:component name="Section">  
+        <div class="section">
+            <Section>                                               
+                <xt:use types="Heading" label="Heading"/>
+                <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Parag SubHeading List Quote Code">
+                    <div class="row">
+                        <xt:use types="Parag SubHeading List Quote Code" param="marker=menu"/>
+                    </div>                        
+                </xt:repeat>          
+            </Section>     
+        </div>     
+    </xt:component>        
+
+    <xt:component name="Heading">  
+        <Heading>
+            <xt:use param="type=textarea;shape=parent;layout=placed;shape=self"
+                types="text" >Section heading</xt:use>
+            <xt:menu-marker/>
+        </Heading>
+    </xt:component> 
+
+    <xt:component name="SubHeading" i18n="h2">  
+        <div class="content">
+            <SubHeading>
+                <xt:use param="type=input;layout=placed;shape=self"
+                    types="text" >Section sub-heading</xt:use>        
+            </SubHeading>
+        </div>
+    </xt:component> 
+
+    <xt:component name="Parag" i18n="p">  
+        <div class="content">
+            <Parag>
+                <xt:use param="shape=parent-60px;type=textarea;layout=placed;filter=wiki"
+                    types="text">Some text</xt:use>     
+            </Parag>
+        </div>
+    </xt:component>   
+    
+    <xt:component name="List" i18n="list">  
+        <div class="content">
+            <ul>
+                <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Item">
+                    <li>
+                        <xt:use param="shape=parent-80px;type=textarea;layout=placed;filter=wiki"
+                            types="text" label="Item">enumeration element</xt:use>     
+                        <xt:menu-marker/>
+                    </li>    
+                </xt:repeat>
+            </ul>
+        </div>
+    </xt:component>   
+    
+    <xt:component name="Quote" i18n="quote">  
+        <div class="content">
+            <Quote>
+                <xt:use param="shape=parent;type=textarea;layout=placed;filter=wiki"
+                    types="text">Some quotation</xt:use>
+                <Source>    
+                    <xt:use param="shape=self;type=input;layout=placed"
+                        types="text" option="unset" label="Source">Source</xt:use>                    
+                </Source>    
+            </Quote>
+        </div>
+    </xt:component>    
+    
+    <xt:component name="Code" i18n="code">  
+        <div class="content">                           
+            <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="CodeLegend">
+                <xt:use types="CodeLegend" label="CodeLegend"/>
+            </xt:repeat>
+            <div class="editing-trick">
+                <xt:use param="shape=parent;type=textarea;layout=placed;enablelinebreak=true"
+                    types="text" handle="pre" label="Snippet">code</xt:use>
+            </div>
+        </div>
+    </xt:component>
+    
+    <xt:component name="CodeLegend">             
+            <CodeLegend>
+                <xt:menu-marker/><CodeRef><xt:use types="text" label="CodeRef" option="unset">ref</xt:use></CodeRef>
+                <div class="editing-trick">
+                    <xt:use param="shape=parent-60px;type=textarea;layout=placed;filter=wiki"
+                        types="text">Caption</xt:use>     
+                    <xt:menu-marker/>
+                </div>
+            </CodeLegend>    
+    </xt:component>     
+        
+    <xt:component name="Figure">             
+        <div class="figure">
+            <Figure>     
+                <xt:use types="Caption" label="Caption"/>
+                <Image>                                                               
+                    <div class="image">
+                        <xt:use param="type=input;layout=placed;class=image;filter=image" 
+                            types="text" label="Image">enter image file name</xt:use>
+                    </div>
+                </Image>
+           </Figure>     
+        </div>
+    </xt:component> 
+
+    <xt:component name="Caption">             
+            <Caption>
+                <Ref><xt:use types="text" label="Ref">ref</xt:use></Ref>
+                <div class="editing-trick">
+                    <xt:use param="shape=parent-60px;type=textarea;layout=placed;filter=wiki"
+                        types="text">Caption</xt:use>     
+                    <xt:menu-marker/>
+                </div>
+            </Caption>    
+    </xt:component>     
+    
+    <xt:component name="RefUrl">
+        <RefUrl>   
+            <Key><xt:use types="text" label="Key">key</xt:use></Key>                                                                           
+            <Link>
+                <xt:use types="link" label="Link"><a href="http://">title</a></xt:use>                           
+            </Link>
+            <xt:use param="shape=self;type=input;layout=placed"
+                types="text" option="unset" label="Comment">comment</xt:use>  
+            <xt:menu-marker/>                      
+        </RefUrl>
+    </xt:component>
+
+    <!-- <xt:union name="BibRef" include="refurl"></xt:union> -->
+
+  </xt:head>
+  
+  <link rel="stylesheet" type="text/css" href="Study.css" />  
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />  
+</head>
+<body>
+    <xt:use types="Title"/>
+
+    <xt:use types="Authors"/>                            
+                    
+    <xt:use types="Timestamp" label="Timestamp"/>                            
+                                    
+    <p class="deco">(Introduction)</p>
+
+    <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Parag">           
+        <div class="row">
+            <span class="menu"><xt:menu-marker/></span>
+            <xt:use types="Parag" label="Parag"/>                            
+        </div>
+    </xt:repeat>  
+
+    <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Section">           
+        <xt:use types="Section" label="Section"/>
+    </xt:repeat>      
+    
+    <Illustrations>
+        <xt:repeat minOccurs="0" maxOccurs="*" label="Illustrations">
+            <xt:use types="Figure" label="Figure"/>
+        </xt:repeat>      
+    </Illustrations>
+    
+    <References>
+        <xt:repeat minOccurs="0" maxOccurs="*" label="References">
+            <xt:use types="RefUrl" label="RefUrl"/>
+        </xt:repeat>      
+    </References>
+</body>
+</html>              

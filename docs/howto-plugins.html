@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>How to develop a primitive editor plugin in AXEL</title>
+  <link rel="stylesheet" type="text/css" href="docu.css" />	
+</head>
+<body> 
+<pre>
+-----------------------------------------------------------------------------------
+---------------- How to develop a primitive editor plugin in AXEL  ----------------
+-----------------------------------------------------------------------------------
+
+Stéphane Sire
+Last update: June 22nd, 2010     
+
+Summary
+=======
+</pre> 
+   
+<ul>
+<li><a href="#intro">Primitive editor plugin functionalities</a></li>
+<li><a href="#api">Plugin API introduction</a></li>        
+<li><a href="#delegation">Methods subject to delegation by filters</a></li>        
+  <ul>                         
+    <li><a href="#create">create</a></li>
+    <li><a href="#init">init</a></li>
+    <li><a href="#awake">awake</a></li> 
+    <li><a href="#duplicate">duplicate</a></li> 
+    <li><a href="#load">load</a></li>
+    <li><a href="#save">save</a></li>
+    <li><a href="#focus">focus</a></li>
+    <li><a href="#start-editing">startEditing</a></li>
+    <li><a href="#get-data">getData</a></li>
+    <li><a href="#unfocus">unfocus</a></li>
+    <li><a href="#stop-editing">stopEditing</a></li>
+    <li><a href="#update">update</a></li>
+    <li><a href="#set-data">_setData</a></li>
+    <li><a href="#clear">clear</a></li>
+    <li><a href="#set">set</a></li>
+    <li><a href="#unset">unset</a></li>
+    <li><a href="#remove">remove</a></li>
+  </ul>  
+  <li><a href="#public">Public methods</a></li>        
+    <ul>                         
+      <li><a href="#can">can</a></li>
+      <li><a href="#execute">execute</a></li>
+      <li><a href="#get-param">getParam</a></li>
+      <li><a href="#get-unique-key">getUniqueKey</a></li>
+      <li><a href="#get-handle">getHandle</a></li>
+      <li><a href="#get-ghost">getGhost</a></li>
+      <li><a href="#get-document">getDocument</a></li>
+      <li><a href="#is-focusable">isFocusable</a></li>
+      <li><a href="#is-modifiable">isModifiable</a></li>
+      <li><a href="#set-modified">setModified</a></li>
+    </ul>  
+</ul>
+                
+<pre id="intro">
+Primitive editor plugin functionalities 
+=======================================
+
+Primitive editor plugins manage: 
+
+* generation of a static presentation of the data into the DOM (what we call "the handle")
+* conversion of content from and to XML (respectively XML loading and XML linearization)
+* generation of a interactive presentation for editing (what we often call "a device" or "a lens")
+* control of user interaction for editing content
+
+Primitive editor plugins are implemented with a Factory design pattern. The factory object registers itself to the AXEL document editor generator object (editor/classical/generator.js) with the same identifier that is used in the <xt:use types="identifier".../> XTiger element.     
+
+For example the factory object for the 'text' primitive editor is defined in xtiger.editor.TextFactory
+
+The factory object must create what we currently call the editor model object ("the model"). Model objects will in most cases  instantiate extra objects to manage interaction with the user, the architecture of each primitive editor is to some extent under the control of the plugin's developer, we recommend using an MVC architecture to implement each plugin as a set of classes.
+
+For example xtiger.editor.TextFactory creates instances of a hidden _TextModel class. 
+
+TO BE COMPLETED  
+
+Explain createFromTree and createFromSeed...
+
+Delegation to filter pattern anchored on the model's life cycle
+
+Can / execute pattern for third party object (e.g. devices) to call third party filter extensions not part of the default model's life cycle  
+</pre>
+
+<pre id="api">
+Plugin API introduction
+=======================
+
+We take the 'text' primitive editor plugin as an example to explain our current view of how a plugin should be written. The 'text' primitive editor is a good example as it also support filters.
+
+For a complete description of each methods and its parameters, please have a look at the source code of generate the documentation from the source code using the ant "buil.doc" target.
+
+Plugin model objects should define the following methods. All these methods should apply the delegation design pattern so that filters can be applied to the plugin to extend its behavior.
+
+All the methods subject to delegation have a default behavior (similar to the default action in HTML terminology). For this reason delegate filters should chain calls up to the default method of the original object (using the remapping mechanism described in the "howto-filter" document). They should break the delegation call chain only when they do something not compatible with the default behavior.   
+
+The * on a method means that a priori we didn't find any reason yet to use delegation to filters for it            
+</pre>           
+
+<pre id="delegation">
+Methods subject to delegation by filters
+========================================
+</pre>
+
+<pre id="create">
+create
+~~~~~~
+
+The model has just been allocated into memory (i.e just after new). At that time the object does not contain any useful information.
+
+Default behavior: nop                                                                                                               
+
+Note: not yet called in 'text.js' !
+</pre>
+     
+<pre id="init">
+init
+~~~~                         
+
+The model is initialized with data from different sources:
+- some properties that are stored in the param attribute of the xt:use element
+- some initial data that is contained in the template tree
+- an optional option attribute of the xt:use element to make the editor optional
+
+Note that when init is called, the handle (the DOM presentation of the model) have already been created and the model has been assigned a unique key which is passed to init as parameter.
+
+Default behavior: store initial data, interprets and copies the initial the value into the handle, sets the optional status, stores the DOM document the model belongs to
+</init>
+      
+<pre id="awake">
+awake
+~~~~~
+
+The model starts listening for user events.
+
+Default behvaior: add event listeners to detect user events to trigger content editing
+</init>
+
+<pre id="duplicate">
+duplicate
+~~~~~~~~~
+
+The model ...
+
+This is considered an optional callback.... 
+
+Default behvaior: no operations (undefined)
+</init>
+
+      
+<pre id="load">
+load
+~~~~
+
+The model loads data from the current point of the DOM data source.
+
+Default behavior: reads data and copies it to the handle, replacing any existing data
+</pre>
+
+<pre id="save">
+save
+~~~~  
+
+The model generates XML content inside a DOM logger from its current state.     
+
+Default behavior: copies the handle first child node data as text in the DOM logger
+</pre>              
+
+<pre id="focus">
+focus
+~~~~~
+
+The model receives focus (e.g. form the keyboard)       
+                                                
+Default behavior: calls startEditing
+</pre>              
+
+<pre id="start-editing">
+startEditing
+~~~~~~~~~~~~     
+
+The model switches to editing mode
+
+Default behavior: 'text' starts it's 'text-device' which itself initializes and shows the editing field (input or textarea)   
+</pre>
+
+<pre id="get-data">  
+getData
+~~~~~~~
+
+The user has activated the editing of the model content
+
+Default behavior: takes the content of the first child of the handle as the content to edit
+</pre>
+
+<pre id="unfocus">
+unfocus
+~~~~~~~                
+
+The model has lost focus (e.g. from the keybord)
+
+Default behavior: calls stopEditing
+</pre>
+
+<pre id="stop-editing">
+stopEditing
+~~~~~~~~~~~
+
+The model returns to static presentation mode of the handle
+
+Default behavior: the associated device terminates editing and cause a call to update 
+</pre>      
+
+<pre id="update">
+update
+~~~~~~
+
+The user has edited some new content which is different from the default content
+
+Default behavior: copies user's data inside the handle
+</pre>
+  
+<pre id="set-data">
+_setData 
+~~~~~~~~
+
+Sets the content of the handle.
+</pre>
+
+<pre id="clear">
+clear
+~~~~~
+
+The model should resets it's content to the same content as after initialization
+
+Default behavior: copies the default content to the first child of the handle
+</pre>
+     
+<pre id="set">
+set 
+~~~ 
+
+The model is selected 
+
+Default behavior: sets the checkbox as selectedm propagates selection to ancestor's repeaters
+</pre>
+   
+<pre id="unset">
+unset
+~~~~~
+
+The model is unselected 
+
+Default behavior: unset the checkbox
+</pre>         
+
+<pre id="remove">
+remove
+~~~~~~
+
+The model has been removed from the editor. Note that this method is not called if the model was the only slice inside an optional repeater that becomes unselected.
+
+Default behavior: does nothing.
+</pre>
+     
+<pre id="public">
+Public methods
+==============
+
+These methods can be called from third party objects
+</pre>
+     
+<pre id="can">
+can
+~~~
+
+Asks if the model is able to execute an optional method whose name is given as parameter
+</pre>
+     
+<pre id="execute">
+execute
+~~~~~~~                                                                                 
+
+Executes an optional method whose name is given as parameter and with the given parameters  
+</pre>
+     
+<pre id="get-param">
+getParam
+~~~~~~~~
+
+Returns a parameter value set on the xt:use param attribute or its default value
+</pre>
+     
+<pre id="get-unique-key">
+getUniqueKey
+~~~~~~~~~~~~
+
+Returns the unique identifier associated with the model 
+
+Note: this is generated by the default init method
+</pre>
+     
+<pre id="get-handle">
+getHandle
+~~~~~~~~~   
+
+Returns a DOM node, usually the top node of the handle
+</pre>      
+
+<pre id="get-ghost">
+getGhost 
+~~~~~~~~
+
+Used by text device to compute initial shape for editing
+</pre>
+     
+<pre id="get-document">
+getDocument
+~~~~~~~~~~~
+
+Returns the document    
+</pre>
+     
+<pre id="is-focusable">
+isFocusable
+~~~~~~~~~~~
+
+Returns true if this model can receive focus
+</pre>
+     
+<pre id="is-modified">
+isModified
+~~~~~~~~~~
+
+Returns true if the model content has been modified and is different from the default content
+</pre>
+     
+<pre id="set-modified">
+setModified
+~~~~~~~~~~~
+
+Signals that the editor content has been modified. This method should be called by filter delegate if they change the model content.
+
+NOTE: it is not clear if setModified can be set to true if the content has been set to the default content, that should be avoided ! [maybe that will be guarded in setModified that could be renamed to updateModificationStatus]
+</pre>
+     
+</body>
+</html>
+
+
+

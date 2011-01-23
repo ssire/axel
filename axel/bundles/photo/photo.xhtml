@@ -1,0 +1,19 @@
+<img id="xt-photo-icon"/>
+<p id="xt-photo-error">Broken Image</p>
+<p id="xt-photo-info">Message</p>
+<div id="xt-photo-menu">
+	<form id="xt-photo-form" enctype="multipart/form-data" action="http://localhost:8042/formUpload" method="POST" target="xt-photo-target">
+		<input type="hidden" name="documentId" value="someDocumentId"/>
+		<div id="xt-photo-form-body">
+		    <div style="padding-top:8px">
+		        <input id="xt-photo-file" name="xt-photo-file" type="file"/>
+		    </div>
+		    <div style="padding-top:6px">
+		        <input id="xt-photo-save" type="button" value="Save"/>
+		    </div>
+		</div>
+      	<input id="xt-photo-cancel" type="button" value="Cancel"/>
+	</form>	
+</div>
+<iframe id="xt-photo-target" name="xt-photo-target" src="javascript:false;">
+</iframe>		

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Telling a Story with Images</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Story">    
+  
+    <xt:component name="header">
+      <h2><xt:use types="text" label="header">Header</xt:use><span class="layout"><xt:attribute types="text" name="clear" default="clear" param="layout=placed;filter=clear;clear=3"/></span></h2>
+    </xt:component>   
+
+    <xt:component name="text">
+      <p class="text"><xt:use types="text" param="type=textarea;shape=parent;layout=float">Text</xt:use><span class="layout"><xt:attribute types="text" name="clear" default="clear" param="layout=placed;filter=clear;clear=3"/></span></p>
+    </xt:component> 
+  
+    <xt:component name="photo">
+      <div class="photo">
+        <xt:use types="text" handle="div" param="shape=parent;type=textarea;layout=float;class=image;filter=image" label="source">file name</xt:use>
+        <p class="caption"><xt:use types="text" label="caption">Caption</xt:use><span class="layout"><xt:attribute types="text" name="clear" default="clear" param="layout=placed;filter=clear;clear=4"/> <xt:attribute types="text" name="position" default="position" param="layout=placed;filter=position"/></span></p>
+      </div>
+    </xt:component>   
+  
+  </xt:head>  
+
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <style type="text/css">
+    body {
+      margin: 20px;
+    }
+    
+    /* repeat and multiple choice menu */
+    span.menu {
+      float: left;
+      margin-right: 10px; 
+    }  
+    
+    body.preview span.menu, body.preview span.layout { /* preview mode */
+      display: none;
+    }           
+
+    /* text component */
+    div.row  p {
+      min-height: 30px;
+      text-align: justify;
+    }       
+    
+    /* photo component */   
+    .photo img {
+      max-width: 250px;     
+    }
+    p.caption {
+      font-weight: bold;
+      font-size: 80%;
+    }
+
+    /* pseudo-editors to change clear / float style */
+    span.layout {
+      font: 9px, Courier, monospace;      
+      float: right;
+      color: gray;
+    }
+    
+    /* image input field */
+    textarea {   /* should be a floating textarea */
+      background-color: white !important;
+      border-color: blue;
+    }   
+    div.image:-moz-drag-over {
+      border: 1px solid green;
+    }
+  </style>  
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <h1><xt:use types="text" label="title">Title</xt:use></h1>
+  
+  <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="text photo header">
+    <div class="row">     
+      <xt:use types="text photo header" param="marker=menu"/>
+    </div>
+  </xt:repeat>
+</body>
+</html>
