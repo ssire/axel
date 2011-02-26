@@ -84,12 +84,17 @@ xtiger.util.decodeParameters = function (aString, aParams) {
 		return;
 	var _tokens = aString.split(';');
 	for (var _i = 0; _i < _tokens.length; _i++) {
-		var _parsedTok = _tokens[_i].split('=');
-		var _key = _parsedTok[0].replace(/^\s*/, '').replace(/\s*$/, ''); // Trim    
-		if (_key == 'class') { // pb with 'class' key in js on Safari
-		  _key = 'hasClass';
-		}
-		aParams[_key] = _parsedTok[1];
+		var pos =  _tokens[_i].indexOf('=');
+		if (pos > 0) {
+			var _parsedTok = _tokens[_i].substr(0, pos);
+			var _key = _parsedTok.replace(/^\s+/, '').replace(/\s+$/, ''); // Trim    
+			if (_key.length > 0) {
+				if (_key == 'class') { // pb with 'class' key in js on Safari
+				  _key = 'hasClass';
+				}
+				aParams[_key] = _tokens[_i].substr(pos + 1).replace(/^\s+/, '').replace(/\s+$/, '');				
+		    }
+	    } // FIXME: raise a warning (?)
 	}
 }  
 

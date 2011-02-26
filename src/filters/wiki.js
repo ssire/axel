@@ -50,7 +50,9 @@ var _WikiFilter = (function _WikiFilter() {
 	var _markers = {
 		"em" : 'important', // XHTML to XML conversion
 		"tt" : 'verbatim',
-		'important' : 'em', // XML to XHTML converstion
+		"EM" : 'important', // IE version
+		"TT" : 'verbatim',		
+		'important' : 'em', // XML to XHTML conversion
 		'verbatim' : 'tt',
 		"*" : 'em', // ASCII to XHTML conversion
 		"'" : 'tt'
@@ -58,7 +60,9 @@ var _WikiFilter = (function _WikiFilter() {
 
 	var _markers2ascii = {
 		"em" : '**', // XHTML to ASCII conversion
-		"tt" : "''"
+		"tt" : "''",
+		"EM" : '**', // IE version
+		"TT" : "''"
 	}
 
 	/**
@@ -249,7 +253,7 @@ var _WikiFilter = (function _WikiFilter() {
 							aLogger.write(cur.firstChild.data);
 							aLogger.closeTag(_tagname[lang]['Fragment']);
 						}
-					} else if (name == 'a') {
+					} else if ((name == 'a') || (name == 'A')) {
 						anchor = (cur.firstChild) ? cur.firstChild.data
 								: 'null';
 						href = cur.getAttribute('href') || 'null';
@@ -302,7 +306,7 @@ var _WikiFilter = (function _WikiFilter() {
 						if (_cur.firstChild) { // sanity check
 							_txtBuffer += _tag + _cur.firstChild.data + _tag;
 						}
-					} else if (_name == 'a') { // "wiki" anchor generation
+					} else if ((_name == 'a') || (_name == 'A')) { // "wiki" anchor generation
 						_txtBuffer += (_cur.getAttribute('href') || '') + '[' + (_cur.firstChild ? _cur.firstChild.data : 'null') + ']';
 					}
 				} else { // it's a text node per construction

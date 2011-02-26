@@ -71,23 +71,32 @@ if (xtiger.cross.UA.IE) {
 	}
 	
 	// see http://www.alistapart.com/articles/crossbrowserscripting
-	xtdom.importNode = function(doc, node, deep) {
+	xtdom.importNode = function(doc, node, deep) {  
+	  var copy;
 		switch (node.nodeType) {
-			case xtdom.ELEMENT_NODE:
-				var newNode = xtdom.createElement(doc, node.nodeName);
-				if (node.attributes && node.attributes.length > 0) // copy attributes
+			case xtdom.ELEMENT_NODE:                                  
+				// remove prefix from node name as in my last attempt with IE8 appendChild 
+				// threw an exception with the node created with a prefixed name
+				var nspos = node.nodeName.indexOf(':');
+				var nodeName = (nspos == -1) ? node.nodeName : node.nodeName.substr(nspos + 1);
+				var newNode = xtdom.createElement(doc, nodeName);
+				// copy attributes								
+				if (node.attributes && node.attributes.length > 0) 
 					for (var i = 0; i < node.attributes.length; i++)
 						xtdom.setAttribute(newNode, node.attributes[i].name, node.attributes[i].value);
 				if (deep && node.childNodes && node.childNodes.length > 0) // copy children (recursion)
-					for (var i = 0; i < node.childNodes.length; i++)
-						newNode.appendChild( xtdom.importNode(doc, node.childNodes[i], deep) );
+					for (var i = 0; i < node.childNodes.length; i++) {
+					  copy = xtdom.importNode(doc, node.childNodes[i], deep);
+					  if (copy) newNode.appendChild(copy);
+					}
 				return newNode;
 				break;
 			case xtdom.TEXT_NODE:
 			case xtdom.CDATA_SECTION_NODE:
-			case xtdom.COMMENT_NODE:
 				return xtdom.createTextNode(doc, node.nodeValue);
-				break;
+			  break;                                           
+  		case xtdom.COMMENT_NODE: // skip comment nodes
+				break;                                           
 		}
 	}		
 	

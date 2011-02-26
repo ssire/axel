@@ -1,7 +1,7 @@
 AXEL - Adaptable XML Editing Library
 ====================================
 
-AXEL is a lightweight, open source (LGPV v2.1), Javascript library for
+AXEL is a lightweight, open source (LGPL v2.1), Javascript library for
 generating XML authoring applications that run inside the browser. Like
 form-based systems, such as XForms, it turns a description of a Web page with
 some editable fields into an editor. Unlike form-based systems, it is targeted
@@ -83,7 +83,16 @@ Then you can contribute your bug fixes, enhancements and extensions by:
 2. Creating a branch (`git checkout -b my_axel`)
 3. Commit your changes (`git commit -am "My contribution"`)
 4. Push to the branch (`git push origin my_axel`)
-5. Create an [Issue](https://github.com/ssire/axel/issues) with a link to your branch
+5. Create an [Issue](https://github.com/ssire/axel/issues) with a link to your branch     
+
+Coding Guidelines 
+-----------------
+                                          
+We currently do not have strong coding conventions as you will see by yourself
+when browsing the source code, however respect at least that one:
+**Soft Tabs at 2 spaces per Tab !**.
+
+
 
 
 

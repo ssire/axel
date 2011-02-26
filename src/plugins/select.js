@@ -32,8 +32,22 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
 			xtiger.session(doc).save(devKey, device);
 		}
 		return device;
+	};                             
+        
+	// Splits string s on every space not preceeded with a backslash "\ "
+	// Returns an array
+	var _split = function _split(s) {
+		var res;
+		if (s.indexOf("\\ ") == -1) {
+			return s.split(' ');
+		} else {     
+			res = s.replace(/\\ /g, "&nbsp;");
+			return xtiger.util.array_map(res.split(' '), function (e) {
+				return e.replace(/&nbsp;/g, " ")
+				});
+		}
 	};
-
+	
 	/**
 	 * Model class for a list selection editor (i.e. select one item in a list)
 	 * There should be only one model class per application per plugin type
@@ -292,8 +306,8 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
 			// completes the parameter set
 			var values = xtSrcNode.getAttribute('values');
 			var i18n = xtSrcNode.getAttribute('i18n');        
-			var _values = values ? values.split(' ') : 'null';
-			var _i18n = i18n ? i18n.split(' ') : false;
+			var _values = values ? _split(values) : 'null';
+			var _i18n = i18n ? _split(i18n) : false;
 			_param['values'] = _i18n ? [_i18n,  _values] : _values;
 			
 			// init

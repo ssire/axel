@@ -301,7 +301,8 @@ object.axel-option-unset {
 
 .axel-lens-containerstyle {
 	border: 1px solid black;
-	background-color: rgb(115, 166, 42);
+	background-color: rgb(115, 166, 42);     
+	text-align: left;	
 }
 
 /*****************/
