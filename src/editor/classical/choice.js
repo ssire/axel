@@ -89,7 +89,7 @@ xtiger.editor.Choice.prototype = {
 		// end.endChoiceLabel = 'endChoice ' + name; // DEBUG
 	},
 			
-	initializeSelectedItem : function (rank) {
+	initializeSelectedItem : function (rank) {     
 		// memorizes the state of the previous display style properties of everyone to be able to restore it
 		for (var i = 0; i < this.items.length; i++) {
 			var memo = [];
@@ -117,6 +117,7 @@ xtiger.editor.Choice.prototype = {
 	// Changes class attribute of the previously visible type item 'name' so that it becomes invisible 
 	selectChoiceItem : function (rank) {
 		xtiger.cross.log('plant', 'Choice.selectChoiceItem ' + rank);
+    // window.console.log('Choice.selectChoiceItem ' + rank + ' for ' + this.getTypes().join(' '));
 		if (this.curItem == rank)	return;
 		if (this.curItem != -1) {
 			// hides last selection
@@ -151,7 +152,7 @@ xtiger.editor.Choice.prototype = {
 	},	
 	
 	selectChoiceForName : function (name) {		
-		xtiger.cross.log('plant', 'Choice.selectChoiceForName ' + name);		
+    // xtiger.cross.log('plant', 'Choice.selectChoiceForName ' + name);   
 		var i;
 		for (i = 0; i < this.types.length; i++) {
 			if (this.types[i] == name) {

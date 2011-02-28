@@ -211,11 +211,24 @@ xtiger.editor.Generator.prototype = {
 						break;
 					}
 				}
-		 	}
+		 	}         
 		}
+		// begin experimental menu-marker feature
+		if (container.querySelector) {
+			var select = container.querySelector('select[class]');
+			if (select) {                                        				
+				var cname = select.getAttribute('class');
+				menuMarker = xtdom.getMenuMarkerXT(container, cname);
+				if (menuMarker) {                                    
+					// replaces menuMarker with select                 
+					menuMarker.parentNode.replaceChild(select, menuMarker);  
+				}
+			}
+		}
+		// end experimental menu-marker feature		
 		//FIXME: we could handle a xttOpenLabel and xttCloseLabel here too for inline components
 	},
-
+	
 	genRepeatBody : function (repeatNode, container) { },
 	
 	genRepeatContent	: function (repeatNode, container, accu) { 
@@ -229,9 +242,9 @@ xtiger.editor.Generator.prototype = {
 	},
 		
 	genIteratedTypeBody : function (kind, xtigerSrcNode, container, types) { 
+		var menu, key, value;
 		// generates type menu
 		if (types.length > 1) {
-			var menu;
 			var s = menu = xtdom.createElement(this.curDoc, 'select');			
 			for (var i = 0; i < types.length; i++) {
 				var o = xtdom.createElement(this.curDoc, 'option');
@@ -239,29 +252,39 @@ xtiger.editor.Generator.prototype = {
 				o.appendChild(t);
 				s.appendChild(o);
 			}
-			// Experimental feature : param="marker=classname"
-			var cname;
-			var marker = xtigerSrcNode.getAttribute('param');
-			if (marker) { // FIXME: at the moment we suppose marker is the only allowed parameter
-				var i = marker.indexOf('=');
+			// Experimental feature : param="marker=value" | "name=value"
+			var pstr = xtigerSrcNode.getAttribute('param');
+			if (pstr) {
+				var i = pstr.indexOf('=');
 				if (i != -1) {
-					cname = marker.substr( i + 1, marker.length - i - 1);
+					key = pstr.substr(0, i);
+					value = pstr.substr(i + 1);
 				}
 			}
-			if (cname) { // generates a <span class="cname"><xt:menu-marker/><br/><select>...</span> group
+			if ((key == 'name') && value) {
+				xtdom.addClassName(menu, value);
+			} else if ((key = 'marker') && value) { // generates a <span class="value"><xt:menu-marker/><br/><select>...</span> group
 				var span = xtdom.createElement(this.curDoc, 'span');
-				xtdom.addClassName(span, cname);
+				xtdom.addClassName(span, value);
 				var mm = xtdom.createElementNS(this.curDoc, 'menu-marker', xtiger.parser.nsXTiger);
 				span.appendChild(mm);
 				var br = xtdom.createElement(this.curDoc, 'br');
 				span.appendChild(br);
 				span.appendChild(menu);
 				menu = span;
-			} 			
+			} 	   			 	
 			// End experimental feature			
 			container.appendChild(menu);
-			var c = new xtiger.editor.Choice ();
-			c.initFromTree(s, types, this.curDoc);
+			var c = new xtiger.editor.Choice ();  
+			/// Begin PATCH 
+  		var label = xtdom.getTagNameXT(xtigerSrcNode);    
+  		if (label) {
+        c.initFromTree(s, label.split(' '), this.curDoc);			
+      } else {
+        c.initFromTree(s, types, this.curDoc);			
+      }
+			/// End PATCH 
+      // c.initFromTree(s, types, this.curDoc);
 			this.savePendingEditor (c, s); // will be used in finishComponentGeneration
 			xtdom.addEventListener (s, 'change', function (ev) { c.handleSelect(ev); }, false);
 			xtiger.cross.log('plant', 'Created a Choice editor for types ' + '/' + types + '/' );
@@ -302,7 +325,10 @@ xtiger.editor.Generator.prototype = {
 	// adds xttOpenLabel and xttCloseLabel on the container boundaries which may be ELEMENT_NODE or TEXT_NODE
 	finishIteratedTypeGeneration : function (kind, xtigerSrcNode, container, types) {    
 		var label = xtdom.getTagNameXT(xtigerSrcNode);    
-		if (! label) 	return;  		
+		if (! label) 	return;  		                        
+		/// Begin PATCH
+		if (label.indexOf(' ') != -1) return;		
+		/// End PATCH		
 		if (kind == 'attribute') {
 			label = '@' + label; // code for a label for an attribute
 		}
