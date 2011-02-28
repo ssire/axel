@@ -278,7 +278,7 @@ xtiger.editor.Generator.prototype = {
 			var c = new xtiger.editor.Choice ();  
 			/// Begin PATCH 
   		var label = xtdom.getTagNameXT(xtigerSrcNode);    
-  		if (label) {
+  		if (label && (label.indexOf(' ') != -1)) {
         c.initFromTree(s, label.split(' '), this.curDoc);			
       } else {
         c.initFromTree(s, types, this.curDoc);			

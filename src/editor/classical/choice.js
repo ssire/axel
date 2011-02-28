@@ -21,9 +21,12 @@ xtiger.editor.Choice = function () {
 	this.curItem = -1; // special value (see selectChoiceItem)
 	// this.items must be garnished by calling addItem (name, begin, end)
 	this.curDoc = null; // will be in initFromTree or initFromSeed	
+	xtiger.editor.Choice.prototype.UID++;		
 }            
 
 xtiger.editor.Choice.prototype = {  
+  
+  UID : 0,
 	
 	initFromTree : function (menu, types, doc) { 
 		this.curDoc = doc;
@@ -43,7 +46,7 @@ xtiger.editor.Choice.prototype = {
 	// The seed is a data structure that should allow to "reconstruct" a cloned editor
 	makeSeed : function () {
 		if (! this.seed) {
-			this.seed = [this.items.length, this.types];
+			this.seed = [this.items.length, this.types, xtiger.editor.Choice.prototype.UID];
 		}
 		return this.seed;
 	},
@@ -53,7 +56,7 @@ xtiger.editor.Choice.prototype = {
 	initFromSeed : function (editorSeed, doc) { 
 		this.curDoc = doc;
 		this.expectedLength = editorSeed[0];
-		this.types = editorSeed[1];
+		this.types = editorSeed[1];                   
 	},
 		
 	setChoiceMenu : function (clone) { 

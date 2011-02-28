@@ -26,9 +26,74 @@
       </div>
     </xt:component>  
   
-    <xt:component name="div">  
-      <p>DIV</p>
-    </xt:component> 
+    <xt:component name="div">           
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="p ul ol">
+        <xt:menu-marker/><xt:use types="p ul ol"/>
+      </xt:repeat>
+    </xt:component>            
+    
+    <xt:component name="p">  
+      <p><xt:use types="text" param="type=textarea;shape=parent">click to edit paragraph</xt:use><xt:menu-marker/></p>
+    </xt:component>    
+
+    <xt:component name="ul">                                                                                    
+      <ul>
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="li">
+          <li class="itemContainer">
+            <xt:use types="list_item" label="li"/>
+          </li>
+        </xt:repeat>    
+      </ul>
+    </xt:component>           
+    
+    <xt:component name="ol">  
+      <!-- <p style="float: left; font-size: 14px;">
+        <xt:attribute types="select" values="par seq" name="data-timecontainer" default="par" option="unset"/>
+      </p>             -->
+      <ol>   
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="li">
+          <li class="itemContainer">
+            <xt:use types="list_item" label="li"/>
+          </li>
+        </xt:repeat>    
+      </ol>
+    </xt:component>    
+    
+    <xt:component name="list_item">  
+        <span style="background: yellow">
+          <xt:menu-marker/>
+        </span>
+        <p style="margin:0"><xt:use types="text" label="span" param="type=textarea;shape=parent">click to edit item textual content</xt:use></p>
+        <xt:use types="t_optional"/>
+    </xt:component>                 
+                           
+    <!-- TRICK: component only necessary so that xt:menu-marker with target
+         is substituted with the select from the corresponding xt:use
+         during finishComponentGeneration() ! -->
+    <xt:component name="t_optional">  
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="p ul">
+        <span class="hover-menu repeat-buttons-container" style="background: yellow">
+          <xt:menu-marker/>
+          <xt:menu-marker target="list-choice"/>
+        </span>
+        <div class="xtt-hide-if-unselect" style="margin-left: 40px">
+          <xt:use types="p t_ul" param="name=list-choice" label="p ul"/> 
+        </div>
+      </xt:repeat>    
+    </xt:component>   
+
+    <!-- AXEL currently does not allow recursive definitions, hence we can not reuse "ul" -->
+    <xt:component name="t_ul" i18n="ul">                                                                                    
+      <ul>
+        <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="li">
+          <xt:use types="t_li" label="li"/>
+        </xt:repeat>    
+      </ul>
+    </xt:component>   
+    
+    <xt:component name="t_li" i18n="li">  
+      <li><xt:use types="text" param="type=textarea;shape=parent - 70px">click to edit item textual content</xt:use><span class="li-repeat-buttons"><xt:menu-marker/></span></li>
+    </xt:component>     
 
     <xt:component name="header">  
       <p>HEADER</p>
