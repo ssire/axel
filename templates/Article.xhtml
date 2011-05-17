@@ -65,6 +65,12 @@
       </div>
     </xt:component>
 
+    <xt:component name="SubSubTitle">    
+      <div class="content">
+        <xt:use types="text" handle="h4" param="shape=parent;type=textarea;layout=float">Sub Sub Section Title</xt:use>
+      </div>
+    </xt:component>
+
   <xt:component name="descr">
     <p class="left-repeater">                              
       <xt:menu-marker/>
@@ -174,12 +180,12 @@
           <xt:use types="text" label="heading">SECTION HEADING</xt:use>
           <xt:menu-marker/>
         </h2>     
-        <xt:repeat pseudoLabel="SubTitle Parag List Code Figure" minOccurs="1">    
+        <xt:repeat pseudoLabel="SubTitle Parag List Code Figure SubSubTitle" minOccurs="1">    
           <div class="row">          
               <span class="left-repeater">                              
               <xt:menu-marker/>
             </span>            
-            <xt:use types="Parag List Code Figure SubTitle"/>
+            <xt:use types="Parag List Code Figure SubTitle SubSubTitle"/>
           </div>      
         </xt:repeat>
       </div>

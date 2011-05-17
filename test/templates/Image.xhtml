@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Your title here</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Image">    
+  
+    <xt:component name="list_item">          
+        <p style="margin:0"><xt:menu-marker/><xt:use types="text" param="type=textarea;shape=parent;filter=wiki;wiki_lang=html" label="span">click to edit item textual content</xt:use></p>
+        <xt:use types="t_optional"/>
+    </xt:component>    
+
+    <xt:component name="t_optional">  
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="p">
+        <xt:menu-marker/> 
+        <div class="xtt-hide-if-unselect" style="margin-left: 40px">
+          <xt:use types="p" label="p"/> 
+        </div>                    
+      </xt:repeat>    
+    </xt:component>      
+    
+    <xt:component name="p">  
+      <p><xt:use types="text" param="type=textarea;shape=parent">click to edit paragraph</xt:use><xt:menu-marker/></p>
+    </xt:component>
+  
+  </xt:head>
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <style type="text/css">
+  div.image {
+    margin: 10px auto;
+  }
+  </style>
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <h1>Image Filter Test File</h1>
+  
+  <h2>image-tag='src'</h2>
+  
+  <xt:use types="text" handle="div" label="Image"
+    param="type=input;layout=placed;class=image;filter=image;class=figure;
+           image_maxwidth=600px;image_maxheight=600px;image_minheight=400px">enter image file name</xt:use>
+
+  <p>Second image, try to focus it with TAB</p>
+           
+  <xt:use types="text" handle="div" 
+   param="type=input;layout=placed;class=image;filter=image;image_lang=html;class=figure;
+          image_maxwidth=800px;image_minwidth=400px">enter image file name</xt:use>
+          
+  <p>Some other data</p>
+  <xt:use types="text" label="Fin">Fin</xt:use>
+
+</body>
+</html>               

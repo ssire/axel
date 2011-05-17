@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Your title here</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Root">    
+  
+    <xt:component name="list_item">          
+        <p style="margin:0"><xt:menu-marker/><xt:use types="text" param="type=textarea;shape=parent;filter=wiki;wiki_lang=html" label="span">click to edit item textual content</xt:use></p>
+        <xt:use types="t_optional"/>
+    </xt:component>    
+
+    <xt:component name="t_optional">  
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="p">
+        <xt:menu-marker/> 
+        <div class="xtt-hide-if-unselect" style="margin-left: 40px">
+          <xt:use types="p" label="p"/> 
+        </div>                    
+      </xt:repeat>    
+    </xt:component>      
+    
+    <xt:component name="p">  
+      <p><xt:use types="text" param="type=textarea;shape=parent">click to edit paragraph</xt:use><xt:menu-marker/></p>
+    </xt:component>
+  
+  </xt:head>
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>
+  <h1>Wiki Test File</h1>
+  
+  <h2>wiki_lang='html'</h2>
+  
+  <p><xt:use types="text" param="shape=parent;type=textarea;wiki_lang=html;filter=wiki" label="HtmlSetting">http://www.enotes.com/shakespeare-quotes/all-world-s-stage[All the world's] a **stage**, And all the ''men'' and ''women'' merely __players__;</xt:use></p>
+
+  <h2>wiki_lang='span'</h2>
+  
+  <p><xt:use types="text" param="shape=parent;type=textarea;wiki_lang=span;filter=wiki" label="SpanSetting">http://www.enotes.com/shakespeare-quotes/all-world-s-stage[All the world's] a **stage**, And all the ''men'' and ''women'' merely __players__;</xt:use></p>
+
+  <h2>wiki_lang='default'</h2>
+  
+  <p><xt:use types="text" param="shape=parent;type=textarea;filter=wiki" label="DefaultSetting">http://www.enotes.com/shakespeare-quotes/all-world-s-stage[All the world's] a **stage**, And all the ''men'' and ''women'' merely __players__;</xt:use></p>
+
+  <h2>Repetition</h2>
+                                                      
+  <ul>
+    <xt:repeat minOccurs="0" maxOccurs="*" label="Wiki">
+      <li>
+        <xt:use types="list_item" label="li"/>
+      </li>
+    </xt:repeat>
+  </ul>
+</body>
+</html>               

@@ -310,9 +310,11 @@ xtiger.editor.TextFactory = (function TextFactory() {
 		 *            aData The new value to be stored by *this* model's
 		 *            instance
 		 */
-		update : function (aData) {                             
+		update : function (aData) { 
 			if (aData == this._data) { // no change
 			  return; 
+			  // FIXME: should we use isModified instead ? 
+			  // filters would just need to call setModified and not this._data ?
 			}
 			// normalizes text (empty text is set to _defaultData)
 			if (aData.search(/\S/) == -1 || (aData == this._defaultData)) {

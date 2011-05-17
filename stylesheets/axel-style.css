@@ -157,7 +157,27 @@ object.axel-option-unset {
 }
 
 /*************************/
-/* Servie filter trigger */
+/* Service filter trigger */
 .axel-service-trigger {
 	margin: 0 5px;
+}
+
+/***********************/
+/* Wiki 'span' variant */
+span.important { font-weight: bold; }
+span.verbatim { font-family: courier, monospace; font-size: 0.85em; }
+span.emphasize { font-style: italic; }
+
+/**************************/
+/* Menu tracker extension */
+div.axel-tracker-menu {  
+  opacity: 0.6; 
+}
+div.axel-tracker-menu  > button.off {
+  background: none repeat scroll 0 0 gray;
+  font-style: italic;
+}
+div.axel-tracker-menu  > button {
+  background: none repeat scroll 0 0 yellow;
+  color: black;
 }

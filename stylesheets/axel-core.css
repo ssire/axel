@@ -165,3 +165,12 @@ div.axel-text-container {
 span.axel-service-handle {
 	display: none;
 }
+
+/**************************/
+/* Menu tracker extension */
+div.axel-tracker-menu {
+  position: absolute;
+}                   
+
+  
+

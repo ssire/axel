@@ -21,6 +21,12 @@
         content: counter(sect1) ". " counter(sect2) ". ";
         counter-increment: sect2;
     }
+    h4 {
+    }
+    h4:before { 
+        content: counter(sect1) ". " counter(sect2) ". " counter(sect3) ". ";
+        counter-increment: sect3;
+    }
 	p.parag {
 	    margin-bottom: .5em; 
 	    margin-top: .5em;
