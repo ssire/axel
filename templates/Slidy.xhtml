@@ -22,11 +22,11 @@
           <xt:menu-marker target="slide-choice"/>
         </div>                                                 
         <hr/>  
-        <xt:use types="div header footer div" param="name=slide-choice" label="alpha beta gamma delta"/>
+        <xt:use types="slide header footer" param="name=slide-choice" label="div header footer"/>
       </div>
     </xt:component>  
   
-    <xt:component name="div">           
+    <xt:component name="slide">           
       <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="p ul ol">
         <xt:menu-marker/><xt:use types="p ul ol"/>
       </xt:repeat>
@@ -111,9 +111,11 @@
   <!-- Place here optional AXEL code for making the template auto-editable -->
 
 </head>
-<body>
-  <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="alpha beta gamma delta">
+<body> 
+  <p>This template shows the use of <tt>&lt;xt:menu-marker target="some-name"/></tt> to position a target choice popup menu at the position of the <tt>xt:menu-marker</tt>. The target <tt>xt:use</tt> element declaring the choice must have a matching <tt>name</tt> parameter (e.g. <tt>&lt;xt:use types="..." param="name=some-name"/></tt>). The matching works only within the scope of a single <tt>xt:component</tt> definition.</p>
+  
+  <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="div header footer">
     <xt:use types="t_slide" />
   </xt:repeat>
 </body>
-</html>               
+</html>
