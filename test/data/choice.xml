@@ -11,4 +11,12 @@
       <fruit/>
     </Strawberry>
   </Favourite>
+  <gamma>
+    <fruit/>
+  </gamma>
+  <Outer>
+    <delta>
+      <fruit/>
+    </delta>
+  </Outer>    
 </Tests>

@@ -24,7 +24,9 @@
     <xt:component name="Orange"><xt:use types="OrangeFruit" label="fruit" /></xt:component> 
 
     <xt:component name="Strawberry"><xt:use types="StrawberryFruit" label="fruit" /></xt:component> 
-
+    
+    <xt:component name="t_rename"><xt:use types="Apple Banana Orange Strawberry" label="alpha beta delta gamma"/></xt:component>
+    
   </xt:head>
   
   <style type="text/css"> 
@@ -65,7 +67,9 @@
 
   <p><span class="info">Choice with inner labels and outer label</span> : <xt:use types="Orange Strawberry" label="Favourite"/></p>
 
-  <p><span class="info">Optional attribute</span> : <xt:attribute types="text" name="Name" option="unset" default="Stéphane"/></p>
+  <p><span class="info">Choice with outer renamed labels with or without inner labels</span> : <xt:use types="Apple Banana Orange Strawberry" label="alpha beta delta gamma"/></p>
+  
+  <p><span class="info">Choice with outer label and renamed labels with or without inner labels</span> : <xt:use types="t_rename" label="Outer"/></p>  
     
 </body>
 </html>
