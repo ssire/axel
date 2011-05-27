@@ -18,20 +18,20 @@
   * @class _NoXMLFilter
   */
 var _NoXMLFilter = (function _NoXMLFilter() {
- 	return {  
+  return {  
 
- 		// No mapping
- 		'->': {
-		},   
+    // No mapping
+    '->': {
+    },   
 
- 		load : function (point, dataSrc) {
-			// do not load
- 		},		
+    load : function (point, dataSrc) {
+      // do not load
+    },    
 
- 		save : function (text) {
-			// do not save
- 		}
-   }    	
+    save : function (text) {
+      // do not save
+    }
+   }      
  })();
 
 // Do not forget to register your filter on any compatible primitive editor plugin

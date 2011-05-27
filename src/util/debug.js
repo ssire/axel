@@ -29,34 +29,34 @@ xtiger.debug = {};
  * Returns the document (should be a DOM Document object) or false in case of error
  */
 xtiger.debug.loadDocument = function (url, logger) {
-	if (window.navigator.appName == "Microsoft Internet Explorer") { // will try with MSXML2.DOMDocument
-		var errMsg;		
-		try {
-			var xtDoc = new ActiveXObject("MSXML2.DOMDocument.6.0");  
-			xtDoc.async = false;
-			xtDoc.resolveExternals = false;
-			xtDoc.validateOnParse = false; 
-			xtDoc.setProperty("ProhibitDTD", false); // true seems to reject files with a DOCTYPE declaration
-			xtDoc.load(url);
-			if (xtDoc.parseError.errorCode != 0) {
-			    errMsg = xtDoc.parseError + ' ' + xtDoc.parseError.reason;
-			} else {
-				return xtDoc; // OK, returns the IXMLDOMElement DOM element 
-			}
-		} catch (e) {
-			errMsg = e.name;
-		}
-		if (errMsg) {
-			if (logger) {
-				logger.logError('Error while loading $$$ : ' + errMsg, url);
-			} else {
-				alert("ERROR:" + errMsg);					
-			}
-		    xtDoc = null;
-		}		
-	} else {
-		return xtiger.cross.loadDocument(url, logger);
-	}
-	return false;	
+  if (window.navigator.appName == "Microsoft Internet Explorer") { // will try with MSXML2.DOMDocument
+    var errMsg;   
+    try {
+      var xtDoc = new ActiveXObject("MSXML2.DOMDocument.6.0");  
+      xtDoc.async = false;
+      xtDoc.resolveExternals = false;
+      xtDoc.validateOnParse = false; 
+      xtDoc.setProperty("ProhibitDTD", false); // true seems to reject files with a DOCTYPE declaration
+      xtDoc.load(url);
+      if (xtDoc.parseError.errorCode != 0) {
+          errMsg = xtDoc.parseError + ' ' + xtDoc.parseError.reason;
+      } else {
+        return xtDoc; // OK, returns the IXMLDOMElement DOM element 
+      }
+    } catch (e) {
+      errMsg = e.name;
+    }
+    if (errMsg) {
+      if (logger) {
+        logger.logError('Error while loading $$$ : ' + errMsg, url);
+      } else {
+        alert("ERROR:" + errMsg);         
+      }
+        xtDoc = null;
+    }   
+  } else {
+    return xtiger.cross.loadDocument(url, logger);
+  }
+  return false; 
 }
 

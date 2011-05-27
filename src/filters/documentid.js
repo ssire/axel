@@ -19,39 +19,39 @@
  */
 var _DocumentIdFilter = (function _DocumentIdFilter() {
 
-	/////////////////////////////////////////////////
-	/////    Static DocumentId Mixin Part     ///////
-	///////////////////////////////////////////////// 
+  /////////////////////////////////////////////////
+  /////    Static DocumentId Mixin Part     ///////
+  ///////////////////////////////////////////////// 
 
-	// none
+  // none
 
-	return {
+  return {
 
-		///////////////////////////////////////////////////
-		/////     Instance DocumentId Mixin Part    ////////
-		///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    /////     Instance DocumentId Mixin Part    ////////
+    ///////////////////////////////////////////////////
 
-		// Property remapping for chaining
-		'->' : {
-			'_setData' : '__DocumentIdSuperSetData'
-		},
+    // Property remapping for chaining
+    '->' : {
+      '_setData' : '__DocumentIdSuperSetData'
+    },
 
-		/** Creates the entry for the identifier into the TOC using it's default text  
-		 *  DOES forward call.
-		 */
-		_setData : function(aData) {
-			this.__DocumentIdSuperSetData(aData);
-			xtiger.session(this.getDocument()).save('documentId', aData);
-		}
-	
-		/** add any other method from the filtered object that you want to override */
-	
-		/** add any other method you want to add to the filtered object to be called with can() / execute() */
+    /** Creates the entry for the identifier into the TOC using it's default text  
+     *  DOES forward call.
+     */
+    _setData : function(aData) {
+      this.__DocumentIdSuperSetData(aData);
+      xtiger.session(this.getDocument()).save('documentId', aData);
+    }
+  
+    /** add any other method from the filtered object that you want to override */
+  
+    /** add any other method you want to add to the filtered object to be called with can() / execute() */
 
-	};
+  };
 
 })();
 
 //Register this filter as a filter of the 'text' plugin (i.e. text.js must have been loaded)
 xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter(
-		'documentId', _DocumentIdFilter);
+    'documentId', _DocumentIdFilter);

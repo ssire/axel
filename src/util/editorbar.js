@@ -24,32 +24,32 @@ function getElementByIdInsideBody(tagname, identifier) {
     if (nodes.item(i).getAttribute('id') == identifier) {
       return nodes.item(i);
     }
-  }	
+  } 
 }
 
 function toggle(button, target, action) {
-	var cur = button.firstChild.data;
-	if ((! action) || (action && (cur == action))) {
-		target.style.display = guiTrans[cur][0];
-		button.firstChild.data = guiTrans[cur][1];
-	}
+  var cur = button.firstChild.data;
+  if ((! action) || (action && (cur == action))) {
+    target.style.display = guiTrans[cur][0];
+    button.firstChild.data = guiTrans[cur][1];
+  }
 }
 
 function installButton (name) {       
- 	var n = getElementByIdInsideBody('span', name + 'Toggle');
- 	var m = getElementByIdInsideBody('p', name);
+  var n = getElementByIdInsideBody('span', name + 'Toggle');
+  var m = getElementByIdInsideBody('p', name);
   if (n && m) {
      n.addEventListener('click', function (ev) { toggle(n, m) }, false);
-		 toggle(n, m, 'hide');
+     toggle(n, m, 'hide');
    } else {
     alert('Failed to install ' + name + ' button !');
    }
 }
 
 function installButtons () {       
- 	for (var i = 0; i < targets.length; i++) {
- 		installButton(targets[i]);
- 	}	
+  for (var i = 0; i < targets.length; i++) {
+    installButton(targets[i]);
+  } 
 }   
 
 ////////////////////////////////////////////////////////
@@ -76,104 +76,104 @@ var EditorBar = function Editor (spec) {
   
   var load = function load () {  
     var filePath, name, data, dataSrc, startt, endt, duration;
-    if (false && xtiger.cross.UA.gecko) {	 // FIXME: should do that only from file://	
-  		filePath = xtiger.util.fileDialog('open', "*.xhtml; *.xml; *.html", "Select a file to load");
-  		if (filePath) {            
-    		startt = new Date();
-  			name = filePath.match(/[^\/]*\.(xml|xhtml|html)$/)[0];
-    		data = xtiger.debug.loadDocument(filePath, my.errLog);
-    		if (data) {
-    			dataSrc = new xtiger.util.DOMDataSource(data);
-    			if (my.form.loadData(dataSrc, my.errLog)) {
-    				endt = new Date();                     
-    				duration = endt.getTime() - startt.getTime();
+    if (false && xtiger.cross.UA.gecko) {  // FIXME: should do that only from file:// 
+      filePath = xtiger.util.fileDialog('open', "*.xhtml; *.xml; *.html", "Select a file to load");
+      if (filePath) {            
+        startt = new Date();
+        name = filePath.match(/[^\/]*\.(xml|xhtml|html)$/)[0];
+        data = xtiger.debug.loadDocument(filePath, my.errLog);
+        if (data) {
+          dataSrc = new xtiger.util.DOMDataSource(data);
+          if (my.form.loadData(dataSrc, my.errLog)) {
+            endt = new Date();                     
+            duration = endt.getTime() - startt.getTime();
             // alert( 'File "' + name + '" loaded in ' + duration + 'ms');
-    			}
-    		}
-    		if (my.errLog.inError()) {
-    		  alert(my.errLog.printErrors());
+          }
+        }
+        if (my.errLog.inError()) {
+          alert(my.errLog.printErrors());
         }        
       }
     } else {                     
-			show_nofileapi_dialog(continue_load);
+      show_nofileapi_dialog(continue_load);
     }    
   }                         
 
-	var show_nofileapi_dialog = function show_nofileapi_dialog (continuation) {
-		var params = "width=600,height=400,status=yes,resizable=yes,scrollbars=yes";
-		if (xtiger.cross.UA.IE) {
-			alert('This is not supported on IE !');
-			return;
-			// my.popup = window.open(spec.nofileapi_URL);
-		} else {
-			my.popup = window.open(spec.nofileapi_URL, "Load / Save File Dialog", params);
-			my.popup.focus ();
-		}                      
-		my.todonext = continuation;
+  var show_nofileapi_dialog = function show_nofileapi_dialog (continuation) {
+    var params = "width=600,height=400,status=yes,resizable=yes,scrollbars=yes";
+    if (xtiger.cross.UA.IE) {
+      alert('This is not supported on IE !');
+      return;
+      // my.popup = window.open(spec.nofileapi_URL);
+    } else {
+      my.popup = window.open(spec.nofileapi_URL, "Load / Save File Dialog", params);
+      my.popup.focus ();
+    }                      
+    my.todonext = continuation;
   }
 
   var continue_load = function continue_load () {
-		my.todonext = null;
-		my.popup_ctrl = my.popup.NoFileAPI({'load' : true, 'callback' : load_document });
-	}
-	  
-	// Reveices a String with an XML document and loads it inside the editor
-	var load_document = function load_document (aDataString) {
-		if (! my.form.loadDataFromString(aDataString)) 
-			alert('Error ' + my.form.msg);
-	}
+    my.todonext = null;
+    my.popup_ctrl = my.popup.NoFileAPI({'load' : true, 'callback' : load_document });
+  }
+    
+  // Reveices a String with an XML document and loads it inside the editor
+  var load_document = function load_document (aDataString) {
+    if (! my.form.loadDataFromString(aDataString)) 
+      alert('Error ' + my.form.msg);
+  }
   
   var save = function save () {
     var filtePath, name, startt, endt, duration;
-		if (false && xtiger.cross.UA.gecko) { // FIXME: should do that only from file://
-			filePath = xtiger.util.fileDialog('save', "*.xhtml; *.xml; *.html", "Select a file for saving");
-			if (filePath) { 				
-        name = filePath.match(/[^\/]*\.(xhtml|xml|html)$/)[0];			  
-    		startt = new Date();
-    		if (my.form.saveDataToFile (filePath)) { 
-    			endt = new Date();                     
-    			duration = endt.getTime() - startt.getTime();    			
-    			alert('File "' + name + '" saved in ' + duration + 'ms', 0);
-    		} else {
-    			alert('Failed to save "' + name + '" : ' + my.form.msg, 1);
-    		}
-		 	}
+    if (false && xtiger.cross.UA.gecko) { // FIXME: should do that only from file://
+      filePath = xtiger.util.fileDialog('save', "*.xhtml; *.xml; *.html", "Select a file for saving");
+      if (filePath) {         
+        name = filePath.match(/[^\/]*\.(xhtml|xml|html)$/)[0];        
+        startt = new Date();
+        if (my.form.saveDataToFile (filePath)) { 
+          endt = new Date();                     
+          duration = endt.getTime() - startt.getTime();         
+          alert('File "' + name + '" saved in ' + duration + 'ms', 0);
+        } else {
+          alert('Failed to save "' + name + '" : ' + my.form.msg, 1);
+        }
+      }
     } else {     
-			show_nofileapi_dialog(continue_save);
+      show_nofileapi_dialog(continue_save);
     }
   }                
 
   var continue_save = function continue_save () {     
-		my.todonext = null;	
-		var dump = new xtiger.util.DOMLogger ();
-		my.form.serializeData (dump);
-		var xmlString = dump.dump();
-		my.popup_ctrl = my.popup.NoFileAPI({'save' : true, data : xmlString });
-	}
+    my.todonext = null; 
+    var dump = new xtiger.util.DOMLogger ();
+    my.form.serializeData (dump);
+    var xmlString = dump.dump();
+    my.popup_ctrl = my.popup.NoFileAPI({'save' : true, data : xmlString });
+  }
   
-	var togglePreview = function togglePreview () {
-		if (my.previewMode == 0) {
-			xtdom.addClassName (my.previewHandle, 'preview');
-			xtdom.setAttribute(my.previewButton, 'value', 'Edit'); 
-			my.previewMode = 1;
-		} else {
-			xtdom.removeClassName (my.previewHandle, 'preview')
-			xtdom.setAttribute(my.previewButton, 'value', 'Preview'); 
-			my.previewMode = 0;
-		}
-	}
-	
+  var togglePreview = function togglePreview () {
+    if (my.previewMode == 0) {
+      xtdom.addClassName (my.previewHandle, 'preview');
+      xtdom.setAttribute(my.previewButton, 'value', 'Edit'); 
+      my.previewMode = 1;
+    } else {
+      xtdom.removeClassName (my.previewHandle, 'preview')
+      xtdom.setAttribute(my.previewButton, 'value', 'Preview'); 
+      my.previewMode = 0;
+    }
+  }
+  
   /////////////////////
   // UI Construction //
   /////////////////////
              
-	var makeButton = function makeButton (name, margin) {
-		var b = xtdom.createElement(document, 'input');   
-		xtdom.setAttribute(b, 'type', 'button');
-		xtdom.setAttribute(b, 'value', name); 
-		b.style.margin = margin;
-		return b;
-	}
+  var makeButton = function makeButton (name, margin) {
+    var b = xtdom.createElement(document, 'input');   
+    xtdom.setAttribute(b, 'type', 'button');
+    xtdom.setAttribute(b, 'value', name); 
+    b.style.margin = margin;
+    return b;
+  }
                            
   // FIXME: changer le label en "create" si pas de nom d'instance
   var installMenu = function installMenu () {                    
@@ -221,11 +221,11 @@ var EditorBar = function Editor (spec) {
     }
   }
 
-	var editorBarPostMessage = function (msg) {
-		if ((msg == 'loaded') && my.todonext) {
-			 my.todonext();  
-		}
-	}
+  var editorBarPostMessage = function (msg) {
+    if ((msg == 'loaded') && my.todonext) {
+       my.todonext();  
+    }
+  }
                             
   //////////////////
   // Installation //

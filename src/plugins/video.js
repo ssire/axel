@@ -36,7 +36,7 @@ xtiger.editor.VideoFactory = (function VideoFactory () {
         inputFieldMessage: 'Paste the video\'s link here', /* {string} the text appearing in the input field if no valid data is hold by the model */
         width: 425, /* {integer} width of the flash video player */
         height: 344 /* {integer} height of the flash video player */
-    	
+      
     };
 
     /**
@@ -781,315 +781,315 @@ xtiger.editor.Plugin.prototype.pluginEditors['video'] = xtiger.util.filterable('
  * This wrapper allows the editrion of video's data
  */
 var _VideoLensWrapper = function (aDocument) {
-	/* The wrapped HTML device */
-	this._handle;
-	
-	/* The handle to restore when releasing */
-	this._handleToRestore;
-	
-	/* the document containing the wrapper */
-	this._document = aDocument;
-	
-	/* true if the focus is in one of the fields */
-	this._isFocused = false;
-	
-	/* if true the model is loaded with valid data */
-	this._loaded = false;
+  /* The wrapped HTML device */
+  this._handle;
+  
+  /* The handle to restore when releasing */
+  this._handleToRestore;
+  
+  /* the document containing the wrapper */
+  this._document = aDocument;
+  
+  /* true if the focus is in one of the fields */
+  this._isFocused = false;
+  
+  /* if true the model is loaded with valid data */
+  this._loaded = false;
 
-	this.build();
+  this.build();
 }
 
 _VideoLensWrapper.prototype = {
 
-	/**
-	 * Builds the wrapper HTML structure
-	 */
-	build : function() {
-		this._topdiv = xtdom.createElement(this._document, 'div');
-		xtdom.addClassName(this._topdiv, 'axel-lens-container');
-		with (this._topdiv) {
-			style.display = 'none';
-			style.minWidth = '200px';
-		}
-		var _innerHTML = '';
-		_innerHTML += '<div style="background: none; position: relative"> </div>'; // mask
-																					// div
-		_innerHTML += '<div class="axel-lens-containerstyle" style="width: 410px; padding: 5px; position: relative">';
-		_innerHTML += '<p style="';
-		_innerHTML += 'display: none; font-size: 7pt; cursor: pointer; ';
-		_innerHTML += 'text-decoration:underline; text-align: right; margin: 0;';
-		_innerHTML += '">delete</p>';
-		_innerHTML += '<div>';
-		_innerHTML += '<label for="videolensinput" style="display: block">Paste url here</label>';
-		_innerHTML += '<input type="text" name="videolensinput" value="" style="width: 90%"></input>';
-		_innerHTML += '</div>';
-		_innerHTML += '<div style="text-align: center">';
-		_innerHTML += '<button>Cancel</button>';
-		_innerHTML += '<button>Save</button>';
-		_innerHTML += '</div></div>';
-		this._topdiv.innerHTML = _innerHTML;
-		this._maskdiv = this._topdiv.firstChild;
-		this._contentdiv = this._maskdiv.nextSibling;
-		this._deletespan = this._contentdiv.firstChild;
-		this._inputdiv = this._deletespan.nextSibling;
-		this._input = this._inputdiv.firstChild.nextSibling;
-		this._buttondiv = this._inputdiv.nextSibling;
-		this._cancelbutton = this._buttondiv.firstChild;
-		this._savebutton = this._buttondiv.firstChild.nextSibling;
-		// event handlers
-		var _this = this;
-		this._handlers = {
-			clearModel : [ this._deletespan, 'click', function(ev) {
-				_this.clearModel()
-			} ],
-			onInputBlur : [ this._input, 'blur', function(ev) {
-				_this._onInputBlur(ev)
-			} ],
-			onInputFocus : [ this._input, 'focus', function(ev) {
-				_this._onInputFocus(ev)
-			} ],
-			onInputKeyDown : [ this._input, 'keydown', function(ev) {
-				_this._onInputKeyDown(ev)
-			} ],
-			onInputKeyUp : [ this._input, 'keyup', function(ev) {
-				_this._onInputKeyUp(ev)
-			} ],
-			onCancel : [ this._cancelbutton, 'click', function(ev) {
-				_this._onCancel(ev)
-			} ],
-			onSave : [ this._savebutton, 'click', function(ev) {
-				_this._onSave(ev)
-			} ]
-		}
-	},
+  /**
+   * Builds the wrapper HTML structure
+   */
+  build : function() {
+    this._topdiv = xtdom.createElement(this._document, 'div');
+    xtdom.addClassName(this._topdiv, 'axel-lens-container');
+    with (this._topdiv) {
+      style.display = 'none';
+      style.minWidth = '200px';
+    }
+    var _innerHTML = '';
+    _innerHTML += '<div style="background: none; position: relative"> </div>'; // mask
+                                          // div
+    _innerHTML += '<div class="axel-lens-containerstyle" style="width: 410px; padding: 5px; position: relative">';
+    _innerHTML += '<p style="';
+    _innerHTML += 'display: none; font-size: 7pt; cursor: pointer; ';
+    _innerHTML += 'text-decoration:underline; text-align: right; margin: 0;';
+    _innerHTML += '">delete</p>';
+    _innerHTML += '<div>';
+    _innerHTML += '<label for="videolensinput" style="display: block">Paste url here</label>';
+    _innerHTML += '<input type="text" name="videolensinput" value="" style="width: 90%"></input>';
+    _innerHTML += '</div>';
+    _innerHTML += '<div style="text-align: center">';
+    _innerHTML += '<button>Cancel</button>';
+    _innerHTML += '<button>Save</button>';
+    _innerHTML += '</div></div>';
+    this._topdiv.innerHTML = _innerHTML;
+    this._maskdiv = this._topdiv.firstChild;
+    this._contentdiv = this._maskdiv.nextSibling;
+    this._deletespan = this._contentdiv.firstChild;
+    this._inputdiv = this._deletespan.nextSibling;
+    this._input = this._inputdiv.firstChild.nextSibling;
+    this._buttondiv = this._inputdiv.nextSibling;
+    this._cancelbutton = this._buttondiv.firstChild;
+    this._savebutton = this._buttondiv.firstChild.nextSibling;
+    // event handlers
+    var _this = this;
+    this._handlers = {
+      clearModel : [ this._deletespan, 'click', function(ev) {
+        _this.clearModel()
+      } ],
+      onInputBlur : [ this._input, 'blur', function(ev) {
+        _this._onInputBlur(ev)
+      } ],
+      onInputFocus : [ this._input, 'focus', function(ev) {
+        _this._onInputFocus(ev)
+      } ],
+      onInputKeyDown : [ this._input, 'keydown', function(ev) {
+        _this._onInputKeyDown(ev)
+      } ],
+      onInputKeyUp : [ this._input, 'keyup', function(ev) {
+        _this._onInputKeyUp(ev)
+      } ],
+      onCancel : [ this._cancelbutton, 'click', function(ev) {
+        _this._onCancel(ev)
+      } ],
+      onSave : [ this._savebutton, 'click', function(ev) {
+        _this._onSave(ev)
+      } ]
+    }
+  },
 
-	/**
-	 * Grabs the wrapper, awakes its listeners and displays it
-	 */
-	grab : function(aDevice, aDoSelect, aPadding) {
-		if (this._currentDevice)
-			this.release();
-		this._currentDevice = aDevice;
+  /**
+   * Grabs the wrapper, awakes its listeners and displays it
+   */
+  grab : function(aDevice, aDoSelect, aPadding) {
+    if (this._currentDevice)
+      this.release();
+    this._currentDevice = aDevice;
 
-		var _handle = this._currentDevice.getCurrentModel().getHandle();
-		_pad = (aPadding[0] >= 10) ? aPadding[0] : 10;
+    var _handle = this._currentDevice.getCurrentModel().getHandle();
+    _pad = (aPadding[0] >= 10) ? aPadding[0] : 10;
 
-		// fixes elements' size
-		var _width = _handle.offsetWidth;
-		var _height = _handle.offsetHeight;
-		if (xtiger.cross.UA.IE) { // IE does include padding in elements' width
-									// and height
-			_width += 2 * _pad;
-			_height += 2 * _pad;
-		}
-		with (this._topdiv.style) {
-			display = 'block';
-			width = _width + 'px';
-			padding = _pad + 'px';
-		}
-		with (this._maskdiv.style) {
-			border = '' + _pad + 'px solid rgb(115, 166, 42)';
-			width = _width + 'px';
-			height = _height + 'px';
-			if (!xtiger.cross.UA.IE) { // all browser but IE
-				left = '-' + _pad + 'px';
-				top = '-' + _pad + 'px';
-			}
-		}
-		with (this._contentdiv.style) {
-			if (!xtiger.cross.UA.IE) {
-				left = '-' + _pad + 'px';
-				top = '-' + _pad + 'px';
-			}
-		}
-	
-		this._cancelbutton.disabled = false; // always enabled
-		this._savebutton.disabled = true; // enabled only once data has been input
-	
-		// Updates input's value
-		if (this._currentDevice.getCurrentModel().isModified()) {
-			this.setData(this._currentDevice.getCurrentModel().getData());
-			this._deletespan.style.display = 'block';
-			this._loaded = true;
-		} else {
-			var _message = this._currentDevice.getCurrentModel().getParam(
-					'inputFieldMessage');
-			this.setData(_message); // defeat IE and opera's "null" bug
-			this._loaded = false;
-		}
-	
-		// subscribes to events
-		for ( var k in this._handlers) {
-			xtdom.addEventListener(this._handlers[k][0], this._handlers[k][1],
-					this._handlers[k][2], true);
-		}
-	},
-	
-	/**
-	 * Terminates the wrapper installation after the lens has been made visible
-	 */ 
-	activate : function(aDevice, doSelectAll) {
-		// nope
-	},
+    // fixes elements' size
+    var _width = _handle.offsetWidth;
+    var _height = _handle.offsetHeight;
+    if (xtiger.cross.UA.IE) { // IE does include padding in elements' width
+                  // and height
+      _width += 2 * _pad;
+      _height += 2 * _pad;
+    }
+    with (this._topdiv.style) {
+      display = 'block';
+      width = _width + 'px';
+      padding = _pad + 'px';
+    }
+    with (this._maskdiv.style) {
+      border = '' + _pad + 'px solid rgb(115, 166, 42)';
+      width = _width + 'px';
+      height = _height + 'px';
+      if (!xtiger.cross.UA.IE) { // all browser but IE
+        left = '-' + _pad + 'px';
+        top = '-' + _pad + 'px';
+      }
+    }
+    with (this._contentdiv.style) {
+      if (!xtiger.cross.UA.IE) {
+        left = '-' + _pad + 'px';
+        top = '-' + _pad + 'px';
+      }
+    }
+  
+    this._cancelbutton.disabled = false; // always enabled
+    this._savebutton.disabled = true; // enabled only once data has been input
+  
+    // Updates input's value
+    if (this._currentDevice.getCurrentModel().isModified()) {
+      this.setData(this._currentDevice.getCurrentModel().getData());
+      this._deletespan.style.display = 'block';
+      this._loaded = true;
+    } else {
+      var _message = this._currentDevice.getCurrentModel().getParam(
+          'inputFieldMessage');
+      this.setData(_message); // defeat IE and opera's "null" bug
+      this._loaded = false;
+    }
+  
+    // subscribes to events
+    for ( var k in this._handlers) {
+      xtdom.addEventListener(this._handlers[k][0], this._handlers[k][1],
+          this._handlers[k][2], true);
+    }
+  },
+  
+  /**
+   * Terminates the wrapper installation after the lens has been made visible
+   */ 
+  activate : function(aDevice, doSelectAll) {
+    // nope
+  },
 
-	/**
-	 * Releases the wrapper, unregisters all events handlers
-	 */
-	release : function() {
-		if (!this._currentDevice)
-			return;
-		// unsubscribes from events
-		for ( var k in this._handlers) {
-			xtdom.removeEventListener(this._handlers[k][0], this._handlers[k][1],
-					this._handlers[k][2], true);
-		}
-		this._deletespan.style.display = 'none';
-		this._currentDevice = null;
-		xtdom.removeElement(this._topdiv);
-	},
-	
-	/**
-	 * Returns the wrapper's handle
-	 * 
-	 * @return {HTMLElement}
-	 */
-	getHandle : function() {
-		return this._topdiv;
-	},
-	
-	/**
-	 * <p>
-	 * Returns the input field content.
-	 * </p>
-	 * 
-	 * @return {string}
-	 */
-	getData : function() {
-		return this._input.value;
-	},
-	
-	/**
-	 * Sets the data hold by the wrapper's input field.
-	 * 
-	 * @param {string}
-	 *            aData The data to set
-	 */
-	setData : function(aData) {
-		// defeat IE and opera's "null" bug
-		this._input.value = (aData && typeof (aData) == 'string') ? aData : '';
-	},
+  /**
+   * Releases the wrapper, unregisters all events handlers
+   */
+  release : function() {
+    if (!this._currentDevice)
+      return;
+    // unsubscribes from events
+    for ( var k in this._handlers) {
+      xtdom.removeEventListener(this._handlers[k][0], this._handlers[k][1],
+          this._handlers[k][2], true);
+    }
+    this._deletespan.style.display = 'none';
+    this._currentDevice = null;
+    xtdom.removeElement(this._topdiv);
+  },
+  
+  /**
+   * Returns the wrapper's handle
+   * 
+   * @return {HTMLElement}
+   */
+  getHandle : function() {
+    return this._topdiv;
+  },
+  
+  /**
+   * <p>
+   * Returns the input field content.
+   * </p>
+   * 
+   * @return {string}
+   */
+  getData : function() {
+    return this._input.value;
+  },
+  
+  /**
+   * Sets the data hold by the wrapper's input field.
+   * 
+   * @param {string}
+   *            aData The data to set
+   */
+  setData : function(aData) {
+    // defeat IE and opera's "null" bug
+    this._input.value = (aData && typeof (aData) == 'string') ? aData : '';
+  },
 
-	/**
-	 * 
-	 * @return
-	 */
-	isFocusable : function() {
-		return true;
-	},
-	
-	/**
-	 * Asks the model to clear itself.
-	 */
-	clearModel : function() {
-		if (!this._currentDevice)
-			return;
-		this._input.value = '';
-		this._currentDevice.getCurrentModel().clear();
-		this._currentDevice.keepAlive(false);
-		this._currentDevice.getCurrentModel().unfocus();
-	},
-	
-	/**
-	 * Toggles between the lens' fields. Useless here as the lens only has one
-	 * field.
-	 */
-	toggleField : function() {
-		// nope, only one field
-	},
-	
-	/**
-	 * Event handler called when the input field losts the focus.
-	 * 
-	 * @param {Event}
-	 *            ev
-	 */
-	_onInputBlur : function(ev) {
-		this._currentDevice.keepAlive(false);
-	},
-	
-	/**
-	 * Event handler called when the input field gains the focus.
-	 * 
-	 * @param {Event}
-	 *            ev
-	 */
-	_onInputFocus : function(ev) {
-		if (this._loaded) {
-			var _aStartPos = 0;
-			var _aEndPos = this._input.value.length;
-	
-			if (this._input.setSelectionRange) {
-				this._input.setSelectionRange(_aStartPos, _aEndPos);
-			} else if (this._input.createTextRange) { // IE
-				var oRange = this._input.createTextRange();
-				oRange.moveStart("character", _aStartPos);
-				oRange.moveEnd("character", _aEndPos);
-				oRange.select();
-			}
-		} else {
-			this._input.value = '';
-		}
-		this._currentDevice.keepAlive(true);
-	},
-	
-	/**
-	 * Saves the current value of the input. This value is used later to enable the
-	 * buttons.
-	 */
-	_onInputKeyDown : function(ev) {
-		this._savedValue = this._input.value;
-	},
-	
-	/**
-	 * Detects the keyup event on the input field. If the input's value has changed,
-	 * buttons are awakened.
-	 * 
-	 * @param ev
-	 *            {The event}
-	 * @return
-	 */
-	_onInputKeyUp : function(ev) {
-		if (this._input.value != this._savedValue) {
-			this._cancelbutton.disabled = false;
-			this._savebutton.disabled = false;
-		}
-	},
-	
-	/**
-	 * Event handler for a click on the "cancel" button
-	 * 
-	 * @param {Event}
-	 *            ev The "click" event
-	 */
-	_onCancel : function(ev) {
-		if (!this._currentDevice)
-			return;
-		this._currentDevice.cancelEditing();
-		xtdom.stopPropagation(ev);
-	},
-	
-	/**
-	 * Event handler for a click on the "save" button
-	 * 
-	 * @param {Event}
-	 *            ev The "click" event
-	 */
-	_onSave : function(ev) {
-		if (!this._currentDevice)
-			return;
-		this._currentDevice.stopEditing();
-		xtdom.stopPropagation(ev);
-	}
+  /**
+   * 
+   * @return
+   */
+  isFocusable : function() {
+    return true;
+  },
+  
+  /**
+   * Asks the model to clear itself.
+   */
+  clearModel : function() {
+    if (!this._currentDevice)
+      return;
+    this._input.value = '';
+    this._currentDevice.getCurrentModel().clear();
+    this._currentDevice.keepAlive(false);
+    this._currentDevice.getCurrentModel().unfocus();
+  },
+  
+  /**
+   * Toggles between the lens' fields. Useless here as the lens only has one
+   * field.
+   */
+  toggleField : function() {
+    // nope, only one field
+  },
+  
+  /**
+   * Event handler called when the input field losts the focus.
+   * 
+   * @param {Event}
+   *            ev
+   */
+  _onInputBlur : function(ev) {
+    this._currentDevice.keepAlive(false);
+  },
+  
+  /**
+   * Event handler called when the input field gains the focus.
+   * 
+   * @param {Event}
+   *            ev
+   */
+  _onInputFocus : function(ev) {
+    if (this._loaded) {
+      var _aStartPos = 0;
+      var _aEndPos = this._input.value.length;
+  
+      if (this._input.setSelectionRange) {
+        this._input.setSelectionRange(_aStartPos, _aEndPos);
+      } else if (this._input.createTextRange) { // IE
+        var oRange = this._input.createTextRange();
+        oRange.moveStart("character", _aStartPos);
+        oRange.moveEnd("character", _aEndPos);
+        oRange.select();
+      }
+    } else {
+      this._input.value = '';
+    }
+    this._currentDevice.keepAlive(true);
+  },
+  
+  /**
+   * Saves the current value of the input. This value is used later to enable the
+   * buttons.
+   */
+  _onInputKeyDown : function(ev) {
+    this._savedValue = this._input.value;
+  },
+  
+  /**
+   * Detects the keyup event on the input field. If the input's value has changed,
+   * buttons are awakened.
+   * 
+   * @param ev
+   *            {The event}
+   * @return
+   */
+  _onInputKeyUp : function(ev) {
+    if (this._input.value != this._savedValue) {
+      this._cancelbutton.disabled = false;
+      this._savebutton.disabled = false;
+    }
+  },
+  
+  /**
+   * Event handler for a click on the "cancel" button
+   * 
+   * @param {Event}
+   *            ev The "click" event
+   */
+  _onCancel : function(ev) {
+    if (!this._currentDevice)
+      return;
+    this._currentDevice.cancelEditing();
+    xtdom.stopPropagation(ev);
+  },
+  
+  /**
+   * Event handler for a click on the "save" button
+   * 
+   * @param {Event}
+   *            ev The "click" event
+   */
+  _onSave : function(ev) {
+    if (!this._currentDevice)
+      return;
+    this._currentDevice.stopEditing();
+    xtdom.stopPropagation(ev);
+  }
 }
 
 xtiger.factory('lens').registerWrapper('videoLensWrapper', function (aDocument) {return new _VideoLensWrapper(aDocument)});

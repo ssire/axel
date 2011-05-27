@@ -26,18 +26,18 @@
  */
 var _CapitalizeService  = (function () {    
 
-	return {      
+  return {      
 
-		/**
-		 * Remap property
-		 */
-		'->': {'onBroadcast': '__capitalizeSuperBroadcast'},
-		                           
-		onBroadcast : function (aModel, aResource, aData) {
-			this.__capitalizeSuperBroadcast(aModel, aResource, aData.toUpperCase());
-		}
-	}
-	
+    /**
+     * Remap property
+     */
+    '->': {'onBroadcast': '__capitalizeSuperBroadcast'},
+                               
+    onBroadcast : function (aModel, aResource, aData) {
+      this.__capitalizeSuperBroadcast(aModel, aResource, aData.toUpperCase());
+    }
+  }
+  
 })();
 
 xtiger.factory('service').registerDelegate('capitalize', _CapitalizeService);

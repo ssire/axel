@@ -17,7 +17,7 @@
  * Starts iterating on any XTiger XML DOM tree which must have been transformed first 
  * Serializes data while iterating to a DOMLogger instance
  * You can share this class as it doesn't maintain state information between serializeData calls
- */
+ */    
 xtiger.editor.BasicSerializer = function (baseUrl) {
 }
 
