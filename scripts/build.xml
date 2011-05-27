@@ -446,7 +446,7 @@ Author(s) : Stephane Sire, Antoine Yersin (build.doc)
     <mkdir dir="${release.dir}/test/auto"/>
     <copy todir="${release.dir}/test/auto">
       <filelist dir="../test/auto"   
-                files="assert.js,diff.js,loadSave.js,loadSave.xhtml"/>
+                files="assert.js,diff.js,loadSave.js,loadSave.html"/>
     </copy>
     <copy file="../test/auto/configuration.distrib.js"        
           tofile="${release.dir}/test/auto/configuration.js"/>

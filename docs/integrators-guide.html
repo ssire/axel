@@ -13,7 +13,7 @@
 ----------------    AXEL integrator's FAQ   --------------------
 ----------------------------------------------------------------
 
-Last update: January 16, 2010 by S.Sire
+Last update: May 27, 2011 by S.Sire
 
 This document gives some advices for integrating AXEL into your application.
 It is presented as a FAQ. You are welcome to share your experience to improve
@@ -114,9 +114,25 @@ NON ROBUSTS may lead to some data loss and distortions when editing data.
 How to test the core features of the library after checkout ?
 =============================================================
 
-The first thing to do is to open test/auto/loadSave.xhtml and to hit the "Run
+The first thing to do is to open test/auto/loadSave.html and to hit the "Run
 Test" button at the upper right, within each browser and on each operating
 system that you intend to support.
+
+You must be aware however that if you open it directly from within your file 
+system (i.e. no web server involved), all of the tests may fail on some browsers
+and if you click on the [inspect] link you should see a message such as:
+
+Exception while loading "XXX" : Access to restricted URI denied
+
+This is because the default security policy of the browser prevents the test
+application to open files from the local file system using the XHR object. 
+This is the case with Firefox for instance. 
+
+If this happens, you can either start again serving the files from behind a Web 
+server, or find a way to enable access to local files from the XHR object.
+
+On Firefox for instance you have to set "security.fileuri.strict_origin_policy"
+to false in the "about:config" panel. See [1] 
 
 The test configuration is described in test/auto/configuration.js, hence you
 can also customize it with your own test. Each test is defined by a template
@@ -144,7 +160,9 @@ Ubuntu. For Google Chrome there is a security restriction that prevents to
 open URLs with XMLHTTPRequest from the file:// domain. In that case you must
 launch the test from behind a Web server (see "How to configure
 scripts/server/server.rb to execute the tests" if you want to use the test
-server provided with AXEL).
+server provided with AXEL).  
+
+[1] http://kb.mozillazine.org/Security.fileuri.strict_origin_policy
 </pre>
 
 <pre id="interactive">

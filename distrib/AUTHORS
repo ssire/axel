@@ -1,4 +1,4 @@
-Copyright (C) 2008, 2009, 2010  Stéphane Sire
+Copyright (C) 2008, 2009, 2010, 2011  Stéphane Sire
 
 Adaptable XML Editing Library (AXEL) is free software ; you can redistribute it 
 and/or modify it under the terms of the GNU Lesser General Public License (the "LGPL")
@@ -13,13 +13,12 @@ You should have received a copy of the GNU General Public License along with thi
 if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, 
 Boston, MA 02111-1307 USA.
 
-Contact: 
+Contact & Author:  
 
-Stéphane Sire (stephane.sire@epfl.ch)
+Stéphane Sire (s.sire@free.fr)
 
-Contributors : 
+Contributors:
 
-Stéphane Sire (stephane.sire@epfl.ch)
 Antoine Yersin (antoine.yersin@epfl.ch)
 Jonathan Wafellman (jonathan.wafellman@a3.epfl.ch)
 Useful Web Sàrl (manuel@madeinlocal.com)
