@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en" lang="en">
+<head>                  
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Specification</title>
+
+  <xt:head version="1.1" templateVersion="1.0" label="html">    
+                    
+    <!-- FIXME: artificial t_head component to include charset and CSS link -->
+    <xt:component name="t_dochead"> 
+      <span style="display:none">
+        <xt:use types="t_charset" label="meta"/>
+        <xt:use types="t_stylesheet" label="link"/>
+      </span>  
+    </xt:component>  
+
+    <xt:component name="t_charset"> 
+      <xt:attribute types="text" name="charset" default="UTF-8"/>
+    </xt:component>  
+
+    <xt:component name="t_stylesheet"> 
+      <xt:attribute types="text" name="rel" default="stylesheet"/>
+      <xt:attribute types="text" name="href" default="Spec.css"/>
+    </xt:component>  
+
+    <xt:component name="t_docbody"> 
+      <div>
+      <h1><xt:use types="text" label="h1">Click to edit title</xt:use></h1>
+
+      <p><xt:use types="text" label="p" param="filter=wiki;wiki_lang=html">Updated: click to edit tracking info</xt:use></p>
+
+      <!-- FIXME: solve Issue 11 and make Notice optional (https://github.com/ssire/axel/issues/11) -->
+      <xt:use types="t_notice"/>
+
+      <h3><xt:menu-marker/><xt:use types="text" label="h3">Table of content</xt:use></h3>  
+
+      <xt:use types="t_toc" label="ol"/>
+
+      <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="h2">
+        <h2 style="position: relative">
+          <xt:use types="t_title" label="h2"/>
+        </h2>              
+
+        <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="div">
+          <xt:use types="t_info_box" label="div"/>
+        </xt:repeat>           
+
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="p ul h3 pre table">
+          <div class="row">   
+            <xt:use types="t_p t_ul t_subtitle t_code t_table" label="p ul h3 pre table" param="marker=row-menu"/>
+          </div>
+        </xt:repeat>
+      </xt:repeat> 
+      </div>        
+    </xt:component>  
+  
+    <xt:component name="t_notice">  
+      <h3><xt:use types="text" label="h3">Notice</xt:use></h3>  
+      <p><xt:use types="text" label="p" 
+        param="type=textarea;shape=parent;filter=wiki;wiki_lang=html">Click to edit notice</xt:use></p>
+    </xt:component> 
+
+    <xt:component name="t_toc">  
+      <ol>
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="li">
+          <li><xt:use types="text" label="li"
+            param="filter=wiki;wiki_lang=html">click to edit toc entry</xt:use><xt:menu-marker/></li>
+        </xt:repeat>
+      </ol>
+    </xt:component>    
+    
+    <xt:component name="t_title" i18n="title">  
+      <xt:use types="text"
+        param="filter=wiki;wiki_lang=html">Click to edit title of section</xt:use>
+      <xt:menu-marker/>        
+      <span class="identifier nopreview">
+        <xt:attribute types="text" name="id" default="click to edit an id" option="unset"/>
+      </span>
+    </xt:component>
+    
+    <xt:component name="t_p" i18n="p">  
+      <p class="row-content">
+        <xt:use types="text"
+          param="type=textarea;shape=parent;filter=wiki;wiki_lang=html">Click to edit paragraph</xt:use>
+      </p>
+    </xt:component>
+
+    <xt:component name="t_ul" i18n="ul">  
+      <ul class="row-content">
+        <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="li">
+          <li><xt:use types="text" label="li"
+            param="type=textarea;shape=parent-75px;filter=wiki;wiki_lang=html">click to edit list item</xt:use><xt:menu-marker/></li>
+        </xt:repeat>
+      </ul>
+    </xt:component>
+    
+    <xt:component name="t_subtitle" i18n="h3">  
+      <h3 class="row-content">
+        <xt:use types="text"
+          param="type=textarea;shape=parent;filter=wiki;wiki_lang=html">Click to edit subtitle</xt:use>
+      </h3>
+    </xt:component>
+
+    <xt:component name="t_code" i18n="code">  
+      <div class="row-content">
+        <xt:use handle="pre" types="text"
+        param="shape=parent-40px;type=textarea;layout=placed;enablelinebreak=true;filter=wiki;wiki_lang=html">Code</xt:use>
+      </div>
+    </xt:component>  
+    
+    <xt:component name="t_table" i18n="table">  
+      <table>
+        <xt:use types="t_head" label="thead"/>
+        <xt:use types="t_body" label="tbody"/>
+      </table>
+    </xt:component> 
+    
+    <xt:component name="t_head">  
+      <thead>
+        <tr>
+          <th></th>
+          <xt:repeat minOccurs="1" label="tr">
+            <th>
+              <xt:use types="text" param="shape=parent" label="th">Edit</xt:use>
+              <xt:menu-marker size="12"/>
+            </th>      
+          </xt:repeat>
+        </tr>      
+      </thead>
+    </xt:component> 
+
+    <xt:component name="t_body">  
+      <tbody>
+        <xt:repeat minOccurs="1" pseudoLabel="tr">
+          <xt:use types="t_row" label="tr"/>
+        </xt:repeat>
+      </tbody>
+    </xt:component> 
+
+    <xt:component name="t_row">  
+      <tr>
+        <td class="menu"><xt:menu-marker/></td>
+        <xt:repeat minOccurs="1" pseudoLabel="td">
+          <td>
+            <xt:use types="text" 
+              param="shape=parent;type=textarea;layout=placed;filter=wiki;wiki_lang=html" label="td">Edit</xt:use>
+            <xt:menu-marker size="12"/>
+          </td>      
+        </xt:repeat>
+      </tr>      
+    </xt:component>    
+
+    <xt:component name="t_info_box">  
+        <p class="nopreview" style="margin-bottom: 1em; margin-right: 0; float: left"><xt:menu-marker/>Infos</p>
+        <div class="containBox xtt-hide-if-unselect">
+          <span style="display:none"><xt:attribute name="class" types="text" default="containBox"/></span>
+          <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="p pre">
+            <div class="row" style="min-height: 2em">
+              <xt:use types="t_relation t_sample" label="p pre" param="menu=row-menu"/>
+            </div>
+          </xt:repeat>
+        </div>
+    </xt:component>    
+    
+    <xt:component name="t_relation" i18n="rel">  
+      <p class="contains row-content">
+         <span><xt:use types="text" label="span">Relation</xt:use></span>
+         <span><xt:use types="text" param="filter=wiki;wiki_lang=html" label="span" option="unset">value</xt:use></span>
+      </p>
+    </xt:component>    
+
+    <xt:component name="t_sample" i18n="code">  
+      <p class="row-content">
+      <xt:use handle="pre" types="text"
+    param="shape=parent-40px;type=textarea;layout=placed;enablelinebreak=true;filter=wiki;wiki_lang=html">Sample</xt:use>    
+      </p>
+    </xt:component> 
+      
+  </xt:head>
+
+  <link rel="stylesheet" type="text/css" href="../docs/Spec.css" />
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+
+</head>
+<body>              
+  <xt:use types="t_dochead" label="head"/>  
+  <xt:use types="t_docbody" label="body"/>  
+</body>
+</html>               

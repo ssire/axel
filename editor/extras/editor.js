@@ -539,7 +539,7 @@ viewerApp.prototype = {
   // Loads from local disk using a local file selection dialog box (FF only)
   localLoadInstanceData : function (inputName) {
     if (this.checkFireFox() && this.checkTemplate()) {
-      var filePath = xtiger.util.fileDialog('open', "*.xml; *.xhtml", "Select a file to load XML data");
+      var filePath = xtiger.util.fileDialog('open', "*.xml; *.xhtml; *.html", "Select a file to load XML data");
       if (filePath) {            
         var name = filePath.match(/[^\/]*\.(xml|xhtml|html)$/)[0];
         this._loadFromUrl(filePath, name);

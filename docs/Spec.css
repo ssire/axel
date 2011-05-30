@@ -10,26 +10,25 @@ h1, h2, h3 {
     color: rgb(0, 90, 156);
      
 }
-h2.chapter:before {
+h2:before {
     content: counter(chapter) ". ";
 }
-h2.chapter {
+h2 {
     counter-increment: chapter;
 }
-/* markup item inside a title */
-.language {
-    font-family: "Courier New",Courier,monospace;
-    font-weight: 500;
+h1 tt, h2 tt {
+  font-family: courier, monospace;
+  color: rgb(0, 90, 156);
+  font-weight: 500;     
+  font-size: 110%;
 }
-/* markup item inside text */
-.markup {
+tt {
     font-weight: bold;
     font-family: "Times New Roman",Times,serif;
     color: purple;
 }
-div.containBox .markup {
-    font-weight: normal;
-     
+div.containBox .tt {
+    font-weight: normal;     
 }
 /* markup attribute */
 .attribute {
@@ -48,9 +47,7 @@ div.containBox .markup {
 div.containBox {
     border: 2px dotted gray;
     padding: 10px;
-    margin-top: 20px;
-    margin-left: 80px;
-    margin-right: 80px;
+    margin: 20px 80px;
 }
 p.contains {
     margin: 0;
@@ -60,22 +57,36 @@ p.containedin {
     margin: 0;
     padding: 0;
 }
-p.contains > span:first-child:after, p.containedin > span:first-child:after {
+div.containBox > p > span:first-child:after {
     content: " :";
 }
-p.contains > span:first-child, p.containedin > span:first-child {
+div.containBox > p > span:first-child {
     text-decoration: underline;
     padding-right: 20px;
 }
 /* Code examples */
-pre.xml {
+pre {
     background-color: #F0F0F0;
-    border: thin solid blue;
+    border: solid thin blue !important;
     padding: 10px;
     margin-top: 20px;
     margin-left: 20px;
+}                  
+div.containBox pre {
+  background-color: white;
+  border: none !important;
+  margin: 0;
+  padding: 0;
 }
-/* Tables */table {
+pre > strong {
+  color: green;  
+}
+pre > em {
+  color: blue;  
+  font-style: normal;
+}
+/* Tables */
+table {
     border-collapse: separate;
     border-style: double;
     border-color: gray;
@@ -96,7 +107,59 @@ td, th {
 }
 th {
     font-weight: bold;
+}      
+
+/* editor specific rules */
+h2 {
+  margin: 2em 0 1em 0;
+  clear: both;
+}                            
+span.identifier {
+  position: absolute; 
+  top: 1.5em; 
+  left: 0;
+  font-size: 0.6em;
+  color: #343434;
+  display: none;
+}                
+h2:hover > span.identifier {
+  display: inline;
+}  
+div.row:first-of-type {           
+  clear: none;
+}  
+div.row {           
+  clear: left;
+  margin: 1em 0;
+}        
+span.row-menu {
+  width: 80px;
+  float: left;
+  margin-bottom: 1em;
 }
+.row-content {
+  margin-left: 80px;
+}        
+pre > textarea {
+  margin: 0 !important;
+  padding: 0 !important;
+}            
+td:not(.menu) img, th img {
+  display: none;
+}
+td:hover img, th:hover img {
+  display: inline;
+}
+body.preview span.row-menu {
+  display: none;
+}
+body.preview .row-content {
+  margin-left: 0;
+}            
+body.preview .nopreview {
+  display: none;
+}
+
 /*	Printing Adjustments */
  @media print {   
   	.noprint { 
@@ -108,7 +171,7 @@ th {
     p, li, dd {
         text-align: justify;
     }
-    pre.xtf, code {
+    pre, code {
 		font-size: 70% !important;
 	}	
 	table {
