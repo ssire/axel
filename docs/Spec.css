@@ -17,9 +17,9 @@ h2 {
     counter-increment: chapter;
 }
 h1 tt, h2 tt {
-  font-family: courier, monospace;
+  font-family: courier, monospace, sans-serif;
   color: rgb(0, 90, 156);
-  font-weight: 500;     
+  font-weight: lighter;     
   font-size: 110%;
 }
 tt {

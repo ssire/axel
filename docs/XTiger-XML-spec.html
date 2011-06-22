@@ -5,9 +5,9 @@
   </head>
   <body>
     <h1>XTiger XML Language Specification</h1>
-    <p>Updated: January 5, 2010 by Stéphane Sire (<a href="http://www.media.epfl.ch">Media</a> research group)</p>
+    <p>Updated: May 30, 2011 by Stéphane Sire (<a href="http://www.media.epfl.ch">Media</a> research group)</p>
     <h3>Notice</h3>
-    <p>You should have a reasonable understanding of XHTML and XML to be able to read this document. You are strongly encouraged to try the primitive editors described in this document by opening the editors.xtd document template with the editor application that comes with the XTiger XML distribution. </p>
+    <p>You should have a reasonable understanding of XHTML and XML to be able to read this document. You are strongly encouraged to try the primitive editors described in this document by opening the <em>"Editors.xhtml"</em> document template with the editor application that comes with the XTiger XML distribution. </p>
     <h3>Table of content</h3>
     <ol>
       <li><a href="#intro">Introduction to the XTiger XML language</a></li>
@@ -60,7 +60,7 @@
       <li>a <tt>xt:head</tt> section within the XHTML document <tt>head</tt> section; it contains some definition of some component types inside <tt>xt:component</tt> elements which can themselves contain the same content as the body part of the document;</li>
       <li>the <tt>body</tt> part of the XHTML document which can, in addition to its XHTML content, declare some inclusion of types (i.e. components) and some constaints on the document structure (i.e. repetition and optionality) with the XTX vocabulary.</li>
     </ul>
-    <p>The example above declares a single component type named friend. This component type is included in the body section where it can be repeated between zero and a non limited number of times. Consequently, when used to enter data, the previous template can produce the following XML data documents:</p>
+    <p>The example above declares a single component type named friend. This component type is included in the body section where it can be repeated between zero and a non limited number of times. Consequently, when used to enter data, the previous template can produce the following target XML document:</p>
     <pre>&lt;greetings&gt;
   &lt;persons/&gt;
 &lt;/greetings&gt;</pre>
@@ -71,16 +71,15 @@
     &lt;name&gt;Oscar&lt;name&gt;
   &lt;/persons&gt;
 &lt;/greetings&gt;</pre>
-    <p>The top element instance in the XML data document is currently not defined by the template (note: this will be done soon). It can currently be set arbitrarily by the programmer when invoking the XTX processor for saving the edited data using the Javascript API. </p>
-    <p>The mapping between the document template and the target XML data model is controlled with two attributes (in green in the document example above):</p>
+    <p>The mapping between the document template and the target XML content model is controlled with two attributes (in green in the document example above):</p>
     <ul>
-      <li>a <tt>label</tt> attribute which can be set when including a component type (in the example above see the <tt>label="persons"</tt> on the repetition, or the <tt>label="name"</tt> on the component type inclusion);</li>
+      <li>a <tt>label</tt> attribute which can be set i) on the <tt>xt:head</tt> element to define the root of the target XML document, ii) when repeating some content (in the example above see the <tt>label="persons"</tt> on the repetition) and iii) when including a component type (see the <tt>label="name"</tt> declaration on the component type inclusion);</li>
       <li>a <tt>name</tt> attribute which is mandatory when declaring an attribute (not shown in the example above).</li>
     </ul>
-    <p>In the document template above you may also notice a <tt>xt:menu-marker</tt> element. This element is just a hint given to the XTX processor for placing the Add / Remove buttons that will be generated to control the repetition inside the xt:repeat element. In the document above these buttons will be inserted in place of the xt:menu-marker, which means at the end of the li element. This way, they will appear at the end of the line and not on a new line, which would break the document layout. This type of hint if precious for the XTX processor as it allows to keep a more natural document appearance when editing data.</p>
+    <p>In the document template above you may also notice a <tt>xt:menu-marker</tt> element. This element is just a hint given to the XTX processor for placing the Add / Remove buttons that will be generated to control the repetition inside the <tt>xt:repeat</tt> element. In the document above these buttons will be inserted in place of the <tt>xt:menu-marker</tt>, which means at the end of the <tt>li</tt> element. This way, they will appear at the end of the line and not on a new line, which would break the document layout. This type of hint if precious for the XTX processor as it allows to keep a more natural document appearance when editing data.</p>
     <h2 id="primitive">Primitive component types</h2>
     <p>XTX comes with a set of built-in component types which are ultimately mapped to editable user interface text input fields. These built-in component types allow the user to enter or to modify data into the document. Consequently a document template that does not reference any built-in component type will not allow users to input new data, at most it will allow users to repeat  static parts of the document, to change their order or to choose between different parts, which is not quite useful.</p>
-    <p>The  built-in component types are included in the template document with an <tt>xt:use</tt> element with a types attribute set to the unique type name of the built-in component. For instance the following declaration <tt>&amp;lt;xt:use types="text"&amp;gt;name&amp;lt;/xt:use&amp;gt;</tt> includes a text editor that can be used to input a name, as suggested by its default value which is put in the element content.</p>
+    <p>The  built-in component types are included in the template document with an <tt>xt:use</tt> element with a pre-defined types attribute set to the unique type name of the built-in component. For instance the following declaration &lt;<tt>xt:use types="text"</tt>&gt;<tt>name</tt>&lt;<tt>/xt:use/</tt>&gt; includes a text editor that can be used to input a name, as suggested by its default value which is put in the element content.</p>
     <p>The XTX library can be extended with new buil-in components. This is usually done by creating a Javascript plugin which has to register it's type name to the library. This way it is possible to create many different editing interaction styles by using different plugin editors. For instance a common use of plugin editors is to create editors that constrain the input data, such as entering a date, or a number, uploading an image, etc.</p>
     <p>The XTX library comes with 3 built-in component types which are explained below: <em>string</em>, <em>text</em> and <em>select</em>.</p>
     <h2 id="head">The <tt>xt:head</tt> element</h2>

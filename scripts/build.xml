@@ -428,7 +428,9 @@ Author(s) : Stephane Sire, Antoine Yersin (build.doc)
                        Plugins.xhtml
                        Publications.xhtml
                        Requirements.xhtml
-                       Services.xhtml
+                       Services.xhtml     
+                       Slidy.xhtml
+                       Specification.xhtml
                        Story.xhtml
                        Suivi.xhtml
                        Taches.xhtml
