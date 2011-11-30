@@ -15,14 +15,14 @@
 
     <xt:component name="platPhotoEnOption">
       <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="@Photo">
-          <xt:menu-marker/><span>[ </span><xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload"/><span> ]</span>       
+          <xt:menu-marker/><span>[ </span><xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload;photo_base=../../data/photos"/><span> ]</span>
       </xt:repeat>
       <p>Les beignets sont une délicieuse patisserie cuite dans l'huile.</p>    
     </xt:component> 
 
     <xt:component name="plat">
       <p><span class="plat"><xt:use types="text" param="type=input" label="Nom">Nom du plat</xt:use></span><xt:menu-marker/><br/>
-      <xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload"/></p>
+      <xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload;photo_base=../../data/photos"/></p>
       <p><xt:use types="text" label="description" param="shape=parent-20px;type=textarea">Description</xt:use></p>
     </xt:component> 
 

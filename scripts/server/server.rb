@@ -99,7 +99,7 @@ class FileUploadServlet < HTTPServlet::AbstractServlet
           f.syswrite filedata
           f.close           
           # res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,'#{targetfile}')</script>";
-          res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,{url:'#{targetfile}',resource_id:#{suffix}})</script>";
+          res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,{url:'#{prefix}-#{suffix}.jpg',resource_id:#{suffix}})</script>";
         rescue Exception => e
           res.body = "<script type='text/javascript'>window.parent.finishTransmission(0,'#{e.message}')</script>";
         end

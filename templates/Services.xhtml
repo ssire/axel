@@ -109,13 +109,13 @@
   <p>Unit : <xt:use types="text" label="Unit"
     param="filter=service;
     service_key=global:producer[Unit];
-    service_trigger=load">mètre</xt:use></p>
+    service_trigger=load;">mètre</xt:use></p>
 
   <xt:repeat minOccurs="0" maxOccurs="*" label="Measures">
     <p><xt:use types="text" label="Measure">0</xt:use> in <xt:use types="text"
       param="filter=noxml service;
       service_key=global:consumer[Unit];
-      service_trigger=load">mètre</xt:use><xt:menu-marker/></p>  
+      service_trigger=load;noedit=true">mètre</xt:use><xt:menu-marker/></p>  
   </xt:repeat>
   
   <h2>Double constraints</h2>  

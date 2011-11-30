@@ -305,6 +305,11 @@ xtiger.service.ServiceFactory = (function _ServiceFactory () {
     notifyLoad : function (aProducer, aResourceKey, aData) {
       this._cache = { resource: aResourceKey, data: aData };   
       // FIXME: cache by resource key
+      if (aProducer.getParam('service_trigger') === 'load') {
+        // most useful for read-only consumer (i.e. noedit=true and noxml filter)
+        this._broadcast (aResourceKey, aData, this.getHandle());
+        // FIXME: broadcast should be schedule when all data has been loaded
+      }
     },    
     
     /**

@@ -51,17 +51,17 @@ xtiger.editor.BasicLoader.prototype = {
     var cur = begin;
     var go = true;
     var next; // anticipation (in case repeatExtraData is called while iterating as it insert siblings)
+    var tmpState;    
     while (cur && go) {     
       if (cur.startRepeatedItem && (cur.startRepeatedItem != repeatedRepeater)) {
         if ((repeats.length == 0) || ((repeats[repeats.length - 1][0]) != cur.startRepeatedItem)) { // new repeat         
-          var state;
           // cur.startRepeatedItem.reset(); // resets repeat (no data) => cannot alter it while iterating !
           if (cur.startRepeatedItem.hasLabel()) {
             var nextPoint = dataSrc.getVectorFor (cur.startRepeatedItem.dump(), point);
             if ((nextPoint instanceof Array) && (dataSrc.lengthFor(nextPoint) > 0)) { // XML data available
               stack.push(nextPoint); // one level deeper
               point = nextPoint;
-              state = this.makeRepeatState(cur.startRepeatedItem, cur.startRepeatedItem.getSize(), true, true);
+              tmpState = this.makeRepeatState(cur.startRepeatedItem, cur.startRepeatedItem.getSize(), true, true);
             } else { // No XML data available
               cur = cur.startRepeatedItem.getLastNodeForSlice(cur.startRepeatedItem.getSize()); // skips repeat
               cur = cur.nextSibling; // in case cur has children, no need to traverse them as no slice is selected
@@ -69,14 +69,14 @@ xtiger.editor.BasicLoader.prototype = {
             }
           } else { 
             if (this.hasDataFor(cur.startRepeatedItem, point, dataSrc)) { //  XML data available
-              state = this.makeRepeatState(cur.startRepeatedItem, cur.startRepeatedItem.getSize(), false, true);
+              tmpState = this.makeRepeatState(cur.startRepeatedItem, cur.startRepeatedItem.getSize(), false, true);
             } else {                                         
               cur = cur.startRepeatedItem.getLastNodeForSlice(cur.startRepeatedItem.getSize()); // skips repeat
               cur = cur.nextSibling;  // in case cur has children, no need to traverse them as no slice is selected
               continue
             }  
           }
-          repeats.push(state);
+          repeats.push(tmpState);
         }
       }
       
@@ -127,18 +127,18 @@ xtiger.editor.BasicLoader.prototype = {
       
       // checks repeat section closing i.e. the last item has been traversed
       if (cur.endRepeatedItem && (cur.endRepeatedItem != repeatedRepeater)) { 
-        var state = repeats[repeats.length - 1]; // current repeat state
-        if (true || (cur.endRepeatedItem == state[0])) {   // true: at the moment always 1 repeat end by node         
-          --(state[1]);  
-          if (state[1] < 0) { // optional repeater (total = 0) was set during this iteration 
+        tmpState = repeats[repeats.length - 1]; // current repeat state
+        if (true || (cur.endRepeatedItem == tmpState[0])) {   // true: at the moment always 1 repeat end by node         
+          --(tmpState[1]);  
+          if (tmpState[1] < 0) { // optional repeater (total = 0) was set during this iteration 
             if (cur.endRepeatedItem.getSize() == 0) {
               cur.endRepeatedItem.sliceLoaded();
             }
             // otherwise it has been configured/activated through autoSelectRepeatIter call
             // from a service filter set to askUpdate on load
           }
-          if (state[1] <= 0) { // all the items have been repeated (worth if min > 1)
-            if (state[3] && this.hasDataFor(cur.endRepeatedItem, point, dataSrc)) { // did we exhaust the data source ?
+          if (tmpState[1] <= 0) { // all the items have been repeated (worth if min > 1)
+            if (tmpState[3] && this.hasDataFor(cur.endRepeatedItem, point, dataSrc)) { // did we exhaust the data source ?
               var repeater = cur.endRepeatedItem;
               while (this.hasDataFor(repeater, point, dataSrc)) {
                 xtiger.cross.log('stack-trace', '>>[ extra ]>> start repetition for', repeater.dump());   
@@ -150,7 +150,7 @@ xtiger.editor.BasicLoader.prototype = {
                 repeater.sliceLoaded(); // 1 slice of extra data added to repeater during this iteration   
               }
             }
-            if (state[2]) {
+            if (tmpState[2]) {
               stack.pop(); // restores the stack and the point
               point = stack[stack.length -1];
             }

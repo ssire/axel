@@ -35,10 +35,15 @@ xtiger.editor.PhotoFactory = (function PhotoFactory() {
     createEditorFromTree : function (handleNode, xtSrcNode, curDoc) {
       var _model = new xtiger.editor.Photo (handleNode, curDoc);    
       var _data = xtdom.extractDefaultContentXT(xtSrcNode);
-      var _param = {};
+      var _param = {}, base;      
       xtiger.util.decodeParameters(xtSrcNode.getAttribute('param'), _param);
       if (_param['filter'])
         _model = this.applyFilters(_model, _param['filter']);    
+      if (base = _param['photo_base']) { // sanitize base URL
+        if (base.charAt(base.length - 1) != '/') {
+          _param['photo_base'] = base + "/";
+        }
+      } 
       _model.init(_data, _param, false);      
       // option always false, no unique key, no repeater
       return _model;
@@ -78,6 +83,10 @@ xtiger.editor.PhotoState.prototype = {
   COMPLETE : 3, // photo stored on server and visible
   
   isPhotoStateObject : true,
+  
+  genPhotoUrl : function () {
+    return (this.base ? this.base + this.photoUrl : this.photoUrl);
+  },
   
   setDelegate : function (client) {
     this.delegate = client;
@@ -153,8 +162,7 @@ xtiger.editor.Photo = function (aHandleNode, aDocument) {
   this.curDoc = aDocument;
   this.handle = aHandleNode;
   this.defaultContent = null;   
-  this.state = new xtiger.editor.PhotoState (this);
-  
+  this.state = new xtiger.editor.PhotoState (this);  
 }
 
 xtiger.editor.Photo.prototype = {  
@@ -183,6 +191,9 @@ xtiger.editor.Photo.prototype = {
     this.defaultContent = aDefaultData;
     if (typeof (aParams) == 'object') { // FIXME: factorize params handling in AXEL
       this.param = aParams;
+      if (aParams.photo_base) {
+        this.state.base = aParams.photo_base;
+      }
     }
     this.awake ();
   },
@@ -236,7 +247,7 @@ xtiger.editor.Photo.prototype = {
   // Updates display state to the current state, leaves state unchanged 
   // FIXME: rename to _setData
   redraw : function (doPropagate) {
-    var src;
+    var src, base, force = false;
     switch (this.state.status) {
       case xtiger.editor.PhotoState.prototype.READY: 
         src = xtiger.bundles.photo.photoIconURL;
@@ -254,18 +265,21 @@ xtiger.editor.Photo.prototype = {
             xtiger.editor.Repeat.autoSelectRepeatIter(this.handle);
           }
         }
-        src = this.state.photoUrl; 
+        force = true; // photo upload service may keep same URL for new photo (?)
+        src = this.state.genPhotoUrl();
         break;
       default: src = xtiger.bundles.photo.photoBrokenIconURL;
     }
-    xtdom.setAttribute (this.handle, 'src', src);
+    if ((this.handle.getAttribute('src') !== src) || force) {
+      xtdom.setAttribute (this.handle, 'src', base ? base + src : src);
+    }
   },
   
   load : function (point, dataSrc) {
-    var value = (point !== -1) ? dataSrc.getDataFor(point) : this.defaultContent;
+    var p, value = (point !== -1) ? dataSrc.getDataFor(point) : this.defaultContent;
     this._constructStateFromUrl (value);
     if (dataSrc.hasAttributeFor('resource_id', point)) { // optional 'resource_id'
-      var p = dataSrc.getAttributeFor('resource_id', point);
+      p = dataSrc.getAttributeFor('resource_id', point);
       this.state.resourceId = dataSrc.getDataFor(p);
     }
     this.redraw(false);
@@ -613,7 +627,7 @@ xtiger.editor.PhotoWrapper.prototype = {
           case xtiger.editor.PhotoState.prototype.UPLOADING: 
             this.view.loading(); break;
           case xtiger.editor.PhotoState.prototype.COMPLETE:             
-            this.view.complete(this.state.photoUrl); break;
+            this.view.complete(this.state.genPhotoUrl()); break;
           default: 
             this.view.error('Unkown Photo status ' + this.state.status); break;
         }
