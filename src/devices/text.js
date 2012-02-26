@@ -362,19 +362,24 @@ xtiger.editor.FloatingField.prototype = {
   },
 
   show : function () {
-    this.hook.style.display = 'inline';     
-  },           
-            
+    this.hook.style.display = 'inline';
+  },
+
   // Inserts as first child into the handle a hook which is an inline div container 
   // styled as a relative positioned element that contains an input or textarea 
   // edit field positioned as absolute    
   // FIXME: hides the handle during editing
-  grab : function (editor) {     
+  grab : function (editor) {
+    var delta;
     this.handle.value = editor.getData();
     this.editorHandle = editor.getHandle();
+    if (this.editorHandle.getClientRects) {
+      delta = this.editorHandle.getClientRects()["0"].left - this.editorHandle.parentNode.getBoundingClientRect().left;
+      this.handle.style.left = (0 - delta) + 'px';
+    }
     this.editorHandle.parentNode.insertBefore (this.hook, this.editorHandle); 
       // FIXME: before and not inside 1st child, not all styling will reach it (e.g. <pre>)
-    editor.getHandle().style.visibility = 'hidden';
+    this.editorHandle.style.visibility = 'hidden';
     // DEPRECATED: var ghost = editor.getGhost(); // moves the handle at the ghost position    
     // this.setPosition (ghost); 
   },

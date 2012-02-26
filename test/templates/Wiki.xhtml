@@ -14,23 +14,24 @@
   <xt:head version="1.1" templateVersion="1.0" label="Root">    
   
     <xt:component name="list_item">          
-        <p style="margin:0"><xt:menu-marker/><xt:use types="text" param="type=textarea;shape=parent;filter=wiki;wiki_lang=html" label="span">click to edit item textual content</xt:use></p>
-        <xt:use types="t_optional"/>
+        <li style="margin:0 0 1.1em 0; clear: left">
+          <p style="margin:0">
+            <xt:menu-marker/>
+            <xt:use types="text" param="type=textarea;shape=parent-80px;filter=wiki;wiki_lang=html" label="Part1">click to edit item textual content</xt:use>
+          </p>
+          <xt:use types="t_optional"/>
+        </li>
     </xt:component>    
 
     <xt:component name="t_optional">  
-      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="p">
-        <xt:menu-marker/> 
-        <div class="xtt-hide-if-unselect" style="margin-left: 40px">
-          <xt:use types="p" label="p"/> 
-        </div>                    
-      </xt:repeat>    
-    </xt:component>      
-    
-    <xt:component name="p">  
-      <p><xt:use types="text" param="type=textarea;shape=parent">click to edit paragraph</xt:use><xt:menu-marker/></p>
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="Part2">
+        <span style="float:left; width=30px"><xt:menu-marker/></span>
+        <p class="xtt-hide-if-unselect" style="margin-left: 40px; margin: 0 0 1em 0">
+          <xt:use types="text" param="type=textarea;shape=parent-40px;filter=wiki;wiki_lang=html" label="Part2">click to edit paragraph</xt:use>
+        </p>
+      </xt:repeat>
     </xt:component>
-  
+    
   </xt:head>
   
   <!-- Optional AXEL Preview Mode -->
@@ -45,22 +46,76 @@
   <h2>wiki_lang='html'</h2>
   
   <p><xt:use types="text" param="shape=parent;type=textarea;wiki_lang=html;filter=wiki" label="HtmlSetting">http://www.enotes.com/shakespeare-quotes/all-world-s-stage[All the world's] a **stage**, And all the ''men'' and ''women'' merely __players__;</xt:use></p>
+  
+  <ul>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=html;filter=wiki"
+        label="Link">==s.sire@oppidoc.fr==(mailto), ==s.sire@oppidoc.fr==(mailto:), ==contact==(s.sire@oppidoc.fr), ==contact==(mailto:s.sire@oppidoc.fr)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=html;filter=wiki"
+        label="Link">==oppidoc.fr==(http), ==oppidoc.fr==(http:), ==site web==(oppidoc.fr), ==site web==(http://oppidoc.fr)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=html;filter=wiki"
+        label="Link">==site web==(oppidoc.fr:80?lang=FR&amp;uid=100), ==site web==(http://oppidoc.fr:80/home?lang=EN&amp;uid=100)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=html;filter=wiki"
+        label="Link">==accueil==(/accueil), ==rapport.pdf==(/static/docs/rapport.pdf)</xt:use>
+    </li>
+  </ul>
 
   <h2>wiki_lang='span'</h2>
   
   <p><xt:use types="text" param="shape=parent;type=textarea;wiki_lang=span;filter=wiki" label="SpanSetting">http://www.enotes.com/shakespeare-quotes/all-world-s-stage[All the world's] a **stage**, And all the ''men'' and ''women'' merely __players__;</xt:use></p>
 
+  <ul>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=span;filter=wiki"
+        label="Link">==s.sire@oppidoc.fr==(mailto), ==s.sire@oppidoc.fr==(mailto:), ==contact==(s.sire@oppidoc.fr), ==contact==(mailto:s.sire@oppidoc.fr)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=span;filter=wiki"
+        label="Link">==oppidoc.fr==(http), ==oppidoc.fr==(http:), ==site web==(oppidoc.fr), ==site web==(http://oppidoc.fr)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=span;filter=wiki"
+        label="Link">==site web==(oppidoc.fr:80?lang=FR&amp;uid=100), ==site web==(http://oppidoc.fr:80/home?lang=EN&amp;uid=100)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;wiki_lang=span;filter=wiki"
+        label="Link">==accueil==(/accueil), ==rapport.pdf==(/static/docs/rapport.pdf)</xt:use>
+    </li>
+  </ul>  
+
   <h2>wiki_lang='default'</h2>
   
   <p><xt:use types="text" param="shape=parent;type=textarea;filter=wiki" label="DefaultSetting">http://www.enotes.com/shakespeare-quotes/all-world-s-stage[All the world's] a **stage**, And all the ''men'' and ''women'' merely __players__;</xt:use></p>
+  <ul>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;filter=wiki"
+        label="Content">==s.sire@oppidoc.fr==(mailto), ==s.sire@oppidoc.fr==(mailto:), ==contact==(s.sire@oppidoc.fr), ==contact==(mailto:s.sire@oppidoc.fr)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;filter=wiki"
+        label="Content">==oppidoc.fr==(http), ==oppidoc.fr==(http:), ==site web==(oppidoc.fr), ==site web==(http://oppidoc.fr)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;filter=wiki"
+        label="Content">==site web==(oppidoc.fr:80?lang=FR&amp;uid=100), ==site web==(http://oppidoc.fr:80/home?lang=EN&amp;uid=100)</xt:use>
+    </li>
+    <li>
+      <xt:use types="text" param="shape=parent;type=textarea;filter=wiki"
+        label="Content">==accueil==(/accueil), ==rapport.pdf==(/static/docs/rapport.pdf)</xt:use>
+    </li>
+  </ul>  
 
   <h2>Repetition</h2>
                                                       
   <ul>
-    <xt:repeat minOccurs="0" maxOccurs="*" label="Wiki">
-      <li>
-        <xt:use types="list_item" label="li"/>
-      </li>
+    <xt:repeat minOccurs="0" maxOccurs="*" label="List">
+      <xt:use types="list_item" label="Element"/>
     </xt:repeat>
   </ul>
 </body>

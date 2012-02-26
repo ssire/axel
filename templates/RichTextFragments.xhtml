@@ -86,6 +86,21 @@
   <h1>XTiger rich text fragments component library</h1>
   
   <p>This template contains XTiger XML component(s) that you may copy inside your templates. It also shows how to use some of the plugins available. The common goal of these components and plugins is to edit what we call rich text fragments, meaning not really semantically-structured content but more visually-structured content (styled text, paragraphs, lists, sublists, etc.). The main difficulty in that case is to play around with HTML and CSS to get an acceptable UI with AXEL.</p>
+
+  <h2>“wiki” filter</h2>
+  
+  <p>Wiki-like syntax :</p>
+  
+  <ul>
+    <li>**bold** : <strong>bold</strong></li>
+    <li>__italic__ : <em>italic</em></li>
+    <li>''verbatim'' : <samp>verbatim</samp></li>
+    <li>http://www.google.com[Google] : <a href="http://www.google.com">Google</a></li>
+  </ul>    
+  
+  <p>
+    <xt:use types="text" label="Wiki" param="type=textarea;shape=parent;filter=wiki">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non diam sit amet libero tristique pharetra non a erat. Sed enim purus, auctor et feugiat sed, lobortis in lorem. Vestibulum eget odio lacinia metus vulputate eleifend eu sit amet libero. Praesent et dui eu velit imperdiet euismod.</xt:use>
+  </p>
   
   <h2>Rich Text plugin</h2>
   

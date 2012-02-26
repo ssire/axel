@@ -36,13 +36,19 @@ var _WikiFilter = (function _WikiFilter() {
   ////////////////////////////////////////////
 
   var _markers_re = "\\*|'|_";
-                                      
+
   // FIXME: the URL scanner could be improved, at the moment it accepts '&' and ';' because
   // characters entities are replaced before scanning and http://url&param=stg[link] 
   // will be parsed as http://url&amp;param=stg[link] 
   var _scanner = new RegExp(
-      "(http:\/\/[\\.\\w\/\\-\\?\\=_&;#]*)\\[([^\\]]*)\\]|(" + _markers_re
-          + "){2}(.*?)\\3{2}|(#[\\.\\w\/\\-_]*)\\[([^\\]]*)\\]", "g");    
+     "(http:\/\/[\\.\\w\/\\-\\?\\=_&;#]*)\\[([^\\]]*)\\]" 
+     + "|(" + _markers_re + "){2}(.*?)\\3{2}"
+     + "|(#[\\.\\w\/\\-_]*)\\[([^\\]]*)\\]"
+     + "|==(.*?)==\\((.*?)\\)", "g");
+
+  var _schemeonly = new RegExp("^(mailto|http|https):?(//)?", "i");
+
+  var _server = new RegExp("^(\\w+\\.)+[a-z]+(.*?)$", "i");
 
   // drives conversion from Fragment with FragmentKind attribute to handle ('default' mode)
   var _kind2tag = {
@@ -57,7 +63,7 @@ var _WikiFilter = (function _WikiFilter() {
     "strong" : 'important',
     'em' : 'emphasize',
     "tt" : 'verbatim',
-    "STRONG" : 'important', // IE version          z`   §§  
+    "STRONG" : 'important', // IE version
     "EM" : 'verbatim',    
     "TT" : 'verbatim'
   };
@@ -93,33 +99,73 @@ var _WikiFilter = (function _WikiFilter() {
     "emphasize" : '__',
     "verbatim" : "''",
   };
+  
+  // rewrites a local URL 
+  var _rewriteURL = function _rewriteURL (href) {
+    // TBD using wiki_rel_baseurl / wiki_rel_baseurl
+    return href;
+  };
+
+  var _genLink = function _genLink (href, anchor) {
+    var fullhref, hinput, hrewritten, tmp1, tmp2;
+    var m = _schemeonly.exec(href);
+    if (m) {
+     if (m[0].length == href.length) { // scheme only (mailto, http, etc.)
+       if (m[1].toLowerCase() == 'mailto') {
+         fullhref = href + ((href.indexOf(':') != -1) ? '' : ':') + anchor;
+       } else {
+         fullhref = href + ((href.indexOf(':') != -1) ? '//' : '://') + anchor;
+       }
+       hinput = m[1]; // simplification
+     } else { // complete URL (mailto:..., http://...)
+       fullhref = href;
+     }
+    } else if (href.charAt(0) == '/') { // absolute URL (/static/docs/rapport.pdf)
+     fullhref = _rewriteURL(href);
+     hrewritten = true;
+     hinput = href;
+    } else if (href.indexOf('@') != -1) { // email with no scheme (sire@oppidoc.fr)
+     fullhref = 'mailto:' + href;
+     hinput = href;
+    } else if (_server.test(href)) { // external URL with no scheme
+     fullhref = 'http://' + href;
+     hinput = href;
+    } else { // relative URL (accueil)
+     fullhref = _rewriteURL(href);
+     hrewritten = true;
+     hinput = href;
+    }
+    tmp1 = hinput ? "data-input ='" + hinput + "' " : '';
+    tmp2 = hrewritten ? "data-rewritten ='1' " : '';
+    return "<a href='" + fullhref + "' " + tmp1 + tmp2 + "target='_blank'>" + anchor + "</a>";
+  };
 
   /**
    * Scanner function to convert wiki-formatted text to html. Design to
    * be used as a callback in the String.replace() function.
    */
-  var _text2html = function _text2html (str, href, anchor, marker, marked, mref, manchor, variant) {
+  var _text2html = function _text2html (str, href, anchor, marker, marked, mref, manchor, vanchor, vref, variant) {
     var tag, cl, ref, text;
-    if (mref || href) {
-      ref = mref ? mref : href;
-      text = manchor ? manchor : anchor;
-      return "<a href='" + xtiger.util.encodeEntities(ref)
-          + "' target='_blank'>" + xtiger.util.encodeEntities(text)
-          + "</a>";
+    if (href) {
+     return _genLink(href, anchor)
+    } else if (mref) {
+     return _genLink(mref, manchor)
+    } else if (vref) {
+     return _genLink(vref, vanchor)
     } else if (marker) {
-      if (variant !== 'span') {
-        tag = _wiki2tag[marker];
-        return "<" + tag + ">" + xtiger.util.encodeEntities(marked) + "</" + tag + ">";
-      } else {
-        cl = _wiki2class[marker];
-        return '<span class="' + cl + '">' + xtiger.util.encodeEntities(marked) + '</span>';
-      }
-   }   
-  };    
-     
+     if (variant !== 'span') {
+       tag = _wiki2tag[marker];
+       return "<" + tag + ">" + marked + "</" + tag + ">";
+     } else {
+       cl = _wiki2class[marker];
+       return '<span class="' + cl + '">' + marked + '</span>';
+     }
+    }
+  };
+ 
   var _text2html_gen = function (variant) {           
-    return function (str, href, anchor, marker, marked, mref, manchor) {
-        return _text2html(str, href, anchor, marker, marked, mref, manchor, variant);      
+    return function (str, href, anchor, marker, marked, mref, manchor, vanchor, vref) {
+        return _text2html(str, href, anchor, marker, marked, mref, manchor, vanchor, vref, variant);      
     }
   };
   
@@ -137,7 +183,7 @@ var _WikiFilter = (function _WikiFilter() {
     return res;
   };         
   
-  var _dumpText = function _dumpFragment (aContainer, aTextStr, aDocument) {   
+  var _dumpText = function _dumpText (aContainer, aTextStr, aDocument) {   
     if (aTextStr && (aTextStr.search(/\S/) != -1)) {
       if (aContainer.lastChild && (aContainer.lastChild.nodeType === xtdom.TEXT_NODE)) {
         aContainer.lastChild.appendData(aTextStr); // completes the existing text
@@ -177,10 +223,11 @@ var _WikiFilter = (function _WikiFilter() {
    * 
    */
   var _dumpLink = function _dumpLink (aBuffer, aLink, aDocument, lang) {
-    var linktextnode, url;
+    var linktextnode, url, datainput;
     if (lang !== 'default') {
       linktextnode = aLink;
       url = aLink.getAttribute('href');
+      datainput = aLink.hasAttribute('data-input') ? aLink.getAttribute('data-input') : null;
     } else {
       var c = _getElementChildren(aLink); // LinkText & LinkRef
       var name = xtdom.getLocalName(c[0]);
@@ -191,13 +238,18 @@ var _WikiFilter = (function _WikiFilter() {
         itext = 1; // LinkText is in second position
       } 
       linktextnode = c[itext];
-      url = c[iref].firstChild ? c[iref].firstChild.nodeValue : '';
+      url = c[iref].firstChild ? c[iref].firstChild.nodeValue : '...';
+      datainput = c[iref].hasAttribute('data-input') ? c[iref].getAttribute('data-input') : null;
     }
     var a = xtdom.createElement(aDocument, 'a');
-    var content = linktextnode.firstChild ? linktextnode.firstChild.nodeValue : 'url'; 
+    var content = linktextnode.firstChild ? linktextnode.firstChild.nodeValue : '...'; 
     var anchor = xtdom.createTextNode(aDocument, content);
     a.appendChild(anchor);
     a.setAttribute('href', url);
+    if (datainput) {
+      a.setAttribute('data-input', datainput);
+    }
+    // FIXME: detect local relative or absolute URLs and call _rewriteURL
     aBuffer.appendChild(a);
   };
               
@@ -315,11 +367,20 @@ var _WikiFilter = (function _WikiFilter() {
             name = xtdom.getLocalName(cur);
             aLogger.openTag(name);
             if ((name == 'a') || (name == 'A')) {
-              href = cur.getAttribute('href') || 'http://...';
+              if (cur.getAttribute('data-rewritten')) {
+                href = cur.getAttribute('data-input') || '...';
+              } else {
+                href = cur.getAttribute('href') || '...';
+              }
               aLogger.openAttribute('href');
               aLogger.write(href);
               aLogger.closeAttribute('href');
-            } 
+            }
+            if (cur.hasAttribute('data-input') && !(cur.hasAttribute('data-rewritten'))) {
+              aLogger.openAttribute('data-input');
+              aLogger.write(cur.getAttribute('data-input'));
+              aLogger.closeAttribute('data-input');
+            }
             if (cur.hasAttribute('class')) {
               aLogger.openAttribute('class');
               aLogger.write(cur.getAttribute('class'));
@@ -356,9 +417,12 @@ var _WikiFilter = (function _WikiFilter() {
               aLogger.closeTag('Fragment');
             }
           } else if ((name == 'a') || (name == 'A')) {
-            anchor = (cur.firstChild) ? cur.firstChild.data
-                : 'null';
-            href = cur.getAttribute('href') || 'null';
+            anchor = (cur.firstChild) ? cur.firstChild.data : '...';
+            if (cur.hasAttribute('data-rewritten')) {
+              href = cur.getAttribute('data-input') || '...';
+            } else {
+              href = cur.getAttribute('href') || '...';
+            }
             aLogger.openTag('Link');
             if (lang == 'html') {
               aLogger.write(anchor);
@@ -370,6 +434,11 @@ var _WikiFilter = (function _WikiFilter() {
               aLogger.write(anchor);
               aLogger.closeTag('LinkText');
               aLogger.openTag('LinkRef');
+              if (cur.hasAttribute('data-input') && !(cur.hasAttribute('data-rewritten'))) {
+                aLogger.openAttribute('data-input');
+                aLogger.write(cur.getAttribute('data-input'));
+                aLogger.closeAttribute('data-input');
+              }
               aLogger.write(href);
               aLogger.closeTag('LinkRef');
             }
@@ -418,26 +487,28 @@ var _WikiFilter = (function _WikiFilter() {
      * 
      * @return {string} Wiki-formatted text to edit
      * 
-     * NOTE: does not call super function. Unnecesasry as getData() should
+     * NOTE: does not call super function. Unnecessary as getData() should
      * never have side-effects
      */
     getData : function getData () {
       //FIXME: could be optimized by directly generating message into edit field
-      var _key, _wikiSym;
+      var _key, _wikiSym, _tmp;
       var _txtBuffer = '';
       var _cur = this.getHandle().firstChild;
       while (_cur) {
         if (_cur.nodeType == xtdom.ELEMENT_NODE) {    
           if (this.getParam('wiki_lang') === 'span') {
             _key = _cur.getAttribute('class');
-            _wikiSym = _key ? _class2wiki[_class] : undefined;
+            _wikiSym = _key ? _class2wiki[_key] : undefined;
             _key = xtdom.getLocalName(_cur);            
           } else {            
             _key = xtdom.getLocalName(_cur);
             _wikiSym = _tag2wiki[_key]; 
           }      
           if ((_key === 'a') || (_key === 'A')) { 
-            _txtBuffer += (_cur.getAttribute('href') || '') + '[' + (_cur.firstChild ? _cur.firstChild.data : 'null') + ']';
+            // _txtBuffer += (_cur.getAttribute('href') || '') + '[' + (_cur.firstChild ? _cur.firstChild.data : 'null') + ']';
+            _tmp = _cur.getAttribute('data-input') || _cur.getAttribute('href') || '...';
+            _txtBuffer += '==' + (_cur.firstChild ? _cur.firstChild.data : '...') + '==(' + _tmp + ')';
           } else if (_cur.firstChild) { // sanity check
             if (_wikiSym === undefined) {
               _txtBuffer += _cur.firstChild.data;
