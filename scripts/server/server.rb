@@ -99,9 +99,9 @@ class FileUploadServlet < HTTPServlet::AbstractServlet
           f.syswrite filedata
           f.close           
           # res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,'#{targetfile}')</script>";
-          res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,{url:'#{prefix}-#{suffix}.jpg',resource_id:#{suffix}})</script>";
+          res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,{url:'#{prefix}-#{suffix}.jpg',resource_id:#{suffix}})</script>"
         rescue Exception => e
-          res.body = "<script type='text/javascript'>window.parent.finishTransmission(0,'#{e.message}')</script>";
+          res.body = "<script type='text/javascript'>window.parent.finishTransmission(0,'#{e.message}')</script>"
         end
       end                                                                                                           
       res['Content-Type'] = "text/html"
@@ -111,6 +111,48 @@ end
 
 server.mount("/formUpload", FileUploadServlet)
 #server.mount("/xtiger/add_photo_to_menu", FileUploadServlet)
+
+class FormDataServlet < HTTPServlet::AbstractServlet
+    def do_POST(req, res)
+      print "FormDataServlet saving file request from document : '", req.query["documentId"], "'\n";
+      print "Content length: ", req.content_length(), "\n"
+      print "Content type: ", req.content_type(), "\n"
+      prefix = req.query["documentId"]
+      suffix = Time.now.to_i.to_s[-2, 2] + Time.now.usec.to_s[-2, 2] # resource id
+      targetfile = "../../data/docs/#{prefix}-#{suffix}.pdf"
+      if filedata = req.query["xt-file"]
+        begin
+          f = File.open(targetfile, "wb")
+          f.syswrite filedata
+          f.close           
+          # res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,'#{targetfile}')</script>";
+          res.body = "#{prefix}-#{suffix}.pdf"
+          res.status = 201
+        rescue Exception => e
+          res.body = "#{e.message}"
+          res.status = 400
+        end
+      end                                                                                                           
+      res['Content-Type'] = "text/plain"
+      sleep(3) # slow server simulation        
+  end
+end
+
+server.mount("/formdata", FormDataServlet)
+
+class ErrorServlet < HTTPServlet::AbstractServlet
+    def do_POST(req, res)
+      print "ErrorServlet handling request from document : '", req.query["documentId"], "'\n";
+      print "Content length: ", req.content_length(), "\n"
+      print "Content type: ", req.content_type(), "\n"
+      res.body = "Internal server error generated for test purpose"
+      res.status = 500
+      res['Content-Type'] = "text/plain"
+      sleep(3) # slow server simulation        
+  end
+end
+
+server.mount("/error", ErrorServlet)
 
 #
 # 4. POST handler for data saved with HTML 5 DnD, FileReader and XHR APIs

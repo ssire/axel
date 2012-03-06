@@ -175,6 +175,38 @@ div.axel-tracker-menu {
   position: absolute;
 }                   
 
+/**********************/
+/* File upload plugin */
+span.xt-file.over:hover > span.xt-file-trans {
+ display: inline;
+}
+span.xt-file-trans {
+ display: none;
+}
+input#xt-file-input {
+  top: -20px;
+  left: 0;
+  position: absolute;
+  visibility: hidden;
+}
+img.xt-file-editable {
+  cursor: pointer;	
+}
+#xt-tooltip {
+  position: absolute;
+  background: black;
+  color: white;
+  border: outset 3px white;
+  padding: 9px;
+  display: none;
+}
+#xt-tooltip a {
+  color: white;
+}
+
+
+
+
   
 
 /* * AXEL style sheet * */

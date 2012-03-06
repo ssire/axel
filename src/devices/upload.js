@@ -15,10 +15,11 @@
 
 // Creates and manages several potentially parallel data uploading processes
 // Manages a pool of Upload objects, queues request to upload and serve them one at a time
-// Possibility to serve in parallel (asynchonous)
+// Possibility to serve in parallel (asynchronous)
 xtiger.editor.UploadManager = function (doc) {
   // this.inProgress = []; // uploading
   // this.queued = []; // waiting for uploading
+  this.inProgress = null;
   this.available = []; // available
   this.curDoc = doc;
 }
@@ -26,7 +27,7 @@ xtiger.editor.UploadManager = function (doc) {
 xtiger.editor.UploadManager.prototype = {
   
   _reset : function (uploader) {
-    if (this.inProgress != uploader) { alert('Warning: attempt to close an unkown transmission !')}
+    if (this.inProgress !== uploader) { alert('Warning: attempt to close an unkown transmission !')}
     uploader.reset();
     this.available.push(uploader);
     this.inProgress = null;
@@ -39,13 +40,13 @@ xtiger.editor.UploadManager.prototype = {
   
   // Returns true if the manager is ready to transmit (no other transmission in progress)
   isReady : function () {
-    return (null == this.inProgress);
+    return (null === this.inProgress);
   },
   
   // Returns false if uploader is null or if it is currently not transmitting
   // Returns true if it is actually transmitting
   isTransmitting : function (uploader) {
-    return (uploader && (uploader == this.inProgress));
+    return (uploader && (uploader === this.inProgress));
   },
   
   // Asks the manager to start uploading data with the given uploader
@@ -64,7 +65,7 @@ xtiger.editor.UploadManager.prototype = {
   // status 0 means error and in that case result is an explanation
   // FIXM: currently only one transmission at a time (this.inProgress)
   reportEoT : function (status, result) {
-    if (! this.inProgress) { // sanity check
+    if (this.inProgress === null) { // sanity check
       // maybe the transmission was simply cancelled hence we cannot say...
       // alert('Warning: attempt to report an unkown file upload termination !');
     } else {
@@ -92,9 +93,9 @@ xtiger.editor.UploadManager.prototype = {
   // Asks the manager to cancel an ongoing transmission
   cancelTransmission : function (uploader) {
     var tmp = uploader.client;
-    uploader.cancel ();   
-    this._reset (uploader);
-    tmp.onCancel (); // informs client of new state 
+    uploader.cancel();   
+    this._reset(uploader);
+    tmp.onCancel(); // informs client of new state 
   }     
 }
 
@@ -113,7 +114,7 @@ xtiger.editor.FileUpload.prototype = {
   },
   
   setDataType : function (kind) {
-    this.dataType = kind; // 'dnd' or 'formular'
+    this.dataType = kind; // 'dnd' or 'formular' or 'dataform'
   },        
     
   // Sets the url of the server-side upload script, should be on the same domain
@@ -132,7 +133,9 @@ xtiger.editor.FileUpload.prototype = {
   start : function (client) {
     this.client = client;
     try {
-      if (this.dataType == 'dnd') { // HTML 5 version with DnD 
+      if (this.dataType == 'dataform') { 
+        this.startXHRForm();
+      } else if (this.dataType == 'dnd') { // HTML 5 version with DnD 
         this.startXHR();
       } else {
         var form = this.client.getPayload();
@@ -148,7 +151,39 @@ xtiger.editor.FileUpload.prototype = {
       this.manager.notifyError(this, e.name, e.message); // e.toString()
     }
   },
+  
+  // Sends file with Ajax FormData API
+  startXHRForm : function () {
+    var formData, id;
+    this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
+    this.isCancelled = false;
+    var _this = this; 
+    window.console.log('Start file upload to the server...');
+    this.xhr.onreadystatechange = function () {
+      if (_this.isCancelled) return;
+        if (4 === _this.xhr.readyState) {
+          if (201 === _this.xhr.status) { // Resource Created
+            _this.manager.notifyComplete(_this, _this.xhr.responseText);
+          } else {
+            _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.responseText);
+          }
+        }
+    }
+    try {
+      this.xhr.open("POST", this.url || this.defaultUrl, true); // asynchronous
+      formData = new FormData();
+      formData.append("xt-file", this.client.getPayload());
+      id = this.client.getDocumentId();
+      if (id) { // FIXME: deprecated ?
+        formData.append("documentId", id); 
+      }
+      this.xhr.send(formData);
+    } catch (e) {
+      this.manager.notifyError(this, e.name, e.message); // e.toString()
+    }
+  },
     
+  // DEPRECATED : binary transfer
   startXHR : function () {    
     this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
     var _this = this;  
@@ -160,8 +195,8 @@ xtiger.editor.FileUpload.prototype = {
           } else {
             _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.statusText);             
           }
+          _this.xhr = null; // GC ?
         } 
-        _this.xhr = null; // GC
       } catch (e) {
         _this.manager.notifyError(_this, e.name, e.message); // e.toString()
       }
@@ -177,8 +212,8 @@ xtiger.editor.FileUpload.prototype = {
   },
     
   cancel : function () {
-    // NOT SURE HOW TO DO IT ?
     if (this.xhr) {
+      this.isCancelled = true; // because onreadystatechange may be fired on some browsers !
       this.xhr.abort();
     } else {
       // FIXME: how to cancel a form submission ? 
