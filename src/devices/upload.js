@@ -57,7 +57,12 @@ xtiger.editor.UploadManager.prototype = {
     // as there may be an error while starting we save inProgress before
     uploader.start(client);   
   },
-  
+
+  startPreflight : function (uploader, client) {
+    this.inProgress = uploader; 
+    uploader.preflight(client);   
+  },
+
   // Must be called by the target iframe at the end of a transmission
   // status 1 means success and in that case result must contain either 
   // a string with the URL of the photo (for displaying in handle)
@@ -87,7 +92,7 @@ xtiger.editor.UploadManager.prototype = {
   notifyError : function (uploader, code, message) {    
     var tmp = uploader.client;
     this._reset (uploader);
-    tmp.onError (message); // informs client of new state
+    tmp.onError (message, code); // informs client of new state
   },
   
   // Asks the manager to cancel an ongoing transmission
@@ -152,17 +157,51 @@ xtiger.editor.FileUpload.prototype = {
     }
   },
   
+  // Use this protocol to check a resource name does not already exists client side before submitting
+  // FIXME: - couldn't we use a HEAD request ?
+  //        - factorize with startXHRForm ?
+  preflight : function (client) {
+    this.client = client;
+    var formData, id, key, options;
+    this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
+    this.isCancelled = false;
+    var _this = this;
+    window.console.log('Start preflight request to the server...');
+    this.xhr.onreadystatechange = function () {
+      if (_this.isCancelled) return;
+        if (4 === _this.xhr.readyState) {
+          if (200 === _this.xhr.status) { // OK
+            _this.manager.notifyComplete(_this, _this.xhr.responseText);
+          } else { // Most probably 409 for Conflict
+            _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.responseText);
+          }
+        }
+    }
+    try {
+      this.xhr.open("POST", this.url || this.defaultUrl, true); // asynchronous
+      formData = new FormData();
+      var options = client.getPreflightOptions();
+      for (k in options) {
+        formData.append(k, options[k]);  
+      }
+      this.xhr.send(formData);
+    } catch (e) {
+      this.manager.notifyError(this, e.name, e.message); // e.toString()
+    }
+  },
+  
   // Sends file with Ajax FormData API
   startXHRForm : function () {
     var formData, id;
     this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
     this.isCancelled = false;
-    var _this = this; 
+    var _this = this;
     window.console.log('Start file upload to the server...');
     this.xhr.onreadystatechange = function () {
       if (_this.isCancelled) return;
         if (4 === _this.xhr.readyState) {
           if (201 === _this.xhr.status) { // Resource Created
+            // variant: use Location header ?
             _this.manager.notifyComplete(_this, _this.xhr.responseText);
           } else {
             _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.responseText);
@@ -172,10 +211,9 @@ xtiger.editor.FileUpload.prototype = {
     try {
       this.xhr.open("POST", this.url || this.defaultUrl, true); // asynchronous
       formData = new FormData();
-      formData.append("xt-file", this.client.getPayload());
-      id = this.client.getDocumentId();
-      if (id) { // FIXME: deprecated ?
-        formData.append("documentId", id); 
+      var options = this.client.getPayload();
+      for (k in options) {
+        formData.append(k, options[k]);
       }
       this.xhr.send(formData);
     } catch (e) {

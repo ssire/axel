@@ -29,12 +29,23 @@ xtiger.editor.FileFactory = (function FileFactory() {
       };
   var HINTS = { // tooltip message
       'fr' : ['cliquez pour choisir un fichier',
-              'cliquez sur “Enregistrer” pour sauvegarder “%” (%)',
+              ['cliquez sur “Enregistrer” pour sauvegarder “%” (%)', 'cliquez sur “Enregistrer” pour sauvegarder “%” (%)<br/>sous “%” (vous pouvez éditer le nom avant)'],
               'enregistrement de “%” (%) en cours',
               "échec de l'enregistrement de “%”<br/>%",
               '“%” a été enregistré en tant que <a target="_blank" href="%">%</a>',
               'cliquez pour remplacer <a target="_blank" href="%">%</a>' ]
       };
+  var PURIFY_NAME = function (name) {
+    var str = $.trim(name).toLowerCase();
+    var res = (str.indexOf('.pdf') !== -1) ? str.substring(0, str.indexOf('.pdf')) : str;
+    /* Replace multi spaces with a single space */
+    res = res.replace(/(\s{2,}|_)/g,' ');
+    /* Replace space with a '-' symbol */
+    res = res.replace(/\s/g, "-");
+    res = res.replace(/[éè]/g,'e'); // FIXME: improve
+    res = res.replace(/[^a-z0-9-_]/g,'');
+    return res;
+  }
       
   /*****************************************************************************\
   |                                                                             |
@@ -151,39 +162,54 @@ xtiger.editor.FileFactory = (function FileFactory() {
      this.file = null; // File object when uploading
      this.delegate = client; 
      this.legacy = null; // real state while new content is beeing uploaded / confirmed
+     this.preflighting = false;
    }
    
    fileModel.prototype = {
      
+    // FIXME: load while a transmission is in progress ?
     reset : function (url, name) {
-     if (url && (url.search(/\S/) !== -1)) {
-       this.state = READY;
-       this.url = url;
-       this.name = name;
-     } else {
-       this.state = EMPTY;
-       this.url = this.name = null;        
-     }
+      if (url && (url.search(/\S/) !== -1)) {
+        this.state = READY;
+        this.url = url;
+        this.name = name;
+      } else {
+        this.state = EMPTY;
+        this.url = this.name = null;        
+      }
     },
     
     // generates URL taking into account file_base parameter
     genFileURL : function () {
       var base = this.delegate.getParam('file_base');
-      return (base ? base + this.url : base);
+      return (base ? base + this.url : this.url);
     },
 
     getPayload : function () {
-      return this.file;
+      var id, payload = { 'xt-file' : this.file };
+      if (this.preflighting) {
+        payload['xt-file-id'] = this.delegate.vId.val();
+        this.preflighting = false;
+      }
+      return payload;      
     },
     
-    rollback : function () {
-      if (this.legacy) {
+    getPreflightOptions : function () {
+      return { 'xt-file-preflight' : this.delegate.vId.val() }
+    },
+    
+    rollback : function (fromErrorState) {
+      if (fromErrorState && (this.preflighting)) {
+        // just returns to selected state and cancel preflighting (sets it to false)
+        this.state = SELECTED;
+      } else if (this.legacy) {
         this.state = this.legacy[0];
         this.url = this.legacy[1];
         this.name = this.legacy[2];
         this.legacy = null;
-        this.delegate.redraw();
       }
+      this.preflighting = false;
+      this.delegate.redraw();
     },
     
     gotoSelected : function (fileObj) {
@@ -197,8 +223,19 @@ xtiger.editor.FileFactory = (function FileFactory() {
     },
     
     gotoLoading : function () {
-      if (this.startTransmission()) {
+      // pre-check if state transition is possible
+      var manager = xtiger.factory('upload').getInstance(this.delegate.curDoc);
+      if (manager && manager.isReady()) {
         this.state = LOADING;
+        // in case of immediate failure gotoError may be called in between
+        // hence we have set the new state to LOADING before starting the transmission
+        if (this.preflighting || (this.delegate.getParam('file_gen_name') === 'auto')) {
+          this.startTransmission(manager, manager.getUploader());
+          // getPayload will set preflighting to false
+        } else {
+          this.preflighting = true;
+          this.startPreflight(manager, manager.getUploader());
+        }
         this.delegate.redraw();
       } else {
         // FIXME: create a new state "upload will start when at least one other upload in progress will have been completed or aborted"
@@ -213,7 +250,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
       this.delegate.redraw(true); // true to autoselect
     },
 
-    // only exist from ERROR is rollback()
+    // only exit from ERROR is rollback()
     gotoError : function() {
       this.state = ERROR;
       this.delegate.redraw();
@@ -229,16 +266,18 @@ xtiger.editor.FileFactory = (function FileFactory() {
       return xtiger.session(this.delegate.curDoc).load('documentId');
     },
 
-    startTransmission : function () {
-      var manager = xtiger.factory('upload').getInstance(this.delegate.curDoc);
-      var ready = manager.isReady();
-      if (ready) {
-        this.transmission = manager.getUploader();
-        this.transmission.setDataType('dataform');
-        this.transmission.setAction(this.delegate.getParam('file_URL'));
-        manager.startTransmission(this.transmission, this);
-      }
-      return ready;
+    startTransmission : function (manager, uploader) {
+      this.transmission = uploader;
+      this.transmission.setDataType('dataform');
+      this.transmission.setAction(this.delegate.getParam('file_URL'));
+      manager.startTransmission(this.transmission, this);
+    },  
+
+    startPreflight : function (manager, uploader) {
+      this.transmission = uploader;
+      this.transmission.setDataType('dataform');
+      this.transmission.setAction(this.delegate.getParam('file_URL'));
+      manager.startPreflight(this.transmission, this);
     },  
 
     cancelTransmission : function () {
@@ -248,19 +287,26 @@ xtiger.editor.FileFactory = (function FileFactory() {
       }
     },
 
+    // FIXME: handle more complex response protocol (e.g. with resourceId)
     onComplete : function (response) {
-      // FIXME: handle more complex response protocol (e.g. with resourceId)
-      this.gotoComplete(response);
-      this.transmission = null;
+      if (this.preflighting) {
+        // do not change state - proceed with upload (which may also fail on conflict !)
+        this.gotoLoading();
+      } else {
+        this.gotoComplete(response);
+        this.transmission = null;
+      }
     },
 
-    onError : function (error) {
+    onError : function (error, code) {
       this.err = error;
       this.gotoError();
       this.transmission = null;
     },
 
     onCancel : function () {
+      this.preflighting = false;
+      this.transmission = null;
       if (this.legacy) {
         this.rollback();
       } else {
@@ -270,6 +316,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
     }
   };
 
+  
   /*****************************************************************************\
   |                                                                             |
   | File input editor                                                           |
@@ -286,7 +333,8 @@ xtiger.editor.FileFactory = (function FileFactory() {
 
     defaultParams : {
       file_URL : "/fileUpload",
-      file_type : 'application/pdf'
+      file_type : 'application/pdf',
+      file_gen_name : 'auto'
       // file_size_limit : 1024
     },
 
@@ -320,6 +368,8 @@ xtiger.editor.FileFactory = (function FileFactory() {
       this.vPerm = $('.xt-file-perm', this.handle);
       this.vIcon2 = $('.xt-file-icon2', this.handle);
       this.vSave = $('.xt-file-save', this.handle).hide();
+      this.vId = $('.xt-file-id', this.handle).hide();
+      // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
       this.vIcon1.bind({
         'click' : $.proxy(_FileEditor.prototype.onActivate, this),
         'mouseenter' : $.proxy(_FileEditor.prototype.onEnterIcon, this),
@@ -327,19 +377,12 @@ xtiger.editor.FileFactory = (function FileFactory() {
       });
       this.vIcon2.click( $.proxy(_FileEditor.prototype.onDismiss, this) );
       this.vSave.click( $.proxy(_FileEditor.prototype.onSave, this) );
+      this.vId.change( $.proxy(_FileEditor.prototype.onChangeId, this) );
       // manages transient area display (works with plugin css rules)
       $(this.handle).bind({
        mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
        // 'over' is set inside onEnterIcon
       });
-      // HTML 5 DnD : FF >= 3.6 ONLY
-      // FIXME: TO BE DONE !
-      // if (xtiger.cross.UA.gecko) { // FIXME: check version too !
-      //  xtdom.addEventListener (this.handle, "dragenter", function (ev) { _this.onDragEnter(ev) }, false);  
-      //  xtdom.addEventListener (this.handle, "dragleave", function (ev) { _this.onDragLeave(ev) }, false);  
-      //  xtdom.addEventListener (this.handle, "dragover", function (ev) { _this.onDragOver(ev) }, false);  
-      //  xtdom.addEventListener (this.handle, "drop", function (ev) { _this.onDrop(ev) }, false);
-      // }
       this.model.reset(this.defaultContent);
       this.redraw(false);
     },
@@ -394,9 +437,15 @@ xtiger.editor.FileFactory = (function FileFactory() {
         this.vTrans.text('');
       }
       if (this.model.state === SELECTED) { // save button
+        if (this.getParam('file_gen_name') !== 'auto') {
+          this.vId.val(this.model.name);
+          this.onChangeId();
+          this.vId.show();
+        }
         this.vSave.show();
       } else {
         this.vSave.hide();
+        this.vId.hide();
       }
       this.vPerm.text(msg || ''); // permanent feedback
       this.configureHints();
@@ -414,6 +463,9 @@ xtiger.editor.FileFactory = (function FileFactory() {
     
     configureHints : function () {
       var a, i, tmp, tokens, vars, mb, kb, spec = HINTS.fr[this.model.state];
+      if (this.model.state === SELECTED) {
+        spec = spec[ (this.getParam('file_gen_name') === 'auto') ? 0 : 1 ];
+      }
       if (spec.indexOf('%') !== -1) {
         a = [];
         if ((this.model.state === SELECTED) || (this.model.state === LOADING)) {
@@ -429,7 +481,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
           } else {
             tmp = this.model.size; 
           }
-          vars = [this.model.name, tmp];
+          vars = [this.model.name, tmp, this.vId.val()];
         } else if (this.model.state === ERROR) {
           vars = [this.model.name, this.model.err];
         } else if (this.model.state === COMPLETE) {
@@ -511,8 +563,6 @@ xtiger.editor.FileFactory = (function FileFactory() {
           this.onLeaveIcon(); // forces tooltip dismiss because otherwise if may stay on screen
           fileDlg.showFileSelectionDialog( this );
         }
-      } else if (this.model.state === ERROR) {
-        alert(this.model.err);
       }
     },
     
@@ -525,50 +575,22 @@ xtiger.editor.FileFactory = (function FileFactory() {
       if (this.model.state === LOADING) {
         this.model.cancelTransmission();
       } else if ((this.model.state === SELECTED) || (this.model.state === ERROR)) { 
-        this.model.rollback();
+        this.model.rollback((this.model.state === ERROR));
       } else if (this.model.state === COMPLETE) {
         this.model.gotoReady();
       }
     },
     
+    onChangeId : function () {
+      this.vId.val(PURIFY_NAME(this.vId.val()));
+      this.vId.attr('size', this.vId.val().length + 2);
+      this.configureHints();
+      this.vId.blur();
+    },
+
     onSave : function (ev) {
       this.model.gotoLoading();
-    },
-    
-    onDragEnter : function (ev) {  
-      xtdom.addClassName (this.handle, 'axel-dnd-over');
-      xtdom.stopPropagation(ev);
-      xtdom.preventDefault(ev);
-    },
-
-    onDragOver : function (ev) {       
-      xtdom.stopPropagation(ev);
-      xtdom.preventDefault(ev);
-    },
-
-    onDragLeave : function (ev) {  
-      xtdom.removeClassName (this.handle, 'axel-dnd-over');
-      xtdom.stopPropagation(ev);
-      xtdom.preventDefault(ev);
-    },  
-
-    onDrop : function (ev) {   
-      var file, imageType;
-      var dt = ev.dataTransfer;
-      var files = dt.files; 
-      xtdom.stopPropagation(ev);
-      xtdom.preventDefault(ev);
-
-      // find the first image file
-      for (var i = 0; i < files.length; i++) {
-        file = files[i];  
-        imageType = /image.*/;  
-        if (!file.type.match(imageType)) {  
-          continue;  
-        }
-        this.model.startTransmission(this.curDoc, 'dnd', file, this.getParam('file_URL'));
-      } 
-    } 
+    }
   }
 
   return {  
@@ -581,7 +603,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
       viewNode = xtdom.createElement (curDoc, 'span');
       xtdom.addClassName (viewNode , 'xt-file');
       $(viewNode).html(
-        '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
+        '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
         );
       // xtdom.addClassName (viewNode , 'axel-drop-target');
       container.appendChild(viewNode);

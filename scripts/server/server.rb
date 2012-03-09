@@ -117,16 +117,32 @@ class FormDataServlet < HTTPServlet::AbstractServlet
       print "FormDataServlet saving file request from document : '", req.query["documentId"], "'\n";
       print "Content length: ", req.content_length(), "\n"
       print "Content type: ", req.content_type(), "\n"
-      prefix = req.query["documentId"]
-      suffix = Time.now.to_i.to_s[-2, 2] + Time.now.usec.to_s[-2, 2] # resource id
-      targetfile = "../../data/docs/#{prefix}-#{suffix}.pdf"
-      if filedata = req.query["xt-file"]
+      if filedata = req.query["xt-file-preflight"]
+        name = req.query["xt-file-preflight"]
+        targetfile = "../../data/docs/#{name}.pdf"
+        if File.exist?(targetfile) then
+          res.body = "name conflict with #{name}"
+          res.status = 409
+        else
+          res.body = "OK to create #{name}"
+          res.status = 200
+        end
+      elsif filedata = req.query["xt-file"]
         begin
+          if name = req.query["xt-file-id"] 
+            targetfile = "../../data/docs/#{name}.pdf"
+            # ideally we should check again if it exists and returns 409 in case of conflict
+          else
+            prefix = req.query["documentId"]
+            suffix = Time.now.to_i.to_s[-2, 2] + Time.now.usec.to_s[-2, 2] # resource id
+            targetfile = "../../data/docs/#{prefix}-#{suffix}.pdf"
+            name = "#{prefix}-#{suffix}"
+          end
           f = File.open(targetfile, "wb")
           f.syswrite filedata
           f.close           
           # res.body = "<script type='text/javascript'>window.parent.finishTransmission(1,'#{targetfile}')</script>";
-          res.body = "#{prefix}-#{suffix}.pdf"
+          res.body = "#{name}.pdf"
           res.status = 201
         rescue Exception => e
           res.body = "#{e.message}"
