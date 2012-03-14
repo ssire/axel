@@ -170,7 +170,7 @@
       if (this.currentEditor) { 
         // another editing was in progress with the same device
         // this is unlikely to happen as when directly clicking another field will trigger unfocus first
-         this.stopEditing (true);       
+         this.stopEditing (true);
       } else {
         // registers to keyboard events
         this._kbdHandlers = this.keyboard.register(this);
@@ -183,11 +183,11 @@
         if (!doSelectAll) { 
           offset = this._computeOffset(mouseEvent, editor);
         }
-        coldStart = true;     
-        this.field.show (editor);  
-      }   
+        coldStart = true;
+        this.field.show (editor);
+      }
     
-      this.currentEditor = editor;     
+      this.currentEditor = editor;
       ghost = editor.getGhost();
     
       // computes current geometry of the editor to apply it to the buffer later on
@@ -199,7 +199,7 @@
     
       if (editor.getParam('enablelinebreak') == 'true') {
         this.keyboard.enableRC();
-      }  
+      }
 
       // cursor positioning and initial text selection
       if (doSelectAll) {

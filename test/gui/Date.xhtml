@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL Interactive (GUI) test case : 'dat' primitive editor plugin</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="TestCase">   
+  </xt:head>
+
+  <link rel="stylesheet" href="../../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css" type="text/css" charset="utf-8" />
+<!--  <script src="../../3rd-part/jquery/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+  <script src="../../3rd-part/jquery/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script> -->
+
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+<!--   <script type="text/javascript" src="../../axel/axel.js"></script> -->
+
+  <script type="text/javascript">
+    var form;
+    function init() {
+      form = new xtiger.util.Form('../../axel/bundles');
+      form.setTemplateSource(document);
+      form.enableTabGroupNavigation();
+      if (! form.transform()) { alert(this .form.msg); }
+    }
+    // xtdom.addEventListener(window,  'load', init, false);
+  </script>
+
+  <!-- Template styling -->
+  <style type="text/css">
+    p.explic {
+      font-size: 90%;
+    }
+    .avertissement {
+      color: green;
+    }       
+  </style>   
+  
+</head>
+<body>                  
+  
+<h1>Interactive (GUI) test case for <tt>'date'</tt> editor</h1>
+
+<h2><xt:use types="text" label="Title">Click to edit a page title</xt:use></h2> 
+
+<!-- Test Case 1 -->
+
+<h3>Click to edit the date, the first time it should be set to the current date</h3>
+
+<p>Check the calendar region is 'fr' and format is 'ISO_8601'</p>
+
+<p>Date : <xt:use types="text" param="filter=date;date_region=fr;date_format=ISO_8601" label="Date"/></p>
+
+<!-- Test Case 2 -->
+
+<h3>Select and click to edit the optional date, it should not be editable while not selected</h3>
+
+<p>Check the calendar region is 'en'  and format is 'RSS'</p>
+
+<p>Date : <xt:use types="text"  param="filter=date;date_region=en;date_format=RSS" label="Date" option="unset"/></p>
+
+<!-- Test Case 3 -->
+
+<h3>Click on the plus icon to create and edit a list of dates</h3>
+
+<p>List of dates : </p>
+
+<ul>
+  <xt:repeat minOccurs="0" maxOccurs="*" label="Dates">
+    <li class="date"><xt:menu-marker/><xt:use types="text" param="filter=date" label="Date"/></li>
+  </xt:repeat>
+</ul>
+
+<p>End of the test</p>
+</body> 
+</html>

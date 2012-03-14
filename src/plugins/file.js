@@ -293,7 +293,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
         // do not change state - proceed with upload (which may also fail on conflict !)
         this.gotoLoading();
       } else {
-        this.gotoComplete(response);
+        this.gotoComplete($.trim(response));
         this.transmission = null;
       }
     },
