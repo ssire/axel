@@ -24,8 +24,8 @@ xtiger.parser.nsXTiger = "http://ns.inria.org/xtiger";
 xtiger.parser.nsXTigerExt = "http://ns.media.epfl.ch/xtiger-extension";
 xtiger.parser.nsXTiger_deprecated = "http://wam.inrialpes.fr/xtiger"; // deprecated ns
 xtiger.parser.nsXHTML = "http://www.w3.org/1999/xhtml"
-xtiger.parser.isXTiger = /<[^>]*[(component)(use)(repeat)(service)]/; // XTiger node opening tag
-xtiger.parser.isXTigerName = /[(component)(use)(repeat)(service)]/; // XTiger node name
+xtiger.parser.isXTiger = /<[^>]*[(component)(use)(repeat)(service)]/i; // XTiger node opening tag
+xtiger.parser.isXTigerName = /[(component)(use)(repeat)(service)]/i; // XTiger node name
 
 /**
  * Represents the tree of each component inside the XTiger file to visualize
@@ -313,7 +313,7 @@ xtiger.parser.Iterator.prototype = {
   changeUse : function (xtSrcNode) {  
     var accu = [];        
     var container = xtdom.createElement(this.curDoc,'div');
-    var kind = xtSrcNode.getAttribute('option') || 'use'; 
+    var kind = 'use'; 
     // creates an array that contains all the types of the use element      
     var types = xtSrcNode.getAttribute('types').split(" ");
     types = this.flattenUnionTypes(types);  
@@ -328,7 +328,7 @@ xtiger.parser.Iterator.prototype = {
   changeAttribute : function (xtSrcNode) {  
     var accu = null; // not used for attribute that MUST resolve to a single type
     var container = xtdom.createElement(this.curDoc,'div');
-    var kind = 'attribute'; // FIXME : how to handle optional attributes ? ('option' = true)
+    var kind = 'attribute';
     var types = [xtSrcNode.getAttribute('types') || xtSrcNode.getAttribute('type')]; // attributes have a single type, "type" is deprecated 
     this.transformer.genIteratedTypeBody (kind, xtSrcNode, container, types);
     this.transformer.genIteratedTypeContent (kind, xtSrcNode, container, accu, types);

@@ -61,14 +61,13 @@ xtdom.containsXT = function (node) {
 // Return the first 'xt:menu-marker' element within node or false otherwise
 // Look for a marker with a target="targetValue" attribute if targetValue is defined
 xtdom.getMenuMarkerXT = function (node, targetValue) {
-  var res = false;
+  var cur, i, res = false;
   var results = xtdom.getElementsByTagNameXT(node, 'menu-marker');
   if (results.length > 0) {     
-    var cur, i;   
     for (i = 0; i < results.length; i++) {
       cur = results.item(i);
-      if (((!cur.hasAttribute('target')) && (targetValue === undefined))
-        || (cur.hasAttribute('target') && (cur.getAttribute('target') == targetValue))) {
+      if (((targetValue === undefined) && (!xtdom.hasAttribute(cur, 'target')))
+        || (cur.getAttribute('target') === targetValue)) {
         res = cur;
         break;
       }
@@ -76,8 +75,8 @@ xtdom.getMenuMarkerXT = function (node, targetValue) {
     // res = results[0];
   }
   return res; 
-}         
-                    
+}
+
 // Returns a string representing the tag name associated with a XTiger Node
 xtdom.getTagNameXT = function (node) {    
   var key = (xtiger.ATTRIBUTE == xtdom.getNodeTypeXT(node)) ? 'name' : 'label';

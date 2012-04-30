@@ -26,14 +26,14 @@ if (xtiger.cross.UA.IE) {
   
   // Returns true if the DOM is a xt:use node, false otherwise.
   xtdom.isUseXT = function (aNode) {  
-    // FIXME: depends on namespace prefix on FF + should we lowercase nodeName ?
-    return (aNode.nodeName == 'use' || aNode.nodeName == 'xt:use');
+    var n = aNode.nodeName.toUpperCase();
+    return (n === 'USE' || n === 'XT:USE');
   }
 
   // Returns true if the DOM is a xt:bag node, false otherwise.
   xtdom.isBagXT = function (aNode) {  
-    // FIXME: depends on namespace prefix on FF + should we lowercase nodeName ?
-    return (aNode.nodeName == 'bag' || aNode.nodeName == 'xt:bag');
+    var n = aNode.nodeName.toUpperCase();
+    return (n === 'BAG' || n === 'XT:BAG');
   }
 
   xtdom.getElementsByTagNameXT = function (container, name) { 
@@ -43,11 +43,11 @@ if (xtiger.cross.UA.IE) {
     } 
     return res;
   } 
-        
+
   xtdom.getLocalName = function (node) {
     return node.nodeName;  // FIXME: check that IE do not keep "prefix:"
   }
-  
+
   xtdom.getTextContent = function (aNode) {
     if (aNode.innerText)
       return aNode.innerText;

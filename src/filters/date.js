@@ -132,7 +132,7 @@
        if (! this.closingInProgress) {
          this.release();
        }
-     },
+     }
    };
 
    xtiger.registry.registerFactory('datepickerdev', 

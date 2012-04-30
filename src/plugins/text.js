@@ -456,7 +456,7 @@ xtiger.editor.TextFactory = (function TextFactory() {
      * manager.
      */
     focus : function () {
-      this.startEditing({shiftKey: true}); // Hack to autoselect content
+      this.startEditing({shiftKey: !this.isModified()});
     },
 
     /**

@@ -272,6 +272,10 @@ xtiger.editor.Photo.prototype = {
     }
     if ((this.handle.getAttribute('src') !== src) || force) {
       xtdom.setAttribute (this.handle, 'src', base ? base + src : src);
+      if (xtiger.cross.UA.IE) {
+        this.handle.removeAttribute('width');
+        this.handle.removeAttribute('height');
+      }
     }
   },
   

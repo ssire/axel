@@ -433,7 +433,7 @@ if (! document.createTreeWalker) {
 } else {
   
   // FIXME: currently it uses "document" although it should be passed the document !!!
-  if (xtiger.cross.UA.webKit) {
+  if (xtiger.cross.UA.webKit || xtiger.cross.UA.IE) {
         
     xtiger.cross.makeTreeWalker =
       function (n, type, filter) { return document.createTreeWalker(n, type, filter, false) }
@@ -546,8 +546,8 @@ if (! xtiger.cross.UA.IE) {
       res = container.getElementsByTagName('xt:' + name);
     } 
     return res;
-  } 
-  
+  }
+
   // Returns the local node of a node (without namespace prefix)
   xtdom.getLocalName = function (node) {
     return node.localName; // otherwise nodeName includes "prefix:"

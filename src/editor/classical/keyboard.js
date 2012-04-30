@@ -89,6 +89,7 @@ xtiger.editor.Keyboard.prototype = {
       var validate = (this.allowRC && (ev.keyCode == 13) && (! ev.shiftKey)) || ((!this.allowRC) && (ev.keyCode == 13));
       if (validate) {
         device.stopEditing(false);
+        xtdom.preventDefault(ev); /* avoid triggering buttons in IE (e.g. Save button) */
       } else if (ev.keyCode == 27) {
         device.cancelEditing ();
       }     

@@ -50,8 +50,8 @@
     
     // Sets initial bounding box constraints of the shadow <div> and on the handle
     setBBox : function setBBox (w, h, handle, shape, type) {
-      var wpx = w + 'px';
-      var hpx = h + 'px'; 
+      var wpx = (w > 0) ? w + 'px' : '0px';
+      var hpx = (h > 0) ? h + 'px' : '0px'; 
       this.lastWidth = w;
       this.lastHeight = h;
 
@@ -78,10 +78,15 @@
     },
 
     // sets the width of the handle to the width of the shadow <div>
-    adjustWidth : function adjustWidth (handle) {     
-      var w = Math.max(this.div.offsetWidth, this.div.clientWidth, this.div.scrollWidth);     
+    adjustWidth : function adjustWidth (handle, exactMath) {     
+      var w = wimp = Math.max(this.div.offsetWidth, this.div.clientWidth, this.div.scrollWidth);
       if (w > this.lastWidth) {
-        handle.style.width = w - (w % 20)  + 20 + 'px';  // FIXME: +20 too empirical ?
+        if (! exactMath) {
+          wimp = w - (w % 20)  + 20; // FIXME: +20 too empirical ?
+        } else if (! xtiger.cross.UA.webKit) {
+          wimp += 4; // assumes a 2px input field border (offsetWidth includes borders)
+        }
+        handle.style.width = wimp + 'px';
         this.lastWidth = w;
       }
     },
@@ -100,7 +105,9 @@
     },
 
     release : function (field, willEditAgain) {   
-      field.hook.removeChild(this.div);
+      if (this.div.parentNode === field.hook) { // sanity check (IE)
+        field.hook.removeChild(this.div);
+      }
     }    
   };
   
@@ -205,8 +212,9 @@
       if (doSelectAll) {
         xtdom.focusAndSelect(handle);
       } else if (offset) {        
-        xtdom.focusAndMoveCaretTo(handle,
-          (offset == -1) ? handle.value.length : offset);
+        xtdom.focusAndMoveCaretTo(handle, (offset == -1) ? handle.value.length : offset);
+      } else {
+         xtdom.focusAndMoveCaretTo(handle, handle.value.length);
       }
 
       shape = this.currentEditor.getParam('shape');
@@ -219,14 +227,13 @@
       }       
                   
       // applies initial geometry to the input field handle                                                              
-      this.metrics.setBBox (constw, consth, handle, shape, this.field.deviceType); 
-      this.metrics.setText(this.field.getValue());      
-      if ((this.field.deviceType == 'input') || (shape == 'self')) { // 'auto' may give a too large field
-        this.metrics.adjustWidth(handle);
-      }                
-      if (redux) { // need to adjust height as width was reduced
-        this.metrics.adjustHeight(handle);
-      }
+      this.metrics.setBBox (constw, consth, handle, shape, this.field.deviceType);
+      this.metrics.setText(this.field.getValue());
+      // always adjusts dimensions since input field has a border the span handle didn't have
+      this.metrics.adjustWidth(handle, ((this.field.deviceType === 'textarea') && (shape === 'parent')));
+      this.metrics.adjustHeight(handle);
+      // does not adjust for 'self' shape which seems to cause small vertical alignment (empirical)
+      handle.style.top = (shape === 'parent') ? '-2px' : '0';
       if (coldStart) {
         // must be called at the end as on FF 'blur' is triggered when grabbing
         xtdom.addEventListener(handle, 'blur', this.blurHandler, false);
@@ -387,7 +394,9 @@ xtiger.editor.FloatingField.prototype = {
   // Removes the first child that was inserted inside the handle 
   // Restore the visibility of the handle
   release : function (editor, willEditAgain) {   
-    this.editorHandle.parentNode.removeChild(this.hook);
+    if (this.hook.parentNode === this.editorHandle.parentNode) { // sanity check (IE)
+      this.editorHandle.parentNode.removeChild(this.hook);
+    }
     editor.getHandle().style.visibility = 'visible';
     if (! willEditAgain) {
       this.hook.style.display = 'none';

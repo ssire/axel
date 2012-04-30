@@ -301,7 +301,7 @@ xtiger.editor.Generator.prototype = {
         // END OF RECURSION for primitive editors and xt:attribute elements
         // assumes default content was pushed on the stack
         var editorHandle = factory.createModel (container, xtigerSrcNode, this.curDoc);
-        var srcUseOrBag = (kind == 'attribute') ? xtigerSrcNode : this.peekTopContext (); // attribute node not saved onto the context
+        var srcUseOrBag = ('attribute' === kind) ? xtigerSrcNode : this.peekTopContext (); // attribute node not saved onto the context
         // currently srcUseOrBag and xtigerSrcNode are the same because terminal editors can only be on single choice xt:use        
         editorHandle.xttPrimitiveEditor = factory.createEditorFromTree (editorHandle, srcUseOrBag, this.curDoc);        
     } else {
@@ -329,7 +329,7 @@ xtiger.editor.Generator.prototype = {
     /// Begin PATCH
     if (label.indexOf(' ') != -1) return;   
     /// End PATCH   
-    if (kind == 'attribute') {
+    if ('attribute' === kind) {
       label = '@' + label; // code for a label for an attribute
     }
     if (! container.firstChild) { // sanity check

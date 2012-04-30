@@ -97,7 +97,7 @@ var _WikiFilter = (function _WikiFilter() {
   var _class2wiki = {
     "important" : '**',
     "emphasize" : '__',
-    "verbatim" : "''",
+    "verbatim" : "''"
   };
   
   // rewrites a local URL 
