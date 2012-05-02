@@ -247,18 +247,18 @@ xtiger.editor.Photo.prototype = {
   // Updates display state to the current state, leaves state unchanged 
   // FIXME: rename to _setData
   redraw : function (doPropagate) {
-    var src, base, force = false;
+    var cname, src, base, force = false;
     switch (this.state.status) {
       case xtiger.editor.PhotoState.prototype.READY: 
         src = xtiger.bundles.photo.photoIconURL;
         break;
       case xtiger.editor.PhotoState.prototype.ERROR: 
-          src = xtiger.bundles.photo.photoBrokenIconURL;
+        src = xtiger.bundles.photo.photoBrokenIconURL;
         break;
       case xtiger.editor.PhotoState.prototype.UPLOADING: 
         src = xtiger.bundles.photo.spiningWheelIconURL;
         break;
-      case xtiger.editor.PhotoState.prototype.COMPLETE:       
+      case xtiger.editor.PhotoState.prototype.COMPLETE:
         if (doPropagate) {        
           var cur = this.handle.getAttribute('src');
           if (cur != this.state.photoUrl) { // Photo URL has changed and successfully uploaded
@@ -275,6 +275,14 @@ xtiger.editor.Photo.prototype = {
       if (xtiger.cross.UA.IE) {
         this.handle.removeAttribute('width');
         this.handle.removeAttribute('height');
+      }
+      cname = this.getParam('photo_class'); // Issue #16
+      if (cname) {
+        if (xtiger.editor.PhotoState.prototype.COMPLETE === this.state.status) {
+          xtdom.addClassName(this.handle, cname);
+        } else {
+          xtdom.removeClassName(this.handle, cname);
+        }
       }
     }
   },
@@ -381,6 +389,7 @@ xtiger.editor.Photo.prototype = {
  * This allows to change the dialog box look and feel independently of the library
  */
 xtiger.editor.PhotoViewer = function (url, doc, target, wrapper) {
+  var tname, iframe, _this = this;
   // creates photo lens container from external resource file at URL
   var lensDiv = this.view = xtdom.createElement(doc, 'div');
   xtdom.setAttribute(lensDiv, 'id', 'xt-photo');
@@ -413,8 +422,14 @@ xtiger.editor.PhotoViewer = function (url, doc, target, wrapper) {
     this.btnselfile = doc.getElementById('xt-photo-file');
     this.btnupload  = doc.getElementById('xt-photo-save');    
     this.btncancel  = doc.getElementById('xt-photo-cancel');    
-    this.result   = doc.getElementById('xt-photo-target');
-    var _this = this;
+    // creates target iframe to collect server's response (Issue #19)
+    tname = this.formular.getAttribute('target') || 'xt-photo-target';
+    iframe = xtdom.createElement(doc, 'iframe');
+    xtdom.setAttribute(iframe, 'id', tname);
+    xtdom.setAttribute(iframe, 'name', tname);
+    xtdom.setAttribute(iframe, 'src', 'javascript:false;');
+    iframe.style.display = 'none';
+    target.appendChild(iframe);
     xtdom.addEventListener(this.btnselfile, 'click', function () { _this.startSelectCb(); }, false);
     xtdom.addEventListener(this.btnupload , 'click', function () { _this.saveCb(); }, false);
     xtdom.addEventListener(this.btncancel , 'click', function () { _this.cancelCb(); }, false);
@@ -553,7 +568,7 @@ xtiger.editor.PhotoWrapper = function (aDoc) {
   this._handleToRestore; // handle to restore when releasing
   this.myDoc = aDoc;
   var form = xtiger.session(aDoc).load('form');
-  var root = (form && form.getRoot()) || aDoc.getElementsByTagName('body')[0]; // NOTE that .body is undefined in XML document (.xtd)
+  var root = (form && form.getRoot()) || aDoc.getElementsByTagName('body')[0]; // NOTE that body is undefined in XML document (.xtd)
   this.view = new xtiger.editor.PhotoViewer(xtiger.bundles.photo.lensBoxURL, aDoc, root, this); // temporary
   this.state = null;
 }

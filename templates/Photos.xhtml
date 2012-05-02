@@ -22,11 +22,18 @@
 
     <xt:component name="plat">
       <p><span class="plat"><xt:use types="text" param="type=input" label="Nom">Nom du plat</xt:use></span><xt:menu-marker/><br/>
-      <xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload;photo_base=../../data/photos"/></p>
+      <xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_class=x-Photo;photo_URL=/formUpload;photo_base=../../data/photos"/></p>
       <p><xt:use types="text" label="description" param="shape=parent-20px;type=textarea">Description</xt:use></p>
     </xt:component> 
 
-  </xt:head>                         
+  </xt:head>               
+  
+  <style type="text/css" media="screen">
+    img.x-Photo {
+      max-width: 350px;
+      max-height: 350px;
+    }
+  </style>          
 
    <!-- CSS file for the photo uploader wrapper -->
    <link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css" />

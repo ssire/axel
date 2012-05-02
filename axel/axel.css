@@ -76,6 +76,12 @@ input.axel-text-float {
 	display: inline;
 }
 
+textarea.axel-text-placed,
+input.axel-text-placed {
+  position: relative;
+  left: -2px; /* assumes 2px input field border ? (empirical)  */
+}
+
 /* Style for text container */
 div.axel-text-container { 
   position: relative;
@@ -94,6 +100,7 @@ div.axel-text-container {
  	white-space: pre-wrap; /* css-3 */
  	white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
  	word-wrap: break-word; /* Internet Explorer 5.5+ */
+	border: solid 2px white; /* assumes 2px input field border ? (empirical) */
 }                       
 
 /*********************/
