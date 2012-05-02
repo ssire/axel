@@ -269,7 +269,7 @@
         n = point[1]; // supposes 'img' tag
         tagname = 'src';
       }         
-      if (n && n.hasAttribute(tagname)) {
+      if (n && xtdom.hasAttribute(n, tagname)) {
         src = n.getAttribute(tagname);
       }
       // }    

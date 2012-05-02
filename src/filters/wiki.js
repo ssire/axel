@@ -211,7 +211,7 @@ var _WikiFilter = (function _WikiFilter() {
       cur = xtdom.createElement(aDocument, tag);
       parent.appendChild(cur);
       parent = cur;
-      if ((lang === 'span') && aFragment.hasAttribute('class')) {
+      if ((lang === 'span') && xtdom.hasAttribute(aFragment, 'class')) {
         xtdom.addClassName(cur, aFragment.getAttribute('class'));
       }
     }
@@ -227,7 +227,7 @@ var _WikiFilter = (function _WikiFilter() {
     if (lang !== 'default') {
       linktextnode = aLink;
       url = aLink.getAttribute('href');
-      datainput = aLink.hasAttribute('data-input') ? aLink.getAttribute('data-input') : null;
+      datainput = xtdom.hasAttribute(aLink, 'data-input') ? aLink.getAttribute('data-input') : null;
     } else {
       var c = _getElementChildren(aLink); // LinkText & LinkRef
       var name = xtdom.getLocalName(c[0]);
@@ -239,7 +239,7 @@ var _WikiFilter = (function _WikiFilter() {
       } 
       linktextnode = c[itext];
       url = c[iref].firstChild ? c[iref].firstChild.nodeValue : '...';
-      datainput = c[iref].hasAttribute('data-input') ? c[iref].getAttribute('data-input') : null;
+      datainput = xtdom.hasAttribute(c[iref], 'data-input') ? c[iref].getAttribute('data-input') : null;
     }
     var a = xtdom.createElement(aDocument, 'a');
     var content = linktextnode.firstChild ? linktextnode.firstChild.nodeValue : '...'; 
@@ -376,12 +376,12 @@ var _WikiFilter = (function _WikiFilter() {
               aLogger.write(href);
               aLogger.closeAttribute('href');
             }
-            if (cur.hasAttribute('data-input') && !(cur.hasAttribute('data-rewritten'))) {
+            if (xtdom.hasAttribute(cur, 'data-input') && !(xtdom.hasAttribute(cur, 'data-rewritten'))) {
               aLogger.openAttribute('data-input');
               aLogger.write(cur.getAttribute('data-input'));
               aLogger.closeAttribute('data-input');
             }
-            if (cur.hasAttribute('class')) {
+            if (xtdom.hasAttribute(cur, 'class')) {
               aLogger.openAttribute('class');
               aLogger.write(cur.getAttribute('class'));
               aLogger.closeAttribute('class');
@@ -418,7 +418,7 @@ var _WikiFilter = (function _WikiFilter() {
             }
           } else if ((name == 'a') || (name == 'A')) {
             anchor = (cur.firstChild) ? cur.firstChild.data : '...';
-            if (cur.hasAttribute('data-rewritten')) {
+            if (xtdom.hasAttribute(cur, 'data-rewritten')) {
               href = cur.getAttribute('data-input') || '...';
             } else {
               href = cur.getAttribute('href') || '...';
@@ -434,7 +434,7 @@ var _WikiFilter = (function _WikiFilter() {
               aLogger.write(anchor);
               aLogger.closeTag('LinkText');
               aLogger.openTag('LinkRef');
-              if (cur.hasAttribute('data-input') && !(cur.hasAttribute('data-rewritten'))) {
+              if (xtdom.hasAttribute(cur, 'data-input') && !(xtdom.hasAttribute(cur, 'data-rewritten'))) {
                 aLogger.openAttribute('data-input');
                 aLogger.write(cur.getAttribute('data-input'));
                 aLogger.closeAttribute('data-input');
