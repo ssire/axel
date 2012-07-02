@@ -83,14 +83,14 @@ xtdom.getTagNameXT = function (node) {
   return node.getAttribute(key);
 }
 
-// Returns a string representing the content of an XTiger node or false if content is empty
+// Returns a string representing the content of an XTiger node or null if content is empty or it contains only spaces
 // Pre-condition: the node is supposed to contain only plain text or to contain only HTML elements
 // in which case the innerHTML of the children will be concatenated (first level tag names are removed)
 // This is the case for instance of a xt:use of a "string" primitive type
 // FIXME: that method should be able to dump any content (including XML) but innerHTML does not work on node
 // which is not an HTML node (it's an xt:use)
 xtdom.extractDefaultContentXT = function (node) {
-  var dump = false;   
+  var dump;   
   if (xtiger.ATTRIBUTE == xtdom.getNodeTypeXT(node)) {
     dump = node.getAttribute('default');
   } else if (node.childNodes) {
@@ -108,6 +108,9 @@ xtdom.extractDefaultContentXT = function (node) {
         dump = str;
       }
     }
+  }
+  if (dump && (-1 === dump.search(/\S/))) { // empty string
+    dump = null;
   }
   return dump;
 }

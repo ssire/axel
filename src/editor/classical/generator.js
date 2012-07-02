@@ -14,7 +14,6 @@
 
 /*
  * Manages atomic editor plugins.
- * Note that at least an Atomic String Editor must be added at some point
  */
 xtiger.editor.Plugin = function () {  
 }
@@ -47,7 +46,92 @@ xtiger.editor.Plugin.prototype = {
     }
     return res;
   }
-}
+};
+
+////////////////////////////////////////////////////////////////////////
+// FIXME: move to a plugin.js file 
+// The $axel object
+// It will be developped further to support plugin and filter coding
+// TODO: 
+//  1. factorize services to
+// - manage a uniqueKey 
+// - manage parameters
+// - manage modification state
+// - manage optionality
+//  2. factorize the factory methods themselves (createModel, createEditorFromTree, createEditorFromSeed)
+////////////////////////////////////////////////////////////////////////
+(function () {
+
+  var _BASE_KEY = 'xt'; // base string for key generation
+  var _keyCounter = 0; // counter for key generation
+
+  // extends a target's constructor function prototype with the own properties 
+  // and methods of a source object whenever they are not already defined
+  var _protoMixin = function _protoMixin (target, source) {
+    for (var x in source){
+      if (source.hasOwnProperty(x)) {
+        if (typeof target.prototype[x] === "undefined") {
+          target.prototype[x] = source[x];
+        }
+      }
+    }
+  }
+
+  // extends a target object's with the own properties and methods 
+  // of a source object whenever they are not already defined
+  var _mixin = function _mixin (target, source) {
+    for (var x in source){
+      if (source.hasOwnProperty(x)) {
+        if (typeof target[x] === "undefined") {
+          target[x] = source[x];
+        }
+      }
+    }
+  }
+  
+  // Methods to be merged with a factory object to complete it's API
+  var _factoryK = {
+
+    // Creates a unique string. Each call to this method returns a different one.
+    createUniqueKey : function createUniqueKey () {
+      return _BASE_KEY + (_keyCounter++);
+    }
+  };
+
+  // Methods to be merged with an editor prototype to complete it's API
+  var _editorK = {
+  
+    can : function (aFunction) {
+      return typeof this[aFunction] == 'function';
+    },
+    
+    execute : function (aFunction, aParam) {
+      return this[aFunction](aParam);
+    }
+  };
+
+  var axel = {
+  
+    registerPlugin : function (name, factory, editor, doFilter) {
+      if (xtiger.editor.Plugin.prototype.pluginEditors[name]) {
+        xtiger.cross.log('error', 'plugin "' + name + '" has already been registered, registration aborted');
+      } else {
+        xtiger.cross.log('info', 'registering plugin "' + name + '"');
+        // extends factory with default factory methods
+        _mixin(factory, _factoryK);
+        // extends editor with default editor methods
+        _protoMixin(editor, _editorK);
+        if (doFilter) {
+          xtiger.editor.Plugin.prototype.pluginEditors[name] = xtiger.util.filterable(name, factory);
+        } else {
+          xtiger.editor.Plugin.prototype.pluginEditors[name] = factory;
+        }
+      }
+    }
+  };
+  
+  window.$axel = axel;
+}());
 
 /**
  * Generates an editable XHTML tree while iterating with a xtiger.parser.Iterator on an XTiger XML template

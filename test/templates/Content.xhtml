@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>XTiger XML and AXEL test case : "content" plugin</title>
+
+  <style type="text/css" media="screen">
+  [contenteditable]:hover:not(:focus) {
+    outline: none;
+  }
+
+  [contenteditable]:focus {
+    outline: 1px dotted #ccc;
+  }
+
+  /* YOU MUST COPY THESE RULES TO YOUR PAGE TO USE THIS TEMPLATE */
+
+  div.t_menu {
+    float: left;
+    width: 80px;
+    margin-left: -80px;
+  }
+
+  p.x-ListHeader {
+    margin-bottom: 0;
+  }
+
+  ul.x-List {
+    list-style-position: inside;
+    margin-top: 0.3em;
+  }
+
+  ul.x-LinesBlock {
+    list-style: none none inside;
+    padding: 0;
+  }
+  
+  span.v-Photo > img {
+    max-width: 400px;
+    max-width: 300px;
+  }
+
+  body.preview .v-colon {
+    display: none;
+  }
+  </style>
+
+  <xt:head version="1.1" templateVersion="1.0" label="Test">
+
+  <xt:component name="t_content_type">  
+    <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Parag List SubTitle SubSubTitle LinesBlock" >
+      <xt:use types="t_row"/>
+    </xt:repeat>
+  </xt:component>
+
+  <xt:component name="t_row">
+    <div class="t_row">
+      <div class="t_menu">
+        <xt:menu-marker target="t_select"/><br/>
+        <xt:menu-marker/>
+      </div>
+      <xt:use types="t_parag t_list t_subtitle t_subsubtitle t_linesblock" label="Parag List SubTitle SubSubTitle LinesBlock" param="name=t_select"/>
+    </div>
+  </xt:component>
+
+  <xt:component name="t_parag" i18n="Parag">  
+    <p><xt:use types="content">Click to edit a paragraph</xt:use></p>
+  </xt:component>
+
+  <xt:component name="t_list" i18n="List">
+    <p class="x-ListHeader"><xt:use label="ListHeader" types="content" option="unset">click to edit optional list header</xt:use> <span class="v-colon">:</span></p>
+    <ul class="x-List">
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Item">
+          <li><xt:use types="content" label="Item">click to edit a list item</xt:use><xt:menu-marker/></li>
+      </xt:repeat>
+    </ul>
+  </xt:component>
+
+  <xt:component name="t_subtitle" i18n="Titre2">  
+    <h2>  
+      <xt:use types="content">Click to edit a title</xt:use>        
+    </h2>
+  </xt:component> 
+
+  <xt:component name="t_subsubtitle" i18n="Titre3">  
+    <h3>  
+      <xt:use types="content">Click to edit a title</xt:use>        
+    </h3>
+  </xt:component>
+
+  <xt:component name="t_linesblock" i18n="Lignes">  
+    <ul class="x-LinesBlock">
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Line">
+          <li><xt:use types="content" label="Line">Click to edit a line</xt:use><xt:menu-marker/></li>
+      </xt:repeat>
+    </ul>
+  </xt:component>
+
+  </xt:head>
+
+  <!-- testing purpose -->
+	<link rel="stylesheet" href="Preview.css" type="text/css" charset="utf-8"/>
+</head>
+<body style="margin-left: 100px">
+  <h1>XTiger XML and AXEL test case : "content" plugin</h1>
+  <p>Things to test</p>
+  <ul>
+    <li>Shift + click : select all</li>
+    <li>Tab navigation</li>
+    <li>Paste some content</li>
+    <li>command-A (select all) within field and type or delete</li>
+    <li>auto-selection of optional field</li>
+    <li>delete all text in a field and validate (empty field)</li>
+    <li>cancel editing (Esc)</li>
+  </ul>
+  <h2>Simple paragraph test</h2>
+  <p><xt:use types="content" label="FirstParag">Click to edit this first paragraph</xt:use></p>
+  <p><xt:use types="content" label="SecondParag">Click to edit this second paragraph</xt:use></p>
+  <p><xt:use types="content" label="ThirdParag" option="unset">Click to edit this third paragraph</xt:use></p>
+  <h2>Simple paragraph 'noedit=true' test</h2>
+  <p><xt:use types="content" label="NoEditParag" param="noedit=true">You should be able neither to change this parag content nor to focus it !</xt:use></p>
+  <h2>Repetition inside different components</h2>
+  <xt:use types="t_content_type" label="Repetition"/>
+  <!-- <h2>"content" with "image" filter</h2>
+  <p>This is a way to partially test filter API</p>
+  <p><xt:use types="content" param="filter=image;class=v-Photo" label="PhotoParag">click to edit the photo URL</xt:use></p> -->
+  <h2>"content" with "wiki" filter</h2>
+  <p>TO BE DONE</p>
+  <h2>"content" with "richtext" filter</h2>
+  <p>TO BE DONE</p>
+</body>
+</html>

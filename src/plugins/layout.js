@@ -129,9 +129,6 @@ xtiger.editor.LayoutFactory = (function LayoutFactory() {
 
     createEditorFromTree : function createEditorFromTree (aHandleNode, aXTUse, aDocument) {
       var _data = xtdom.extractDefaultContentXT(aXTUse);
-      if (_data && (_data.search(/\S/) == -1)) { // empty string
-        _data = null;
-      }
       var _model = new _LayoutModel(aHandleNode, aDocument);
       _model.init(_data, aXTUse.getAttribute('param'));
       return _model;

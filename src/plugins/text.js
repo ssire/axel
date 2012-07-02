@@ -647,9 +647,6 @@ xtiger.editor.TextFactory = (function TextFactory() {
      */
     createEditorFromTree : function createEditorFromTree (aHandleNode, aXTUse, aDocument) {
       var _data = xtdom.extractDefaultContentXT(aXTUse);
-      if (_data && (_data.search(/\S/) == -1)) { // empty string
-        _data = null;
-      }
       var _model = new _TextModel(aHandleNode, aDocument);
       var _param = {};
       xtiger.util.decodeParameters(aXTUse.getAttribute('param'), _param);

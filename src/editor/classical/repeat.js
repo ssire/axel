@@ -19,7 +19,8 @@
 xtiger.editor.Repeat = function () {
   this.items = [];   
   this.curDoc = null; // will be in initFromTree or initFromSeed
-  this.originPosition = -1;
+  this.originPosition = -1; // FIXME: this is a leg from PIAAC to maintain tocs,should we keep it ? 
+  this.tickCount = 0;
   // this.model will be set in one of the init functions
 }         
                                                       
@@ -81,6 +82,10 @@ xtiger.editor.Repeat.prototype = {
   // the concept of origin position is undefined and it returns -1
   getOriginPosition : function () {
     return this.originPosition;   
+  },
+  
+  getClockCount : function () {
+    return this.tickCount;
   },
 
   // Returns the last node for the slice at index
@@ -489,6 +494,7 @@ xtiger.editor.Repeat.prototype = {
   
   // Returns a new slice copied from the repeater model
   getOneCopy : function (index, position) {
+    this.tickCount++;
     return this.deepClone(this.model, index);
   },   
       
