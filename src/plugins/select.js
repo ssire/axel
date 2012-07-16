@@ -13,12 +13,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 
-/**
- * Class SelectFactory (static)
- * @class TextFactory
- * @version beta
- */
-xtiger.editor.SelectFactory = (function SelectFactory() {  
+(function () {
   
   var _DEFAULT_param = {    
     select_dispatch : 'value' // alternative is 'display'
@@ -51,17 +46,14 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
   /**
    * Model class for a list selection editor (i.e. select one item in a list)
    * There should be only one model class per application per plugin type
-   * @name _SelectModel
-   * @class _SelectModel
    */
-  var _SelectModel = function(aHandleNode, aDocument) {
+  var _SelectModel = function (aHandleNode, aDocument) {
     this.handle = aHandleNode;
     this.isOptional = undefined; // otherwise 'set' or 'unset' when it is optional
     this.isOptionSet = false; // iff this.isOptional is not null 
     this._data = null; // contains the model data (not the i18n version)    
-  };               
-  
-  /** @memberOf _SelectModel */
+  };
+
   _SelectModel.prototype = {
 
     //////////////////////////
@@ -112,13 +104,11 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
 
     awake : function () {     
         var _this = this;       
-      xtdom.addEventListener(this.handle, 'click', 
-        function (ev) { _this.startEditing(ev) }, true);                                   
+      xtdom.addEventListener(this.handle, 'click', function (ev) { _this.startEditing(ev) }, true);                                   
       if (this.isOptional !== undefined) {
         var check = this.handle.previousSibling;
         xtdom.addEventListener (check, 'click', 
-          function (ev) { _this.isOptionSet ? _this.unset(true) : _this.set(true); },
-            true);  
+          function (ev) { _this.isOptionSet ? _this.unset(true) : _this.set(true); }, true);  
       }       
     },
     
@@ -169,8 +159,7 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
     // NOT CALLED FOR THIS EDITOR
     stopEditing : function() {
     },
-            
-                      
+
     // aData is the universal value and not the localized one
     update : function(aData) {                            
       var val = (this.getParam('select_dispatch') == 'value') ? aData : this.i18nFilter(aData, false);
@@ -230,7 +219,7 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
     // The seed is a data structure that should allow to "reconstruct" a cloned editor in a <xt:repeat>
     makeSeed : function () {
       if (! this.seed) { // lazy creation
-        this.seed = [xtiger.editor.SelectFactory, this.defaultScreenData, this.param, this.isOptional];
+        this.seed = [factory, this.defaultScreenData, this.param, this.isOptional];
       }
       return this.seed;
     },    
@@ -273,7 +262,7 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
     
   }   
 
-  return {     
+  var factory = {
 
     // creates the list <select> with <option> based on content of values 
     createModel : function (container, useNode, curDoc) {
@@ -326,10 +315,8 @@ xtiger.editor.SelectFactory = (function SelectFactory() {
         _model = this.applyFilters(_model, _param['filter']);
       _model.init(_defaultScreenData, _param, _option, 'nokey', aRepeater);
       return _model;    
-    }     
-  }
-  
-})();
+    }
+  };
 
-xtiger.editor.Plugin.prototype.pluginEditors['select']
-  = xtiger.util.filterable('select', xtiger.editor.SelectFactory);
+  $axel.registerPlugin('select', factory, _SelectModel, true); // true: filterable
+})();

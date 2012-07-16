@@ -18,38 +18,24 @@
  */
 xtiger.editor.PopupDevice = function (aDocument) {
   
-  /**
-   * The document containing *this* device
-   */
   this._document = aDocument;
   
-  /**
-   * The device's edition handle
-   */
+  // device's edition handle 
   this._menu = xtiger.session(aDocument).load('popupmenu'); // shared on a per-document basis
   if (!this._menu) {
     this._menu = new xtiger.editor.PopupMenu(aDocument);
     xtiger.session(aDocument).save('popupmenu', this._menu);
   }
   
-  /**
-   * A reference to the keyboard device
-   */
+  // a reference to the keyboard device
   this._keyboard = xtiger.session(aDocument).load('keyboard');
   
-  /**
-   * The currently edited model
-   */
+  // the currently edited model
   this._currentModel = null;
   
-  /**
-   * The handlers for keyboard events
-   */
+  //  handlers for keyboard events
   this._keyboardHandlers = null;
   
-  /**
-   * The current selection
-   */
   this._currentSelection = null;
   
   // event callback to subscribe / unscribe later
@@ -66,11 +52,6 @@ xtiger.editor.PopupDevice.prototype = {
   /**
    * Displays the popup menu below the editor's handle
    * Available choices are listed in choices with the current one in curSel
-   * 
-   * @param aModel
-   * @param aChoices
-   * @param aSelection
-   * @param aHandle
    */
   startEditing : function(aModel, aChoices, aSelection, aHandle) {
     var coldStart = true;
@@ -84,15 +65,14 @@ xtiger.editor.PopupDevice.prototype = {
     
     // Resets Width/Height constraints that will be adjusted after display                                
     popupDiv.style.width = '';
-        popupDiv.style.maxHeight = this.MAX_HEIGHT + 'px'; // will be adjusted later
-        
+    popupDiv.style.maxHeight = this.MAX_HEIGHT + 'px'; // will be adjusted later
+
     this._menu.setOptions(aChoices, aSelection);
     this._menu.setPosition(aHandle);
     if (coldStart) {
       this._menu.show();
-      xtdom.addEventListener(this._document, 'mousedown',
-          this.clickHandler, true); // to detect click or lost of focus
-      
+      // to detect click or lost of focus
+      xtdom.addEventListener(this._document, xtiger.cross.events.DOWN, this.clickHandler, true); 
       // registers to keyboard events
       this._keyboardHandlers = this._keyboard.register(this, this._document);
     }
@@ -104,18 +84,14 @@ xtiger.editor.PopupDevice.prototype = {
           this._menu.adjustHeight(popupDiv, this.MAX_HEIGHT);          
           if (this._menu.isScrollbarInside()) {
             this._menu.adjustWidthToScrollbar(popupDiv);
-          }                
-      } catch (e) { /* nop */ }
+        }                
+    } catch (e) { /* nop */ }
   },
 
   /**
    * Stops the edition process. Updates the model if this is not a cancel.
-   * 
-   * @param {boolean}
-   *            willEditAgain If true, the device is kept visible and awakened
-   *            to events.
-   * @param {boolean}
-   *            isCancel If true, the model is not updated nor set.
+   * If willEditAgain the device is kept visible and awakened to events
+   * If isCancel is true the model is not updated nor set.
    */
   stopEditing : function (willEditAgain, isCancel) {
     // Safety guard in case of consecutive stops (may arise in case of chaned device, such as with the autocomplete)
@@ -134,7 +110,7 @@ xtiger.editor.PopupDevice.prototype = {
     
     // Uninstalls text device
     if (!willEditAgain) { 
-      xtdom.removeEventListener(this._document, 'mousedown', this.clickHandler, true);
+      xtdom.removeEventListener(this._document, xtiger.cross.events.DOWN, this.clickHandler, true);
       this._menu.hide();
       
       // Unregisters to keyboard events
@@ -164,8 +140,6 @@ xtiger.editor.PopupDevice.prototype = {
   
   /**
    * Returns true if the device is in an edition process.
-   * 
-   * @return {boolean}
    */
   isEditing : function () {
     return this._currentModel ? true : false;
@@ -177,8 +151,6 @@ xtiger.editor.PopupDevice.prototype = {
 
   /**
    * Returns the currently selected item
-   * 
-   * @return
    */
   getSelection : function() {
     return this._currentSelection;
@@ -186,8 +158,6 @@ xtiger.editor.PopupDevice.prototype = {
   
   /**
    * Sets the currently selected item
-   * 
-   * @param {any}
    */
   setSelection : function(aSelection) {
     this._currentSelection = aSelection;
@@ -195,8 +165,6 @@ xtiger.editor.PopupDevice.prototype = {
   
   /**
    * Retruns the 
-   * 
-   * @return
    */
   getHandle : function () {
     return this._menu.getHandle();
@@ -218,8 +186,6 @@ xtiger.editor.PopupDevice.prototype = {
   /**
    * Handler for keyboard events. Mainly listen for up and down arrows, escape
    * or return keystrockes.
-   * 
-   * @param aEvent
    */
   doKeyDown : function (aEvent) {
     switch (aEvent.keyCode) {
@@ -242,8 +208,6 @@ xtiger.editor.PopupDevice.prototype = {
   /**
    * Handler for keyboard events. Mainly listen for up and down arrows, escape
    * or return keystrockes.
-   * 
-   * @param aEvent
    */
   doKeyUp : function (aEvent) {
     // nope
@@ -253,42 +217,24 @@ xtiger.editor.PopupDevice.prototype = {
 
 /**
  * Utility class to wrap the DOM construction
- *
- * @param {DOMDocument}
- *            aDocument
  */
 xtiger.editor.PopupMenu = function(aDocument) {
   
   this._document = aDocument;
-  
-  
   this._handle = this._createMenuForDoc(aDocument);
-  
-  
   this._handle.style.visibility = 'hidden';
   
-  /*
-   * The position (from 0 to length-1) of the selected choice.
-   * 
-   * If -1, no element is selected
-   */
+   // Position (from 0 to length-1) of the selected choice. 
+   // If -1, no element is selected
   this._currentSelection = -1;
   
-  /**
-   * the current options *values* displayed by the menu
-   */
+  // current options *values* displayed by the menu
   this._options = null;
 }
 
 xtiger.editor.PopupMenu.prototype = {
 
-  /**
-   * Creates the DOM elements (the handle) to display the choices.
-   * 
-   * @param {DOMDocument}
-   *            aDocument
-   * @return {DOMElement}
-   */
+  // Creates the DOM elements (the handle) to display the choices.
   _createMenuForDoc : function(aDocument) {
     var body = aDocument.getElementsByTagName('body')[0]; // FIXME: body or BODY ? (use a hook for insertion ?)
     var device = xtdom.createElement(aDocument, 'div');
@@ -383,9 +329,7 @@ xtiger.editor.PopupMenu.prototype = {
   },
 
   /**
-   * Returns the menu's handle.
-   * 
-   * @return {HTMLElement} The HTML top container of the popup menu
+   * Returns the menu's handle (i.e. the html top container of the popup menu)
    */
   getHandle : function() {
     return this._handle;
@@ -442,8 +386,7 @@ xtiger.editor.PopupMenu.prototype = {
     },    
 
   /**
-   * Initialize popup menu content with options and creates as many
-   * &gt;li&lt; as necessary
+   * Initialize popup menu content with options and creates as many <li> as necessary
    */
   setOptions : function(aOptions, aSelection) {
     this._currentSelection = -1;
@@ -462,8 +405,6 @@ xtiger.editor.PopupMenu.prototype = {
 
   /** 
    * Position the menu just below the provided handle (an HTML DOM node)
-   * 
-   * @param aHandle
    */
   setPosition : function(aHandle) {
     var pos = xtdom.findPos(aHandle); // FIXME use another positionment algo
@@ -472,8 +413,7 @@ xtiger.editor.PopupMenu.prototype = {
 
   /**
    * Select the next element in the list
-   * 
-   * @TODO manage sub lists
+   * @TODO: manage sub lists
    */
   selectNext : function () {
     if (this._currentSelection != -1)
@@ -485,8 +425,7 @@ xtiger.editor.PopupMenu.prototype = {
 
   /**
    * Select the previous element in the list
-   * 
-   * @TODO manage sub lists
+   * TODO: manage sub lists
    */
   selectPrev : function () {
     if (this._currentSelection != -1)
@@ -501,10 +440,7 @@ xtiger.editor.PopupMenu.prototype = {
   
   /**
    * Returns the value of the currently selected element, if any. If none,
-   * returns false.
-   * 
-   * @return {string|boolean} The value of the selected element or false if no
-   *         element is selected.
+   * returns false. Returns the value of the selected element or false
    */
   getSelected : function () {
     if (this._currentSelection == -1)
@@ -533,16 +469,13 @@ xtiger.editor.PopupMenu.prototype = {
    * Analyses the event provided as parameter and returns the selected option
    * as a string if the event is targeted at one of the menu options. Returns
    * false otherwise.
-   * 
-   * @param {DOMMouseEvent}
-   *            aEvent A mouse event to analyse.
    */
   handleClick : function (aEvent, aDevice) {
     // find the first <li> target in event target ancestors chain
     var target = xtdom.getEventTarget(aEvent);
     // xtiger.cross.log('debug', 'peekEvent(' + xtdom.getLocalName(target) + ')');
     while (target.parentNode) {
-      if (xtdom.getLocalName(target).toLowerCase() == 'li' && target.selectionvalue) {
+      if (xtdom.getLocalName(target).toLowerCase() === 'li' && target.selectionvalue) {
         aDevice.setSelection(target.selectionvalue);
         xtdom.preventDefault(aEvent);
         xtdom.stopPropagation(aEvent);

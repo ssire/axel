@@ -63,20 +63,16 @@ xtiger.editor.StringModel.prototype = {
   },
   
   createEditorFromTree : function (handleNode, xtSrcNode, curDoc) {
-    var data = xtdom.extractDefaultContentXT(xtSrcNode);              
+    var m, data, param, s = xtdom.extractDefaultContentXT(xtSrcNode);              
     if (data) {
-      if (data.search(/\S/) == -1) { // empty string
-        data = null;
-      } else {
-        // removes potential tags surrounding initial value (for wrapper="auto" mode) 
-        var m = data.match(/^\s*\<.*\>(.*?)\<\/\w*\>\s*$/);
-        if (m) {
-          data = m[1];
-        }
+      // removes potential tags surrounding initial value (for wrapper="auto" mode) 
+      m = data.match(/^\s*\<.*\>(.*?)\<\/\w*\>\s*$/);
+      if (m) {
+        data = m[1];
       }
     } 
-    var param = xtSrcNode.getAttribute('param');
-    var s = new xtiger.editor.String ();
+    param = xtSrcNode.getAttribute('param');
+    s = new xtiger.editor.String ();
     s.initFromTree (handleNode, curDoc, data, param, xtSrcNode.getAttribute('option') || false);
     return s;
   },

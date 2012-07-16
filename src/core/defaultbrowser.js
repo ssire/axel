@@ -25,12 +25,16 @@ xtiger.cross.UA = {
   webKit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
   gecko:  navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') === -1,
   mobileSafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/)  
-}
+};
+
+xtiger.cross.events = {
+  DOWN: (window.Modernizr && window.Modernizr.touch) ? 'touchstart' : 'mousedown'
+};
 
 if (! (xtiger.cross.UA.gecko || xtiger.cross.UA.webKit || xtiger.cross.UA.IE || xtiger.cross.UA.opera ||  xtiger.cross.UA.mobileSafari)) {
   xtiger.cross.log ('warning', 'XTiger Forms could not detect user agent name, assuming a Gecko like browser');
   xtiger.cross.UA.gecko = true;
-}           
+}
 
 xtiger.util.countProperties = function (o) {
   var total = 0;
@@ -125,7 +129,7 @@ xtiger.util.mixin = function mixin (/*Object*/ obj, /*Object*/ props) {
     obj.toString = props.toString;
   }
   return obj; // Object
-}             
+}
 
 /**
  * Implements the "map" feature for arrays.
@@ -615,21 +619,22 @@ if (! xtiger.cross.UA.IE) {
                          
   xtdom.focusAndSelect = function (aField) {
     try {
-      aField.focus();
-      aField.select(); // not sure: for Safari focus must preceed select
+      aField.focus(); // not sure: for Safari focus must preceed select
+      // aField.select(); // variant: setSelectionRange(0, aField.value.length); 
+      aField.value = ''; // compatible with iPad 
     }
     catch (e) {}
   }
 
   xtdom.focusAndMoveCaretTo = function (aField, aPos) {
     try {
-    aField.focus();
-    if (aField.setSelectionRange) {
-      aField.setSelectionRange(aPos, aPos);
-    }   
+      aField.focus();
+      if (aField.setSelectionRange) {
+        aField.setSelectionRange(aPos, aPos);
+      }
     }
     catch (e) {}
-  }   
+  }
 
 } // else REMEMBER TO INCLUDE iebrowser.js !
 

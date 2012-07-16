@@ -23,11 +23,36 @@
   var _focusAndSelect = function (editor) {
     // pre-condition: the editor's handle must already have focus
     try {
-      editor.getDocument().execCommand('selectAll', false, ''); //FIXME: IE ?
-      editor.getHandle().focus();
+      editor.getDocument().execCommand('selectAll', false, ''); // FIXME: fails on iPad
     }
-    catch (e) {
-      window.console.log('EXCEPTION');
+    catch (e) { }
+  };
+  
+  var _trim = function (str) {
+    var tmp = str.replace(/\s+/gi,' ');
+    if (/\s/.test(tmp.charAt(0))) {
+      tmp = tmp.substr(1);
+    }
+    if (/\s$/.test(tmp)) {
+      tmp = tmp.substr(0, tmp.length-1);
+    }
+    return tmp;
+  }
+
+  // Checks node contains only a text node, otherwise recreate it
+  // (this can be used to prevent cut and paste side effects)
+  var _sanitize = function (node, doc) {
+    var tmp = '';
+    if ((node.children.length > 1) || (node.firstChild && (node.firstChild.nodeType != xtdom.TEXT_NODE))) {
+      // Detect whether the browser supports textContent or innerText
+      if (typeof node.textContent == 'string') {
+        tmp = node.textContent;
+      } else if (typeof node.innerText == 'string') {
+        tmp = node.innerText;
+      }
+      node.innerHTML = '';
+      t = xtdom.createTextNode(doc, tmp ? _trim(tmp) : tmp);
+      node.appendChild(t);
     }
   };
 
@@ -142,7 +167,14 @@
         // 'mousedown' always preceeds 'focus', saves shiftKey timestamp to detect it in forthcoming 'focus' event
         xtdom.addEventListener(this.handle, 'mousedown', function(ev) { if (ev.shiftKey) { _timestamp = new Date().getTime() }; }, true);
         // tracks 'focus' event in case focus is gained with tab navigation  (no shiftKey)
-        xtdom.addEventListener(this.handle, 'focus', function(ev) { window.console.log('focus'); _this.startEditing(); }, true);
+        xtdom.addEventListener(this.handle, 'focus', function(ev) {  _this.startEditing(); }, true);
+        if (xtiger.cross.UA.gecko) {  // gecko: prevent browser from selecting contentEditable parent in triple clicks ! 
+          xtdom.addEventListener(this.handle, 'mousedown', function(ev) { if (ev.detail >= 3) {xtdom.preventDefault(ev);xtdom.stopPropagation(ev);_this.handle.focus();_focusAndSelect(_this)} }, true);
+        }
+        if (xtiger.cross.UA.webKit) {
+          this.doSelectAllCb = function () { _focusAndSelect(_this); }; // cache function
+        }
+        // TODO: instant paste cleanup by tracking 'DOMNodeInserted' and merging each node inserted ?
       }
       if (this.isOptional()) {
         xtdom.addEventListener(this.optCheckBox, 'click', function(ev) { _this.onToggleOpt(ev); }, true);
@@ -177,14 +209,11 @@
     save : function (aLogger) {
       if (this.isOptional() && !this.isSet()) {
         aLogger.discardNodeIfEmpty();
-        window.console.log('SAVE discard');
         return;
       }
       if (!this.model) {
-        window.console.log('SAVE no model');
         return;
       }
-      window.console.log('SAVE : "' + this.model + '"');
       aLogger.write(this.model);
     },
 
@@ -309,32 +338,33 @@
     startEditing : function () {
       // avoid reentrant calls (e.g. user's click in the field while editing)
       if (this.editInProgress === false) {
-        window.console.log('Start editing !');
         this.editInProgress = true;
         // registers to keyboard events
         this.kbdHandlers = this.keyboard.register(this);
         this.keyboard.grab(this, this);
         xtdom.removeClassName(this.handle, 'axel-core-editable');
         if ((!this.isModified()) || ((_timestamp != -1) && ((_timestamp - new Date().getTime()) < 100))) {
-          // FIXME: does not always work, is it because the element has not been focused yet ?
-          _focusAndSelect(this);
+          if (xtiger.cross.UA.webKit) {
+            // it seems on webkit the contenteditable will really be focused after callbacks return
+            setTimeout(this.doSelectAllCb, 100);
+          } else {
+            _focusAndSelect(this); 
+          }
         }
         // must be called at the end as on FF 'blur' is triggered when grabbing
         xtdom.addEventListener(this.handle, 'blur', this.blurHandler, false);
-      } else {
-        window.console.log('Start editing cancelled (editInProgress) !')
       }
     },
 
     // Stops the edition process on the device
     stopEditing : function (isCancel) {
       if ((! this.stopInProgress) && (this.editInProgress !== false)) {
-        window.console.log('Stop editing !');
         this.stopInProgress = true;
         _timestamp = -1;
         this.keyboard.unregister(this, this.kbdHandlers);
         this.keyboard.release(this, this);
         xtdom.removeEventListener(this.handle, 'blur', this.blurHandler, false);
+        _sanitize(this.handle, this.doc);
         if (!isCancel) {
           // user may have deleted all
           // FIXME: we should also normalize in case of a paste that created garbage (like some <br/>)
@@ -349,8 +379,6 @@
         xtdom.addClassName(this.handle, 'axel-core-editable');
         this.stopInProgress = false;
         this.editInProgress = false;
-      } else {
-        window.console.log('Stop editing cancelled (stopInProgerss) !');
       }
     },
 
