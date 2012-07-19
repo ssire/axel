@@ -370,7 +370,7 @@ xtiger.editor.Generator.prototype = {
       /// End PATCH 
       // c.initFromTree(s, types, this.curDoc);
       this.savePendingEditor (c, s); // will be used in finishComponentGeneration
-      xtdom.addEventListener (s, 'change', function (ev) { c.handleSelect(ev); }, false);
+      c.awake(s);
       xtiger.cross.log('plant', 'Created a Choice editor for types ' + '/' + types + '/' );
     }
   },

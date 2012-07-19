@@ -61,8 +61,7 @@ xtiger.editor.Choice.prototype = {
     
   setChoiceMenu : function (clone) { 
     this.menu = clone;
-    var _this = this;
-    xtdom.addEventListener (clone, 'change', function (ev) { _this.handleSelect(ev); }, false);
+    this.awake(clone);
   },
   
   setBeginChoiceItem : function (clone) { 
@@ -76,6 +75,37 @@ xtiger.editor.Choice.prototype = {
       this.initializeSelectedItem (0);  // FIXME : check that it's not too early
     }
   },  
+  
+  awake : function (select) {
+    var _this = this;
+    xtdom.addEventListener (select, 'change', function (ev) { _this.handleSelect(ev); }, false);  
+    if (xtiger.cross.UA.IE) { // https://github.com/ssire/axel/issues/23
+      this.handleMouseEnter = function (event) {
+        var cur = xtdom.getEventTarget(event).parentNode;
+        while (cur && ((!cur.className) || cur.className.search('ie-select-hack') === -1)) {
+          cur = cur.parentNode;
+        }
+        if (cur) {
+          xtdom.addClassName(cur, 'hover');
+        } else {
+          xtdom.removeEventListener (select, 'mouseenter', _this.handleMouseEnter, false);
+        }
+        };
+      this.handleMouseLeave =   function (event) { 
+            var cur = xtdom.getEventTarget(event).parentNode;
+            while (cur && ((!cur.className) || cur.className.search('ie-select-hack') === -1)) {
+              cur = cur.parentNode;
+            }
+            if (cur) {
+              xtdom.removeClassName(cur, 'hover');
+            } else {
+              xtdom.removeEventListener (select, 'mouseleave', _this.handleMouseEnter, false);
+            }
+            };
+      xtdom.addEventListener (select, 'mouseenter', this.handleMouseEnter, false);
+      xtdom.addEventListener (select, 'mouseleave', this.handleMouseLeave, false);
+    }
+  },
   
   addChoiceItem : function (name, begin, end) {
     // console.log('addChoiceItem name=' + name + ' start=' + begin.nodeName + ' end=' + end.nodeName);

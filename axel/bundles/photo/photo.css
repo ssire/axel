@@ -3,6 +3,7 @@
 div#xt-photo {
 	width: 300px;
 	height: 260px;
+	overflow: hidden;
 }
 
 p#xt-photo-info {
@@ -12,7 +13,6 @@ p#xt-photo-info {
 
 p#xt-photo-error {
 	display: none;	
-	text-align: center;
 	font-family: sans-serif;
 	color: red;
 	margin: 20px;

@@ -204,8 +204,7 @@ xtiger.editor.Photo.prototype = {
     xtdom.addEventListener (this.handle, "error", function (ev) { _this.state.onError('Broken Image', true) }, false);
     xtdom.addEventListener (this.handle, this.getParam('trigger'), function (ev) {_this.device.startEditing(_this, 'photo');xtdom.preventDefault(ev);
     xtdom.stopPropagation(ev); }, false);
-    // HTML 5 DnD : FF >= 3.6 ONLY
-    // FIXME: TO BE DONE !
+    // HTML 5 DnD - FIXME: to be implemented as a filter
     // if (xtiger.cross.UA.gecko) { // FIXME: check version too !
     //  xtdom.addEventListener (this.handle, "dragenter", function (ev) { _this.onDragEnter(ev) }, false);  
     //  xtdom.addEventListener (this.handle, "dragleave", function (ev) { _this.onDragLeave(ev) }, false);  
@@ -348,39 +347,39 @@ xtiger.editor.Photo.prototype = {
     return this.handle;
   },
     
-  onDragEnter : function (ev) {  
-    xtdom.addClassName (this.handle, 'axel-dnd-over');
-    xtdom.stopPropagation(ev);
-    xtdom.preventDefault(ev);
-  },
-  
-  onDragOver : function (ev) {       
-    xtdom.stopPropagation(ev);
-    xtdom.preventDefault(ev);
-  },
-
-  onDragLeave : function (ev) {  
-    xtdom.removeClassName (this.handle, 'axel-dnd-over');
-    xtdom.stopPropagation(ev);
-    xtdom.preventDefault(ev);
-  },  
-
-  onDrop : function (ev) {       
-    var dt = ev.dataTransfer;  
-    var files = dt.files; 
-    xtdom.stopPropagation(ev);
-    xtdom.preventDefault(ev);
-  
-    // find the first image file
-    for (var i = 0; i < files.length; i++) {  
-      var file = files[i];  
-      var imageType = /image.*/;  
-      if (!file.type.match(imageType)) {  
-        continue;  
-      }  
-      this.state.startTransmission(this.curDoc, 'dnd', file, this.getParam('photo_URL'));
-    } 
-  } 
+  // onDragEnter : function (ev) {  
+  //   xtdom.addClassName (this.handle, 'axel-dnd-over');
+  //   xtdom.stopPropagation(ev);
+  //   xtdom.preventDefault(ev);
+  // },
+  // 
+  // onDragOver : function (ev) {       
+  //   xtdom.stopPropagation(ev);
+  //   xtdom.preventDefault(ev);
+  // },
+  // 
+  // onDragLeave : function (ev) {  
+  //   xtdom.removeClassName (this.handle, 'axel-dnd-over');
+  //   xtdom.stopPropagation(ev);
+  //   xtdom.preventDefault(ev);
+  // },  
+  // 
+  // onDrop : function (ev) {       
+  //   var dt = ev.dataTransfer;  
+  //   var files = dt.files; 
+  //   xtdom.stopPropagation(ev);
+  //   xtdom.preventDefault(ev);
+  // 
+  //   // find the first image file
+  //   for (var i = 0; i < files.length; i++) {  
+  //     var file = files[i];  
+  //     var imageType = /image.*/;  
+  //     if (!file.type.match(imageType)) {  
+  //       continue;  
+  //     }  
+  //     this.state.startTransmission(this.curDoc, 'dnd', file, this.getParam('photo_URL'));
+  //   } 
+  // } 
 }
 
 /**
@@ -627,7 +626,7 @@ xtiger.editor.PhotoWrapper.prototype = {
     
     // Starts uploading on behalf of the view
     onStartUpload : function (form) {
-      this.state.startTransmission(this.myDoc, 'upload', form, this.editor.getParam('photo_URL'));
+      this.state.startTransmission(this.myDoc, 'form', form, this.editor.getParam('photo_URL'));
     },
 
     onCancelUpload : function (form) {

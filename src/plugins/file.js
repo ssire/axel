@@ -268,14 +268,14 @@ xtiger.editor.FileFactory = (function FileFactory() {
 
     startTransmission : function (manager, uploader) {
       this.transmission = uploader;
-      this.transmission.setDataType('dataform');
+      this.transmission.setDataType('formdata');
       this.transmission.setAction(this.delegate.getParam('file_URL'));
       manager.startTransmission(this.transmission, this);
     },  
 
     startPreflight : function (manager, uploader) {
       this.transmission = uploader;
-      this.transmission.setDataType('dataform');
+      this.transmission.setDataType('formdata');
       this.transmission.setAction(this.delegate.getParam('file_URL'));
       manager.startPreflight(this.transmission, this);
     },  
