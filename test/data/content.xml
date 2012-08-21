@@ -1,0 +1,24 @@
+<Test>
+  <FirstParag>One</FirstParag>
+  <SecondParag>Two</SecondParag>
+  <ThirdParag>Three</ThirdParag>
+  <NoEditParag>You should be able neither to change this parag content nor to focus it !</NoEditParag>
+  <Repetition>
+    <Parag>Four</Parag>
+    <SubTitle>Five</SubTitle>
+    <List>
+      <ListHeader>Six</ListHeader>
+      <Item>seven</Item>
+      <Item>eight</Item>
+      <Item>nine</Item>
+    </List>
+    <SubSubTitle>Ten</SubSubTitle>
+    <Parag>Eleven</Parag>
+    <List>
+      <Item>twelve</Item>
+      <Item>thirteen</Item>
+      <Item>fifteen</Item>
+    </List>
+    <Parag>seventeen</Parag>
+  </Repetition>
+</Test>

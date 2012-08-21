@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>AXEL design file for 'file' plugin</title>
+	
+	<style type="text/css" media="screen">
+	 input.xt-file-input {
+	   position: absolute;
+	   top: 0;
+	   left: 0;
+     visibility: hidden;
+	 }
+   span.xt-file.full:hover > span.data-file {
+    display: inline;
+   }
+   span.data-file {
+    display: none;
+   }
+   img.icon {
+     vertical-align: middle;
+   }
+   p#tooltip {
+     position: absolute;
+     display: none;
+     background: black;
+     color: white;
+     border: outset 3px white;
+     padding: 9px;
+   }
+	</style>
+	
+	<script type="text/javascript" src="../../3rd-part/jquery-1.5.1.min.js"></script>
+  	
+	<script type="text/javascript" charset="utf-8">
+	var file;
+	 function handleFiles(files) {  
+     file = files[0];
+     var img = document.getElementById('feedback');
+     img.src = window.URL.createObjectURL(file);
+     console.log('onchange ' + files.length + ' ' + $('#test')[0].value);
+       /* now you can work with the file list */  
+   }
+	 function handleBlur(files) {  
+     console.log('onblur');
+       /* now you can work with the file list */  
+   }
+   function uploadFile() {
+     var flinput = $('input.xt-file-input').get(0);
+     if (flinput) {
+       flinput.click();
+       console.log('click input field');
+     } else {
+       console.log('could not find input field');
+     }
+   }
+   function saveFile() {
+     if (file) {
+       // simulates a POST !!!
+       var oXHR = new XMLHttpRequest();  
+       oXHR.open("POST", "images", true);  
+       oXHR.onreadystatechange = function (oEvent) {  
+         if (oXHR.readyState === 4) {  
+           if (oXHR.status === 200) {  
+             console.log(oXHR.responseText)  
+           } else {  
+             console.log("Error", oXHR.statusText);  
+           }  
+         }  
+       };  
+       var formData = new FormData();
+       formData.append("xt-photo-file", file); 
+       oXHR.send(formData);
+     } else {
+       alert('SELECT first !')
+     }
+   }
+   function showTooltip(ev) {
+     console.log('current '  + $('#test')[0].value);
+     var pos = $(ev.target).offset();
+     var delta = $('#tooltip').height() + $(ev.target).height();
+     // console.log('show ' + pos.left + ' ' + pos.top);
+     // console.log('page ' + ev.pageX + ' ' + ev.pageY);
+     $('#tooltip').css({'left' : pos.left, 'top' : (pos.top - delta) }).show();
+     console.log('delta ' + delta);
+   }
+   function hideTooltip(ev) {
+     $('#tooltip').hide();
+   }
+   function enterFull(ev) {
+     $(ev.target.parentNode).addClass('full');
+   }
+   function leaveFull(ev) {
+     $(ev.currentTarget).removeClass('full');
+   }
+   
+(function () { 	
+   jQuery( function() { 
+     $('img.xt-file-icon').bind({
+      mouseenter : function (ev) { showTooltip(ev) },
+      mouseleave : function (ev) { hideTooltip(ev) }
+     });
+     $('img.xt-file-over').bind({
+      mouseenter : function (ev) { enterFull(ev) },
+     });
+     $('span.xt-file').bind({
+      mouseleave : function (ev) { leaveFull(ev) },
+     });
+     
+   })
+})();
+	</script>
+</head>
+
+<body>
+  <div>
+    <img id="feedback"/>
+  </div>
+
+  <p><span onclick="saveFile()">SAVE</span></p>
+  
+  <p id="tooltip">“exposé-a...-12.pdf”<br/>Erreur : adresse inconnue (500)</p>
+  
+  <p>Blah blah</p>
+  
+  <p><strong>EMPTY state</strong> :   
+      <span class="xt-file">
+        <img onclick="uploadFile()" class="icon xt-file-over" src="../../axel/bundles/file/nofile32.png" alt="MISSING ICON"/><span class="data-file">(cliquez pour choisir un fichier)</span>
+        <input id="test" type="file" class="xt-file-input" onchange="handleFiles(this.files)" onblur="handleBlur()" onselect="handleBlur()" onblur="handleClick()"  accept="image/png"/>      
+      </span>
+  </p>
+
+  <p><strong>SELECTED state</strong> :
+    <span class="xt-file">
+      <img class="icon xt-file-over" src="../../axel/bundles/file/save32.png"/ alt="MISSING ICON"><span class="data-file">“exposé-a...-12.pdf”</span><input type="button" value="Enregistrer"/> <img src="../../axel/bundles/file/cancel32.png"/>
+    </span>
+  </p>
+  
+  <p><strong>LOADING state</strong> :
+    <span class="xt-file">
+      <img class="icon xt-file-over" src="../../axel/bundles/file/spiningwheel.gif" alt="MISSING ICON"/><span class="data-file">“exposé-a...-12.pdf”</span> (enregistrement en cours<img src="../../axel/bundles/file/cancel32.png"/>)
+    </span>
+  </p>
+
+  <p><strong>ERROR state</strong> :
+    <span class="xt-file">
+      <img class="icon xt-file-icon xt-file-over" style="vertical-align: middle"  src="../../axel/bundles/file/bug48.png" alt="MISSING ICON"/><span class="data-file">“exposé-a...-12.pdf”</span>  (échec de l'enregistrement <img src="../../axel/bundles/file/cancel32.png"/>)
+    </span>      
+  </p>
+
+  <p><strong>COMPLETE state</strong> :
+    <span class="xt-file">
+      <img class="icon xt-file-over" src="../../axel/bundles/file/pdf32.png" alt="MISSING ICON"/><span class="data-file">“exposé-a...-12.pdf”</span> (téléchargement réussi <img src="../../axel/bundles/file/ok16.png"/>)
+    </span>
+  </p>
+
+  <p><strong>READY state</strong> :
+    <span class="xt-file">
+      <img onclick="uploadFile()" class="icon xt-file-over" style="vertical-align: middle" src="../../axel/bundles/file/pdf32.png" alt="MISSING ICON"/><span class="data-file">“Arnoux.pdf” (cliquez pour remplacer le fichier)</span>
+    </span>
+  </p>
+</body>
+</html>

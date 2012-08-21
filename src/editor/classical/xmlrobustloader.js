@@ -19,7 +19,7 @@
  * You can share this class as it doesn't maintain state information between loadData calls
  */
 xtiger.editor.RobustLoader = function () {
-}
+};
 
 xtiger.editor.RobustLoader.prototype = {    
   

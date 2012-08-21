@@ -164,7 +164,7 @@
 
      stopEditing : function ( isCancel ) {
        var picker = xtiger.factory('datepickerdev').getInstance(this.getDocument());
-       picker.release();
+       picker.release(isCancel);
      },
      
      load : function (aPoint, aDataSrc) {
