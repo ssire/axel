@@ -91,7 +91,7 @@
      // and that contains an input or textarea edit field
      // FIXME: register keyboard manager to track TAB navigation ?
      grab : function ( editor, doSelectAll ) {
-       var _htag, region = editor.getParam('date_region') || DEFAULT_REGION;
+       var tmp, _htag, region = editor.getParam('date_region') || DEFAULT_REGION;
        $.datepicker.setDefaults((region === 'fr') ? REGION['fr'] : $.datepicker.regional['']);
        this.jhandle.val(editor.getData()); // FIXME: format data to date (?)
        this.editorHandle = editor.getHandle();
@@ -103,6 +103,18 @@
        } else {
          this.hook = this.cache[_htag];
        }
+       // constraints
+       tmp = editor.getParam('minDate');
+       this.jhandle.datepicker('option', 'minDate', tmp || null);
+       tmp = editor.getParam('maxDate');
+       this.jhandle.datepicker('option', 'maxDate', tmp || null);
+       tmp = editor.getParam('beforeShow');
+       if (tmp) {
+         this.jhandle.datepicker('option', 'beforeShow', tmp); // sets callback
+       } else {
+         this.jhandle.datepicker('option', 'beforeShow', tmp); // unsets callback
+       }
+       // insertion
        var parent = this.editorHandle.parentNode;  
        if (this.hook.firstChild != this.handle) {
          this.hook.appendChild(this.handle);
@@ -148,7 +160,7 @@
      }
    );
 
-   var datepickerFilterMixin = {  
+   var datepickerFilterMixin = {
 
      // Property remapping for chaining
      '->': {
@@ -179,10 +191,23 @@
        this._data = _convertDate(this, tmp, 'date_region', 'date_format');
        this.__datepickerSuperSave(aLogger);
        this._data = tmp; // reestablish it for next save
+     },
+     
+     // Experimental method to change parameters - to be part of future Param API ?
+     // FIXME: indirection for datepicker('option', key, value) ?
+     configure : function (key, value) {
+       if ((value == undefined) || (((key == 'minDate') || (key == 'maxDate')) && isNaN(new Date(value).getDay()))) { 
+         delete this._params[key];
+       } else {
+         this._params[key] = value;
+       }
      }
    }
 
    // Expose the filter to the 'text' plugin (i.e. text.js must have been loaded)
    xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('date', datepickerFilterMixin);
+   if (xtiger.editor.Plugin.prototype.pluginEditors['input']) {
+     xtiger.editor.Plugin.prototype.pluginEditors['input'].registerFilter('date', datepickerFilterMixin);
+   }
 
  })();

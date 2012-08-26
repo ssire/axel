@@ -319,4 +319,4 @@ xtiger.util.Form.prototype = {
     return (this.status == 1);    
   }
   
-} 
+};
