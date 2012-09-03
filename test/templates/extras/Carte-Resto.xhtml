@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+
+  <title>Carte</title>
+  
+  <xt:head version="1.1" templateVersion="1.0" label="carte">
+
+    <xt:component name="course">        
+      <h2 class="courseTitle"><xt:use types="text" label="name">Type de plats (ex: entrées)</xt:use><xt:menu-marker size="20"/></h2>
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="choice">
+        <xt:use types="choice" label="choice"/>
+        <p class="choiceSeparator"></p>
+      </xt:repeat>
+    </xt:component>
+
+    <xt:component name="choice" i18n="liste de plats">   
+      <div class="choiceBox">
+        <div class="choiceBoxMarker"><xt:menu-marker/></div>
+        <div class="choiceBoxContent">  
+          <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="@specialty">
+            <h3 class="specialty">
+              <xt:menu-marker/>
+              <xt:attribute types="text" name="specialty" default="Type de spécialité (ex: entrées chaudes)"/>
+            </h3>                   
+            <p class="specialtyComment"><xt:use types="text" label="comment" option="unset">commentaire</xt:use></p>
+          </xt:repeat>
+          <ul class="choiceList">
+            <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="dish">
+              <li class="dishItem">         
+                <xt:use types="dish" label="dish"/>
+              </li>
+            </xt:repeat>
+          </ul>  
+        </div>
+     </div>
+    </xt:component>
+
+    <xt:component name="dish">    
+      <span class="dishMarker"><xt:menu-marker/></span><xt:use types="text" label="name" param="type=input;shape=self;layout=placed;class=dishName">Nom du plat</xt:use>          
+      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="@photo">
+        <span class="photo"><xt:menu-marker/><xt:attribute types="photo" name="photo" default=""/></span>
+      </xt:repeat> 
+      <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="price">
+        <xt:use types="price" label="price"/>
+      </xt:repeat>  
+      <br />
+      <xt:use types="text" label="comment" option="unset" param="class=dishComment" handle="blockquote">commentaire</xt:use>      
+    </xt:component>
+
+    <xt:component name="price">    
+      <xt:menu-marker size="12" /><xt:use types="text" param="type=input;class=priceItem">prix</xt:use> <xt:attribute types="select" name="currency" values="EUR CHF USD" i18n="&#8364; CHF $" default="EUR" param="class=currencyItem"> </xt:attribute>
+    </xt:component>
+    
+  </xt:head>  
+  
+  <style type="text/css">
+  body
+   {     
+    padding: 40px;
+      color: black;
+      background-color: white;
+   }                        
+
+  /***************** XTiger Forms *****************/ 
+
+  .xtt-editable:hover {
+    border: 1.5px dashed blue !important;
+    padding: 2px;
+  }        
+
+  body.preview .specialty {
+    margin-bottom: 0;
+  }
+  
+  body.preview img.xtt-photo {
+    display: none;
+  }
+
+  /***************** Menu ******************/
+  
+  .menuBox {
+    border: 3px inset lightgray;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .title {
+    font-family: "Comic Sans MS", sans-serif;      
+    font-variant: small-caps;
+    font-size: 140%;
+    color: #6d5858;
+    text-align: left;         
+    margin-left: 20%;
+  }           
+  
+  .courseBox {
+    text-align: center;
+  }           
+  
+  .courseTitle {     
+    font-family: cursive;
+    font-size: 140%;
+    color: blue;
+    text-decoration: underline;   
+  }
+  
+  .choiceBox {
+    margin: 0;      
+    margin-bottom: 0;
+    padding: 2px;    
+    position: relative;
+  }             
+  
+  .choiceBox:hover {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0;    
+    border: 1px dashed lightgray;
+  }
+  
+  .choiceBoxMarker {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;    
+    height: 0;
+  }                 
+  
+  .choiceBox:hover  .choiceBoxMarker {
+    visibility: visible;
+  }
+
+  .choiceBoxContent {
+    position: static;
+  }
+  
+  h3.specialty {       
+    font-family: cursive;
+    font-size: 120%;    
+    margin-top: 0;
+    padding-top: 0;       
+    margin-bottom: 0;     
+  }   
+                       
+  h3.specialty > span {       
+    color: #993030;       
+    text-decoration: underline;
+  }
+
+  h3.specialty > span.xtt-repeat-unset  {
+    text-decoration: none;
+  }    
+
+  p.specialtyComment {  
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 0;
+    font-size: 110%;      
+    vertical-align: 40%;     
+  }                    
+  
+  p.specialtyComment > span {
+/*    color: #691010;  */
+    color: black;
+    font-style: italic;
+  }
+
+  .dishComment:before, p.specialtyComment > span:before {   
+    content: "("
+  }
+  
+  .dishComment:after, p.specialtyComment > span:after {   
+    content: ")"
+  }
+  
+  .choiceList {        
+    list-style:none;
+    padding:5px 10px;
+    margin: 0;
+  }
+  
+  .dishMarker {     
+    position: relative;
+    left: -60px;
+  } 
+  
+  .dishItem {       
+    color: #6d5858;
+    margin-bottom: 8px;    
+  }    
+
+  span.dishName {   
+    font-family: cursive;  
+    margin-right: 10px;
+  }  
+  
+  textarea.dishName {   
+    background-color: white !important;
+    border-color: blue;
+  }   
+                    
+  /*ne marche pas sur FF, pourquoi ? car pas block level ?*/
+  span.dishName:first-letter {   
+    font-size: 150%;
+    font-weight: bold; 
+  }
+  
+  blockquote.dishComment {  
+    margin: 0;       
+    padding: 0;       
+    font-family: sans-serif;    
+    font-style: italic;  
+    font-size : 80%;   
+    display:inline;
+  }       
+  
+  blockquote.dishComment.xtt-option-edit-set {
+/*    color: #4d3838;       */
+    color: black;   
+  } 
+                          
+  .priceItem, .currencyItem {         
+    font-family: Helvetica, sans-serif;
+    font-size: 90%;
+  }
+  
+  .currencyItem {                                               
+    margin-right: 5px;
+  }
+
+  li.dishItem span.currencyItem:last-of-type:after
+  {                   
+    content: ""
+  }
+
+  li.dishItem span.currencyItem:after
+  {                   
+    content: ","
+  }
+
+  .courseSeparator {
+    text-align: center;
+  }         
+
+  .courseSeparator, .choiceSeparator {
+    margin: 0;
+    padding: 0;
+  }
+
+  .courseBox .choiceSeparator:after {
+    content: "***"
+  }
+  
+  .courseBox .choiceSeparator:last-of-type:after {
+    content: ""
+  } 
+
+  body .courseSeparator:after {
+    content: "§§§"
+  }
+  
+  body .courseSeparator:last-of-type:after {
+    content: ""
+  }
+  
+  span.photo {
+    vertical-align: top;
+  }
+  </style>   
+  
+  <!-- Optional AXEL Preview Mode -->
+  <link rel="stylesheet" type="text/css" href="Preview.css" />
+  
+  <!-- CSS file for the photo uploader wrapper -->
+  <link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css" />
+  
+  <script type="text/javascript">                                 
+    function finishTransmission(url) { 
+      var pwin = window.parent;
+      var manager = pwin.xtiger.factory('upload').getInstance(document);
+       if (manager) {
+        manager.notifyComplete(null, url);
+       }
+    }   
+  </script>   
+  
+  <!-- Place here optional AXEL code for making the template auto-editable -->
+
+</head>
+<body>             
+  <div class="menuBox">
+    <h1 class="title"><xt:use types="text" label="title">Carte...</xt:use></h1>
+    <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="course">
+      <div class="courseBox">
+        <xt:use types="course" label="course"/>  
+      </div>
+      <p class="courseSeparator"></p>
+    </xt:repeat>        
+  </div>
+</body>
+</html>
+
