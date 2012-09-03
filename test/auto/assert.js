@@ -64,7 +64,7 @@ function logSuccess (message) {
 	var n = document.getElementById('results');
 	var answer = document.createElement('p');
 	answer.setAttribute('class', 'result');
-	var buffer = message + "<span class='passed'>PASSED</span>";
+	var buffer = message + " <span class='passed'>PASSED</span>";
 	answer.innerHTML = buffer;
 	n.appendChild(answer);
 }
@@ -73,7 +73,7 @@ function logFailure (message) {
 	var n = document.getElementById('results');
 	var answer = document.createElement('p');
 	answer.setAttribute('class', 'result');
-	var buffer = message + "<span class='passed'>FAILED</span>";
+	var buffer = message + " <span class='failed'>FAILED</span>";
 	answer.innerHTML = buffer;
 	n.appendChild(answer);
 }

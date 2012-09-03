@@ -354,6 +354,11 @@ viewerApp.prototype = {
     }
     if (! this.curForm.transform()) {
       alert(this.curForm.msg);            
+    } else {
+      if (window.jQuery) {
+        // triggers completion event on main document
+        $(document).triggerHandler('AXEL-TEMPLATE-READY', [this]);
+      }
     }
     if (e.profile.checked) {
       console.profileEnd();

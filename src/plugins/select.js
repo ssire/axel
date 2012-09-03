@@ -318,5 +318,5 @@
     }
   };
 
-  $axel.registerPlugin('select', factory, _SelectModel, true); // true: filterable
+  $axel.plugin.register('select', factory, _SelectModel, true); // true: filterable
 })();

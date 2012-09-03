@@ -77,9 +77,11 @@
    var datepickerDevice = function ( doc ) {
      var _this = this;
      this.handle = xtdom.createElement(doc, 'input');
-     this.jhandle = $(this.handle).attr({'id' : 'xt-date-datepicker', 'size' : 10});
+     xtdom.setAttribute(this.handle, 'id', 'xt-date-datepicker');
+     xtdom.setAttribute(this.handle, 'size', 10);
      $('body', doc).append(this.handle);
-     this.jhandle.datepicker().datepicker('option', 'onClose', function () { _this.onClose() });
+     this.jhandle = $('body > #xt-date-datepicker', doc);
+     this.jhandle.datepicker().datepicker('option', 'onClose', function () { _this.onClose(); });
      this.myDoc = doc;
      this.cache = {};
    };
@@ -202,7 +204,7 @@
          this._params[key] = value;
        }
      }
-   }
+   };
 
    // Expose the filter to the 'text' plugin (i.e. text.js must have been loaded)
    xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('date', datepickerFilterMixin);

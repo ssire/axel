@@ -463,5 +463,5 @@
     }
   };
 
-  $axel.registerPlugin('content', factory, TextModel, false); // false: not filterable
+  $axel.plugin.register('content', factory, TextModel, false); // false: not filterable
 }());

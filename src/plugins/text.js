@@ -183,8 +183,7 @@ xtiger.editor.TextFactory = (function TextFactory() {
       var _deviceFactory = this._params['device'] ? 
           xtiger.factory(this._params['device']) : 
           xtiger.factory(this._params['defaultDevice']);
-      this._device = _deviceFactory.getInstance(this._document,
-          this._params['type'], this._params['layout']);
+      this._device = _deviceFactory.getInstance(this._document, this._params['type'], this._params['layout']);
       this.awake();
     },
 
@@ -650,10 +649,10 @@ xtiger.editor.TextFactory = (function TextFactory() {
       var _model = new _TextModel(aHandleNode, aDocument);
       var _param = {};
       xtiger.util.decodeParameters(aXTUse.getAttribute('param'), _param);
-      if (_param['filter'])
+      if (_param['filter']) {
         _model = this.applyFilters(_model, _param['filter']);
-      _model.init(_data, aXTUse.getAttribute('param'), 
-        aXTUse.getAttribute('option'), this.createUniqueKey());
+      }
+      _model.init(_data, aXTUse.getAttribute('param'), aXTUse.getAttribute('option'), this.createUniqueKey());
       return _model;
     },
 
@@ -679,8 +678,9 @@ xtiger.editor.TextFactory = (function TextFactory() {
       var _defaultData = aSeed[1];
       var _params = aSeed[2];
       var _option = aSeed[3];
-      if (_params['filter'])
-        _model = this.applyFilters(_model, _params['filter']);
+      if (_params['filter']) {
+        _model = this.applyFilters(_model, _params['filter']); 
+      }
       _model.init(_defaultData, _params, _option, this.createUniqueKey(), aRepeater);
       return _model;
     },

@@ -1,5 +1,42 @@
-(function() {
+/* ***** BEGIN LICENSE BLOCK *****
+ *
+ * @COPYRIGHT@
+ *
+ * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@ 
+ *
+ * @LICENSE@
+ *
+ * Web site : http://media.epfl.ch/Templates/
+ * 
+ * Author(s) : Stephane Sire
+ * 
+ * ***** END LICENSE BLOCK ***** */
 
+/*****************************************************************************\
+|                                                                             |
+|  AXEL Wrapper                                                               |
+|                                                                             |
+|  wrapped set function (access to primitive editors a-la jQuery)             |
+|  extended with some global management functions                             |
+|  exposed as GLOBAL.$axel                                                    |
+|                                                                             |
+|*****************************************************************************|
+|                                                                             |
+|  Wrapped set:                                                               |
+|    $axel (node(s) | string, seethrough)                                     |
+|             returns a wrapped set of primitive editor(s) within             | 
+|             the DOM node(s) or a string $ (jQuery) selector                 |
+|             also includes unselected choice slices if seethrough is true    | 
+|             the string argument will be interpreted if and only if a $      |
+|             function is defined                                             |
+|                                                                             |
+|  Global functions:                                                          |
+|    extend (target, source, proto)                                           |
+|             utility method to merge objects                                 |
+|                                                                             |
+\*****************************************************************************/
+(function (GLOBAL) {
+  
   function _nodeIter (n, accu, seethrough) { 
     if (n.xttPrimitiveEditor) {
       accu.push(n.xttPrimitiveEditor);
@@ -65,8 +102,8 @@
     
   };
 
-  function _WrappedSet (nodes, seethrough) {
-    var i, targets = (typeof nodes === 'string') ? $(nodes).get() : nodes;
+  function _WrappedSet (targets, seethrough) {
+    var i;
     this.seethrough = seethrough; // to show optional repetitions content
     this.list = [];
     for (i = 0; i < targets.length; i++) {
@@ -108,6 +145,14 @@
       return logger.dump(); 
     },
 
+    configure : function (option, value) {
+      var i;
+      for (i = 0; i < this.list.length; i++) {
+        this.list[i].configure(option, value);
+      }
+      return this; 
+    },
+
     apply : function (func, toHandle) {
       var i;
       for (i = 0; i < this.list.length; i++) {
@@ -115,12 +160,51 @@
       }
       return this;
     }
+  };
 
+  // Creates AXEL wrapped set function and global object
+  var _axel = function axel_ws (nodes, seethrough, doc) {
+    var target;
+    if (typeof nodes === 'string') { // jQuery selector 
+      if (GLOBAL.jQuery) {
+        target = $(nodes, doc || document).get();
+      } else {
+        xtiger.cross.log('warning', 'jQuery missing to interpet wrapped set selector "' + nodes  + '"');
+        target = [];
+      }
+    } else if (Object.prototype.toString.call(nodes) === "[object Array]") { // isArray
+      target = nodes;
+    } else if (nodes) { // would be nice to detect a jQuery wrapped set ([object Object] ?) to call get()
+      target = [ nodes ];
+    } else {
+      xtiger.cross.log('warning', 'empty wrapped set selector');
+      target = [];
+    }
+    return new _WrappedSet(target, seethrough);
   };
-  
-  var axel_func = function (nodes, seethrough) {
-    return new _WrappedSet(nodes, seethrough);
-  };
-  
-  window.xray = axel_func;
-}());
+
+  // Extends a target object's with the own properties and methods 
+  // of a source object whenever they are not already defined
+  // if proto is true extends the target's prototype
+  _axel.extend = function extend (target, source, proto) {
+    if (proto) {
+      for (var x in source){
+        if (source.hasOwnProperty(x)) {
+          if (typeof target.prototype[x] === "undefined") {
+            target.prototype[x] = source[x];
+          }
+        }
+      }
+    } else {
+      for (var x in source){
+        if (source.hasOwnProperty(x)) {
+          if (typeof target[x] === "undefined") {
+            target[x] = source[x];            
+          }
+        }
+      }
+    }
+  }
+
+  GLOBAL.$axel = _axel;
+}(window));
