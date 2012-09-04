@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>AXEL "date" filter</title>
+  
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+     <xt:component name="t_date">
+      <span>
+        <xt:use types="text" param="filter=date;date_region=fr;date_format=ISO_8601"/>
+      </span>
+     </xt:component>
+    </xt:head>
+
+    <!-- BEGIN transformation -->
+    <link rel="stylesheet" type="text/css" href="../../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css"  charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../../axel/axel.css"></link>
+
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-ui-1.8.18.custom.min.js"></script>
+    <script type="text/javascript" src="../../axel/axel.js"></script>
+
+    <script type="text/javascript">
+      var form;
+      function init() {
+        var today, dates;
+        form = new xtiger.util.Form('../axel/bundles');
+        form.setTemplateSource(document);
+        form.enableTabGroupNavigation();
+        if (! form.transform()) { 
+          alert(this .form.msg); 
+        } else {
+          today = $.datepicker.formatDate('dd/mm/yy', new Date())
+          dates = $axel('#x-Todate');
+          dates.get(0).configure('maxDate', today);
+        }
+      }
+      xtdom.addEventListener(window,  'load', init, false);
+    </script>
+    <!-- END transformation -->
+
+    <style type="text/css">
+      .warning {
+        margin: 1em;
+        border: solid 1px red;
+        font-style: italic;
+        color: navy;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <p class="warning">WARNING: this is a self-transformed template that can only be used with jQuery/jQuery-ui/AXEL libraries sitting in the parent window because of jQuery datepicker limitations</p>
+  
+    <h1>AXEL "date" filter</h1>
+
+    <h2>"date" filter on "text" plugin</h2>
+  
+    <p>Calendar region is 'fr' and format is 'ISO_8601'</p>
+
+    <p id="x-Todate">Date : 
+      <xt:use types="t_date" label="Date"/>
+      <!-- <xt:use types="text" param="filter=date;date_region=fr;date_format=ISO_8601" label="Date"/> -->
+    </p>
+
+  </body> 
+</html>

@@ -1,99 +1,60 @@
 /** 
- * AXEL configuration file for selecting which templates to use in the demos 
- * and to insert by default in the editor application if it cannot list
- * the content of the templates folder upon load
+ * AXEL configuration file
+ *
+ * List of templates to insert by default in the editor application
+ * The editor will try to overwrite files by reading the file system
+ *
  */       
 
-/** Returns the list of templates and data file to show in demos/index.html 
-  *
-  */                
+// Model data to construct template selection menus in editor application
+// Please fill this data structure as you add more templates
+// NOTE: do not use "_custom_" name (reserved)
 function getDefaultTemplates () {
-	var res = [
-	"Article.xhtml",
-	"Carte-Resto.xhtml",
-	"Curriculum.xhtml",
-	"Editors.xhtml",
-	"Fiche-Cafe++.xhtml",
-	"Fiche-Cafe-Flow.xhtml",
-	"Fiche-Cafe.xhtml",
-	"Fiche-Projet.xhtml",
-	"Hello-world.xhtml",
-	"Meeting-Report.xhtml",
-	"PageWeb.xhtml",
-	"Photos.xhtml",
-	"Plugins.xhtml",
-	"Publications.xhtml",
-	"Requirements.xhtml",
-	"Services.xhtml",
-	"Story.xhtml",
-	"Suivi.xhtml",
-	"Taches.xhtml",
-	"Tickets.xhtml",
-	"Workpackage.xhtml",
-	"YouTube.xhtml"    
-	]	
-	return res;
-}	           
-            
-/** Returns the list of templates and data file to show in demos/index.html 
-  *
-  */                
-function getDemoTemplates () {                
-	var res = {
-		'Curriculum.xhtml' : {
-			data: 'cvHaddock.xml',
-			description : 'shows a curriculum vitae'
-		},
-		'Carte-Resto.xhtml' : {
-			data: 'carteResto2.xml',
-			description: 'shows a restaurant menu card (<span class="warning">photo upload not functional in this demo</span>)'
-		},
-		'Fiche-Cafe++.xhtml' : {
-			description: 'shows a page that describes a bar or a restaurant'
-		},
-		'Article.xhtml' : {
-			data: 'article/final.xml',
-			description: 'is the template used to write XML Prague 2010 article on AXEL and XTiger XML. It works with an <em>image</em> filter which must be packaged inside the library. It also works with a <em>wiki</em> filter to allow simple formating in paragraphs and to enter hypertext links'
-		},
-		'Fiche-Projet.xhtml' : {
-			data: 'ficheProjetW.xml',
-			description: 'shows a student project description such as the one displayed at <a href="http://media.epfl.ch/Student%20Projects.html" target="_blank">MEDIA student projects</a>'
-		},
-		'Publications.xhtml' : {
-			data: 'publications.xml',
-			description: 'shows a bibliography'
-		},
-		'Taches.xhtml' : {
-			compatibility: 'not-on-ie',
-			description: 'shows a basic project task management record; in French'
-		},
-		'Tickets.xhtml' : {
-			compatibility: 'not-on-ie',
-			description: 'shows a basic ticket for a bug or feature tracking system'
-		},
-		'Story.xhtml' : {
-			compatibility: 'not-on-ie',
-			data: 'thailand.xml',
-			description: 'shows an experimental template with an input filter that allows user\'s input to change the style of the document. It also uses the <em>image</em> filter that supports DnD on Firefox (3.6). Such template could be used to create pages in a Wiki for instance. It opens with a document that includes images on the Web, so you must have your Internet connection turned on'
-		},
-		'Editors.xhtml' : {
-			compatibility: 'not-on-ie',
-		 	description: 'shows a tutorial with all the different kind of editors supported with the core library'
-		},
-		'Workpackage.xhtml' : {
-			data: 'wp1.xml',
-			description:  'shows a European Project Workpackage description template, currently the default <a href="../data/wp1.xml">wp1.xml</a> shows an XSLT generated view of a document created with this template, ready to be included in a project proposal'
-		},
-		'PageWeb.xhtml' : {
-			compatibility: 'not-on-ie',
-			data: 'pageWeb.xhtml',
-			description: 'shows a generic Web page template with an XHTML subset target content model'
-		}		 
-	}
-	return res;	
+  return [
+    { 
+    name : 'demos', // menu name
+    path : '../templates/demos/', // path to folder (MUST end with '/')
+    files :  // available template files
+      [
+      "Date.xhtml",
+      "Editors.xhtml",
+      "Photos.xhtml",
+      "Plugins.xhtml",
+      "Video.xhtml"
+      ]
+    },
+    {
+    name : 'samples',
+    path : '../templates/samples/',
+    files : 
+      [
+      "Article.xhtml"
+      ]
+    },
+    { 
+    name : 'test',
+    path : '../test/gui/',
+    files : 
+      [
+      "Core.xhtml"
+      ]
+    }
+  ]
 }
 
-
-
-
-
+/** Returns the list of templates and data file to show in demos/index.html 
+  *
+  * DEPRECATED : to be move out or replace by something (?)
+  */                
+function getDemoTemplates () {                
+  return {
+    'Article.xhtml' : {
+      data: 'article/final.xml',
+      description: 'is the template used to write XML Prague 2010 article on AXEL and XTiger XML. It works with an <em>image</em> filter which must be packaged inside the library. It also works with a <em>wiki</em> filter to allow simple formating in paragraphs and to enter hypertext links'
+    },
+    'Editors.xhtml' : {
+      compatibility: 'not-on-ie',
+      description: 'shows a tutorial with all the different kind of editors supported with the core library'
+    }
+  }
+}

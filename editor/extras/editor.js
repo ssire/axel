@@ -31,7 +31,7 @@ var Utility = {
 
   // Returns true if the running application has been started directly from the file system
   isLocalSession : function () {
-    return (0 == document.location.href.indexOf('file://'));
+    return (0 === document.location.href.indexOf('file://'));
   },
   
   // Returns fn if the application hasn't been launched from a file:// URL
@@ -55,8 +55,8 @@ var Utility = {
     } else {
       return proxy + escape(url);
     }
-  }   
-}
+  }
+};
 
 Utility.FileListAction.prototype = {
   // Pre-defined data detectors and data filters to parse, extract and select which file names to return
@@ -130,19 +130,19 @@ Utility.FileListAction.prototype = {
   },
   loadSubFoldersFrom : function (url) { 
     if (Utility.isLocalSession()) {
-      this.load(url, this.localSubFolderDetector, this.subFolderFilter) 
+      this.load(url, this.localSubFolderDetector, this.subFolderFilter);
     } else {
-      this.load(url, this.proxySubFolderDetector, this.subFolderFilter)     
+      this.load(url, this.proxySubFolderDetector, this.subFolderFilter);
     }
   },
   loadxTigerTmplFrom : function (url) { 
     if (Utility.isLocalSession()) {   
-      this.load(url, this.localxTigerTmplDetector, this.xTigerTmplFilter) 
+      this.load(url, this.localxTigerTmplDetector, this.xTigerTmplFilter);
     } else {
-      this.load(url, this.proxyxTigerTmplDetector, this.xTigerTmplFilter)     
+      this.load(url, this.proxyxTigerTmplDetector, this.xTigerTmplFilter);
     }
   }
-}
+};
 
 /*****************************************************/
 /*                                                   */
@@ -176,13 +176,13 @@ function dragOverCb (ev) {
   ev.preventDefault();
 }
 
-function viewerApp (path, defaultTemplates) {   
+function viewerApp (path, tplModel) {
     var std;    
-    this.templatePath = null;
-    this.templateList = null;
-    this.defaultTemplatePath = path;
-    this.defaultTemplateList = defaultTemplates;
-    this.setContainerPaths (path);
+    this.templatePath = null; // path to the current templates folder
+    this.templateList = null; // list of current template files in current templates folder
+    this.menuModel = tplModel; // data model for templates folders / files
+    this._createFoldersMenu();
+    this.installTemplateMenu(0); // displays current folder and template menu
     this.curTransfo = null;
     this.curBody = null;
     this.inputPopupWindow = null;    
@@ -205,7 +205,7 @@ function viewerApp (path, defaultTemplates) {
       'html' : xtiger.editor.HTMLSerializer ? new xtiger.editor.HTMLSerializer() : undefined,
       'robust' : std,                                           
       'schema' : xtiger.editor.SchemaSerializer ? new xtiger.editor.SchemaSerializer() : undefined
-    }
+    };
     
     // Event Handler used to monitor when the iframe has been loaded with a template
     var _this = this;
@@ -265,15 +265,22 @@ viewerApp.prototype = {
   savePreferences : function () {
     var n = document.getElementById('templateRepos');
     var path = n.value;
-    this.setContainerPaths(path);
+    this.setCustomTemplatesFolder(path);
     this.hidePreferences ();
   },
+  
+  // Changes the templatesList menu to reflect the new foldersList menu selection
+  updateSelectedFolder : function () {
+    var i = this.getFirstSelectedIndexFromSelect(document.getElementById('foldersList'));
+    this.installTemplateMenu(i);
+  },
     
-  // supposes this.templatePath ends with '/' (normalized)
+  // Changes the current template URL displayed in the formUrl field
+  // to reflect the new template selection in templatesList
   updateSelectedTemplate : function () {
-    var i = this.getFirstSelectedIndexFromSelect(document.getElementById('templatesList'));
-      var e = document.getElementById('formUrl');
-      e.url.value = (i == 0) ? '' : this.templatePath + this.templateList[i];
+    var i = this.getFirstSelectedIndexFromSelect(document.getElementById('templatesList')),
+        e = document.getElementById('formUrl');
+    e.url.value = (i === 0) ? '' : this.templatePath + this.templateList[i];
   },
   
   doToggleViewMode : function () {
@@ -337,38 +344,49 @@ viewerApp.prototype = {
   
   // Creates the XTiger form UI on top of the document just loaded into the frame
   frameLoaded : function () {
-    var iframeDoc;
-    var iframe = document.getElementById('container');
+    var iframeDoc, iframe = document.getElementById('container');
     xtdom.removeEventListener(iframe, 'load', this.frameLoadedHandler, false);
     if (iframe.contentDocument) {
       iframeDoc = iframe.contentDocument;
     } else if (iframe.contentWindow) { // IE7
       iframeDoc = iframe.contentWindow.document;      
-    }       
-    this.curForm = new xtiger.util.Form (xttMakeLocalURLFor(this.baseUrl));
-    this.curForm.setTemplateSource (iframeDoc); 
-    this.curForm.enableTabGroupNavigation ();        
-    var e = document.getElementById('formUrl');
-    if (e.profile.checked) {
-      console.profile();
-    }
-    if (! this.curForm.transform()) {
-      alert(this.curForm.msg);            
-    } else {
-      if (window.jQuery) {
-        // triggers completion event on main document
-        $(document).triggerHandler('AXEL-TEMPLATE-READY', [this]);
+    } 
+    if (window.frames[0].$axel) { // template already uses AXEL
+      this.curForm = xtiger.session(iframeDoc).load('form');
+      // see form.js currrently only one form per document
+      if (this.curForm) {
+        this.log('Self-transformed template detected : the editor has managed to plug on its AXEL object', 0);
+      } else {
+        this.log('Self-transformed template detected : the editor has failed to plug on its AXEL object', 1);
       }
+    } else {
+      this.curForm = new xtiger.util.Form (xttMakeLocalURLFor(this.baseUrl));
+      this.curForm.setTemplateSource (iframeDoc); 
+      this.curForm.enableTabGroupNavigation ();        
+      var e = document.getElementById('formUrl');
+      if (e.profile.checked) {
+        console.profile();
+      }
+      if (! this.curForm.transform()) {
+        alert(this.curForm.msg);
+        this.log('Transformation failed', 1);
+      } else {
+        this.log('Transformation success', 0);        
+        if (window.jQuery) {
+          // triggers completion event on main document
+          $(document).triggerHandler('AXEL-TEMPLATE-READY', [this]);
+        }
+      }
+      if (e.profile.checked) {
+        console.profileEnd();
+      }
+      if (! this.curForm.injectStyleSheet (xttMakeLocalURLFor(this.xtStylesheet))) {
+        alert(this.curForm.msg);
+      }
+      $('body', iframeDoc).bind('dragenter', dragEnterCb);
+      $('body', iframeDoc).bind('dragover', dragOverCb);
+      $('body', iframeDoc).bind('drop', cancelDropCb);
     }
-    if (e.profile.checked) {
-      console.profileEnd();
-    }
-    if (! this.curForm.injectStyleSheet (xttMakeLocalURLFor(this.xtStylesheet))) {
-      alert(this.curForm.msg);      
-    }                                                      
-    $('body', iframeDoc).bind('dragenter', dragEnterCb);    
-    $('body', iframeDoc).bind('dragover', dragOverCb);    
-    $('body', iframeDoc).bind('drop', cancelDropCb);    
   },    
   
   /////////////////////////////////////////////
@@ -638,15 +656,24 @@ viewerApp.prototype = {
   /*                                                   */
   /*            Initializations                        */
   /*                                                   */
-  /*****************************************************/     
+  /*****************************************************/
   
-  _initTemplates : function (path, list) {
-    // var str = "<option selected='true'>---</option><option>" + list.join('</option><option>') + "</option>";
-    var n = document.getElementById('templatesList');
+  _createFoldersMenu : function () {
+    var i, o, s, n = document.getElementById('foldersList');
     xtdom.removeChildrenOf(n);
-    var o,t;
+    for (i = 0; i < this.menuModel.length; i++) {
+      o = xtdom.createElement(document, 'option');
+      key = xtdom.createTextNode(document, this.menuModel[i].name);
+      o.appendChild(key);
+      n.appendChild(o);
+    }
+  },
+  
+  _initTemplatesMenu : function (list) {
+    var o, t, n = document.getElementById('templatesList');
+    xtdom.removeChildrenOf(n);
     if (list[0] != '---') {
-      list.splice(0,0,'---');
+      list.splice(0, 0, '---');
     }
     for (var i = 0; i < list.length; i++) {
       o = xtdom.createElement(document, 'option');
@@ -654,33 +681,59 @@ viewerApp.prototype = {
       o.appendChild(t);
       n.appendChild(o);
     }
-    this.templateList = list;
-    this.templatePath = path;
-    if ((path.length > 0) && (path.charAt(path.length -1) != '/')) { // normalize container path (EN FAIRE UN FONC)
-      this.templatePath += '/';
-    }
   },
   
-  // currently only displays last error message if there are several ones
-  setContainerPaths : function (tpath) {
-    this.log("...", 0);
-    if (tpath && (tpath.length > 0) && (tpath != this.templatePath))
-      this.initializeTemplateList(tpath);     
+  // Change the custom template folder
+  setCustomTemplatesFolder : function (path) {
+    var i, o, t, n, path2folder = path;
+    if (path && path.length > 0) {
+      if ((path.length > 0) && (path.charAt(path.length -1) != '/')) {
+        path2folder +=  '/'; // adds trailing '/'
+      }
+      this.log("Setting custom templates folder path to " + path2folder);
+      n = document.getElementById('foldersList');
+      if (! this.modelCustomIndex) { // create the entry
+        this.modelCustomIndex = this.menuModel.length;
+        this.menuModel.push({
+          name : '_custom_',
+        });
+        o = xtdom.createElement(document, 'option');
+        s = xtdom.createTextNode(document, '#yours#');
+        o.appendChild(s);
+        n.appendChild(o);
+      }
+      for (var i = 0; i < (n.options.length - 1); i++) {
+        n.options[i].selected = false;
+      }
+      n.options[this.modelCustomIndex].selected = true;
+      this.menuModel[this.modelCustomIndex].path = path2folder;
+      this.menuModel[this.modelCustomIndex].files = [];
+      this.menuModel[this.modelCustomIndex].loaded = false;
+      this.installTemplateMenu(this.modelCustomIndex);
+    } else {
+      this.log("You must enter a non empty path", 1);
+    }
   },  
   
-  // Load list of templates in predefined container and add them as options in the appropriate selector
-  initializeTemplateList : function (path) {
-    var list = new Utility.FileListAction ();   
-    list.loadxTigerTmplFrom(Utility.makeURLForFile(path, this.PROXY));
-    if (list.isInError()) { // in error, set template path and template list to default
-      this.log(list.error, 1);
-      this._initTemplates (this.defaultTemplatePath, this.defaultTemplateList)        
-    } else if (list.isEmpty()) { // empty, set template path and template list to default
-      this.log("Could not build template list from '" + path + "', page shortcut menu set to defaults", 1);
-      this._initTemplates (this.defaultTemplatePath, this.defaultTemplateList);   
-    } else {      
-      this._initTemplates (path, list.getFiles())
+  // Select folder at index
+  // Sets this.templatePath and this.templateList
+  // If first view of folder then try to initialize its content from file system
+  installTemplateMenu : function (index) {
+    var list, model = this.menuModel[index];
+    if (! model.loaded) { // try reading templates list from file system (browser dependent)
+      list = new Utility.FileListAction ();
+      list.loadxTigerTmplFrom(Utility.makeURLForFile(model.path, this.PROXY));
+      if (list.isInError()) { // in error, leave template list to default
+        this.log(list.error, 1);
+      } else if (list.isEmpty()) { // empty, leave template list to default
+        this.log("Template files list from '" + model.path + "', is empty, menu set to defaults", 0);
+      } else { // sucess
+        model.files = list.getFiles(); // overrides defaults
+      }
+      model.loaded = true;
     }
+    this._initTemplatesMenu(model.files);
+    this.templatePath = model.path;
+    this.templateList = model.files;
   }
-    
 }

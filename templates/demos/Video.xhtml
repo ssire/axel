@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>                  
+  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
+  <meta name="description" content="XTiger XML document template" />
+  <meta name="keywords" content="template, XTiger" />
+  
+  <title>Sample template with YouTube videos</title>
+
+  <xt:head label="Videos">
+  </xt:head>                         
+
+  <style type="text/css">
+    h1 {
+    }
+    p.note {
+      font-style: italic;
+      font-size: 150%;
+    }               
+    span.video {
+      display: inline-block; /* not working on IE : vertical margins will not be applied neither */
+      vertical-align: middle;
+      margin: 0 20px 10px 20px;
+    }              
+    p.label {
+    }                  
+  </style>
+  <!-- XTiger Library Inclusion -->                                                    
+</head>
+<body>
+
+<h1>Sample template with YouTube videos</h1>                 
+
+<p class="note">You need the video.js and videofilter.js files to execute this template. You also must have an operational Internet connection to actually see the videos from YouTube.</p>
+
+<h2>Optional video</h2>
+
+<h3>Using the video lens plugin editor...</h3>
+                               
+<p class="label">Please select a video : <span class="video">
+	<xt:use types="video" label="Video1" option="unset" param="width=300; height=200">URL from YouTube</xt:use>
+</span></p>
+
+<h3>Using the video filter on the text plugin editor...</h3>
+
+<p class="label">Please select a video : <span class="video"><xt:use types="text" label="Video2" option="unset" param="filter=video">URL from YouTube</xt:use></span></p>
+                                                             
+<h2>Repeated video</h2>
+
+<h3>Using the video lens plugin editor...</h3>
+                               
+<p class="label">Please select a video : 
+   <xt:repeat minOccurs="0" maxOccurs="*" label="Collection1"><span class="video"><xt:menu-marker /><xt:use types="video" label="Video1">URL from YouTube</xt:use></span></xt:repeat>
+</p>
+
+<h3>Using the video filter on the text plugin editor...</h3>
+
+<p class="label">Please select a video : 
+   <xt:repeat minOccurs="0" maxOccurs="*" label="Collection2"><span class="video"><xt:menu-marker /><xt:use types="text" label="Video2" param="filter=video">URL from YouTube</xt:use></span></xt:repeat>
+</p>
+
+<hr/>
+
+<p>That template also uses the <em>inline-block</em> CSS style property which has been reported not working on Internet Explorer. In that case you should prefer <em>float</em> layout.</p>
+
+</body> 
+</html>

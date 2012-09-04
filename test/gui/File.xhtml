@@ -1,13 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
 <head>                  
-  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
-  <meta name="description" content="XTiger XML document template" />
-  <meta name="keywords" content="template, XTiger" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
   <title>XTiger XML and AXEL Interactive (GUI) test case : 'file' primitive editor plugin</title>
   
@@ -29,46 +24,46 @@
       form.enableTabGroupNavigation();
       if (! form.transform()) { alert(this .form.msg); }
     }
-    // xtdom.addEventListener(window,  'load', init, false);
+    xtdom.addEventListener(window,  'load', init, false);
   </script>
 
   <!-- Template styling -->
   <style type="text/css">
-  	p.explic {
-  		font-size: 90%;
-  	}
-  	.avertissement {
-  		color: green;
-  	}				
-  	/* documentId is visible only on fly over */
-  	span.docid {
-  		text-align: right;
-  		float: right;
-  		width: 300px;
-  		padding: 10px;
-  		font-size: 12px;
-  		color: red;
-  	}		
-  	h1:hover span.docid {
-  		visibility: visible;
-  	}
-  	span.docid {
-  		visibility: hidden;
-  	}	 
-  	p.file {
-  	}
+    p.explic {
+      font-size: 90%;
+    }
+    .avertissement {
+      color: green;
+    }       
+    /* documentId is visible only on fly over */
+    span.docid {
+      text-align: right;
+      float: right;
+      width: 300px;
+      padding: 10px;
+      font-size: 12px;
+      color: red;
+    }   
+    h1:hover span.docid {
+      visibility: visible;
+    }
+    span.docid {
+      visibility: hidden;
+    }  
+    p.file {
+    }
   </style>   
-	
+  
 </head>
 <body>                  
   
 <h1>Interactive (GUI) test case for <tt>'file'</tt> editor</h1>
 
 <h2><xt:use types="text" label="Title">Click to edit a title</xt:use> 
-	<span class="docid">
-		<xt:attribute types="text" label="DocumentId" param="filter=documentId" default="file" name="documentId"/>
-	</span>
-</h2>	
+  <span class="docid">
+    <xt:attribute types="text" label="DocumentId" param="filter=documentId" default="file" name="documentId"/>
+  </span>
+</h2> 
 
 <p class="explic avertissement">Pour utiliser ce template vous devez le lancer depuis le serveur Web fourni en exemple dans <tt>scripts/server.rb</tt> seul moyen d'activer la sauvagarde des fichiers, leur URL sera définie par rapport au serveur d'exemple.</p>
 
@@ -85,5 +80,5 @@
 </ul>
 
 <p>End of the test</p>
-</body>	
+</body> 
 </html>
