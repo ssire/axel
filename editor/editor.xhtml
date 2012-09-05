@@ -133,7 +133,7 @@
             <select id="foldersList" onchange="appController.updateSelectedFolder()"></select>
           </label>
           <select id="templatesList" onchange="appController.updateSelectedTemplate()"></select>
-          <input type="button" value="Preferences" onclick="appController.setPreferences();"/>
+          <input id="prefs" type="button" value="Preferences" onclick="appController.setPreferences();"/>
           <span style="position: absolute; left: 46%">
             <input type="button" id="previewToggle" value="Preview" onclick="appController.doToggleViewMode();"/>
           </span>
@@ -157,8 +157,6 @@
             <input type="button" value="Browse"
               onclick="appController.localFileDialog(&quot;folder&quot;, null, &quot;Select a folder that contains some XTiger Forms templates&quot;, &quot;templateRepos&quot;)"/>
             <input type="button" value="Ok" onclick="appController.savePreferences()"/>
-            <input class="hide" type="button" value="Hide"
-              onclick="appController.hidePreferences()"/>
             <span style="position: absolute; right: 30px">
               <input type="radio" value="standard" name="algorithm" checked="true"/>
               <label for="robust">Std</label>

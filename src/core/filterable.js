@@ -41,8 +41,9 @@ xtiger.util.filterable = function (name, that) {
   that.registerFilter = function registerFilter (aKey, aFilter) {
     if (! typeof(aFilter) == "object") // NOTE may test harder?
       return;
-    if (_filtersRegistry[aKey])
+    if (_filtersRegistry[aKey]) {
       xtiger.cross.log('warning', '"' + _pluginName + '" plugin: filter "' + aKey + '" is already registred. Overwriting it.');
+    }
     _filtersRegistry[aKey] = aFilter;
   };     
   

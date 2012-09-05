@@ -1,16 +1,11 @@
-/*
- * ***** BEGIN LICENSE BLOCK *****
- * This file is part of "XTiger Forms" by S. Sire.
+/* Copyright (c) 2012 S. Sire
  *
- * "XTiger Forms" License will be added soon
- *
- * ***** END LICENSE BLOCK *****
+ * author      : Stéphane Sire
+ * contact     : s.sire@oppidoc.fr
+ * last change : 2012-09-05
+ *                         
+ * AXEL demo editor
  */
-
-/*
- * XTiger Forms editor : viewer.js
- * viewerApp object to be used as application controller for viewer.xhtml   
- */                
 
 // A few constants
 var _INPUT_FILE = 'extras/input.html';
@@ -177,12 +172,18 @@ function dragOverCb (ev) {
 }
 
 function viewerApp (path, tplModel) {
-    var std;    
+    var std, path;
     this.templatePath = null; // path to the current templates folder
     this.templateList = null; // list of current template files in current templates folder
     this.menuModel = tplModel; // data model for templates folders / files
     this._createFoldersMenu();
     this.installTemplateMenu(0); // displays current folder and template menu
+    if (localStorage) { // restore preferences
+      path = localStorage.getItem('templatesPath');
+      if (path) {
+        this.setCustomTemplatesFolder(path);
+      }
+    }
     this.curTransfo = null;
     this.curBody = null;
     this.inputPopupWindow = null;    
@@ -241,16 +242,23 @@ viewerApp.prototype = {
   },
 
   setPreferences : function () {
-    var n = document.getElementById('templateRepos');
-    n.value = this.templatePath;
-    var lowerdiv = document.getElementById('frameContainer');
-    if (lowerdiv) { // called from 'editor.xhtml'
-      lowerdiv.style.top = "15em";  
-    } else { // called from 'editornoframe.xhtml'
-      var prefs = document.getElementById('preferences');
-      prefs.style['display'] = 'block';     
+    var n = document.getElementById('prefs');
+    if (n.value === 'Preferences') {
+      n.value = 'Hide'; // toggle state
+      n = document.getElementById('templateRepos');
+      n.value = this.templatePath;
+      var lowerdiv = document.getElementById('frameContainer');
+      if (lowerdiv) { // called from 'editor.xhtml'
+        lowerdiv.style.top = "15em";  
+      } else { // called from 'editornoframe.xhtml'
+        var prefs = document.getElementById('preferences');
+        prefs.style['display'] = 'block';     
+      }
+    } else {
+      n.value = 'Preferences'; // toggle state
+      this.hidePreferences();
     }
-  },  
+  },
 
   hidePreferences : function () {
     var lowerdiv = document.getElementById('frameContainer');
@@ -266,7 +274,6 @@ viewerApp.prototype = {
     var n = document.getElementById('templateRepos');
     var path = n.value;
     this.setCustomTemplatesFolder(path);
-    this.hidePreferences ();
   },
   
   // Changes the templatesList menu to reflect the new foldersList menu selection
@@ -374,7 +381,7 @@ viewerApp.prototype = {
         this.log('Transformation success', 0);        
         if (window.jQuery) {
           // triggers completion event on main document
-          $(document).triggerHandler('AXEL-TEMPLATE-READY', [this]);
+          $(document).triggerHandler('axel-editor-ready', [this]);
         }
       }
       if (e.profile.checked) {
@@ -710,6 +717,9 @@ viewerApp.prototype = {
       this.menuModel[this.modelCustomIndex].files = [];
       this.menuModel[this.modelCustomIndex].loaded = false;
       this.installTemplateMenu(this.modelCustomIndex);
+      if (localStorage) {
+        localStorage.setItem('templatesPath', path2folder);
+      }
     } else {
       this.log("You must enter a non empty path", 1);
     }
