@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "xt:attribute" element</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>  
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <h1>The "xt:attribute" element</h1>  
+
+    <p>
+      You can edit target XML attributes with the same plugin editors as for target XML elements. The only difference is that the field is declared by an <code>xt:attribute</code> element instead of an <code>xt:use</code> element.
+    </p>
+
+    <p>
+      The XML attribute name is defined with a <var>name</var> attribute.
+    </p>
+    
+    <p>
+      The field's default value is set with a <var>default</var> attribute.
+    </p>
+    
+    <p>
+      Some plugins (such as <code>select</code>) may support other attributes (such as <code>values</code>).
+    </p>
+  
+    <div class="demo extract">
+      <p class="edit">I am called "<xt:attribute types="text" name="name" default="my name"/>".</p>
+      <p class="edit">But my friends call me "<xt:attribute types="text" name="nickname" default="my nickname"/>".</p>
+      <p class="edit">I was born in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania"/>.</p>
+    </div>
+  </body> 
+</html>

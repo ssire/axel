@@ -351,7 +351,9 @@ viewerApp.prototype = {
   
   // Creates the XTiger form UI on top of the document just loaded into the frame
   frameLoaded : function () {
-    var iframeDoc, iframe = document.getElementById('container');
+    var iframeDoc, e,
+        iframe = document.getElementById('container'),
+        errLog = new xtiger.util.Logger();
     xtdom.removeEventListener(iframe, 'load', this.frameLoadedHandler, false);
     if (iframe.contentDocument) {
       iframeDoc = iframe.contentDocument;
@@ -368,33 +370,36 @@ viewerApp.prototype = {
       }
     } else {
       this.curForm = new xtiger.util.Form (xttMakeLocalURLFor(this.baseUrl));
-      this.curForm.setTemplateSource (iframeDoc); 
-      this.curForm.enableTabGroupNavigation ();        
-      var e = document.getElementById('formUrl');
-      if (e.profile.checked) {
-        console.profile();
-      }
-      if (! this.curForm.transform()) {
-        alert(this.curForm.msg);
-        this.log('Transformation failed', 1);
-      } else {
-        this.log('Transformation success', 0);        
-        if (window.jQuery) {
-          // triggers completion event on main document
-          $(document).triggerHandler('axel-editor-ready', [this]);
+      if (this.curForm.setTemplateSource (iframeDoc, errLog)) {
+        this.curForm.enableTabGroupNavigation ();
+        e = document.getElementById('formUrl');
+        if (e.profile.checked) {
+          console.profile();
+        }
+        if (! this.curForm.transform(errLog)) {
+          this.log('Transformation failed', 1);
+        } else {
+          this.log('Transformation success', 0);
+          if (window.jQuery) {
+            // triggers completion event on main document
+            $(document).triggerHandler('axel-editor-ready', [this]);
+          }
+        }
+        if (e.profile.checked) {
+          console.profileEnd();
+        }
+        if (! errLog.inError()) { // injects axel.css in iframe
+          this.curForm.injectStyleSheet(xttMakeLocalURLFor(this.xtStylesheet), errLog);
         }
       }
-      if (e.profile.checked) {
-        console.profileEnd();
-      }
-      if (! this.curForm.injectStyleSheet (xttMakeLocalURLFor(this.xtStylesheet))) {
-        alert(this.curForm.msg);
+      if (errLog.inError()) { // summarizes errors
+        alert(errLog.printErrors());
       }
       $('body', iframeDoc).bind('dragenter', dragEnterCb);
       $('body', iframeDoc).bind('dragover', dragOverCb);
       $('body', iframeDoc).bind('drop', cancelDropCb);
     }
-  },    
+  }, 
   
   /////////////////////////////////////////////
   // Template dump (window, file or server)

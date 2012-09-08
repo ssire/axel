@@ -29,13 +29,17 @@ xtiger.util.Form = function (baseIconsUrl) {
 } 
 
 xtiger.util.Form.prototype = {
-                                                                   
+
   // Internal log mechanism that keeps track of a status
   _report : function (status, str, logger) {
     this.status = status;
-    this.msg = str;                 
-    if (logger && (0 == this.status)) { 
-      logger.logError(str);
+    this.msg = str;
+    if (0 === this.status) {
+      if (logger) { 
+        logger.logError(str);
+      } else {
+        xtiger.cross.log('error', str);
+      }
     }
   },   
   
@@ -66,7 +70,7 @@ xtiger.util.Form.prototype = {
    * that will be transformed. In that case you should also call injectStyleSheet
    * to include the form CSS style sheet into the template if it wasn't included yet
    */
-  setTemplateSource : function (xtDoc) { // FIXME: add optional logger ?
+  setTemplateSource : function (xtDoc, logger) {
     // FIXME: add a parameter to select a sub-part of the template to transform   
     this.srcDoc = xtDoc;
     this.srcForm = null;
@@ -81,13 +85,15 @@ xtiger.util.Form.prototype = {
         } catch (e) { /* nop */ }
       }     
       if (! this.srcForm) {
-        alert('Could not get <body> element from the template to transform !');
+        this._report (0, 'Could not get <body> element from the template to transform', logger);
       }
       this.curDoc = xtDoc;
       this.targetContainerId = false;
     } else {
-      alert('The document containing the template is null or undefined !');
+      this._report (0, 'The document containing the template is null or undefined', logger);
     }
+    this._report (1, 'template source set', logger);
+    return (this.status === 1);
   },
   
   /**

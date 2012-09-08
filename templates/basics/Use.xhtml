@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "xt:use" element</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+      <xt:component name="Banana">
+        <fieldset class="banana">
+          <legend>Banana component</legend>
+          <p>
+            <xt:use types="text" label="Content" param="type=textarea;shape=parent">Banana content</xt:use>
+          </p>     
+        </fieldset>   
+      </xt:component>
+      <xt:component name="Orange">
+        <fieldset class="orange">
+          <legend>Orange component</legend>
+          <p>
+            <xt:use types="text" label="Content" param="type=textarea;shape=parent;">Orange content</xt:use>    
+          </p>     
+        </fieldset>   
+      </xt:component>
+      <xt:component name="Apple">
+        <fieldset class="apple">
+          <legend>Apple component</legend>
+          <p>
+            <xt:use types="text" label="Content" param="type=textarea;shape=parent">Apple content</xt:use>   
+          </p>     
+        </fieldset>   
+      </xt:component>
+    </xt:head>  
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+    
+    <style type="text/css" media="screen">
+      div.shifted > select {
+        width: 100px;
+        float: left;
+      }
+      div.shifted > fieldset {
+        margin-left: 120px;
+      }
+      .orange {
+        width: 500px;
+        padding: 5px 20px 0px 20px;   
+      } 
+      .banana {
+        width: 450px;
+        padding: 5px 20px 0px 20px;   
+      } 
+      .apple {
+        width: 400px;
+        padding: 5px 20px 0px 20px;   
+      } 
+    </style>
+  </head>
+  <body>
+    <h1>The "xt:use" element</h1>  
+
+    <h2>Single entry field</h2>
+
+    <p>
+      The <code>xt:use</code> element with a <var>label</var> attribute and a plugin name in its <var>types</var> attribute generates an XML element with its content generated from the plugin. This is the classical way to create a single entry field.
+    </p>
+    
+    <div class="demo extract">
+      <p>I like to eat <xt:use types="text" label="Food">click to edit something you like</xt:use>.</p>
+    </div>
+
+    <h2>Choice</h2>
+
+    <p>
+      The <code>xt:use</code> element with a list of component types in its <var>types</var> attribute generates a choice between several XML elements bearing the same name as the components type name. The components MUST BE declared in the <code>xt:head</code> section of the template (see XTiger XML specification).
+    </p>
+    
+    <div class="demo shifted extract">
+      <xt:use types="Orange Banana Apple"/>
+    </div>
+    
+    <p>
+      The popup menu to select the active component is directly inserted by AXEL at the position of the <code>xt:use</code> element. The popup menu is a <code>select</code> HTML element. It is followed by the HTML source code of each of the components. The inactive components are hidden by setting their CSS <var>display</var> property to none.
+    </p>
+    
+    <h2>Labelled choice</h2>
+
+    <p>
+      The <code>xt:use</code> element with a list of component types in its <var>types</var> attribute AND a <var>label</var> attribute with a unique name generates a choice among several XML elements bearing the same name as the component type name. The currently selected component is wrapped inside an XML element named after the label's value.
+    </p>
+    
+    <div class="demo shifted extract">
+      <xt:use types="Orange Banana Apple" label="Fruit"/>
+    </div>
+    
+    <h2>Renamed choice</h2>
+    
+    <p>
+      The <code>xt:use</code> element with a list of component types in its <var>types</var> attribute and a <var>label</var> attribute with a whitespace separated list of names generates a choice among several XML elements bearing the name given by the label name at the same index than the component name. The <var>types</var> and the <var>label</var> attributes MUST have the same number of tokens.
+    </p>
+    
+    <div class="demo shifted extract">
+      <xt:use types="Orange Banana Apple" label="First Second Third"/>
+    </div>
+  
+  </body> 
+</html>

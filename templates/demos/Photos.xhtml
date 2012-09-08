@@ -1,120 +1,110 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
-<head>                  
-  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
-  <meta name="description" content="XTiger XML document template" />
-  <meta name="keywords" content="template, XTiger" />
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-  <title>Mon menu illustré</title>
+    <title>The "photo" plugin</title>
 
-  <xt:head version="1.1" templateVersion="1.0" label="Menu">
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+    
+    <!-- CSS file for the photo uploader wrapper -->
+    <link rel="stylesheet" type="text/css" href="../../axel/bundles/photo/photo.css"/>
 
-    <xt:component name="platPhotoEnOption">
-      <xt:repeat minOccurs="0" maxOccurs="1" pseudoLabel="@Photo">
-          <xt:menu-marker/><span>[ </span><xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_URL=/formUpload;photo_base=../../data/photos"/><span> ]</span>
-      </xt:repeat>
-      <p>Les beignets sont une délicieuse patisserie cuite dans l'huile.</p>    
-    </xt:component> 
-
-    <xt:component name="plat">
-      <p><span class="plat"><xt:use types="text" param="type=input" label="Nom">Nom du plat</xt:use></span><xt:menu-marker/><br/>
-      <xt:attribute types="photo" name="Photo" default="" param="display=above;trigger=click;photo_class=x-Photo;photo_URL=/formUpload;photo_base=../../data/photos"/></p>
-      <p><xt:use types="text" label="description" param="shape=parent-20px;type=textarea">Description</xt:use></p>
-    </xt:component> 
-
-  </xt:head>               
-  
-  <style type="text/css" media="screen">
-    img.x-Photo {
-      max-width: 350px;
-      max-height: 350px;
-    }
-  </style>          
-
-   <!-- CSS file for the photo uploader wrapper -->
-   <link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css" />
-
-  <!-- Photo upload script -->
-  <script type="text/javascript">
-//<![CDATA[                                
+    <!-- Photo upload script -->
+    <script type="text/javascript">//<![CDATA[                                                         
     function finishTransmission(status, result) { 
       var pwin = window.parent; // only if this template is run from inside an iframe !
       var manager = pwin.xtiger.factory('upload').getInstance(document);
       if (manager) {
         manager.reportEoT(status, result);
       }
+    } 
+    //]]></script>
+    
+    <style type="text/css" media="screen">
+    
+    div.grid {
+    position: relative;
     }
-//]]>
-  </script>
-  
-  <style type="text/css">
-    p.beignets img {
-      vertical-align: top; 
-      position: relative;
+    div.cell {
+    float: left;
+    margin: 0 10px 10px 0;
     }
-    p.explic {
-      font-size: 90%;
-    }
-    .avertissement {
-      color: green;
-    }       
-    div.plat {
-      float: left;
-      width: 400px;     
-      height: 300px;
-      margin: 0 20px 40px 0;
-    }
-    span.plat {
-      font-size: 150%;      
-      text-decoration: underline;
-    }   
-    /* documentId is visible only on fly over */
-    span.docid {
-      text-align: right;
-      float: right;
-      width: 300px;
-      padding: 10px;
-      font-size: 12px;
-      color: red;
-    }   
-    h1:hover span.docid {
-      visibility: visible;
-    }
-    span.docid {
-      visibility: hidden;
-    }   
-  </style>
-  
-  <!-- Place here optional AXEL code for making the template auto-editable -->
+    </style>
 
-</head>
-<body>
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <h1>The "photo" plugin</h1>
 
-<h1><xt:use types="text" label="Title">Votre titre</xt:use> 
-  <span class="docid">
-    <xt:attribute types="text" label="DocumentId" param="filter=documentId noxml" default="3245" name="documentId"></xt:attribute>
-  </span>
-</h1> 
+    <p>The <code>"photo"</code> primitive editor uploads photos to a Web server. Photos are sent with a POST request, as described in <a href="../../docs/howto-photo-plugin.html" target="_blank"><tt>photo-plugin-howto</tt></a>.</p>
 
-<p class="explic avertissement">Pour utiliser ce template vous devez le lancer depuis le serveur Web fourni en exemple dans <tt>scripts/server.rb</tt> seul moyen d'activer la sauvagarde des photos et d'afficher les photos, leur URL étant définie par rapport au serveur d'exemple.</p>
+    <p>There are a few pre-conditions to use this editor :</p>
 
-<h2>Les beignets sont illustrés par une photo en option</h2>
+    <ul>
+      <li>include the photo upload script inside your template</li>
+      <li>include the photo lens CSS style sheet inside your template</li>
+    </ul> 
+    
+    <p>Optionaly you can :</p>
+    
+    <ul>
+      <li>embed a hidden (e.g. with <i>display:none</i>) documentId filter on a text field in your template; the photo upload protocol will transmit the current value of documentId to the server when uploading a photo thus providing a mean for the server to link the photo with a document</li>
+    </ul>
 
-<p class="beignets">Beignets <xt:use types="platPhotoEnOption" label="Beignets"/></p>
+    <p>The photo displayed in the document has a <var>class</var> set to <code>xtt-photo</code> so that you can style it (e.g. setting max-width and/or max-height).</p>
 
-<p class="explic">Comme le plugin photo plugin ne supporte pas l'attribut <tt>option</tt> vous devez utiliser un repeat avec <tt>maxOccurs="1"</tt> pour rendre une photo optionnelle, malheureusement le feedback n'est pas adpaté puisque l'icone ne se grise pas...</p>
-  
-<h2>Tous les autres plats ci-dessous ont une photo associée (chaine vide si non définie)</h2> 
+    <p>The examples below put the photo inside an <code>xt:use</code> element to generate an element in the XML content model, but they could as well put it inside an <code>xt:attribute</code> element to generate an attribute in the XML content model.</p>
 
-<xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Plat">
-  <div class="plat">
-      <xt:use types="plat" label="Plat"/>
-  </div>
-</xt:repeat>
+    <div class="grid">
+      
+      <div class="cell">
+        <h3>Default configuration</h3>
+        
+        <p class="caption">This is equivalent to <code>&lt;xt:use types="photo" label="photo" param="display=above;trigger=click;padding=10px"/></code></p>  
+        <div class="demo extract">
+          <p class="edit"><xt:use types="photo" label="photo"/></p>
+        </div>  
+      </div>
+      
+      <div class="cell">
+        <h3>With <var>display</var> <code>"inline"</code> and <var>trigger</var> <code>"click"</code></h3>
 
-</body> 
+        <div class="demo extract">
+          <p class="edit"><xt:use types="photo" label="photo" param="display=inline;trigger=click"/></p>
+        </div>  
+
+      </div>
+      <div class="cell">
+        <h3>With <var>display</var> <code>"inline"</code> and <var>trigger</var> <code>"mouseover"</code></h3>
+
+        <div class="demo extract">
+          <p><xt:use types="photo" label="photo" param="display=inline;trigger=mouseover"/></p>
+        </div>  
+      </div>
+
+      <div class="cell">
+        <h3>With <var>display</var> <code>"above"</code> and <var>trigger</var> <code>"click"</code></h3>
+
+        <p class="demo extract">
+          <p><xt:use types="text" label="none" param="layout=float;type=textarea;shape=parent">Enter some text</xt:use></p>
+          <p><xt:use types="photo" label="photo" param="display=above;trigger=click"/></p>
+        </p>  
+      </div>
+      
+      <div class="cell">
+        <h3>With <var>display</var> <code>"above"</code> and <var>trigger</var> <code>"mouseover"</code></h3>
+
+        <div class="demo extract">
+          <p><xt:use types="photo" label="photo" param="display=above;trigger=mouseover"/></p>
+        </div>  
+      </div>  
+    </div>
+
+  </body> 
 </html>

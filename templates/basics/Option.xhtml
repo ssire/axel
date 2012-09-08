@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "option" attribute of the "xt:use" or "xt:attribute" elements</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>  
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <h1>The "option" attribute of the "xt:use" or "xt:attribute" elements</h1>  
+
+    <p>You can make a single entry field (primitive editor) optional by using an <var>option</var> attribute when you insert it with an <code>xt:use</code> or an <code>xt:attribute</code> XTiger element.</p> 
+
+    <p><b>Limitations</b> : currently you can only use the <var>option</var> attribute on a plugin that explicitly supports it. You cannont use it to make optional an <code>xt:use</code> that includes a list of component types, or a component type which is not a primitive component type.</p>
+
+    <h3>With an XML element content model (<code>xt:use</code>)</h3>    
+
+    <div class="demo extract">
+      <p><xt:use types="text" label="Content1" option="set">your content here</xt:use></p>
+      <p><xt:use types="text" label="Content2" option="unset">your content here</xt:use></p> 
+    </div>
+
+    <h3>With an XML attribute content model (<code>xt:attribute</code>)</h3>    
+
+    <div class="demo extract">
+      <p>My brother is called "<xt:attribute types="text" name="name" default="his name" option="set"/>".</p>
+      <p>But his friends call him "<xt:attribute types="text" name="nickname" default="his nickname" option="unset"/>".</p>
+      <p>He was born in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/>.</p>
+    </div>
+  </body> 
+</html>
+
+
