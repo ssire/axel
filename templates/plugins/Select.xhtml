@@ -10,7 +10,7 @@
     </xt:head>
 
     <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
-    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
     <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="../shared/demo.js">//</script>        
   </head>
@@ -28,7 +28,7 @@
     
     <h3>As an attribute</h3>
     
-    <div class="demo">
+    <div class="demo extract">
       <p>
         I prefer <xt:attribute types="select" name="season" default="Autumn" values="Winter Spring Summer Autumn"/> 
         in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/>.
@@ -37,7 +37,7 @@
     
     <h3>As an element</h3>
     
-    <div class="demo">
+    <div class="demo extract">
       <p>
         I prefer to pay with <xt:use types="select" label="Currency" values="EUR USD CHF" i18n="Euro Dollars Swiss-franc">USD</xt:use>.
       </p>
@@ -47,7 +47,7 @@
     
     <p>You can load the list of options from an external resource by giving its URL with a <sanmp>model</sanmp> parameter.</p>
     
-    <div class="demo">
+    <div class="demo extract">
       <p>
         I live in <xt:use types="select" label="Country" param="model=countries.xml"/>.
       </p>

@@ -40,11 +40,13 @@ dd {
   <p class="header">This is the source distribution of the Adaptable XML Editing Library (AXEL). The library implements a client-side XTiger XML processor in Javascript.</p>      
   
   <div class="credits"> 
-    <p>AXEL and XTiger XML are the results of research efforts at the <a href="http://media.epfl.ch" target="_blank">MEDIA</a> research group at EPFL and in collaboration with <a href="http://wam.inrialpes.fr/" target="_blank">project WAM</a> at INRIA, Centre de Recherche Public <a href="http://www.tudor.lu/" target="_blank">Henri Tudor</a> and <a href="http://www.madeinlocal.com" target="_blank">Useful Web Sàrl</a>.</p>
+    <p>AXEL and XTiger XML is the results of research efforts at the <a href="http://media.epfl.ch" target="_blank">MEDIA</a> research group at EPFL and in collaboration with <a href="http://wam.inrialpes.fr/" target="_blank">project WAM</a> at INRIA, Centre de Recherche Public <a href="http://www.tudor.lu/" target="_blank">Henri Tudor</a> and <a href="http://www.madeinlocal.com" target="_blank">Useful Web Sàrl</a>.</p>
+    
+    <p>AXEL development is now continued by Stéphane Sire at <a href="http://www.oppidoc.fr" target="_blank">Oppidoc</a>.</p>
     
     <p>AXEL is released as free software, under the terms of the LGPL version 2.1, please make sure that you read the license file in <a href="distrib/COPYING">distrib/COPYING</a>. You are welcome to join our efforts to improve the library and the specification at any time and to become part of the <a href="distrib/AUTHORS">contributors</a>.</p>
     
-    <p style="text-align: right;margin-right: 40px">Contact: <a href="mailto:stephane.sire@epfl.ch?subject=AXEL @VERSION@ (Rev @REV@)">Stéphane Sire</a></p>
+    <p style="text-align: right;margin-right: 40px">Contact: <a href="mailto:s.sire@oppidoc.fr?subject=AXEL @VERSION@ (Rev @REV@)">Stéphane Sire</a></p>
   </div>
   
   <h3>Where to start ?</h3>
@@ -53,36 +55,33 @@ dd {
 
   <p>The best way to learn the library is to experiment with the sample templates and applications which are distributed with it. If you already know the library you may have a look at the <a href="distrib/CHANGELOG.html">CHANGELOG<a> file.</p>
 
-  <p><strong>Template authors</strong> should first try the <a href="demos/index.html">demos</a> and read the <a href="docs/XTiger-XML-spec.html">XTiger XML language specification</a>. It's a good idea  to open the templates from the template folder inside your favorite text editor to see how they are written. Then you can use the <a href="editor/editor.xhtml">editor.xhtml</a> application to open the templates provided with the library, or to try your own templates. The Editors.xhtml and the Plugins.xhtml template files are catalog of existing primitive editors.</p>                                                                  
+  <p><strong>Template authors</strong> should read the <a href="docs/XTiger-XML-spec.html">XTiger XML language specification</a>. It's a good idea  to open the templates from the template folder inside your favorite text editor to see how they are written. Then you can use the <a href="editor/editor.xhtml">editor.xhtml</a> application to open the templates provided with the library, or to try your own templates.</p>                                                                  
 
-  <p><strong>Web application developers</strong>, in addition to the above links, should read the <a href="examples/tutorial/tutorial.xhtml">tutorial</a>,  and then go through the other examples inside the examples folder. There are some instructions about the use of the advanced primitive editors video, photo and richtext in corresponding howto files in the docs folder. The howto files should be transformed into real documentation soon.</p>
+  <p><strong>Web application developers</strong>, in addition to the above links, should read the <a href="examples/tutorial/tutorial.xhtml">tutorial</a>. There are some instructions about the use of the advanced primitive editors video, photo and richtext in corresponding howto files in the docs folder.</p>
 
-  <p><strong>Plugins developers</strong> (i.e. primitive editor developers) can consult the HOWTO files which are in the <a href="docs/toc.html">documentation</a> folder. They can also look at the existing plugin source files in the src/plugins folder.</p>
+  <p><strong>Plugins or Filters developers</strong>  can consult the HOWTO files which are in the <a href="docs/toc.html">documentation</a> folder. They can also look at the existing plugin or filter source files in the <code>src/plugins</code> or <code>src/filters</code> folders and try them using the <a href="editor/editor.xhtml">editor.xhtml</a>.</p>
 
   <h3>Project layout</h3>
 
-  <dl>   
+  <dl>
   
     <dt>axel</dt>
-    <dd>All the files ready for deploying AXEL on your server, you can regenerate the axel.js library from the build.lib target of the ant script in the scripts folder.</dd>
+    <dd>All the files ready for deploying AXEL on a server, axel.js is generated from the build.lib target of the ant script in the scripts folder.</dd>
 
     <dt>contribs</dt>
     <dd>Third party tools and contributions.</dd>
 
     <dt>data</dt>
-    <dd>XML sample data files; they can be loaded inside the templates found in the templates folder, for
-  instance using the editor application which is in the editor folder.</dd>
+    <dd>XML sample data files; some of which can be loaded inside the sample templates found in the templates folder, for instance using the editor application which is in the editor folder. Some others are used for testing the library.</dd>
 
-    <dt>demos</dt>
-    <dd>The <a href="demos/index.html">index.html</a> file opens some of the templates in the templates folder and eventually loads them with data from the data folder. It uses a special launcher page and Javascript program.</dd>
-  
     <dt>docs</dt>
-    <dd>Some <a href="docs/toc.html">documentation</a> including the <a href="docs/XTiger-XML-spec.html">XTiger XML language specification</a>.</dd>
+    <dd>Some <a href="docs/toc.html">documentation</a> including the <a href="docs/XTiger-XML-spec.html">XTiger XML language specification</a> (which will be moved to its own GitHub repository soon).</dd>
   
     <dt>editor</dt>
-    <dd>Sample editing application (<a href="editor/editor.xhtml">editor.xhtml</a>) built with the library. The "Page shortcut" popup menu on Firefox (if you follow the instructions about disabling security restrictions) lists all the templates found in the templates folder, or a pre-defined list on other browsers. You can also directly type a template absolute or relative path. Starting the editor from behind a Web server should get the "Page shortcut" initialized from the templates folder content on any browser.</dd>                                                      
+
+    <dd>Sample editing application (<a href="editor/editor.xhtml">editor.xhtml</a>) built with the library. This is the MAIN ENTRY POINT to discover AXEL and XTiger XML : select a template folder and template file name using the two popup menus next to <i>Template :</i>, then click on <i>Visualize</i> to transform it into an editor in the main panel of the window. Use the <i>Dump</i> button to see the current XML content of the editor at any time. If you follow the instructions on disabling security restrictions on Firefox, you can also list all the templates below any custom template folder you choose in the preferences.</dd>
   
-    <dd>The application includes the library from the src folder and not from the axel folder, this is because we currently use this application to debug the library. The other editing application file <a  href="editor/editornoframe.xhtml">editornoframe.xhtml</a> loads the template in an Ajax object instead of an iframe element and then renders it inside a div inside the page. Consequently CSS files loaded by templates are not loaded.</dd>
+    <dd>The editing application includes each library file individually from the src folder and not from the axel folder, this is because it is used to debug the library. The other editing application file <a  href="editor/editornoframe.xhtml">editornoframe.xhtml</a> loads the template into an Ajax object instead of an iframe element and then renders it inside a div inside the page. Consequently CSS files loaded by templates are not loaded.</dd>
 
     <dt>examples</dt>
     <dd>Several developer-oriented <a href="examples/tutorial/tutorial.xhtml">tutorial</a> applications. They can serve as example of how to use the API to transform templates and load/save XML data.</dd>                                                
@@ -94,15 +93,14 @@ dd {
     <dd>The source code of the library. The axel.js file in the axel folder is generated from the content of this folder using the ant buid.lib target defined in the scripts folder.</dd>
     
     <dt>templates</dt>  
-    <dd>XML sample template files. This folder also contains CSS files used in some templates and in some cases there may be an XSL transformation which turns XML data into a non-editable XHTML document for publication. </dd>
+    <dd>XML sample template files.</dd>
 
     <dt>test</dt>
     <dd>Test folder. This folder contains some tests targeted at AXEL library or plugin developers. It's purpose is to simplify library testing on different browsers and platform architectures.<d>
-  </dl>     
+  </dl>
 
   <hr style="width: 100%; height: 2px;">  
-  <p>Last update: <span style="font-style: italic;">January</span><i> 16,
-  2011</i></p>      
+  <p>Last update: <span style="font-style: italic;">2012-09-08</span></p>
 
 </body>
 </html>
