@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "text" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>        
+  </head>
+  <body>
+  
+    <h1>The <samp>"text"</samp> plugin</h1>  
+    
+    <h2>Default configuration</h2>
+
+    <div class="demo extract">
+      <p><xt:use types="text" label="Default">your content here</xt:use></p>
+    </div>  
+
+    <h2>With parameter <var>type</var> set to <code>"textarea"</code></h2>
+    
+    <p>Observe the effects of <var>shape</var> and <var>layout</var> parameters.</p>
+
+    <div class="demo extract">
+      <p><xt:use types="text" label="TextArea" param="type=textarea;shape=self;layout=placed">your content here</xt:use></p>
+      <p><xt:use types="text" label="TextArea" param="type=textarea;shape=self;layout=float">your content here</xt:use></p>
+      <p><xt:use types="text" label="TextArea" param="type=textarea;shape=parent;layout=placed">your content here</xt:use></p>
+      <p><xt:use types="text" label="TextArea" param="type=textarea;shape=parent;layout=float">your content here</xt:use></p>
+    </div>
+
+    <h3>With <var>type</var> set to <code>"input"</code></h3>  
+
+    <p>Observe the effects of <var>shape</var> and <var>layout</var> parameters.</p>
+
+    <div class="demo extract">
+      <p><xt:use types="text" label="Input" param="type=input;shape=self;layout=placed">your content here</xt:use></p>
+      <p><xt:use types="text" label="Input" param="type=input;shape=self;layout=float">your content here</xt:use></p>
+      <p><xt:use types="text" label="Input" param="type=input;shape=parent;layout=placed">your content here</xt:use></p>
+      <p><xt:use types="text" label="Input" param="type=input;shape=parent;layout=float">your content here</xt:use></p>
+    </div>  
+  </body> 
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "image" filter</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>  
+    
+    <style type="text/css">
+      div.image, input.image {
+        border: 1px solid gray; 
+        padding: 2px;         
+        margin: 20px;
+        text-align: center;
+        vertical-align: middle;
+      } 
+      div.grid {
+        position: relative;
+      }
+      div.cell {
+        float: left;
+        padding: 0 20px 20px 0;
+        width: 400px;
+      }
+      div.image > img {
+        max-width: 330px;
+      }
+    </style>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <p class="warning">You must have a live Internet connection to actually see some of the images.</p>
+
+    <h1>The "image" filter</h1>
+    
+    <p><b>Goal</b> : turns a text entry field into an image URL entry field to include images by URL within a document.</p>
+    
+    <p>The "image" filter is compatible with the "text" plugin. It doesn't upload any image file on the server, it simply displays the existing file inside an <code>img</code> tag.</p>
+
+    <p>The examples below are shown inside a <code>xt:repeat</code> element so that you can see how does look a freshly repeated element.</p>
+
+    <p>The example below set an "image" class attribute on the image container and on the entry field. The border and margins are set with CSS rules applied to a <code>div.image, input.image</code> selector.</p>
+
+    <div class="grid">
+      
+      <div class="cell">
+        <h3>Without default content</h3>
+        <div class="demo extract">
+          <xt:repeat minOccurs="0" maxOccurs="*" label="Gallery">
+            <p>Set an image<xt:menu-marker/></p>
+            <xt:use types="text" handle="div" label="Image"
+                    param="filter=image;type=input;layout=placed;class=image">click to enter an image file name</xt:use>
+          </xt:repeat>
+        </div>  
+      </div>
+      
+      <div class="cell">
+        <h3>With a default content that points to an image file with an absolute URL</h3>    
+        <div class="demo extract">
+          <xt:repeat minOccurs="0" maxOccurs="*"  label="Gallery">
+            <p>Set an image<xt:menu-marker/></p>
+            <xt:use types="text" handle="div" label="Image"
+                    param="filter=image;type=input;class=image"
+                    >http://farm5.static.flickr.com/4015/4405670097_c6a31114c0.jpg</xt:use>
+          </xt:repeat>
+        </div>
+      </div>
+      
+      <div class="cell">
+        <h3>With a default content that points to an image file with a relative URL and a base URL using a <var>base</var> attribute</h3>    
+        <div class="demo extract">
+          <xt:repeat minOccurs="0" maxOccurs="*" label="Gallery">
+            <p>Set an image <xt:menu-marker/></p>
+            <xt:use types="text" handle="div" label="Image"
+                    param="filter=image;type=input;class=image;base=../../axel/bundles/repeat/">plus.png</xt:use>
+          </xt:repeat>
+        </div>  
+      </div>
+      
+    </div>
+  </body> 
+</html>

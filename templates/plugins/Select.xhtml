@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "select" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>        
+  </head>
+  <body>
+  
+    <h1>The <samp>"select"</samp> plugin</h1>  
+
+    <p><b>Goal</b> : select a choice in a list of choices presented as a popup menu</p>
+    
+    <p>You can use an <samp>i18n</samp> attribute to set the labels displayed in the popup menu independently of the generated XML content.</p>
+
+    <p>You can use an <samp>option</samp> attribute to make it optional.</p>
+    
+    <h2>Basic usage</h2>
+    
+    <h3>As an attribute</h3>
+    
+    <div class="demo">
+      <p>
+        I prefer <xt:attribute types="select" name="season" default="Autumn" values="Winter Spring Summer Autumn"/> 
+        in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/>.
+      </p>
+    </div>
+    
+    <h3>As an element</h3>
+    
+    <div class="demo">
+      <p>
+        I prefer to pay with <xt:use types="select" label="Currency" values="EUR USD CHF" i18n="Euro Dollars Swiss-franc">USD</xt:use>.
+      </p>
+    </div>
+    
+    <h2>The <samp>model</samp> parameter</h2>
+    
+    <p>You can load the list of options from an external resource by giving its URL with a <sanmp>model</sanmp> parameter.</p>
+    
+    <div class="demo">
+      <p>
+        I live in <xt:use types="select" label="Country" param="model=countries.xml"/>.
+      </p>
+    </div>
+    
+  </body> 
+</html>
