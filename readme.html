@@ -35,18 +35,18 @@ dd {
   </style>
 </head>
 <body>
-  <h1>AXEL Version @VERSION@ (Rev @REV@)</h1>
+  <h1>AXEL Version 1</h1>
 
   <p class="header">This is the source distribution of the Adaptable XML Editing Library (AXEL). The library implements a client-side XTiger XML processor in Javascript.</p>      
   
   <div class="credits"> 
-    <p>AXEL and XTiger XML is the results of research efforts at the <a href="http://media.epfl.ch" target="_blank">MEDIA</a> research group at EPFL and in collaboration with <a href="http://wam.inrialpes.fr/" target="_blank">project WAM</a> at INRIA, Centre de Recherche Public <a href="http://www.tudor.lu/" target="_blank">Henri Tudor</a> and <a href="http://www.madeinlocal.com" target="_blank">Useful Web Sàrl</a>.</p>
-    
-    <p>AXEL development is now continued by Stéphane Sire at <a href="http://www.oppidoc.fr" target="_blank">Oppidoc</a>.</p>
+    <p>AXEL is developped by Stéphane Sire at <a href="http://www.oppidoc.fr" target="_blank">Oppidoc</a>.</p>
+
+    <p>The first version of AXEL and XTiger XML is the results of research efforts at the <a href="http://media.epfl.ch" target="_blank">MEDIA</a> research group at EPFL and in collaboration with <a href="http://wam.inrialpes.fr/" target="_blank">project WAM</a> at INRIA, Centre de Recherche Public <a href="http://www.tudor.lu/" target="_blank">Henri Tudor</a> and <a href="http://www.madeinlocal.com" target="_blank">Useful Web Sàrl</a>.</p>
     
     <p>AXEL is released as free software, under the terms of the LGPL version 2.1, please make sure that you read the license file in <a href="distrib/COPYING">distrib/COPYING</a>. You are welcome to join our efforts to improve the library and the specification at any time and to become part of the <a href="distrib/AUTHORS">contributors</a>.</p>
     
-    <p style="text-align: right;margin-right: 40px">Contact: <a href="mailto:s.sire@oppidoc.fr?subject=AXEL @VERSION@ (Rev @REV@)">Stéphane Sire</a></p>
+    <p style="text-align: right;margin-right: 40px">Contact: <a href="mailto:s.sire@oppidoc.fr?subject=AXEL">Stéphane Sire</a></p>
   </div>
   
   <h3>Where to start ?</h3>
@@ -72,14 +72,14 @@ dd {
     <dd>Third party tools and contributions.</dd>
 
     <dt>data</dt>
-    <dd>XML sample data files; some of which can be loaded inside the sample templates found in the templates folder, for instance using the editor application which is in the editor folder. Some others are used for testing the library.</dd>
+    <dd>XML sample data files; some of which can be loaded inside the sample templates found in the templates folder, for instance using the editor application which is in the editor folder.</dd>
 
     <dt>docs</dt>
     <dd>Some <a href="docs/toc.html">documentation</a> including the <a href="docs/XTiger-XML-spec.html">XTiger XML language specification</a> (which will be moved to its own GitHub repository soon).</dd>
   
     <dt>editor</dt>
 
-    <dd>Sample editing application (<a href="editor/editor.xhtml">editor.xhtml</a>) built with the library. This is the MAIN ENTRY POINT to discover AXEL and XTiger XML : select a template folder and template file name using the two popup menus next to <i>Template :</i>, then click on <i>Visualize</i> to transform it into an editor in the main panel of the window. Use the <i>Dump</i> button to see the current XML content of the editor at any time. If you follow the instructions on disabling security restrictions on Firefox, you can also list all the templates below any custom template folder you choose in the preferences.</dd>
+    <dd>Sample editing application (<a href="editor/editor.xhtml">editor.xhtml</a>) built with the library. This is the MAIN ENTRY POINT to discover AXEL and XTiger XML : select a template folder and template file name using the two popup menus next to <i>Template :</i>, then click on <i>Visualize</i> to transform it into an editor in the main panel of the window. Use the <i>Dump</i> button to see the current XML content of the editor at any time. If you follow the instructions on disabling security restrictions on Firefox, you can also list all the templates inside any custom template folder you choose in the preferences.</dd>
   
     <dd>The editing application includes each library file individually from the src folder and not from the axel folder, this is because it is used to debug the library. The other editing application file <a  href="editor/editornoframe.xhtml">editornoframe.xhtml</a> loads the template into an Ajax object instead of an iframe element and then renders it inside a div inside the page. Consequently CSS files loaded by templates are not loaded.</dd>
 
