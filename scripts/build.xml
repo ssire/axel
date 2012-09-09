@@ -49,11 +49,11 @@ Author(s) : Stephane Sire
     <filelist id="files.filters" dir="${filters.src.dir}"
               files="${filters.lib.files}"/>
 
-    <filelist id="files.services" dir="${services.src.dir}"
-              files="${services.lib.files}"/>
-
     <filelist id="files.utils" dir="${util.src.dir}"
               files="${util.lib.files}"/>
+              
+    <filelist id="files.css" dir="${css.src.dir}"
+              files="${css.lib.files}"/>
   </target>
 
   <target name="-init.release">
@@ -92,7 +92,6 @@ Author(s) : Stephane Sire
       <filelist refid="files.devices"/>
       <filelist refid="files.plugins"/>
       <filelist refid="files.filters"/>
-      <filelist refid="files.services"/>
       <filelist refid="files.utils"/>
     </concat>
   </target>
@@ -116,7 +115,7 @@ Author(s) : Stephane Sire
     <filter token="VERSION" value="${release.number}"/>
     <filter token="LICENSE" value="${distrib.license}"/>
     <filter token="REV" value="${revision.number}"/>
-    <!-- FIXME: we should include SVN revision number somewhere -->
+    <!-- FIXME: we should include revision number somewhere -->
     <copy file="../distrib/library-header-js.txt"
           tofile="${build.dir}/library-header-js.txt" filtering="true"/>
 
@@ -135,8 +134,7 @@ Author(s) : Stephane Sire
 /*  AXEL library CSS file */
 /**************************/
 </string>
-      <file file="${css.dir}/axel-core.css"/>
-      <file file="${css.dir}/axel-style.css"/>
+      <filelist refid="files.css"/>
     </concat>
   </target>
 
