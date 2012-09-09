@@ -49,9 +49,6 @@ Author(s) : Stephane Sire
     <filelist id="files.filters" dir="${filters.src.dir}"
               files="${filters.lib.files}"/>
 
-    <filelist id="files.utils" dir="${util.src.dir}"
-              files="${util.lib.files}"/>
-              
     <filelist id="files.css" dir="${css.src.dir}"
               files="${css.lib.files}"/>
   </target>
@@ -92,7 +89,6 @@ Author(s) : Stephane Sire
       <filelist refid="files.devices"/>
       <filelist refid="files.plugins"/>
       <filelist refid="files.filters"/>
-      <filelist refid="files.utils"/>
     </concat>
   </target>
 

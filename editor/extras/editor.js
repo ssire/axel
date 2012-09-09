@@ -139,6 +139,71 @@ Utility.FileListAction.prototype = {
   }
 };
 
+/**
+ * A window for logging data
+ * An alternative design could be to make it directly a DOMLogger (?)
+ */
+xtiger.util.LogWin = function (name, width, height, isTranscoding) {
+  var params = "width=" + width + ",height=" + height + ",status=yes,resizable=yes,scrollbars=yes,title=" + name;
+  if (xtiger.cross.UA.IE) {
+    this.window = window.open('about:blank');
+  } else {
+    this.window = window.open(null, name, params);    
+  }
+  this.doc = this.window.document;
+  this.doc.open();
+  this.isTranscoding = isTranscoding;
+}
+
+xtiger.util.LogWin.prototype = {       
+  
+  // Dumps a form inside this LogWin
+  // Assumes form has been configured to dump schemas
+  dumpSchema : function (form, stylesheet, template) {
+    var dump = new xtiger.util.SchemaLogger ();   
+    var data = form.serializeData (dump);
+    this.write(dump.dump('*'));
+    this.close();     
+  },    
+  // Dumps a form inside this LogWin
+  // stylesheet is an optional stylesheet filename, if present it adds a stylesheet processing instruction
+  // filename is the optional name of the XML content file, if present it is added as a 'filename' attribute
+  //  on the root node
+  dump : function (form, stylesheet, template) {
+    var buffer;
+    var dump = new xtiger.util.DOMLogger ();
+    // form.setSerializer(new xtiger.editor.BasicSerializer ());
+    var data = form.serializeData (dump);
+    buffer = "<?xml version=\"1.0\"?>\n" // encoding="UTF-8" ?
+    if (stylesheet) {
+      buffer += '<?xml-stylesheet type="text/xml" href="' + stylesheet + '"?>\n';
+    }
+    if (template) {
+      buffer += '<?xtiger template="' + template + '" version="1.0" ?>\n';
+    }                                           
+    buffer += dump.dump('*');
+    this.write(buffer);
+    this.close();     
+  },
+  transcode : function (text) {
+    var filter1 = text.replace(/</g, '&lt;');
+    var filter2 = filter1.replace(/\n/g, '<br/>');    
+    var filter3 = filter2.replace(/ /g, '&nbsp;');    
+    return filter3;
+  },
+  write : function (text) {     
+    var t = this.isTranscoding ? this.transcode(text) : text;
+    this.doc.writeln(t);
+  },
+  
+  close : function (text) {
+    this.doc.close();
+  },  
+  dispose : function () {
+    this.doc.close(); 
+  } 
+};
+
 /*****************************************************/
 /*                                                   */
 /*            Application Controller                 */

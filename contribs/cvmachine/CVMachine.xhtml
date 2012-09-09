@@ -728,8 +728,7 @@ div#menu {
   <link rel="stylesheet" href="../../axel/axel.css" type="text/css" />        
   
   <script type="text/javascript" src="../../axel/axel.js"></script>  
-  <script type="text/javascript" src="../../src/util/editorbar.js"></script>    
-  <script type="text/javascript" src="../../src/util/debug.js"></script>    
+  <script type="text/javascript" src="editorbar.js"></script>
   <script type="text/javascript">                                         
     var guiTrans = { 'show' : ['block', 'hide'], 'hide' : ['none', 'show'] };
     var targets = ['style'];  
@@ -737,7 +736,7 @@ div#menu {
       setTimeout(installButtons, 100); // waits for end of transformation..     
       EditorBar({
           bundles_URL: '../../axel/bundles', 
-					nofileapi_URL : "nofileapi.html",
+          nofileapi_URL : "nofileapi.html",
           menuId: 'menu', 
           layout: 'vertical',
           load: true,
