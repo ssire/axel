@@ -1,0 +1,83 @@
+<carte>
+  <title>Carte des plaisirs</title>
+  <course>
+    <name>Pour Commencer</name>
+    <choice>
+      <dish>
+        <name>Salade Champêtre et Vinaigrette Balsamique</name>
+        <price currency="EUR">8.50</price>
+      </dish>
+      <dish>
+        <name>Gaspacho de Melon et Jambon Cru</name>
+        <price currency="EUR">10.50</price>
+      </dish>
+      <dish>
+        <name>Tartare de Féra et Thon rouge à l'échalote</name>
+        <price currency="EUR">14.50</price>
+      </dish>
+      <dish>
+        <name>Poisson Fumée et Petit Mélange de Salade</name>
+        <price currency="EUR">14.50</price>
+      </dish>
+      <dish>
+        <name>Saladine Champêtre accompagnée de langoustine, de crevettes   au tandoori et vinaigrette citron et Basilic</name>
+        <price currency="EUR">15.90</price>
+      </dish>
+      <dish>
+        <name>Foie Gras de Canard à la « Petite Arvine »</name>
+        <price currency="EUR">17.60</price>
+      </dish>
+    </choice>
+  </course>
+  <course>
+    <name>Pour Suivre</name>
+    <choice specialty="Les Poissons">
+      <dish>
+        <name>Filets de Perche au Beurre Citronné</name>
+        <price currency="EUR">23.80</price>
+      </dish>
+      <dish>
+        <name>Pavé de Thon Rouge rôti à  la provençal</name>
+        <price currency="EUR">23.60</price>
+      </dish>
+      <dish>
+        <name>Panaché de Poissons à la Crème de Crustacés</name>
+        <price currency="EUR">24.50</price>
+      </dish>
+      <dish>
+        <name>Bar au Fenouil</name>
+        <price currency="EUR">24.50</price>
+      </dish>
+    </choice>
+    <choice specialty="Les Poissons du Léman">
+      <comment>Selon  la pêche ces poissons peuvent nous faire défaut, veuillez nous en excuser</comment>
+      <dish>
+        <name>Filets de Perche du Léman Meunière</name>
+        <price currency="EUR">27.00</price>
+      </dish>
+      <dish>
+        <name>Filet de Féra à la Rhubarbe</name>
+        <price currency="EUR">21.50</price>
+      </dish>
+    </choice>
+    <choice specialty="Les Viandes">
+      <dish>
+        <name>Entrecôte de Charolais Beurre Maître d’Hôtel</name>
+        <price currency="EUR">22.80</price>
+      </dish>
+      <dish>
+        <name>Suprême de Pintade à la Lullin</name>
+        <price currency="EUR">23.80</price>
+      </dish>
+      <dish>
+        <name>Carré d’Agneau aux à la Sarriette et Romarin</name>
+        <price currency="EUR">24.00</price>
+      </dish>
+      <dish>
+        <name>Côte de Bœuf Simmental Marinée aux Epices</name>
+        <price currency="EUR">27</price>
+        <comment>pour 2 personnes, 30 min, Pris/ pers</comment>
+      </dish>
+    </choice>
+  </course>
+</carte>

@@ -1,9 +1,8 @@
-<curriculum>
+<curriculum email="haddock@moulinsart.fr">
   <full_name>Capitaine Haddock</full_name>
   <birth_day>Inconnue</birth_day>
   <address>Chateau de Moulinsart</address>
   <phone>04 56 78 30 20</phone>
-  <email>haddock@moulinsart.fr</email>
   <objectives>
     <description>Capitaine au long cours</description>
   </objectives>
@@ -22,9 +21,7 @@
     </item>
   </training>
   <placements>
-    <employment>
-      <start>1969</start> 
-      <end>Aujourd'hui</end>
+    <employment start="1969" end="Aujourd'hui">
       <description>Héro de bande dessinée</description>
       <location>Moulinsart</location>
     </employment>
