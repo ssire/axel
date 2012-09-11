@@ -22,7 +22,6 @@ if (typeof xtiger == "undefined" || !xtiger) {
   xtiger.USE = 3;
   xtiger.BAG = 4;         
   xtiger.ATTRIBUTE = 5; 
-  xtiger.SERVICE = 6; // extension
   xtiger.UNKNOWN = -1;  
 }
 
@@ -31,8 +30,6 @@ if (typeof xtiger == "undefined" || !xtiger) {
 xtiger.parser = {};
 /** @namespace Contains editors and plugins */
 xtiger.editor = {};
-/** @namespace Contains services */
-xtiger.service = {};
 /** @namespace Contains utilities to make the library cross-browser */
 xtiger.cross = {};
 /** @namespace Contains various utility methods */

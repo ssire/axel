@@ -21,7 +21,6 @@ xtiger.parser.CONSTRUCTED = 1;
 
 // RegExps
 xtiger.parser.nsXTiger = "http://ns.inria.org/xtiger";
-xtiger.parser.nsXTigerExt = "http://ns.media.epfl.ch/xtiger-extension";
 xtiger.parser.nsXTiger_deprecated = "http://wam.inrialpes.fr/xtiger"; // deprecated ns
 xtiger.parser.nsXHTML = "http://www.w3.org/1999/xhtml"
 xtiger.parser.isXTiger = /<[^>]*[(component)(use)(repeat)(service)]/i; // XTiger node opening tag
@@ -226,15 +225,12 @@ xtiger.parser.Iterator.prototype = {
           case xtiger.REPEAT:
             this.changeRepeat(aNode);
             break;
-          case xtiger.ATTRIBUTE:                
+          case xtiger.ATTRIBUTE:
             this.changeAttribute(aNode); 
             break;   
           case xtiger.BAG:
             this.changeBag(aNode); 
-            break;      
-          case xtiger.SERVICE:
-            this.changeService(aNode);
-            break;      
+            break;
           default:
             this.continueWithChildOf(aNode);
         }      
@@ -346,18 +342,5 @@ xtiger.parser.Iterator.prototype = {
     span.appendChild(t);      
     bagNode.parentNode.insertBefore(span, bagNode, true);
     bagNode.parentNode.removeChild(bagNode);
-  },
-
-  // Creates a service
-  changeService : function (xtSrcNode) {        
-    var sFactory = xtiger.factory('service');
-    if (sFactory) {
-      var container = xtdom.createElement(this.curDoc,'div');
-      var handle = sFactory.createModel(container, xtSrcNode, this.curDoc);
-      handle.xttService = sFactory.createServiceFromTree (handle, xtSrcNode, this.curDoc);
-      xtdom.replaceNodeByChildOf (xtSrcNode, container);
-    } else {
-      xtiger.cross.log('warning', 'Missing "service" factory - services will not be generated !');
-    }
-  }       
+  }
 }

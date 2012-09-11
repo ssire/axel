@@ -469,8 +469,6 @@ xtdom.getNodeTypeXT = function (aNode) {
     return xtiger.BAG;
   } else if ((s == 'attribute') || (s == 'xt:attribute')) {
     return xtiger.ATTRIBUTE;
-  } else if ((s == 'service') || (s == 'xte:service')) {
-    return xtiger.SERVICE;
   // } else if ((s == 'menu-marker') || (s == 'xt:menu-marker')) { {
   //  return xtiger.MENU_MARKER;
   } else {
@@ -528,7 +526,7 @@ if (! xtiger.cross.UA.IE) {
   // Returns true if the node is an XTiger node
   xtdom.isXT = function isXT (node) {
     var ns = node.namespaceURI;
-    return (ns == xtiger.parser.nsXTiger) || (ns == xtiger.parser.nsXTiger_deprecated) || (ns == xtiger.parser.nsXTigerExt);
+    return (ns == xtiger.parser.nsXTiger) || (ns == xtiger.parser.nsXTiger_deprecated);
   } 
   
   // Returns true if the DOM is a xt:use node, false otherwise.
