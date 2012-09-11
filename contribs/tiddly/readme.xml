@@ -329,7 +329,7 @@
     <RefUrl>
       <Key>XTigerXML</Key>
       <Link>
-        <linkRef>http://media.epfl.ch/Templates/XTiger-XML-spec.html</linkRef>
+        <linkRef>http://ssire.github.com/xtiger-xml-spec/</linkRef>
         <linkText>XTiger XML Language Specification</linkText>
       </Link>
     </RefUrl>

@@ -13,7 +13,7 @@
 ----------------    AXEL integrator's FAQ   --------------------
 ----------------------------------------------------------------
 
-Last update: May 27, 2011 by S.Sire
+Last update: Sept 11, 2012 by S.Sire
 
 This document gives some advices for integrating AXEL into your application.
 It is presented as a FAQ. You are welcome to share your experience to improve
@@ -29,16 +29,15 @@ Summary
 <li><a href="#build">How to build the library ?</a></li>
 <li><a href="#debug">How to build the library for debugging purpose ?</a></li>
 <li><a href="#include">How to select which source files to include into the library ?</a></li>
-<li><a href="#loading">How to choose between the basic XML loading algorithm or the robust one ?</a></li>
 <li><a href="#core">How to test the core features of the library after checkout ?</a></li>
 <li><a href="#interactive">How to test the interactive features of the library after checkout ?</a></li>
 <li><a href="#api">How to learn about AXEL API to load and transform templates into editors ?</a></li>
 <li><a href="#write">How to write portable (cross-browser) templates ?</a></li>
 <li><a href="#serve">How to serve portable (cross-browser) templates ?</a></li>
 <li><a href="#test">How to configure scripts/server/server.rb to execute the tests ? </a></li>
-<li><a href="#plugins">How to get some documentation about the available plugins ?</a></li>
-<li><a href="#documentation">How to build some documentation from the source files ?</a></li>
+<li><a href="#plugins">How to get some documentation about the available plugins / filters ?</a></li>
 <li><a href="#files">How to know which files to include in the library ?</a></li>
+<li><a href="#loading">How to choose between the basic XML loading algorithm or the robust one ?</a></li>
 </ul>
 
 <pre id="build">
@@ -69,47 +68,14 @@ How to select which source files to include into the library ?
 ==============================================================
 
 The files to include into the library are defined by the "core.lib.files",
-"editor.lib.files", "devices.lib.files", "filters.lib.files",
-"services.lib.files" and "util.lib.files" in the "scripts/ant.properties"
-file. You can remove some files to generate a smaller library. 
+"editor.lib.files", "devices.lib.files", "filters.lib.files"
+and "util.lib.files" in the "scripts/ant.properties" file. 
+You can remove some files to generate a smaller library. 
 
 The dependencies between the source files are explained in the
-"How to know which files to include in the library ?" entry of this FAQ>
+"How to know which files to include in the library ?" entry of this FAQ.
 </pre>
 
-<pre id="loading">
-How to choose between the basic XML loading algorithm or the robust one ?
-=========================================================================
-
-When loading XML data in a template with xtiger.util.Form.loadData, as
-described in the tutorial, the library uses the XML loading algorithm defined
-by the defaultLoader property of xtiger.editor.Generator. That property is set
-by the latest of the two source files "xmlrobustloader.js" and "xmlloader.js"
-which is included in the library. The basic algorithm is set as the default
-one in this distribution (i.e. "xmlloader.js" is included after
-"xmlrobustloader.js").
-
-Alternatively you can explicitly set the loader object by calling the
-setLoader method of xtiger.util.Form with either a new
-xtiger.editor.RobustLoader, or a new xtiger.editor.BasicLoader argument to
-select respectively the robust or the basic algorithms (in that case do not
-forget to include either "xmlrobustloader.js" or "xmlloader.js" into the
-library).
-
-The robust loader uses a greedy algorithm for loading XML data. It supports
-some forms of backward compatibility at the data level when a template has
-been modified. The drawback is that the template must conform to a set of
-restrictions on the full XTiger XML specification. The modifications
-themselves are limited to a restricted set of modifications. Both the XTiger
-XML restrictions and the allowed modifications are defined in a "Guidelines
-for writing robust XTiger XML templates" document written by Antoine Yersin
-which is available on demand (contat us).
-
-In conclusion be very careful if you want to use the robust XML loading
-algorithm. In particular USING THE ROBUST XML ALGORITHM ON TEMPLATES WHICH ARE
-NON ROBUSTS may lead to some data loss and distortions when editing data.  
-</pre>
-      
 <pre id="core">
 How to test the core features of the library after checkout ?
 =============================================================
@@ -146,17 +112,15 @@ version.
 Currently all the tests configured by default PASS on Firefox 3, Safari 4,
 Opera 10.
 
-The tests with the "wiki" filter (Fiche-Projet and Article) FAIL on Internet
-Explorer 7 & 8, we will debug this later, in the meantime do not use these
-filters on IE. The tests with the "richtext" plugin FAIL on Opera and Internet
-Explorer 7 & 8. This is due to some minor differences in the serialization
+The tests with the "richtext" plugin FAIL on Opera and Internet Explorer. 
+This is due to some minor differences in the serialization
 results. However it doesn't mean the plugin is not functional but only that
 different browsers give different HTML serializations which are all valid and
 can be viewed in any browser.
 
 All the tests above can be executed directly from the file system on Firefox
-3, Safari 4, Internet Explorer 7 & 8, Opera 10, on Windows, Mac OS X, and
-Ubuntu. For Google Chrome there is a security restriction that prevents to
+3, Safari 4, Internet Explorer 7, Opera 10, on Windows, Mac OS X, and
+Linux (Ubuntu). For Google Chrome there is a security restriction that prevents to
 open URLs with XMLHTTPRequest from the file:// domain. In that case you must
 launch the test from behind a Web server (see "How to configure
 scripts/server/server.rb to execute the tests" if you want to use the test
@@ -184,14 +148,8 @@ some interactive tests to performs.
 The second way is to open editor/editor.xhtml, select a template (Page
 shortcut drop down list) and hit the "Visualize" button to generate the
 corresponding editor and enter data. You can also use the preferences button
-to load XML data inside a template.
-
-Here are some possible tests:
-
-- open Curriculum.xhtml template and load ../data/cvHaddock.xml
-- open Carte-Resto.xhtml template and load ../data/carteResto1.xml or
-  ../data/carteResto2.xml
-- etc. (all the sample templates are in the templates folder)
+to load XML data inside a template. There should be at least one sample 
+template for each plugin / filter.
 
 You can also directly test your own template by entering its path by hand. We
 strongly advice that you do so with your own template and test the interactive
@@ -206,10 +164,6 @@ AXEL style sheet inside the iframe). In that case you can use
 editor/editornoframe.xhtml that does the same thing but without an iframe. The
 drawback is that in that case any external CSS files included by the template
 will not be loaded.
-
-For your convenience you can also open demos/index.html that contains links to
-several demonstrations; they are built the same way editor/editor.xhtml (i.e.
-an iframe).     
 </pre>
 
 <pre id="api">
@@ -221,13 +175,10 @@ examples/tutorial/tutorial.xhtml
 
 Alternatively you can look at the source code of:
 
-- editor/editor.xhtml or demos/launch.xhtml : to see how to load a template
+- editor/editor.xhtml : to see how to load a template
   and transform within an iframe
 - editor/editornoframe.xhtml : to see how to load a template with an Ajax
   request and transform it to a div in your application Web page
-- examples/standalone/curriculum.xhtml (NOT YET AVAILABLE) : to see how to
-  transform a Web page into an "editable" Web page by directly embedding the
-  template within it
 </pre>
 
 <pre id="write">
@@ -274,7 +225,7 @@ scripts/server/server.rb starts a Web server that listen on port 8042
 (http://localhost:8042/demos/index.html) and that serves the full library
 distribution.
 
-You can use it to launch the sample applications and do some testing from
+You can use it to launch the sample editor and/or do some testing from
 behind a Web server in case you have problem to launch them from within the
 file system. Read the previous entry "How to Serve portable (cross-browser)
 templates" to learn how to properly configure their MIME-Type.
@@ -285,43 +236,22 @@ such as my_mime_types.update({"xhtml" => "text/html"}) (see the source code).
 </pre>
 
 <pre id="plugins">
-How to get some documentation about the available plugins ?
-===========================================================
+How to get some documentation about the available plugins / filters ?
+=====================================================================
 
-This is a weak point we are working on. As a starting point we are writing
-some How-To style guides in the docs folder. We currently have a
-link-plugin-howto.txt guide for the "link" plugin, a photo-plugin-howto.txt
-guide for the "photo" plugin and a video-plugin-howto.txt guide for the
-YouTube "video" plugin.
+Some very common plugins are described in the XTiger XML specification [1]
+(such as "text" and "select"). 
 
-The "string" and the "text" (which should be preferred) plugins are described
-in the specification (the XTIger-XML-spec.html document in the docs folder).
+The rule of thumb is that every plugin / filter should have a How-To style
+guide in the docs folder, and a demonstration template that you can play 
+with using the editor/editor.xhtml application in the templates folder.
 
-Alternatively you can have a look at the templates given as example in the
-templates folder, more specifically the Editors.xhtml and the Plugins.xhtml
-templates should be seen as catalog files of existing plugins. 
+Finally you can check the AXEL wiki [2].
+
+[1] ssire.github.com/xtiger-xml-spec/
+[2] https://github.com/ssire/axel/wiki
 </pre>
-     
-<pre id="documentation">
-How to build some documentation from the source files ?    
-=======================================================     
 
-We have started to experiment with using JSDoc style comments to automatically
-generate documentation from the source files. However at that moment only very
-few files have been properly commented. However if you want you can try to
-generate the documentation with the "build.doc" target defined in the ant
-script in scripts/build.xml. You must first install JSDoc-toolkit and sets its
-path inside the "jsdoc.generator.dir" property of the scripts/ant.properties
-file. The documentation will be generated in the folder defined by the
-"doc.build.dir" property and that defaults to docs/jsdoc.
-
-Let us know if you think JSDoc style documentation is more important than
-writing a separate developer's manual, since we are still balancing between
-both alternatives. Meantime if you want to learn about the intricacies of the
-library you should directly read the comments inside the source code.
-
-You can get JSDoc-toolkit at http://code.google.com/p/jsdoc-toolkit/    
-</pre> 
 <pre id="files">
 How to know which files to include in the library ?    
 ===================================================     
@@ -339,92 +269,91 @@ use the basic loader algorithm. You must leave "xmlloader.js" after
 You need the files in "src/plugins" according to the primitive editors you use
 in your templates:
 
-text.js: 'text' primitive editor (depends on text.js device)
+text.js:      'text' primitive editor (depends on text.js device)
 
-select.js: 'select' primitive editor (depends on popup.js device)
+select.js:    'select' primitive editor (depends on popup.js device)
 
-link.js: 'link' primitive editor (depends on popup.js device)
+link.js:      'link' primitive editor (depends on popup.js device)
 
-richtext.js: 'richtext' primitive editor (depends on popup.js device)
+richtext.js:  'richtext' primitive editor (depends on popup.js device)
 
-photo.js: 'photo' upload primitive editor (depends on popup.js, upload devices
-          and documentid.js filter)
+photo.js:     'photo' upload primitive editor (depends on popup.js, upload devices
+              and documentid.js filter)
 
-video.js: 'video' primitive editor for YouTube video 
-          (depends on popup.js device)
+video.js:     'video' primitive editor for YouTube video 
+              (depends on popup.js device)
 
 You need the files in "src/devices" according to the primitive editors you use
 in your templates as stated above. For your information:
 
-text.js: input and textarea text entry fields 
+text.js:      input and textarea text entry fields 
 
-popup.js: popup menu that may segmented
+popup.js:     popup menu that may segmented
 
-lens.js: generic lens device (mega popup) for all lens based primitive editor
+lens.js:      generic lens device (mega popup) for all lens based primitive editor
 
-upload.js: transfers a file (image file) to a server through an iframe
-  requires a server that implements a corresponding communication protocol
+upload.js:    transfers a file (image file) to a server through an iframe
+              requires a server that implements a corresponding communication 
+              protocol
 
 autocomplete.js: communication layer for the 'autocomplete' filter
-  requires a server that implements the autocomplete protocol 
-  (this is not yet available in public release)
+                 requires a server that implements the autocomplete protocol 
 
 You need the files in "src/filters" according to the filters you use in your
-template. The only exception are "service.js" which is required to use
-services and "documentid.js" which is required to use the 'photo' primitive
-editor. For your information:
+template. The only exception is "documentid.js" which can be required to use 
+the 'photo' primitive editor. For your information:
 
-common.js: 'noxml' filter 
+common.js:    'noxml' filter 
 
 documentid.js: 'documentid' filter to be used with 'photo' plugin
 
-wiki.js: 'wiki' filter of the 'text' primitive editor
-  (still some bugs on IE)
+wiki.js:      'wiki' filter of the 'text' primitive editor
 
-image.js: image inclusion by URL filter of the 'text' primitive editor
-  initially developed for the Article.xhtml template
+image.js:     image inclusion by URL filter of the 'text' primitive editor
+              initially developed for the Article.xhtml template
 
-layout.js: 'layout' filter of the 'text' primitive editor used in the
-  Story.xhtml template to edit CSS within a document (does not run on IE)
+layout.js:    'layout' filter of the 'text' primitive editor (experimental)
 
-video.js: YouTube 'filter' of the 'text' primitive editor, alternative to
-'video' plugin
+video.js:     YouTube 'filter' of the 'text' primitive editor, alternative to
+              'video' plugin
 
-service.js: 'service' filter for each of the primitive editors
-  required if you  intend to use services
+debug.js:     'debug' filter for each of the primitive editors
 
-debug.js: 'debug' filter for each of the primitive editors
+autocomplete.js: 'autocomplete' filter for 'text' editor 
+                 (depends on autocomplete.js and popup.js device)
+</pre>
 
-autocomplete.js: 'autocomplete' filter for 'text' editor (depends on
-autocomplete.js and popup.js device, not yet available in the public release)
+<pre id="loading">
+How to choose between the basic XML loading algorithm or the robust one ?
+=========================================================================
 
-You need the files in "src/services" if you use the services and depending on
-the services you use in your templates. For your information:
+When loading XML data in a template with xtiger.util.Form.loadData, as
+described in the tutorial, the library uses the XML loading algorithm defined
+by the defaultLoader property of xtiger.editor.Generator. That property is set
+by the latest of the two source files "xmlrobustloader.js" and "xmlloader.js"
+which is included in the library. The basic algorithm is set as the default
+one in this distribution (i.e. "xmlloader.js" is included after
+"xmlrobustloader.js").
 
-service.js: required if you use any service       
+Alternatively you can explicitly set the loader object by calling the
+setLoader method of xtiger.util.Form with either a new
+xtiger.editor.RobustLoader, or a new xtiger.editor.BasicLoader argument to
+select respectively the robust or the basic algorithms (in that case do not
+forget to include either "xmlrobustloader.js" or "xmlloader.js" into the
+library).
 
-All the other files are optional and only needed if you use the corresponding 
-service (i.e. &lt;xte:service key="..." types="service-identifier"/>  )
+The robust loader uses a greedy algorithm for loading XML data. It supports
+some forms of backward compatibility at the data level when a template has
+been modified. The drawback is that the template must conform to a set of
+restrictions on the full XTiger XML specification. The modifications
+themselves are limited to a restricted set of modifications. Both the XTiger
+XML restrictions and the allowed modifications are defined in a "Guidelines
+for writing robust XTiger XML templates" document written by Antoine Yersin
+which is available on demand (contat us).
 
-common.js: 'copy' and 'copycond' (conditional copy) services
-
-capitalize.js: 'capitalize' service
-  for demonstration purpose, used in templates/Services.xhtml
-               
-debug.js: 'debug' service    
-
-date.js: 'date' service (supports constraints between start date and end date)
-
-suggest.js: 'suggest' service, implement a client-server protocol to fetch 
-  and present suggestions to update primitive editor's content model
-  (depends on popup.js device, not yet available in the public release)     
-  
-The files in "src/util" are optional:
-
-ioutils.js: only required if you are using xtiger.util.Logger  
-
-debug.js: defines xtiger.debug.load which works with local file system on
-          Internet Explorer.
+In conclusion be very careful if you want to use the robust XML loading
+algorithm. In particular USING THE ROBUST XML ALGORITHM ON TEMPLATES WHICH ARE
+NON ROBUSTS may lead to some data loss and distortions when editing data.  
 </pre>
 </body>
 </html>

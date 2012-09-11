@@ -12,7 +12,7 @@ How does it work ?
 ------------------
 
 AXEL works by transforming a *document template* (i.e. an XHTML file with
-embedded [XTiger XML](http://media.epfl.ch/Templates/XTiger-XML-spec.html)
+embedded [XTiger XML](http://ssire.github.com/xtiger-xml-spec/)
 instructions) into an editable HTML page.
 
 Where to start ?

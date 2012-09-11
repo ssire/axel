@@ -1098,7 +1098,7 @@ form.loadData(source, result); // form from above
         </authors>
         <title>XTiger XML Language Specification</title>
         <url>
-          <url>http://media.epfl.ch/Templates/XTiger-XML-spec.html</url>
+          <url>http://ssire.github.com/xtiger-xml-spec/</url>
         </url>
       </refreport>
     </reference>
