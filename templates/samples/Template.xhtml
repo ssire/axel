@@ -1,35 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
-<head>                  
-  <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=8;" />   
-  <meta name="description" content="XTiger XML document template" />
-  <meta name="keywords" content="template, XTiger" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-  <title>Your title here</title>
+    <title>Your title here</title>
 
-  <xt:head version="1.1" templateVersion="1.0" label="Root">    
-  
-    <xt:component name="myComponent">  
-      <p>A component <xt:menu-marker /></p>
-    </xt:component> 
-  
-  </xt:head>
-  
-  <!-- Optional AXEL Preview Mode -->
-  <link rel="stylesheet" type="text/css" href="Preview.css" />
-  
-  <!-- Place here optional AXEL code for making the template auto-editable -->
+    <xt:head version="1.1" templateVersion="1.0" label="Root">
 
-</head>
-<body>
-  <h1>Your template title here</h1>
+      <xt:component name="myComponent">
+        <p>A component <xt:menu-marker /></p>
+      </xt:component> 
+
+    </xt:head>
+
+    <!-- put here optional AXEL code to transform the template -->
+  </head>
+  <body>
+    <h1>Your template title here</h1>
   
-  <xt:repeat minOccurs="0" maxOccurs="*" label="SomeRepetition">
-    <xt:use types="myComponent" label="SomeComponent" />
-  </xt:repeat>
-</body>
-</html>               
+    <xt:repeat minOccurs="0" maxOccurs="*" label="SomeRepetition">
+      <xt:use types="myComponent" label="SomeComponent" />
+    </xt:repeat>
+  </body>
+</html>

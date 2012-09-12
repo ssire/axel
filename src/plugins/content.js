@@ -342,7 +342,7 @@
         // registers to keyboard events
         this.kbdHandlers = this.keyboard.register(this);
         this.keyboard.grab(this, this);
-        xtdom.removeClassName(this.handle, 'axel-core-editable');
+//        xtdom.removeClassName(this.handle, 'axel-core-editable');
         if ((!this.isModified()) || ((_timestamp != -1) && ((_timestamp - new Date().getTime()) < 100))) {
           if (xtiger.cross.UA.webKit) {
             // it seems on webkit the contenteditable will really be focused after callbacks return
@@ -376,7 +376,7 @@
           }
         }
         this.handle.blur();
-        xtdom.addClassName(this.handle, 'axel-core-editable');
+//        xtdom.addClassName(this.handle, 'axel-core-editable');
         this.stopInProgress = false;
         this.editInProgress = false;
       }
