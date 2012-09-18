@@ -12,7 +12,7 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-
+// DEPRECATED : to be moved somewhere else (experimental)
 // Float the parent of the editor element left or right
 // Inserts two icons with "reflow left" and "reflow right" class
 xtiger.editor.LayoutFactory = (function LayoutFactory() {

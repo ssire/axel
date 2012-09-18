@@ -12,7 +12,7 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/*
+/* 2012-09-17 : DEPRECATED, will be replaced by a 'richtext' filter on 'content' plugin (!)
  * 
  * NOTE : This editor is written using my own naming conventions and terminology. Please note the following points :
  * - SomeModel becomes SomeFactory

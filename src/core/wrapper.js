@@ -186,11 +186,12 @@
   // Extends a target object's with the own properties and methods 
   // of a source object whenever they are not already defined
   // if proto is true extends the target's prototype
-  _axel.extend = function extend (target, source, proto) {
+  // if force is true extends even if already defined
+  _axel.extend = function extend (target, source, proto, force) {
     if (proto) {
       for (var x in source){
         if (source.hasOwnProperty(x)) {
-          if (typeof target.prototype[x] === "undefined") {
+          if (force || (typeof target.prototype[x] === "undefined")) {
             target.prototype[x] = source[x];
           }
         }
@@ -198,7 +199,7 @@
     } else {
       for (var x in source){
         if (source.hasOwnProperty(x)) {
-          if (typeof target[x] === "undefined") {
+          if (force || (typeof target[x] === "undefined")) {
             target[x] = source[x];            
           }
         }
