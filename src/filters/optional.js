@@ -1,40 +1,44 @@
-/* AXEL 'optional' filter
+/* ***** BEGIN LICENSE BLOCK *****
  *
- * author      : Stéphane Sire
- * contact     : s.sire@oppidoc.fr
- * license     : proprietary (this is part of the Oppidum framework)
+ * @COPYRIGHT@
  *
- * August 2012 - (c) Copyright 2012 Oppidoc SARL. All Rights Reserved.
- */
+ * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@ 
+ *
+ * @LICENSE@
+ *
+ * Web site : https://github.com/ssire/axel
+ * 
+ * Author(s) : Stephane Sire
+ * 
+ * ***** END LICENSE BLOCK ***** */
 
-(function () {
-  
-  var _OptionalFilter =  {
+/*****************************************************************************\
+|                                                                             |
+|  AXEL 'optional' filter                                                     |
+|                                                                             |
+|  Only serializes data to XML if it is different from the default data       |
+|                                                                             |
+|*****************************************************************************|
+|  Prerequisite: none                                                         |
+|                                                                             |
+\*****************************************************************************/
+(function ($axel) {
 
-    ///////////////////////////////////////////////////
-    /////     Instance Clear Mixin Part    ////////
-    ///////////////////////////////////////////////////
+  var _Filter = {
 
-    // Property remapping for chaining
     '->': {
-     'save' : '__OptionalSuperSave'
+     'onSave' : '__opt__onSave'
     },   
 
-    save : function (aLogger) {
+    onSave : function (aLogger) {
       if (this.isModified()) {
-        this.__OptionalSuperSave(aLogger);
+        this.__opt__onSave(aLogger);
       } else {
         aLogger.discardNodeIfEmpty();
       }
     }
-
   };
 
-  // Do not forget to register your filter on any compatible primitive editor plugin
-  xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('optional', _OptionalFilter);
-  // FIXME: asynchronous mechanism to register filter to other plugins (e.g. 'input')
-  if (! window.axeltmptrick) {
-    window.axeltmptrick = {};
-  }
-  window.axeltmptrick['_OptionalFilter'] = _OptionalFilter;
-}());
+  $axel.filter.register('optional', _Filter);
+  $axel.filter.applyTo({'optional' : 'text'});
+}($axel));

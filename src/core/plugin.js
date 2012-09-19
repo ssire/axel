@@ -329,7 +329,10 @@ xtiger.editor.Plugin.prototype = {
 
   $axel.plugin = $axel.plugin || {};
 
-  // adds global management function 
+  /////////////////////////////
+  // Public module functions //
+  /////////////////////////////
+
   $axel.plugin.register = function ( name, spec, defaults, genfunction, klassdefs ) {
    var pluginK;
    if (xtiger.editor.Plugin.prototype.pluginEditors[name]) {
@@ -380,6 +383,12 @@ xtiger.editor.Plugin.prototype = {
        xtiger.editor.Plugin.prototype.pluginEditors[name] = factoklass;
      }
    }
+  };
+  
+  $axel.plugin.list = function () {
+    var key, accu = [];
+    for (key in xtiger.editor.Plugin.prototype.pluginEditors) { accu.push(key); }
+    return accu;
   };
 }($axel));
 

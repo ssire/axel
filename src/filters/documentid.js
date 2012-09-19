@@ -12,46 +12,39 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/*
- * DocumentId stores its value into xtiger.session(doc) as "documentId"
- * When used in an invisible part of the template, this allows to generate a document identifier 
- * which can be used by some primitive plugin editors to communicate with a server (e.g. Photo upload)
- */
-var _DocumentIdFilter = (function _DocumentIdFilter() {
+/*****************************************************************************\
+|                                                                             |
+|  AXEL 'documentid' filter                                                   |
+|                                                                             |
+|  Stores its value into xtiger.session(doc) as "documentId"                  |
+|  When used in an invisible part of the template, it allows to generate      |
+|  a document identifier that some other plugin can send to the server        |
+|  when sending binary data to be associated with the document (e.g. photo)   |
+|                                                                             |
+|*****************************************************************************|
+|  Compatiblity: developed for 'photo' plugin                                 |
+|                                                                             |
+\*****************************************************************************/
 
-  /////////////////////////////////////////////////
-  /////    Static DocumentId Mixin Part     ///////
-  ///////////////////////////////////////////////// 
+// NOTE: DEPRECATED
+// another approach is to configure the plugin to encode the documentid into
+// the URL used to POST the data
+(function ($axel) {
+ 
+  _Filter = {
 
-  // none
-
-  return {
-
-    ///////////////////////////////////////////////////
-    /////     Instance DocumentId Mixin Part    ////////
-    ///////////////////////////////////////////////////
-
-    // Property remapping for chaining
     '->' : {
-      '_setData' : '__DocumentIdSuperSetData'
+      '_setData' : '__did__setData'
     },
 
-    /** Creates the entry for the identifier into the TOC using it's default text  
-     *  DOES forward call.
-     */
+    // Creates the entry for the identifier into the TOC using it's default text  
     _setData : function(aData) {
-      this.__DocumentIdSuperSetData(aData);
+      this.__did__setData(aData);
       xtiger.session(this.getDocument()).save('documentId', aData);
     }
-  
-    /** add any other method from the filtered object that you want to override */
-  
-    /** add any other method you want to add to the filtered object to be called with can() / execute() */
-
   };
+  
+  $axel.filter.register('documentId', _Filter);
+  $axel.filter.applyTo({'documentId' : 'text'});
 
-})();
-
-//Register this filter as a filter of the 'text' plugin (i.e. text.js must have been loaded)
-xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter(
-    'documentId', _DocumentIdFilter);
+}($axel));

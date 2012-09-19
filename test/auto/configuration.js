@@ -17,7 +17,6 @@ var tests = {
         '../templates/extras/Fiche-Projet.xhtml' : '../data/extras/ficheProjetW.xml',
         '../../templates/samples/Article.xhtml' : '../../data/article/final.xml',
         '../templates/Link.xhtml' : '../data/link.xml',
-        '../templates/RichText.xhtml' : '../data/richtext.xml',
         '../templates/Video.xhtml' : '../data/video.xml',
         '../templates/Content.xhtml' : '../data/content.xml'
 	}

@@ -1,43 +1,45 @@
-/* AXEL 'event' filter
+/* ***** BEGIN LICENSE BLOCK *****
  *
- * author      : Stéphane Sire
- * contact     : s.sire@oppidoc.fr
- * license     : proprietary (this is part of the Oppidum framework)
+ * @COPYRIGHT@
  *
- * August 2012 - (c) Copyright 2012 Oppidoc SARL. All Rights Reserved.
- */
-
-/**
- * Class _EventFilter (mixin filter)
+ * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@ 
  *
- */
-var _EventFilter  = (function _EventFilter () {
+ * @LICENSE@
+ *
+ * Web site : https://github.com/ssire/axel
+ * 
+ * Author(s) : Stephane Sire
+ * 
+ * ***** END LICENSE BLOCK ***** */
 
-  var _EventFilter =  {
+/*****************************************************************************\
+|                                                                             |
+|  AXEL 'event' filter                                                        |
+|                                                                             |
+|  Sends event on some plugin method calls                                    |
+|  To be used to create user interactions not supported natively with AXEL    |
+|  for instance in conjunction with the $axel wrapped set                     |
+|                                                                             |
+|*****************************************************************************|
+|  Prerequisite: jQuery                                                       |
+|                                                                             |
+\*****************************************************************************/
+(function ($axel) {
 
-    ///////////////////////////////////////////////////
-    /////     Instance Clear Mixin Part    ////////
-    ///////////////////////////////////////////////////
+  var _Filter = {
 
-    // Property remapping for chaining
     '->': {
-     'update' : '__EventSuperUpdate'
+     'update' : '__evt__update'
     },   
 
     update : function (aData) {
-      this.__EventSuperUpdate(aData);
-      // 4. triggers completion event
+      this.__evt__update(aData);
+      // triggers 'axel-update' event
       $(this.getHandle()).trigger('axel-update', this);
     }
 
   };
   
-  // Do not forget to register your filter on any compatible primitive editor plugin
-  xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('event', _EventFilter);
-  // FIXME: asynchronous mechanism to register filter to other plugins (e.g. 'input')
-  if (! window.axeltmptrick) {
-    window.axeltmptrick = {};
-  }
-  window.axeltmptrick['_EventFilter'] = _EventFilter;
-  
-}());
+  $axel.filter.register('event', _Filter);
+  $axel.filter.applyTo({'event' : 'text'});
+}($axel));

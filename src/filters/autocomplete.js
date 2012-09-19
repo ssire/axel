@@ -12,78 +12,56 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/**
- * 
- * 
- * This static object is a shared front-end for the AutocompleteDevice. It acts as a
- * Filter, that is, it allows the implementation of additional behaviors for the
- * functions it declares.
- */
-var _AutocompleteFilter = (function _AutocompleteFilter () {
-  
-  return {
-    
-    '->': {
-      'init' : '__autocompleteSuperInit',
-      'update': '__autocompleteSuperUpdate',
-      'startEditing': '__autocompleteSuperStartEditing'
-    },
-    
-    /**
-     * <p>
-     * Inits as usual and gets the instance of an autocomplete device
-     * </p>
-     * 
-     * @param aDefaultData
-     * @param aParams
-     * @param aOption
-     * @param aUniqueKey
-     */
-    init: function init (aDefaultData, aParams, aOption, aUniqueKey) {
-      this.__autocompleteSuperInit(aDefaultData, aParams, aOption, aUniqueKey);
-      this._autocompleteDevice = xtiger.editor.AutocompleteDevice.getInstance(this.getDocument()).
-                                    validateParameters(this);
-    },
-    
-    /**
-     * If the device is initialized with an autocomplete device, releases it
-     * on update action
-     * 
-     * @param {string} aData
-     */
-    update : function update (aData) {
-      this.__autocompleteSuperUpdate(aData);
-      // Prevents the usual device to update against a completion. Otherwise it may overwrites the completion.
-      this._device.cancelEditing();
-      if (this._autocompleteDevice)
-        this._autocompleteDevice.release();
-    },
-    
-    /**
-     * On the start of an editing process, after grabbing the edition
-     * device, grabs the autocomplete device.
-     * 
-     * @param {DOMEvent}
-     *            aEvent
-     */
-    startEditing: function startEditing (aEvent) {
-      this.__autocompleteSuperStartEditing(aEvent);
-      if (this._autocompleteDevice)
-        this._autocompleteDevice.grab(this._device, this._device.getHandle());
-    },
-    
-    /**
-     * <p>
-     * Hook to be called as the device recieves a keyup keyboard event.
-     * </p>
-     * 
-     * @see TextDevice#doKeyUp()
-     */
-    onkeyup: function () {
-      if (this._autocompleteDevice)
-        this._autocompleteDevice.onKeyUp();
-    }
-  } 
-})();
 
-xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('autocomplete', _AutocompleteFilter);
+/*****************************************************************************\
+|                                                                             |
+|  AXEL 'autocomplete' filter                                                 |
+|                                                                             |
+|  Acts as a front-end for the AutocompleteDevice                             |
+|                                                                             |
+|*****************************************************************************|
+|  Prerequisites: uses 'autocomplete' device                                  |
+|                                                                             |
+\*****************************************************************************/
+(function ( $axel ) {
+
+  var _AutocompleteFilter = {
+    '->': {
+      'onInit' : '__acf__onInit',
+      'update': '__acf__update',
+      'startEditing': '__acf__startEditing'
+    },
+    
+    // Stores an instance of an autocomplete device
+    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
+      this.__acf__onInit(aDefaultData, anOptionAttr, aRepeater);
+      this._autocompleteDevice = 
+        xtiger.editor.AutocompleteDevice.getInstance(this.getDocument()).validateParameters(this);
+    },
+    
+    update : function update ( aData ) {
+      this.__acf__update(aData);
+      // prevents the usual device to update against a completion, otherwise it may overwrites the completion
+      this._device.cancelEditing();
+      if (this._autocompleteDevice) {
+        this._autocompleteDevice.release();
+      }
+    },
+    
+    startEditing: function startEditing (aEvent) {
+      this.__acf__startEditing(aEvent);
+      if (this._autocompleteDevice) {
+        this._autocompleteDevice.grab(this._device, this._device.getHandle());
+      }
+    },
+    
+    // Relays keyup from the text device to the autocomplete device
+    onkeyup: function () {
+      if (this._autocompleteDevice) {
+        this._autocompleteDevice.onKeyUp();
+      }
+    }
+  };
+  
+  $axel.filter.register('autocomplete', _AutocompleteFilter);
+}($axel));

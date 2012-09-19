@@ -6,40 +6,44 @@
  *
  * @LICENSE@
  *
- * Web site : http://media.epfl.ch/Templates/
+ * Web site : https://github.com/ssire/axel
  * 
  * Author(s) : Stephane Sire
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/**
-  * Class NoXMLFilter (filter mixin)
-  * 
-  * @class _NoXMLFilter
-  */
-var _NoXMLFilter = (function _NoXMLFilter() {
-  return {  
+(function ($axel) {
 
-    // No mapping
+  /*****************************************************************************\
+  |                                                                             |
+  |  AXEL 'noxml' filter                                                        |
+  |                                                                             |
+  |  Prevents a plugin from generating XML output                               |
+  |                                                                             |
+  |*****************************************************************************|
+  |  Prerequisites: none                                                        |
+  |                                                                             |
+  \*****************************************************************************/
+  var _NoXMLFilter = {
+
     '->': {
-    },   
+      // empty
+    },
 
-    load : function (point, dataSrc) {
+    onLoad : function (point, dataSrc) {
       // do not load
-    },    
+    },
 
-    save : function (text) {
+    onSave : function (text) {
       // do not save
     }
-   }      
- })();
+  }
 
-// Do not forget to register your filter on any compatible primitive editor plugin
-xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('noxml', _NoXMLFilter);   
-xtiger.editor.Plugin.prototype.pluginEditors['select'].registerFilter('noxml', _NoXMLFilter);   
+  $axel.filter.register('noxml', _NoXMLFilter);
+  $axel.filter.applyTo({ 'noxml' : ['text', 'select'] });
 
-// TBD : 'hidden' filter (forces handle's style to display:'none') 
-
+  // TBD : 'hidden' filter (forces handle's style to display:'none')    
+}($axel));
 
 
- 
+
