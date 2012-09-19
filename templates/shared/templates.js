@@ -11,25 +11,16 @@
 // NOTE: do not use "_custom_" name (reserved)
 function getDefaultTemplates () {
   return [
-    {
-    name : 'basics',
-    path : '../templates/basics/',
-    files : 
-      [
-      "Use.xhtml",
-      "Repeat.xhtml",
-      "Option.xhtml",
-      "Attribute.xhtml"
-      ]
-    },
     { 
     name : 'plugins', // menu name
     path : '../templates/plugins/', // path to folder (MUST end with '/')
     files :  // available template files
       [
+      "Content.xhtml",
       "Text.xhtml",
       "Select.xhtml",
       "Photo.xhtml",
+      "Link.xhtml",
       "Video.xhtml"
       ]
     },
@@ -41,6 +32,17 @@ function getDefaultTemplates () {
       "Date.xhtml",
       "Image.xhtml",
       "Video.xhtml"
+      ]
+    },
+    {
+    name : 'basics',
+    path : '../templates/basics/',
+    files : 
+      [
+      "Use.xhtml",
+      "Repeat.xhtml",
+      "Option.xhtml",
+      "Attribute.xhtml"
       ]
     },
     {

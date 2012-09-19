@@ -21,7 +21,7 @@ $(
                       accu.push(attr.nodeName + "='" + attr.nodeValue + "'"); 
                     });
               if (el.textContent) {
-                buffer.push('&lt;xt:' + n + ' ' + accu.join(' ') + '>' + el.textContent + '&lt;/xt:' + n + '>');
+                buffer.push('&lt;xt:' + n + ' ' + accu.join(' ') + '>' + el.textContent.replace('&', '&amp;', 'g') + '&lt;/xt:' + n + '>');
               } else {
                 buffer.push('&lt;xt:' + n + ' ' + accu.join(' ') + '/>');
               }

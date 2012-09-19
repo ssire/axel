@@ -1,7 +1,7 @@
 body {
-	padding: 0;
-	background-color: white;
-	margin: 10px 20px;
+  padding: 0;
+  background-color: white;
+  margin: 10px 20px;
 }
 /* below is a trick from : http://labnol.blogspot.com/2006/10/html-css-trick-for-displaying-code.html  
    to wrap long lines of text (note that it works in pre to display long lines of source code) */
@@ -11,24 +11,30 @@ pre {
   white-space: -pre-wrap; /* Opera 4-6 */
   white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
-}              
+}
 li {
   margin-bottom: 10px;
 }
-@media print {   
+@media print {
   body {
-  	padding: 0;
-  	background-color:white;
-  	margin: 20px 10px;
+    padding: 0;
+    background-color:white;
+    margin: 20px 10px;
   }          
   pre {
     text-align: justify;
     font-size: 10pt;
   }
-}         
+}
 li {
   margin: 0;
-}               
+}
 a:visited {
   color: blue;
+}
+div.code {
+  background: none repeat scroll 0 0 #EEEEEE;
+  border: 3px ridge gray;
+  margin: 1em 0;
+  padding: 0.5em;
 }
