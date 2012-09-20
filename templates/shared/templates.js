@@ -50,7 +50,8 @@ function getDefaultTemplates () {
     path : '../templates/samples/',
     files : 
       [
-      "Article.xhtml"
+      "Article.xhtml",
+      "Page.xhtml"
       ]
     },
     { 
