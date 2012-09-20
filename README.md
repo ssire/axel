@@ -15,6 +15,17 @@ AXEL works by transforming a *document template* (i.e. an XHTML file with
 embedded [XTiger XML](http://ssire.github.com/xtiger-xml-spec/)
 instructions) into an editable HTML page.
 
+How to test it ?
+----------------
+
+This repository is also published as the [AXEL web site](http://ssire.github.com/axel/) 
+thanks to the Git Hub project pages mechanism. From the web site you can directly
+test AXEL inside your browser without any preliminary software installation.
+Follow the instructions of the section "For the impatient". 
+
+The web site is regularly updated, however to really get the latest version checkout 
+the repository.
+
 Where to start ?
 ----------------
 
