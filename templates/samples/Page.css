@@ -1,0 +1,127 @@
+body {
+  /*  cf http://www.fonttester.com/web_safe_fonts.html */
+  font: 15px/140% Verdana, Geneva, sans-serif;
+}
+
+/********************** Parag type **********************/
+p.x-Parag {
+  margin: 0 0 1em 0;
+}
+
+/********************** List type **********************/
+ul {
+  margin: 0.5em 0 1em 0;
+}
+/**** Common to all List types (x-List, x-ListPlus, x-ListMulti) *****/
+p.x-ListHeader {
+  margin-bottom: 0.25em !important;
+}
+p.x-ListHeader + ul.v-list-body {
+  margin-top: 0 ;
+}
+ul.v-list-body {
+  padding-left: 2em;
+}
+ul.v-list-body > li {
+  list-style-position: outside;
+  margin-bottom: 0;
+}
+/***** Common to ListPlus and ListMulti ****/
+li {
+  margin-bottom: 0.25em;
+}
+li p.x-Parag {
+  margin: 0 0 0.25em;
+}
+li p.x-Parag:last-of-type {
+  margin-bottom: 0.5em;
+} 
+li p.x-Parag:only-of-type {
+  margin-bottom: 0em;
+}  
+
+/********************* LinesBlock type *********************/
+.x-LinesBlock {
+  margin: 0.75em 0 1em 0;
+  line-height: 1.2em;
+}
+
+/**************************************************
+                EDITING
+ **************************************************/
+
+ /********************* web page commons ***************/
+ div.t_row {
+   clear: both;
+   min-height: 2.2em;
+ }
+ div.t_menu {
+   position: relative;
+   float: left;
+   width: 78px; /* -2px because of textarea or input border */
+   margin-left: -80px;
+ }
+ body.preview div.t_row {
+   min-height: 1em;
+ }
+
+ /******** dynamical menu variant (.t_row.t_dyn) *************/
+ div.t_row.t_dyn {
+   min-height: 1em !important;
+   /* to augment "menu" sensibility */
+   margin-left: -50px;
+   padding-left: 50px;
+ }
+ div.t_dyn > div.t_menu {
+   height: 1em;
+   display: none;
+ }
+ div.t_dyn:hover div.t_menu {
+   display: block;
+ }
+ div.t_menu_content {
+   position: absolute;
+   top: 0;
+   left: 0;
+ }
+ div.t_menu_mask {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 80px; /* same as .t_dyn.t_menu  */
+   height: 2em;
+   padding: 0;
+ }
+
+ /********************* LinesBlock *********************/
+ ul.x-LinesBlock {
+   list-style: none none inside;
+   padding: 0;
+ }
+
+ /***** common to ListPlust, ListMulti and Definitions ****/
+ span.t_item_mask {
+   position: absolute;
+   top: -2px;
+   left: -2px;
+   right: 2px;
+   bottom: 2px;
+   z-index: -1;
+   display: block;
+ }
+ span.t_menu_side:hover + span.t_item_mask {
+   border: dotted 1px gray;
+   z-index: 10;
+ }
+
+ /**** common to ListPlust, ListMulti ****/
+ span.t_menu_hover {
+   display: none;
+ }
+ p:hover span.t_menu_hover {
+   display: inline-block;
+ }
+ span.t_menu_hover img {
+   vertical-align: middle;
+   z-index: -1;
+ }
