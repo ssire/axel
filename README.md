@@ -97,3 +97,9 @@ Coding Guidelines
 We currently do not have strong coding conventions as you will see by yourself
 when browsing the source code, however respect at least that one:
 **Soft Tabs at 2 spaces per Tab !**.
+
+Each plugin should be documented in a self-describing template file inside 
+the templates/plugins folder.
+
+Each filter should be documented in a self-describing template file inside
+the templates/filters folder.

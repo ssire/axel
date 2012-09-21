@@ -47,10 +47,25 @@
     <p class="warning">WARNING: this is a self-transformed template that can only be used with jQuery/jQuery-ui/AXEL libraries sitting in the parent window because of jQuery datepicker limitations</p>
   
     <h1>The "date" filter</h1>
-  
-    <p><b>Goal</b> : select a date using a calendar or the keyboard</p>
-  
-    <h2>The "date" filter on "text" plugin</h2>
+
+    <p>The <code>"date"</code> filter turns a text entry field into a field for selecting a date using a calendar or the keyboard. It uses the <a href="http://jqueryui.com/demos/datepicker/" target="_new">jQuery UI Datepicker</a>, hence it depends on jQuery and jQuery UI. </p>
+    
+    <p>This filter is compatible with the <code>"text"</code> plugin.</p>
+    
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+      
+      <ul class="parameters">
+        <li><var>date_region</var> (<code><b>fr</b></code>) : specifies the user interface language (currently only 'fr', but you can edit the <code>filters/date.js</code> source code to add another region)</li>
+        <li><var>date_format</var> (<code><b>ISO_8601</b></code>) : specifies the date format used in XML output (read and write). You can use any datepicker date format string (e.g. 'dd/mm/yy'), or a $.datepicker constant name such as <code>ISO_8601</code> (others are <code>ATOM, COOKIE, RFC_822, RFC_850, RFC_1036, RFC_1123, RFC_2822, RSS, TICKS, TIMESTAMP, W3C</code>)</li>
+        <li><var>minDate</var> (<code>undefined</code>) : to be documented</li>
+        <li><var>maxDate</var> (<code>undefined</code>) : to be documented</li>
+        <li><var>beforeShow</var> (<code>undefined</code>) : to be documented</li>
+      </ul>
+    </ul>
+
+    <h2>Example</h2>
   
     <p>In this example the calendar region (<samp>date_region</samp> parameter) and format (parameter <samp>date_format</samp>) are set to "fr" and "ISO_8601".</p>
     
@@ -58,7 +73,17 @@
 
     <div class="demo extract">
       <p id="x-Todate">Date : 
-        <xt:use types="text" label="Date" param="filter=date;date_region=fr;date_format=ISO_8601;maxDate=today"/>
+        <xt:use types="text" label="Date1" param="filter=date;date_region=fr;date_format=ISO_8601;maxDate=today"/>
+      </p>
+    </div>
+
+    <h2>Example with a default date set</h2>
+    
+    <p>The default date syntax must match the format defined in the <var>date_region</var>, which is not necessarily the format defined for the XML output with <var>date_format</var>.</p>
+  
+    <div class="demo extract">
+      <p id="x-Todate">Date : 
+        <xt:use types="text" label="Date2" param="filter=date">12/12/1999</xt:use>
       </p>
     </div>
   </body> 
