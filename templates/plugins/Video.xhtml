@@ -27,9 +27,18 @@
 
     <h1>The "video" plugin</h1>
     
-    <p><b>Goal</b> : edit a video URL and see it with an embedded player.</p>
+    <p>The <code>"video"</code> plugin is a video URL entry field. The video is shown inside an embedded video player. When the mouse is passed over it displays a popup window lens around the player that allows to change the video URL.</p>
+    
+    <p>Currently this plugin is limited to You Tube video URLs. There is also a limitation in some browsers that do not allows to play the video (the mask used to detect mouse over filters out events).</p>
 
-    <p>The "video" plugin currently supports only YouTube video.</p>
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+      <li><var>lang</var> (<code><b>fr_FR</b></code>) : lang's code for player's GUI (must respect the video's provider's standards)</li>
+      <li><var>inputFieldMessage</var> (<code><b>Paste the video's link here</b></code>) : text appearing in the input field when the model does not contain a valid URL</li>
+      <li><var>width</var> (<code>number</code>) : width of the embedded video player</li>
+      <li><var>height</var> (<code>number</code>) : height of the flash video player</li>
+    </ul>
 
     <h2>Empty default content</h2>
 
