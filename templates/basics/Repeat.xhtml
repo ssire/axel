@@ -57,5 +57,25 @@
         <xt:use types="t_sample_component" label="Sample"/>
       </xt:repeat>
     </div>
+
+    <h3>With a <code>menu-marker</code> element inside</h3>
+    <p>Without a <var>size</var> attribute</p>
+    <div class="demo">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="List1">
+        <ul>
+          <li><xt:use types="text" label="Item" param="shape=parent-80px">click to enter an item</xt:use><xt:menu-marker/></li>
+        </ul>
+      </xt:repeat>
+    </div>
+
+    <p>Without a <var>size</var> attribute set to <code>20</code></p>
+    <div class="demo">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="List2">
+        <ul>
+          <li><xt:use types="text" label="Item" param="shape=parent-80px">click to enter an item</xt:use><xt:menu-marker size="20"/></li>
+        </ul>
+      </xt:repeat>
+    </div>
+    
   </body> 
 </html>
