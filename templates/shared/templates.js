@@ -32,7 +32,8 @@ function getDefaultTemplates () {
       "Date.xhtml",
       "Wiki.xhtml",
       "Image.xhtml",
-      "Video.xhtml"
+      "Video.xhtml",
+      "Style.xhtml"
       ]
     },
     {

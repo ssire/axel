@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The style filters</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <style type="text/css">
+div.hilite {
+  background: yellow;
+  border: solid 2px red;
+}
+    </style>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body class="toplevel">
+    <h1>The style filters</h1>
+
+    <p>The style filters is a set of filters that turn editing fields into live CSS property editors. They interpret the value of the field as CSS property values. They apply these properties live onto one or more DOM target elements.</p>
+
+    <h2>The "style" filter</h2>
+
+    <p>The <code>"style"</code> filter interprets the content of a text entry field as a CSS property defined by the filter's <var>style_property</var> parameter.</p>
+
+    <p>The "style" filter is compatible with the "text" and "select" plugins.</p>
+
+    <h3>Parameters</h3>
+
+    <ul class="parameters">
+      <li><var>style_property</var> (<code>class</code>) : name of the CSS property that will be affected by the filter</li>
+
+      <li><var>style_root_class</var> (<code>undefined</code>) : class name that a DOM element must hold to become an ancestor of an element controlled by the filter</li>
+      <li><var>style_target_class</var> (<code>undefined</code>) : class name that the descendants of the root element must carry to be controlled by the filter</li>
+    </ul>
+    
+    <p>Currently the filter only applies to the closest ancestor of the editing field with the <var>style_root_class</var> class name, and to the first of its descendants holding the <var>style_target_class</var> class name.</p>
+
+    <h3>Sample usage</h3>
+
+    <div class="hilite style1">
+      <p>This div's background color is controlled by the text entry field below</p>
+    </div>
+
+    <div class="demo extract">
+      <p>Please type in a color : <xt:use types="text" label="Style1Text" option="unset" param="filter=style;style_property=background;style_root_class=toplevel;style_target_class=style1">green</xt:use>
+        or choose directly : <xt:use types="select" label="Style1Select" option="unset" values="green blue orange chartreuse #123456" param="filter=style;style_property=background;style_root_class=toplevel;style_target_class=style1">green</xt:use></p>
+    </div>
+
+    <h2>The "width" filter</h2>
+
+    <p>NOTE: <i>this filter will most probably be superseded by the "style" filter above</i></p>
+
+    <p>The <code>"width"</code> filter interprets the content of a text entry field as a width in pixels.</p>
+
+    <p>The "width" filter is compatible with the "text" plugin.</p>
+
+    <h3>Parameters</h3>
+
+    <ul class="parameters">
+      <li><var>width_root_class</var> (<code>undefined</code>) : class name that a DOM element must hold to become an ancestor of an element controlled by the filter</li>
+      <li><var>width_target_class</var> (<code>undefined</code>) : class name that the descendants of the root element must carry to be controlled by the filter</li>
+    </ul>
+
+    <h3>Sample usage</h3>
+
+    <div class="hilite width1 style1">
+      <p>This div's width is controlled by the text entry field below</p>
+    </div>
+
+    <div class="demo extract">
+      <p>Please enter a width : <xt:use types="text" label="Width1" option="unset" param="filter=width;width_root_class=toplevel;width_target_class=width1">200</xt:use>px</p>
+    </div>
+
+
+  </body>
+</html>
