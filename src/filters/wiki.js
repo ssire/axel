@@ -305,17 +305,12 @@
 
  var _WikiFilter = { 
 
-    '->': {
-      'onLoad': '_wiki__onLoad',
-      'startEditing': '_wiki__startEditing'
-    },             
-
     // Loads XML data from the point into the editor. Converts it to an XHTML representation.
     // DOES forward the call only if data source is empty.
     onLoad: function load (aPoint, aDataSrc) {
       // FIXME: manage spaces in source
       if (aDataSrc.isEmpty(aPoint)) {
-        this._wiki__onLoad(aPoint, aDataSrc); // no content : default behavior
+        this.__wiki__onLoad(aPoint, aDataSrc); // no content : default behavior
       } else {
         var h = this.getHandle();
         xtdom.removeChildrenOf(h);      
@@ -341,206 +336,212 @@
       }
       return (lang === 'default') ? this._saveHandleAsFragment(aLogger) : this._saveHandleAsIs(aLogger);
     },
-
-    // Replaces the default _setData by a similar function that interprets data as wiki language.
-    _setData: function _setData (aData) {
-      var variant = this.getParam('wiki_lang') || 'default';
-      try {
-        // FIXME: sanitize to avoid Javascript injection ! 
-        // text2html will encode entities (so it can match & in URLs) 
-        this.getHandle().innerHTML = xtiger.util.encodeEntities(aData).replace(_scanner, _text2html_gen(variant));
-        if (variant == 'span') {
-          _enspanHandle(this.getHandle(), this.getDocument());
-        }
-      } catch (e) {         
-        xtiger.cross.log('error', "Exception " + e.name + "\n" + e.message);
-        try {
-          this.getHandle().innerHTML = xtiger.util.encodeEntities(aData) + " (Exception : " + e.name + " - " + e.message + ")";
-        } catch (e) {
-          // nop          
-        }
-      }
-    },
-     
-    // Saves the handle content
-    _saveHandleAsIs : function (aLogger) {
-      var name, anchor, href, tag, _class;
-      var cur = this.getHandle().firstChild;
-      while (cur) {
-        if (cur.nodeType == xtdom.ELEMENT_NODE) {
-          if (cur.firstChild) { // sanity check  
-            name = xtdom.getLocalName(cur);
-            aLogger.openTag(name);
-            if ((name == 'a') || (name == 'A')) {
-              if (cur.getAttribute('data-rewritten')) {
-                href = cur.getAttribute('data-input') || '...';
-              } else {
-                href = cur.getAttribute('href') || '...';
-              }
-              aLogger.openAttribute('href');
-              aLogger.write(href);
-              aLogger.closeAttribute('href');
-            }
-            if (xtdom.hasAttribute(cur, 'data-input') && !(xtdom.hasAttribute(cur, 'data-rewritten'))) {
-              aLogger.openAttribute('data-input');
-              aLogger.write(cur.getAttribute('data-input'));
-              aLogger.closeAttribute('data-input');
-            }
-            if (xtdom.hasAttribute(cur, 'class')) {
-              aLogger.openAttribute('class');
-              aLogger.write(cur.getAttribute('class'));
-              aLogger.closeAttribute('class');
-            }
-            aLogger.write(cur.firstChild.data);
-            aLogger.closeTag(name);
-          }
-        } else { // it's a text node per construction
-          if (cur.data && (cur.data.search(/\S/) != -1)) { 
-            aLogger.write(cur.data);
-          }
-        }
-        cur = cur.nextSibling;
-      }      
-    }, 
     
-    // Saves the handle content, converting it to Fragment syntax ('default' mode)
-    _saveHandleAsFragment : function (aLogger, lang) {
-      var name, anchor, href, tag;
-      var cur = this.getHandle().firstChild;
-      while (cur) {
-        // FIXME: maybe we shouldn't save if cur.data / cur.firstChild.data is null ?
-        if (cur.nodeType == xtdom.ELEMENT_NODE) {
-          name = xtdom.getLocalName(cur);
-          tag = _tag2kind[name];
-          if (tag) {
+    methods : {
+
+      // Replaces the default _setData by a similar function that interprets data as wiki language.
+      _setData: function _setData (aData) {
+        var variant = this.getParam('wiki_lang') || 'default';
+        try {
+          // FIXME: sanitize to avoid Javascript injection ! 
+          // text2html will encode entities (so it can match & in URLs) 
+          this.getHandle().innerHTML = xtiger.util.encodeEntities(aData).replace(_scanner, _text2html_gen(variant));
+          if (variant == 'span') {
+            _enspanHandle(this.getHandle(), this.getDocument());
+          }
+        } catch (e) {         
+          xtiger.cross.log('error', "Exception " + e.name + "\n" + e.message);
+          try {
+            this.getHandle().innerHTML = xtiger.util.encodeEntities(aData) + " (Exception : " + e.name + " - " + e.message + ")";
+          } catch (e) {
+            // nop          
+          }
+        }
+      },
+     
+      // Saves the handle content
+      _saveHandleAsIs : function (aLogger) {
+        var name, anchor, href, tag, _class;
+        var cur = this.getHandle().firstChild;
+        while (cur) {
+          if (cur.nodeType == xtdom.ELEMENT_NODE) {
             if (cur.firstChild) { // sanity check  
-              aLogger.openTag('Fragment');
-              aLogger.openAttribute('FragmentKind');
-              aLogger.write(tag);
-              aLogger.closeAttribute('FragmentKind');
-              aLogger.write(cur.firstChild.data);
-              aLogger.closeTag('Fragment');
-            }
-          } else if ((name == 'a') || (name == 'A')) {
-            anchor = (cur.firstChild) ? cur.firstChild.data : '...';
-            if (xtdom.hasAttribute(cur, 'data-rewritten')) {
-              href = cur.getAttribute('data-input') || '...';
-            } else {
-              href = cur.getAttribute('href') || '...';
-            }
-            aLogger.openTag('Link');
-            if (lang == 'html') {
-              aLogger.write(anchor);
-              aLogger.openAttribute('href');
-              aLogger.write(href);
-              aLogger.closeAttribute('href');
-            } else {
-              aLogger.openTag('LinkText');
-              aLogger.write(anchor);
-              aLogger.closeTag('LinkText');
-              aLogger.openTag('LinkRef');
+              name = xtdom.getLocalName(cur);
+              aLogger.openTag(name);
+              if ((name == 'a') || (name == 'A')) {
+                if (cur.getAttribute('data-rewritten')) {
+                  href = cur.getAttribute('data-input') || '...';
+                } else {
+                  href = cur.getAttribute('href') || '...';
+                }
+                aLogger.openAttribute('href');
+                aLogger.write(href);
+                aLogger.closeAttribute('href');
+              }
               if (xtdom.hasAttribute(cur, 'data-input') && !(xtdom.hasAttribute(cur, 'data-rewritten'))) {
                 aLogger.openAttribute('data-input');
                 aLogger.write(cur.getAttribute('data-input'));
                 aLogger.closeAttribute('data-input');
               }
-              aLogger.write(href);
-              aLogger.closeTag('LinkRef');
+              if (xtdom.hasAttribute(cur, 'class')) {
+                aLogger.openAttribute('class');
+                aLogger.write(cur.getAttribute('class'));
+                aLogger.closeAttribute('class');
+              }
+              aLogger.write(cur.firstChild.data);
+              aLogger.closeTag(name);
             }
-            aLogger.closeTag('Link');
-          } else {  
-            aLogger.openTag(name);
-            aLogger.write(cur.firstChild.data);
-            aLogger.closeTag(name);
+          } else { // it's a text node per construction
+            if (cur.data && (cur.data.search(/\S/) != -1)) { 
+              aLogger.write(cur.data);
+            }
           }
-        } else { // it's a text node per construction
-          if (cur.data && (cur.data.search(/\S/) != -1)) { 
-            aLogger.openTag('Fragment');
-            aLogger.write(cur.data);
-            aLogger.closeTag('Fragment');
-          }
-        }
-        cur = cur.nextSibling;
-      }
-    },
+          cur = cur.nextSibling;
+        }      
+      }, 
     
-    // Converts the content of the handle (e.g. #text, <span>, <a>, ...)
-    // into ASCII text. DOES NOT forward the call.
-    // Returns Wiki-formatted text to edit
-    getData : function getData () {
-      //FIXME: could be optimized by directly generating message into edit field
-      var _key, _wikiSym, _tmp;
-      var _txtBuffer = '';
-      var _cur = this.getHandle().firstChild;
-      while (_cur) {
-        if (_cur.nodeType == xtdom.ELEMENT_NODE) {    
-          if (this.getParam('wiki_lang') === 'span') {
-            _key = _cur.getAttribute('class');
-            _wikiSym = _key ? _class2wiki[_key] : undefined;
-            _key = xtdom.getLocalName(_cur);            
-          } else {            
-            _key = xtdom.getLocalName(_cur);
-            _wikiSym = _tag2wiki[_key]; 
-          }      
-          if ((_key === 'a') || (_key === 'A')) { 
-            // _txtBuffer += (_cur.getAttribute('href') || '') + '[' + (_cur.firstChild ? _cur.firstChild.data : 'null') + ']';
-            _tmp = _cur.getAttribute('data-input') || _cur.getAttribute('href') || '...';
-            _txtBuffer += '==' + (_cur.firstChild ? _cur.firstChild.data : '...') + '==(' + _tmp + ')';
-          } else if (_cur.firstChild) { // sanity check
-            if (_wikiSym === undefined) {
-              _txtBuffer += _cur.firstChild.data;
-            } else {
-              _txtBuffer += _wikiSym + _cur.firstChild.data + _wikiSym;
+      // Saves the handle content, converting it to Fragment syntax ('default' mode)
+      _saveHandleAsFragment : function (aLogger, lang) {
+        var name, anchor, href, tag;
+        var cur = this.getHandle().firstChild;
+        while (cur) {
+          // FIXME: maybe we shouldn't save if cur.data / cur.firstChild.data is null ?
+          if (cur.nodeType == xtdom.ELEMENT_NODE) {
+            name = xtdom.getLocalName(cur);
+            tag = _tag2kind[name];
+            if (tag) {
+              if (cur.firstChild) { // sanity check  
+                aLogger.openTag('Fragment');
+                aLogger.openAttribute('FragmentKind');
+                aLogger.write(tag);
+                aLogger.closeAttribute('FragmentKind');
+                aLogger.write(cur.firstChild.data);
+                aLogger.closeTag('Fragment');
+              }
+            } else if ((name == 'a') || (name == 'A')) {
+              anchor = (cur.firstChild) ? cur.firstChild.data : '...';
+              if (xtdom.hasAttribute(cur, 'data-rewritten')) {
+                href = cur.getAttribute('data-input') || '...';
+              } else {
+                href = cur.getAttribute('href') || '...';
+              }
+              aLogger.openTag('Link');
+              if (lang == 'html') {
+                aLogger.write(anchor);
+                aLogger.openAttribute('href');
+                aLogger.write(href);
+                aLogger.closeAttribute('href');
+              } else {
+                aLogger.openTag('LinkText');
+                aLogger.write(anchor);
+                aLogger.closeTag('LinkText');
+                aLogger.openTag('LinkRef');
+                if (xtdom.hasAttribute(cur, 'data-input') && !(xtdom.hasAttribute(cur, 'data-rewritten'))) {
+                  aLogger.openAttribute('data-input');
+                  aLogger.write(cur.getAttribute('data-input'));
+                  aLogger.closeAttribute('data-input');
+                }
+                aLogger.write(href);
+                aLogger.closeTag('LinkRef');
+              }
+              aLogger.closeTag('Link');
+            } else {  
+              aLogger.openTag(name);
+              aLogger.write(cur.firstChild.data);
+              aLogger.closeTag(name);
             }
-          }          
-        } else { // it's a text node per construction
-          _txtBuffer += _cur.data;
-        }
-        _cur = _cur.nextSibling;
-      }
-      return _txtBuffer; // accepts delegation
-    },    
-
-    // Starts an edition process. Delays the start of the edition process in case 
-    // the user clicked on a link inside the content, in which case it displays 
-    // a popup menu to select between editing or opening the link in a new window.
-    // DOES NOT forward the call if it is called from a mouse event and the user 
-    // clicked on a link. DOES forward it otherwise.
-    startEditing : function startEditing (optMouseEvent, optSelectAll) {
-      if (optMouseEvent) {
-        var _target = xtdom.getEventTarget(optMouseEvent);
-        var _tname = xtdom.getLocalName(_target);
-        if (/^a$/i.test(_tname)) { // clicked on a link
-          xtdom.preventDefault(optMouseEvent);
-          xtdom.stopPropagation(optMouseEvent); // prevents link opening
-          var _popupdevice = _getPopupDevice(this.getDocument());
-          this._url = _target.getAttribute('href'); // stores the url to follow
-          if ((!this._url) || (this._url == '')) {
-            this._url = _target.getAttribute('HREF');
+          } else { // it's a text node per construction
+            if (cur.data && (cur.data.search(/\S/) != -1)) { 
+              aLogger.openTag('Fragment');
+              aLogger.write(cur.data);
+              aLogger.closeTag('Fragment');
+            }
           }
-          _popupdevice.startEditing(this, ['edit', 'open'], 'edit', _target);
-          return;
+          cur = cur.nextSibling;
         }
-      }
-      this._wiki__startEditing(optMouseEvent, optSelectAll);
-    },
+      },
+    
+      // Converts the content of the handle (e.g. #text, <span>, <a>, ...)
+      // into ASCII text. DOES NOT forward the call.
+      // Returns Wiki-formatted text to edit
+      getData : function getData () {
+        //FIXME: could be optimized by directly generating message into edit field
+        var _key, _wikiSym, _tmp;
+        var _txtBuffer = '';
+        var _cur = this.getHandle().firstChild;
+        while (_cur) {
+          if (_cur.nodeType == xtdom.ELEMENT_NODE) {    
+            if (this.getParam('wiki_lang') === 'span') {
+              _key = _cur.getAttribute('class');
+              _wikiSym = _key ? _class2wiki[_key] : undefined;
+              _key = xtdom.getLocalName(_cur);            
+            } else {            
+              _key = xtdom.getLocalName(_cur);
+              _wikiSym = _tag2wiki[_key]; 
+            }      
+            if ((_key === 'a') || (_key === 'A')) { 
+              // _txtBuffer += (_cur.getAttribute('href') || '') + '[' + (_cur.firstChild ? _cur.firstChild.data : 'null') + ']';
+              _tmp = _cur.getAttribute('data-input') || _cur.getAttribute('href') || '...';
+              _txtBuffer += '==' + (_cur.firstChild ? _cur.firstChild.data : '...') + '==(' + _tmp + ')';
+            } else if (_cur.firstChild) { // sanity check
+              if (_wikiSym === undefined) {
+                _txtBuffer += _cur.firstChild.data;
+              } else {
+                _txtBuffer += _wikiSym + _cur.firstChild.data + _wikiSym;
+              }
+            }          
+          } else { // it's a text node per construction
+            _txtBuffer += _cur.data;
+          }
+          _cur = _cur.nextSibling;
+        }
+        return _txtBuffer; // accepts delegation
+      },    
 
-    // Callback for the popup device used to manage link edition
-    onMenuSelection: function onMenuSelection (aSelection) {
-      if (aSelection == 'edit') {
-        this._wiki__startEditing();
-      } else if (aSelection == 'open') {
-        // opens this.cachedURL in an external window
-        window.open(this._url);
-      }
-    },
+      // Starts an edition process. Delays the start of the edition process in case 
+      // the user clicked on a link inside the content, in which case it displays 
+      // a popup menu to select between editing or opening the link in a new window.
+      // DOES NOT forward the call if it is called from a mouse event and the user 
+      // clicked on a link. DOES forward it otherwise.
+      startEditing : function startEditing (optMouseEvent, optSelectAll) {
+        if (optMouseEvent) {
+          var _target = xtdom.getEventTarget(optMouseEvent);
+          var _tname = xtdom.getLocalName(_target);
+          if (/^a$/i.test(_tname)) { // clicked on a link
+            xtdom.preventDefault(optMouseEvent);
+            xtdom.stopPropagation(optMouseEvent); // prevents link opening
+            var _popupdevice = _getPopupDevice(this.getDocument());
+            this._url = _target.getAttribute('href'); // stores the url to follow
+            if ((!this._url) || (this._url == '')) {
+              this._url = _target.getAttribute('HREF');
+            }
+            _popupdevice.startEditing(this, ['edit', 'open'], 'edit', _target);
+            return;
+          }
+        }
+        this.__wiki__startEditing(optMouseEvent, optSelectAll);
+      },
 
-    // Accessor to change the selection state (kept for compatibility with popupdevice)
-    setSelectionState: function setSelectionState (aState) {
-      return aState ? this.set(): this.unset();
+      // Callback for the popup device used to manage link edition
+      onMenuSelection: function onMenuSelection (aSelection) {
+        if (aSelection == 'edit') {
+          this.__wiki__startEditing();
+        } else if (aSelection == 'open') {
+          // opens this.cachedURL in an external window
+          window.open(this._url);
+        }
+      },
+
+      // Accessor to change the selection state (kept for compatibility with popupdevice)
+      setSelectionState: function setSelectionState (aState) {
+        return aState ? this.set(): this.unset();
+      }
     }
   };
 
-  $axel.filter.register('wiki', _WikiFilter);
+  $axel.filter.register('wiki', 
+    { chain: ['onLoad', 'startEditing'] },
+    {},
+    _WikiFilter);
   $axel.filter.applyTo({'wiki' : 'text'});
 }($axel));

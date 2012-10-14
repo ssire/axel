@@ -40,39 +40,41 @@
 
   var _Filter = {
 
-    '->': {
-      'set': '__width__set',
-      'clear': '__width__clear'
-    },
+    methods : {
 
-    set : function(doPropagate) {
-      var val, target = _getTarget(this);
-      if (target) {
-        val = this.getData();
-        if (/^\d+$/.test(val)) {
-          val = val + 'px';
-        } else {
-          val="auto";
+      set : function(doPropagate) {
+        var val, target = _getTarget(this);
+        if (target) {
+          val = this.getData();
+          if (/^\d+$/.test(val)) {
+            val = val + 'px';
+          } else {
+            val="auto";
+          }
+          target.css('width', val);
         }
-        target.css('width', val);
-      }
-      this.__width__set(doPropagate);
-    },
+        this.__width__set(doPropagate);
+      },
 
-    clear : function (doPropagate) {
-      var target = _getTarget(this);
-      if (target) {
-        target.css('width', '');
+      clear : function (doPropagate) {
+        var target = _getTarget(this);
+        if (target) {
+          target.css('width', '');
+        }
+        this.____width__clear(doPropagate);
       }
-      this.____width__clear(doPropagate);
+
+      // unset : function (doPropagate) {
+      // }
+      // FIXME: there is one case where unset is called and not clear (unchek through checkbox)
     }
-
-    // unset : function (doPropagate) {
-    // }
-    // FIXME: there is one case where unset is called and not clear (unchek through checkbox)
   };
 
-  $axel.filter.register('width', _Filter);
+  $axel.filter.register(
+    'width', 
+    { chain : [ 'set', 'clear'] },
+    null,
+    _Filter);
   $axel.filter.applyTo({'width' : 'text'});
 }($axel));
 
@@ -105,60 +107,61 @@
 
   var _Filter = {
 
-     '->': {
-       'onInit' : '__style__onInit',
-       'set': '__style__set',
-       'unset': '__style__unset'
-     },
-
      onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
        this.__style__onInit(aDefaultData, anOptionAttr, aRepeater);
        this._CurStyleValue = aDefaultData; 
        // works with 'select' iff aDefaultData is the target XML value (not the i18n one)
      },
+     
+     methods : {
 
-     set : function ( doPropagate ) {
-       var value, prop, values, target;
-       this.__style__set(doPropagate);
-       values = this.getParam('values');
-       target = _getTarget(this);
-       if (target) {
-         prop = this.getParam('style_property') || 'class';
-         if (values) { // this is a 'select' plugin
-          value = this.getData();
-          if (this._CurStyleValue) {
-            if (prop === 'class') {
-              target.removeClass(this._CurStyleValue);
+       set : function ( doPropagate ) {
+         var value, prop, values, target;
+         this.__style__set(doPropagate);
+         values = this.getParam('values');
+         target = _getTarget(this);
+         if (target) {
+           prop = this.getParam('style_property') || 'class';
+           if (values) { // this is a 'select' plugin
+            value = this.getData();
+            if (this._CurStyleValue) {
+              if (prop === 'class') {
+                target.removeClass(this._CurStyleValue);
+              }
             }
-          }
-          this._CurStyleValue = value;
-         } else {
-          value = this.getParam('style_value') || this.getData();
+            this._CurStyleValue = value;
+           } else {
+            value = this.getParam('style_value') || this.getData();
+           }
+          (prop === 'class') ? target.addClass(value) : target.css(prop, value);
          }
-        (prop === 'class') ? target.addClass(value) : target.css(prop, value);
-       }
-     },
+       },
 
-     unset : function ( doPropagate ) {
-       var value, prop, target;
-       this.__style__unset(doPropagate);
-       prop = this.getParam('style_property') || 'class';
-       target = _getTarget(this);
-       if (target) {
+       unset : function ( doPropagate ) {
+         var value, prop, target;
+         this.__style__unset(doPropagate);
          prop = this.getParam('style_property') || 'class';
-         if (this.getParam('values')) { // this is a 'select' plugin
-           value = this._CurStyleValue;
-         } else {
-           value = this.getParam('style_value') || this.getData();
-         }
-         if (value) {
-           (prop === 'class') ? target.removeClass(value) : target.css(prop, '');
-           // FIXME: remember original css value in set and restore it ?
+         target = _getTarget(this);
+         if (target) {
+           prop = this.getParam('style_property') || 'class';
+           if (this.getParam('values')) { // this is a 'select' plugin
+             value = this._CurStyleValue;
+           } else {
+             value = this.getParam('style_value') || this.getData();
+           }
+           if (value) {
+             (prop === 'class') ? target.removeClass(value) : target.css(prop, '');
+             // FIXME: remember original css value in set and restore it ?
+           }
          }
        }
-     }
+    }
   };
   
-  $axel.filter.register('style', _Filter);
+  $axel.filter.register(
+    'style', 
+    { chain : ['onInit', 'set', 'unset'] },
+    null,
+    _Filter);
   $axel.filter.applyTo({'style' : ['text', 'select']});
 }($axel));

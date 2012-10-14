@@ -199,18 +199,9 @@
     
   var imageFilterMixin = {  
     
-    // Property remapping for chaining
-    '->': {
-      'onAwake' : '__img__onAwake',
-      'onLoad' : '__img__onLoad',
-      'update' : '__img__update',
-      '_setData' : '__img__setData',
-      'startEditing' : '__img__startEditing'
-    },
-    
     onAwake : function () { 
       var curP;
-      this.__img__onAwake();
+      this.__image__onAwake();
       // FIXME: experimental feature for FF - could be factorized inside text editor ?
       // FIXME: there should be an uninit to remove event listeners
       var h = this.getHandle();
@@ -243,7 +234,7 @@
       }
       // }    
       if ((! src) || (src.search(/(png|jpg|jpeg|gif)$/i) === -1)) { // no image
-        this.__img__onLoad(point, dataSrc);          
+        this.__image__onLoad(point, dataSrc);          
         // FIXME: should we replace content with an error message instead ?
       } else {
         if (this.image_resizable) { // parses and applies width and height
@@ -290,111 +281,127 @@
       }
     },
     
-    getData : function () {
-      return _getImageSrcFromHandle(this);
-    },
-    
-    // Manages two cases: 
-    // 1. if aData is an image file name then generates an <img> tag 
-    // 2. if aData is a string then forwards call to default _setData
-    _setData : function (aData) {    
-      if (aData.search && (aData.search(/(png|jpg|jpeg|gif)$/i) !== -1)) { 
-        _genImageInside(this, aData);
-        this._data = aData;
-      } else {
-        var h = this.getHandle(); 
-        if (h.firstChild.nodeType !== xtdom.TEXT_NODE) {
-          xtdom.removeChildrenOf(h);
-          var t = xtdom.createTextNode(this.getDocument(), '');
-          h.appendChild(t);
+    methods : {
+      
+      getData : function () {
+        return _getImageSrcFromHandle(this);
+      },
+      
+      // Manages two cases: 
+      // 1. if aData is an image file name then generates an <img> tag 
+      // 2. if aData is a string then forwards call to default _setData
+      _setData : function (aData) {    
+        if (aData.search && (aData.search(/(png|jpg|jpeg|gif)$/i) !== -1)) { 
+          _genImageInside(this, aData);
+          this._data = aData;
+        } else {
+          var h = this.getHandle(); 
+          if (h.firstChild.nodeType !== xtdom.TEXT_NODE) {
+            xtdom.removeChildrenOf(h);
+            var t = xtdom.createTextNode(this.getDocument(), '');
+            h.appendChild(t);
+          }
+          this.__image___setData(aData);
         }
-        this.__img__setData(aData);
-      }
-    },
+      },
   
-    // Tests if the input is not empty, nor the defaultContent (no editing)
-    // nor a correct file name in which case it replaces the input with 
-    // an error message. Forwards call to the default update.
-    update : function (aData) {   
-      if ((aData.search(/\S/) !== -1) // not empty
-        && (aData !== this.getDefaultData())  // edited content (no default)
-        && (aData.search(/(png|jpg|jpeg|gif)$/i) === -1)) { // incorrect file extension
-          this.__img__update('Not a supported image file (must end with png, jpg, jpeg or gif)');
-          // be careful not to finish the error message with a correct image file extension
-      } else {
-        this.__img__update(aData);
-      }
-    },    
+      // Tests if the input is not empty, nor the defaultContent (no editing)
+      // nor a correct file name in which case it replaces the input with 
+      // an error message. Forwards call to the default update.
+      update : function (aData) {   
+        if ((aData.search(/\S/) !== -1) // not empty
+          && (aData !== this.getDefaultData())  // edited content (no default)
+          && (aData.search(/(png|jpg|jpeg|gif)$/i) === -1)) { // incorrect file extension
+            this.__image__update('Not a supported image file (must end with png, jpg, jpeg or gif)');
+            // be careful not to finish the error message with a correct image file extension
+        } else {
+          this.__image__update(aData);
+        }
+      },    
     
-    startEditing : function (aEvent) {
-      var tracker;
-      if (this.image_resizable) {
-         tracker = _getDevice(this.getDocument(), this, true);
-         if (tracker) {
-           tracker.stopEditing(); // just in case 
-         }
-      }                        
-      this.__img__startEditing(aEvent);
-    },
+      startEditing : function (aEvent) {
+        var tracker;
+        if (this.image_resizable) {
+           tracker = _getDevice(this.getDocument(), this, true);
+           if (tracker) {
+             tracker.stopEditing(); // just in case 
+           }
+        }                        
+        this.__image__startEditing(aEvent);
+      },
 
-    // Zoom in the image and it's handler by one unit
-    zoomIn : function () {                
-      var handle = this.getHandle(), 
-          wrapper = $('img', handle), 
-          w, h, rw, rh, z;                
-      if (wrapper.size() > 0) { // sanity check
-        w = wrapper.width();
-        h = wrapper.height();
-        rw = this.image_maxWidth ? this.image_maxWidth / w : undefined;
-        rh = this.image_maxHeight ? this.image_maxHeight / h : undefined;
-        z = rw ? ( rh ? ( rh > rw ? rw : rh ) : rw ) : rh;
-        if (z) {               
-          if (z > 1) {
-            if (z > 1.1) {
-              z = 1.1;
+      // Zoom in the image and it's handler by one unit
+      zoomIn : function () {                
+        var handle = this.getHandle(), 
+            wrapper = $('img', handle), 
+            w, h, rw, rh, z;                
+        if (wrapper.size() > 0) { // sanity check
+          w = wrapper.width();
+          h = wrapper.height();
+          rw = this.image_maxWidth ? this.image_maxWidth / w : undefined;
+          rh = this.image_maxHeight ? this.image_maxHeight / h : undefined;
+          z = rw ? ( rh ? ( rh > rw ? rw : rh ) : rw ) : rh;
+          if (z) {               
+            if (z > 1) {
+              if (z > 1.1) {
+                z = 1.1;
+              } else {
+                _getDevice(this.getDocument(), this, true).disable('zoomin');
+              }
+              wrapper.width(w * z).height(h * z);
+              $(handle).width(w * z).height(h * z);
+              _getDevice(this.getDocument(), this, true).enable('zoomout');
             } else {
               _getDevice(this.getDocument(), this, true).disable('zoomin');
             }
-            wrapper.width(w * z).height(h * z);
-            $(handle).width(w * z).height(h * z);
-            _getDevice(this.getDocument(), this, true).enable('zoomout');
-          } else {
-            _getDevice(this.getDocument(), this, true).disable('zoomin');
           }
         }
-      }
-    },
+      },
 
-    // Zoom out the image and it's handler by one unit
-    zoomOut : function () {
-      var handle = this.getHandle(), 
-          wrapper = $('img', handle), 
-          w, h, rw, rh, z;                
-      if (wrapper.size() > 0) { // sanity check
-        w = wrapper.width();
-        h = wrapper.height();
-        rw = this.image_minWidth ? this.image_minWidth / w : undefined;
-        rh = this.image_minHeight ? this.image_minHeight / h : undefined;
-        z = rw ? ( rh ? ( rh > rw ? rh : rw ) : rw ) : rh;
-        if (z) {               
-          if (z < 1) {
-            if (z < 0.9) {
-              z = 0.9;
+      // Zoom out the image and it's handler by one unit
+      zoomOut : function () {
+        var handle = this.getHandle(), 
+            wrapper = $('img', handle), 
+            w, h, rw, rh, z;                
+        if (wrapper.size() > 0) { // sanity check
+          w = wrapper.width();
+          h = wrapper.height();
+          rw = this.image_minWidth ? this.image_minWidth / w : undefined;
+          rh = this.image_minHeight ? this.image_minHeight / h : undefined;
+          z = rw ? ( rh ? ( rh > rw ? rh : rw ) : rw ) : rh;
+          if (z) {               
+            if (z < 1) {
+              if (z < 0.9) {
+                z = 0.9;
+              } else {
+                _getDevice(this.getDocument(), this, true).disable('zoomout');
+              }
+              wrapper.width(w * z).height(h * z);
+              $(handle).width(w * z).height(h * z); 
+              _getDevice(this.getDocument(), this, true).enable('zoomin');            
             } else {
               _getDevice(this.getDocument(), this, true).disable('zoomout');
             }
-            wrapper.width(w * z).height(h * z);
-            $(handle).width(w * z).height(h * z); 
-            _getDevice(this.getDocument(), this, true).enable('zoomin');            
-          } else {
-            _getDevice(this.getDocument(), this, true).disable('zoomout');
           }
         }
       }
     }
   }; 
    
-  $axel.filter.register('image', imageFilterMixin);
+  $axel.filter.register(
+    'image',
+    { chain : ['onAwake', 'onLoad', 'update', '_setData', 'startEditing'] },
+    {
+      image_tag : 'Source',
+      image_lang : 'default', 
+      base : undefined,
+      image_maxWidth : undefined,
+      image_maxHeight : undefined,
+      image_minWidth : undefined,
+      image_minHeigth : undefined
+    },
+    imageFilterMixin
+  );
   $axel.filter.applyTo({'image' : 'text'});
 }($axel));
 

@@ -28,18 +28,18 @@
 
   var _Filter = {
 
-    '->': {
-     'update' : '__evt__update'
-    },   
-
     update : function (aData) {
-      this.__evt__update(aData);
+      this.__event__update(aData);
       // triggers 'axel-update' event
       $(this.getHandle()).trigger('axel-update', this);
     }
 
   };
   
-  $axel.filter.register('event', _Filter);
+  $axel.filter.register(
+    'event', 
+    { chain : [ 'update'] },
+    null,
+    _Filter);
   $axel.filter.applyTo({'event' : 'text'});
 }($axel));

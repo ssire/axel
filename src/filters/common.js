@@ -26,10 +26,6 @@
   \*****************************************************************************/
   var _NoXMLFilter = {
 
-    '->': {
-      // empty
-    },
-
     onLoad : function (point, dataSrc) {
       // do not load
     },
@@ -39,7 +35,7 @@
     }
   }
 
-  $axel.filter.register('noxml', _NoXMLFilter);
+  $axel.filter.register('noxml', null, null, _NoXMLFilter);
   $axel.filter.applyTo({ 'noxml' : ['text', 'select'] });
 
   // TBD : 'hidden' filter (forces handle's style to display:'none')    
