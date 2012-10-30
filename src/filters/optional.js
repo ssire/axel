@@ -17,6 +17,8 @@
 |  AXEL 'optional' filter                                                     |
 |                                                                             |
 |  Only serializes data to XML if it is different from the default data       |
+|  WARNING: currently this is a READONLY filter, it does not support loading  |
+|  XML data                                                                   |
 |                                                                             |
 |*****************************************************************************|
 |  Prerequisite: none                                                         |

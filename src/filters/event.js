@@ -2,14 +2,14 @@
  *
  * @COPYRIGHT@
  *
- * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@ 
+ * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@
  *
  * @LICENSE@
  *
  * Web site : https://github.com/ssire/axel
- * 
+ *
  * Author(s) : Stephane Sire
- * 
+ *
  * ***** END LICENSE BLOCK ***** */
 
 /*****************************************************************************\
@@ -28,16 +28,17 @@
 
   var _Filter = {
 
-    update : function (aData) {
-      this.__event__update(aData);
-      // triggers 'axel-update' event
-      $(this.getHandle()).trigger('axel-update', this);
+    methods : {
+      update : function (aData) {
+        this.__event__update(aData);
+        // triggers 'axel-update' event
+        $(this.getHandle()).trigger('axel-update', this);
+      }
     }
-
   };
-  
+
   $axel.filter.register(
-    'event', 
+    'event',
     { chain : [ 'update'] },
     null,
     _Filter);

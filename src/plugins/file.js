@@ -71,6 +71,7 @@
         this._param.file_base = base + "/";
         // this.configure('file_base', base + "/")
       }
+      this.model = new fileModel(this);
     },
 
     // Awakes the editor to DOM's events, registering the callbacks for them
@@ -83,13 +84,13 @@
       this.vId = $('.xt-file-id', this._handle).hide();
       // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
       this.vIcon1.bind({
-        'click' : $.proxy(_FileEditor.prototype.onActivate, this),
-        'mouseenter' : $.proxy(_FileEditor.prototype.onEnterIcon, this),
-        'mouseleave' : $.proxy(_FileEditor.prototype.onLeaveIcon, this)
+        'click' : $.proxy(_Editor.methods.onActivate, this),
+        'mouseenter' : $.proxy(_Editor.methods.onEnterIcon, this),
+        'mouseleave' : $.proxy(_Editor.methods.onLeaveIcon, this)
       });
-      this.vIcon2.click( $.proxy(_FileEditor.prototype.onDismiss, this) );
-      this.vSave.click( $.proxy(_FileEditor.prototype.onSave, this) );
-      this.vId.change( $.proxy(_FileEditor.prototype.onChangeId, this) );
+      this.vIcon2.click( $.proxy(_Editor.methods.onDismiss, this) );
+      this.vSave.click( $.proxy(_Editor.methods.onSave, this) );
+      this.vId.change( $.proxy(_Editor.methods.onChangeId, this) );
       // manages transient area display (works with plugin css rules)
       $(this._handle).bind({
        mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
@@ -506,7 +507,7 @@
     
     gotoLoading : function () {
       // pre-check if state transition is possible
-      var manager = xtiger.factory('upload').getInstance(this.delegate.curDoc);
+      var manager = xtiger.factory('upload').getInstance(this.delegate.getDocument());
       if (manager && manager.isReady()) {
         this.state = LOADING;
         // in case of immediate failure gotoError may be called in between
@@ -545,7 +546,7 @@
 
     // Called after a transmission has started to retrieve the document id
     getDocumentId : function () {
-      return xtiger.session(this.delegate.curDoc).load('documentId');
+      return xtiger.session(this.delegate.getDocument()).load('documentId');
     },
 
     startTransmission : function (manager, uploader) {
@@ -564,7 +565,7 @@
 
     cancelTransmission : function () {
       if (this.transmission) {
-        var manager = xtiger.factory('upload').getInstance(this.delegate.curDoc);
+        var manager = xtiger.factory('upload').getInstance(this.delegate.getDocument());
         manager.cancelTransmission(this.transmission);
       }
     },

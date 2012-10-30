@@ -112,6 +112,10 @@
           <label>
             Page : <input id="url" type="text" name="url" maxlength="100" value=""/>
           </label>
+
+          <!-- HTML5 files selection: non functional see notes in editor.js  -->
+          <!-- <input type="file" id="fileInput" onchange="appController.handleFiles(this.files)"/> -->
+
           <input type="button" value="Browse"
             onclick="appController.localFileDialog(&quot;open&quot;, &quot;*.xtd; *.xhtml; *.html; *.xml&quot;, &quot;Select an XTiger Forms template&quot; , &quot;url&quot;)"/>
           <span style="position: absolute; right: 30px; margin-left: 5px">

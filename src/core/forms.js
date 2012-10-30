@@ -284,6 +284,7 @@ xtiger.util.Form.prototype = {
                           
   // Firefox only
   // Saves form data into a file, filename must contain an absolute path (i.e. "/tmp/myFile") 
+  // TODO: use http://www.w3.org/TR/file-writer-api/ instead
   saveDataToFile : function (filename, logger) {
     if (xtiger.cross.UA.gecko) { 
       // tries with an XPCOM component (nsILocalFile)   

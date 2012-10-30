@@ -284,6 +284,18 @@ viewerApp.prototype = {
   STORE_URL : 'http://localhost:8042/store?file=', // to be used with scripts/server/server.rb
   DUMP_URL : 'http://localhost:8042/dump?file=', // to be used with scripts/server/server.rb
   
+  // Non-functional: Safari, Opera, Chrome do not show the object URL in iframe,
+  // Firefox shows it but it does not dereference embedded scripts / CSS files
+  handleFiles : function (files) {
+    alert('HandleFiles');
+    var fileObj = files[0];
+    var objUrl = window.URL.createObjectURL(fileObj);
+                // window.webkitURL.createObjectURL();
+    var iframe = document.getElementById('container');
+    xtdom.addEventListener(iframe, 'load', this.frameLoadedHandler, false);
+    iframe.src = objUrl;
+  },
+  
   setBase : function (url) {
     this.baseUrl = url;
   },
@@ -409,7 +421,7 @@ viewerApp.prototype = {
       var url = Utility.makeURLForFile(s, this.PROXY);
       var iframe = document.getElementById('container');
       xtdom.addEventListener(iframe, 'load', this.frameLoadedHandler, false);
-      iframe.setAttribute('src', url);
+      iframe.src = url;
     }
     return false; // prevent default action
   },
