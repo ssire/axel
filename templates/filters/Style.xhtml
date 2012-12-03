@@ -54,6 +54,17 @@ div.hilite {
         or choose directly : <xt:use types="select" label="Style1Select" option="unset" values="green blue orange chartreuse #123456" param="filter=style;style_property=background;style_root_class=toplevel;style_target_class=style1">green</xt:use></p>
     </div>
 
+    <h3>With parameter <var>style_unit</var></h3>
+
+    <div class="hilite style2">
+      <p>This div's width is controlled by the text entry fields below</p>
+    </div>
+
+    <div class="demo extract">
+      <p>Please type in a width in percent : <xt:use types="text" label="StylePercentWidth" option="unset" param="filter=style;style_property=width;style_root_class=toplevel;style_target_class=style2;style_unit=%">25</xt:use>%
+        or in pixels : <xt:use types="select" label="StylePixelWidth" option="unset" values="100 200 300 400 500" param="filter=style;style_property=width;style_root_class=toplevel;style_target_class=style2;style_unit=px">100</xt:use>px</p>
+    </div>
+
     <h2>The "width" filter</h2>
 
     <p>NOTE: <i>this filter will most probably be superseded by the "style" filter above</i></p>
