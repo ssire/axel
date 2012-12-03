@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "date" filter</title>
+  
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <!-- BEGIN transformation -->
+    <link rel="stylesheet" type="text/css" 
+          href="../../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css"  charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../../axel/axel.css"></link>
+
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-ui-1.8.18.custom.min.js"></script>
+    <script type="text/javascript" src="../../axel/axel.js"></script>
+
+    <script type="text/javascript">
+      var form;
+      function init() {
+        var today, dates;
+        form = new xtiger.util.Form('../axel/bundles');
+        form.setTemplateSource(document);
+        form.enableTabGroupNavigation();
+        if (! form.transform()) {
+          alert(this .form.msg);
+        } else {
+          today = $.datepicker.formatDate('dd/mm/yy', new Date())
+          dates = $axel('#x-Todate');
+          dates.get(0).configure('maxDate', today);
+          dates.get(0).update(today);
+        }
+      }
+      xtdom.addEventListener(window,  'load', init, false);
+    </script>
+    <!-- END transformation -->
+    
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" charset="utf-8" src="../shared/demo.js">//</script>        
+  </head>
+  <body>
+    
+    <p class="warning">WARNING: this is a self-transformed template that can only be used with jQuery/jQuery-ui/AXEL libraries sitting in the parent window because of jQuery datepicker limitations</p>
+  
+    <h1>The "date" filter</h1>
+
+    <p>The <code>"date"</code> filter turns a text entry field into a field for selecting a date using a calendar or the keyboard. It uses the <a href="http://jqueryui.com/demos/datepicker/" target="_new">jQuery UI Datepicker</a>, hence it depends on jQuery and jQuery UI. </p>
+    
+    <p>This filter is compatible with the <code>"text"</code> plugin.</p>
+    
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+      <li><var>date_region</var> (<code><b>fr</b></code>) : specifies the user interface language (currently only 'fr', but you can edit the <code>filters/date.js</code> source code to add another region)</li>
+      <li><var>date_format</var> (<code><b>ISO_8601</b></code>) : specifies the date format used in XML output (read and write). You can use any datepicker date format string (e.g. 'dd/mm/yy'), or a $.datepicker constant name such as <code>ISO_8601</code> (others are <code>ATOM, COOKIE, RFC_822, RFC_850, RFC_1036, RFC_1123, RFC_2822, RSS, TICKS, TIMESTAMP, W3C</code>)</li>
+      <li><var>minDate</var> (<code>undefined</code>) : to be documented</li>
+      <li><var>maxDate</var> (<code>undefined</code>) : to be documented</li>
+      <li><var>beforeShow</var> (<code>undefined</code>) : to be documented</li>
+    </ul>
+
+    <h2>Example</h2>
+  
+    <p>In this example the calendar region (<samp>date_region</samp> parameter) and format (parameter <samp>date_format</samp>) are set to "fr" and "ISO_8601".</p>
+    
+    <p><i>The <samp>maxData</samp> parameter is not implemented yet.</i></p>
+
+    <div class="demo extract">
+      <p id="x-Todate">Date : 
+        <xt:use types="text" label="Date1" param="filter=date;date_region=fr;date_format=ISO_8601;maxDate=today"/>
+      </p>
+    </div>
+
+    <h2>Example with a default date set</h2>
+    
+    <p>The default date syntax must match the format defined in the <var>date_region</var>, which is not necessarily the format defined for the XML output with <var>date_format</var>.</p>
+  
+    <div class="demo extract">
+      <p id="x-Todate">Date : 
+        <xt:use types="text" label="Date2" param="filter=date">12/12/1999</xt:use>
+      </p>
+    </div>
+  </body> 
+</html>

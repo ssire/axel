@@ -14,7 +14,7 @@
                                                              
 <h2>Introduction</h2>
 
-<p>The AXEL Javascript library transforms XHTML documents that follow the <a  href="XTiger-XML-spec.html">XTiger XML language specification</a> into custom XML editors running inside a browser window. These editors allow to edit XML documents conformant with an XML document model implicitly defined by the template. The library is entirely client-side, the only interactions with the server are to get a template, and to load and save XML data ; all this can be realized with Ajax calls. Thus AXEL can be deployed on top of any Web framework. There are two different ways to use the library:</p>
+<p>The AXEL Javascript library transforms XHTML documents that follow the <a  href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a> into custom XML editors running inside a browser window. These editors allow to edit XML documents conformant with an XML document model implicitly defined by the template. The library is entirely client-side, the only interactions with the server are to get a template, and to load and save XML data ; all this can be realized with Ajax calls. Thus AXEL can be deployed on top of any Web framework. There are two different ways to use the library:</p>
 
 <ul>
   <li>you can include the library in a Web page, load the template as a separate file (e.g. inside an iframe within the Web page, or alternatively with an Ajax request) then transform it (e.g. transform the template loaded in the iframe or with Ajax request) and copy the result somewhere inside your Web page</li>      
@@ -34,8 +34,6 @@ template is an <span style="font-style: italic;">auto-editable</span> template.<
   <li>editor/<a href="../editor/editor.xhtml" target="_blank">editor.xhtml</a> loads the library in a main Web page, then it loads templates within an iframe within that page and transforms them (in-place transformation)</li>
 
  <li>editor/<a href="../editor/editornoframe.xhtml" target="_blank">editornoframe.xhtml</a> loads the library in a main Web page, then it loads templates with an XMLHTTPRequest object, transforms them and copy the result within a div container within the main Web page</li>
-
- <li>demos/<a href="../demos/launch.xhtml" target="_blank">launch.xhtml</a> is a minimalist application that loads the library and then loads one template inside an iframe and transforms it (it is called by our <a href="../demos/index.html">demos</a> index), note that this application also loads XML content inside the document generated from the template right after the transformation</li>
 </ul>           
 
 <h2>Deploying the library</h2>       

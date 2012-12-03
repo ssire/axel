@@ -12,16 +12,26 @@ How does it work ?
 ------------------
 
 AXEL works by transforming a *document template* (i.e. an XHTML file with
-embedded [XTiger XML](http://media.epfl.ch/Templates/XTiger-XML-spec.html)
+embedded [XTiger XML](http://ssire.github.com/xtiger-xml-spec/)
 instructions) into an editable HTML page.
+
+How to test it ?
+----------------
+
+This repository is also published as the [AXEL web site](http://ssire.github.com/axel/) 
+thanks to the Git Hub project pages mechanism. From the web site you can directly
+test AXEL inside your browser without any preliminary software installation.
+Follow the instructions of the section "For the impatient". 
+
+The web site is regularly updated, however to really get the latest version checkout 
+the repository.
 
 Where to start ?
 ----------------
 
 This repository contains the full AXEL source code, documentation, examples
 and utilities. It is targeted at integrators and developers that want to
-use/debug/extend the library. It is also used to generate the stripped-down
-AXEL distribution that you can find at [http://media.epfl.ch/Templates/]().
+use/debug/extend the library.
 
 If you are just interested in using and deploying AXEL, all you need to do is
 to copy the `axel` folder to your Web server. Then you can start deploying
@@ -34,7 +44,7 @@ clone git://github.com/ssire/axel.git`, you should read the `readme.html`.
 How to build the library ?   
 --------------------------
 
-The library comes with the latest sources concatenated and minified inside
+The library comes with the sources concatenated and minified inside
 `axel/axel.js`. However it is wised to make a fresh version by running the
 `build.lib` target in the scripts directory:
 
@@ -66,11 +76,7 @@ The basic archicture of the library is reflected into the structure of its
   vocabulary (e.g. the `wiki` filter turns a `text` entry field into a wiki
   entry field)
 
-* *services* can be spreaded within the document tree to gather data and to
-  trigger external actions with side effects while editing (e.g. you can setup
-  a service to translate some text)
- 
-You can extend the library by writing your own plugins, filters or services.
+You can extend the library by writing your own plugins or filters.
 
 How to contribute to the library ? 
 ----------------------------------
@@ -92,22 +98,8 @@ We currently do not have strong coding conventions as you will see by yourself
 when browsing the source code, however respect at least that one:
 **Soft Tabs at 2 spaces per Tab !**.
 
+Each plugin should be documented in a self-describing template file inside 
+the templates/plugins folder.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Each filter should be documented in a self-describing template file inside
+the templates/filters folder.

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "xt:repeat" element</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+
+      <xt:component name="t_sample_component">
+        <p>
+          <xt:menu-marker/>
+          <xt:use types="text" param="type=textarea;shape=parent-40px">Repeat me.</xt:use>
+        </p>
+      </xt:component>
+    </xt:head>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <h1>The "xt:repeat" element</h1>
+
+    <h3>Default configuration</h3>
+
+    <p class="caption"><code>&lt;xt:repeat>...&lt;/xt:repeat></code></p>
+    <div class="demo">
+      <xt:repeat label="Repetition1">
+        <xt:use types="t_sample_component" label="Sample"/>
+      </xt:repeat>
+    </div>
+
+    <h3>With different combinations of <var>minOcccurs</var> and <var>maxOccurs</var></h3>
+
+    <p>It is possible to create optional content by setting <var>minOccurs</var> to <samp>0</samp> and <var>maxOccurs</var> to <samp>1</samp>. Currently <var>minOccurs</var> can only be set to <samp>0</samp> or <samp>1</samp>. Similarly <var>maxOccurs</var> can only be set to <samp>0</samp> or <samp>*</samp>, all the other values are treated as <samp>*</samp> (unbounded).</p>
+
+    <p class="caption"><code>&lt;xt:repeat minOccurs="0" maxOccurs="1">...&lt;/xt:repeat></code></p>
+    <div class="demo">
+      <xt:repeat minOccurs="0" maxOccurs="1" label="Repetition2">
+        <xt:use types="t_sample_component" label="Sample"/>
+      </xt:repeat>
+    </div>
+
+    <p class="caption"><code>&lt;xt:repeat minOccurs="1" maxOccurs="*">...&lt;/xt:repeat></code></p>
+    <div class="demo">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="Repetition3">
+        <xt:use types="t_sample_component" label="Sample"/>
+      </xt:repeat>
+    </div>
+
+    <p class="caption"><code>&lt;xt:repeat minOccurs="0" maxOccurs="*">...&lt;/xt:repeat></code></p>
+    <div class="demo">
+      <xt:repeat minOccurs="0" maxOccurs="*" label="Repetition4">
+        <xt:use types="t_sample_component" label="Sample"/>
+      </xt:repeat>
+    </div>
+
+    <h3>With a <code>menu-marker</code> element inside</h3>
+    <p>Without a <var>size</var> attribute</p>
+    <div class="demo">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="List1">
+        <ul>
+          <li><xt:use types="text" label="Item" param="shape=parent-80px">click to enter an item</xt:use><xt:menu-marker/></li>
+        </ul>
+      </xt:repeat>
+    </div>
+
+    <p>Without a <var>size</var> attribute set to <code>20</code></p>
+    <div class="demo">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="List2">
+        <ul>
+          <li><xt:use types="text" label="Item" param="shape=parent-80px">click to enter an item</xt:use><xt:menu-marker size="20"/></li>
+        </ul>
+      </xt:repeat>
+    </div>
+
+  </body>
+</html>

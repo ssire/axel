@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "link" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <style type="text/css">
+    </style>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+
+    <h1>The <samp>"link"</samp> plugin</h1>
+
+    <p>The <code>"link"</code> plugin is a dual text entry field to edit the anchor text and the target part (URL) of a link. It's static view shows only the anchor text. Once clicked, it popups a window lens around the anchor text with the two editing fields.</p>
+    
+    <p>While editing it is possible to navigate from the anchor text input to the URL input using key up and key down. Future versions should go farther and use standard tab navigation instead to fully integrate with the page.</p>
+    
+    <p>This plugin is only compatible with a <code>xt:use</code> element.</p>
+
+    <h2>Parameters</h2>
+    
+    <ul class="parameters">
+      <li><var>linkRefTagName</var> (<code><b>linkRef</b></code>) : string label used by the load/save method for the url content</li>
+      <li><var>linkTextTagName</var> (<code><b>linkText</b></code>) : string label used by the load/save method for the anchor text content</li>
+      <li><var>trigger</var> (<code>mouseover|<b>click</b></code>) : user action that triggers editing mode</li>
+      <!-- <li><var>padding</var> (<code>10</code>) : internal padding of the popup window lens</li> -->
+    </ul>
+
+    <h2>Default configuration</h2>
+
+    <div class="demo extract">
+      <p><xt:use types="link" label="Default">enter your link</xt:use></p>
+    </div>
+
+    <h2>With default content</h2>
+    
+    <p>You can declare the default anchor text and target URL as a classical HTML link child of the <code>xt:use</code> element.</p>
+
+    <div class="demo extract">
+      <p><xt:use types="link" label="Default"><a href="http://www.wikipedia.fr">wikipedia</a></xt:use></p>
+    </div>
+
+    <h2>Variation</h2>
+
+    <div class="demo extract">
+      <p><xt:use types="link" label="Variation" param="trigger=mouseover;linkRefTagName=TargetUrl;linkTextTagName=Anchor"/></p>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "content" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <style type="text/css">
+      .axel-core-editable[contenteditable] {
+        border: none !important;
+        outline: 0px solid transparent;
+      }
+      .multi {
+        -moz-column-count: 2;
+        -moz-column-gap: 25px;
+        -webkit-column-count: 2;
+        -webkit-column-gap: 25px;
+      }
+      span.styled {
+        font-size: 120%;
+        font-family: Garamond, Arial;
+        color: brown;
+      }
+    </style>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+
+    <h1>The <code>"content"</code> plugin</h1>
+
+    <p>The <code>"content"</code> plugin is a text editing field. As it makes its handle <code>contentEditable</code>, it offers a perfect integration with the page to create a WYSIWYG experience. You can use it to edit text that flows around floating elements.</p>
+
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+      <li><var>noedit</var> (<code>true|<b>false</b></code>) : set it  to <code>true</code> to make the field read only (constant).</li>
+      <li><var>class</var> (<code><i>name</i></code>) : set a class name on the handle</li>
+    </ul>
+
+    <h2>Default configuration</h2>
+
+    <div class="demo extract">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="Default">
+        <p><xt:use types="content" label="parag">Click to edit a paragraph.</xt:use><xt:menu-marker/></p>
+      </xt:repeat>
+    </div>
+
+    <h2>Styled with a class name</h2>
+
+    <div class="demo extract">
+      <p><xt:use types="content" label="Styled" param="class=styled">Click to edit your content here with a different style.</xt:use></p>
+    </div>
+    
+    <h2>With multi-column text (using CSS)</h2>
+
+    <div class="demo extract">
+      <p class="multi"><xt:use types="content" label="MultiColumn">Click to edit some content here that will spread on two columns with a gap.</xt:use></p>
+    </div>
+    
+  </body>
+</html>

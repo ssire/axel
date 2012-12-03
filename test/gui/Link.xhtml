@@ -14,15 +14,15 @@
   <xt:head version="1.1" templateVersion="1.0" label="Root">
   </xt:head>
   
-	<style type="text/css">
-		.xtt-lens a img {
-			background-color: rgba(115, 166, 42, 0.75);
-			border-bottom: 2px solid rgba(0, 0, 0, 0.75);
-			border-top: 2px solid rgba(120, 120, 120, 0.75);
-			border-right: 2px solid rgba(0, 0, 0, 0.75);
-			border-left: 2px solid rgba(120, 120, 120, 0.75);
-		}
-	</style>
+  <style type="text/css">
+    .xtt-lens a img {
+      background-color: rgba(115, 166, 42, 0.75);
+      border-bottom: 2px solid rgba(0, 0, 0, 0.75);
+      border-top: 2px solid rgba(120, 120, 120, 0.75);
+      border-right: 2px solid rgba(0, 0, 0, 0.75);
+      border-left: 2px solid rgba(120, 120, 120, 0.75);
+    }
+  </style>
 
   <link rel="stylesheet" href="../../axel/axel.css" type="text/css"/>
   <script type="text/javascript" src="../../axel/axel.js"></script> 
@@ -36,8 +36,8 @@
       if (! form.transform()) { alert(this .form.msg); }
     }
     function dump () {
-	    var log = new xtiger.util.LogWin ("XML instance data", 400, 600, true);	
-	    log.dump(form);
+      var log = new xtiger.util.LogWin ("XML instance data", 400, 600, true); 
+      log.dump(form);
     }
     xtdom.addEventListener(window,  'load', init, false);
   </script> 
@@ -73,6 +73,6 @@
   <xt:use types="link" label="opt1" option="set"><a href="http://www.5a.com">another opt link set</a></xt:use>
   <br/>
   <p>and one with option="unset".</p>
-  <xt:use types="link" label="opt1" option="unset"><a href="http://www.5b.com">another opt link unset</a></xt:use>
+  <xt:use types="link" label="opt2" option="unset"><a href="http://www.5b.com">another opt link unset</a></xt:use>
 </body>
 </html>

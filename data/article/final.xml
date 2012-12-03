@@ -118,7 +118,7 @@
         <Fragment>The figure below shows a typical XML editorial process built with document templates: a template author creates the templates which are turned into interactive editing applications into the browser by the AXEL library. End users can then create or change documents; when they save them, their XML content is generated and sent to server side applications for further processing or stored into databases or documents.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/architecture.png"/>
+        <image Source="../../data/article/images/architecture.png"/>
         <caption>Overall architecture</caption>
       </Figure>
       <SubTitle>Anatomy of an XTiger XML Template</SubTitle>
@@ -222,7 +222,7 @@
         <Fragment> button. Some other parts of the document become editing fields, such as the fields to enter a person name. Finally, some parts are just part of the background and are displayed as usual, non-editable XHTML elements, such as the list header in the snapshot below.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/greetingswithbar.png"/>
+        <image Source="../../data/article/images/greetingswithbar.png"/>
         <caption>The "Greetings" generated editor</caption>
       </Figure>
       <Parag>
@@ -261,7 +261,7 @@
         <Fragment>The editing user interface is self-contained in the document (no need for extra menus or panels) and the document template engine implementation is client-side. As a consequence, editable document templates can be embedded anywhere in any application (see section on server integration for details). For instance, for the purpose of writing this article, we have deployed the document template engine onto a WebDAV web server. The only addition to the document template of the article (which uses a custom XML content model from which we can easily generate a Docbook or an XHTML document), has been to program a Javascript menu bar to load and save XML data from and to the document template. The resulting editing application with its menu bar is displayed below:</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/editing.png"/>
+        <image Source="../../data/article/images/editing.png"/>
         <caption>A simple editing application with it's menu bar for authoring this article</caption>
       </Figure>
     </a_section>
@@ -279,7 +279,7 @@
         <Fragment> label, is a repeated list of time slots.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/timetable.png"/>
+        <image Source="../../data/article/images/timetable.png"/>
         <caption>Editing a timetable</caption>
       </Figure>
       <Parag>
@@ -300,7 +300,7 @@
         <Fragment> buttons inside the document, and their size. Also, some information, such as the specialty, some comments, or the prices are optional.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/carte.png"/>
+        <image Source="../../data/article/images/carte.png"/>
         <caption>Editing a menu</caption>
       </Figure>
       <Parag>
@@ -319,7 +319,7 @@
         <Fragment> publication. The presentation and the nature of the information displayed in the user interface may be quite different for each type.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/publis.png"/>
+        <image Source="../../data/article/images/publis.png"/>
         <caption>Editing a bibliography</caption>
       </Figure>
       <Parag>
@@ -685,7 +685,7 @@
         <Fragment> illusion that contributes to give a WYSIWIG feeling.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/wiki.png"/>
+        <image Source="../../data/article/images/wiki.png"/>
         <caption>Text primitive editor with wiki filter while viewing (1) and editing (2)</caption>
       </Figure>
       <Parag>
@@ -702,7 +702,7 @@
         <Fragment> currency to change it.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/selectcurrency.png"/>
+        <image Source="../../data/article/images/selectcurrency.png"/>
         <caption>Example of popup menu of the primitive editor "select"</caption>
       </Figure>
       <Parag>
@@ -722,7 +722,7 @@
         <Fragment> choice). This can be useful to make light corrections (spell-checking, typos) to a document or to translate it. This opens up future possibilities to generate different user interfaces for different tasks.</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/cartesans.png"/>
+        <image Source="../../data/article/images/cartesans.png"/>
         <caption>Menu document with all structure editing controls hidden but still editable</caption>
       </Figure>
     </a_section>
@@ -798,7 +798,7 @@ form.loadData(source, result); // form from above
         <Fragment>We have experienced this  Javascript library with several document templates in order to evaluate this solution in terms of performance and usability. The tested templates range from simple form-based structures, such as the menu example given previously, to more complex templates, like the template used for writing this paper. The table below lists some properties and some results obtained with different use cases of templates. Time results of these tests have been obtained on a MacBook Pro with 2.16 Ghz Intel Core Duo with 2GB memory running Firefox 3.5.3 (a 3 years+ computer).</Fragment>
       </Parag>
       <Figure>
-        <image Source="../data/article/images/perfs.png"/>
+        <image Source="../../data/article/images/perfs.png"/>
         <caption>Loading XML documents into a template and editing with AXEL</caption>
       </Figure>
       <Parag>
@@ -1098,7 +1098,7 @@ form.loadData(source, result); // form from above
         </authors>
         <title>XTiger XML Language Specification</title>
         <url>
-          <url>http://media.epfl.ch/Templates/XTiger-XML-spec.html</url>
+          <url>http://ssire.github.com/xtiger-xml-spec/</url>
         </url>
       </refreport>
     </reference>

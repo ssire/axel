@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="XTiger XML document template" />
+    <meta name="keywords" content="template, XTiger" />
+
+  <title>Simple Web Page Template</title>
+
+  <style type="text/css">
+  /* RESET - do not copy this as it should usually depend on your web site look and feel */
+  body {
+    width: 800px;
+  }
+  p {
+    margin: 0 0 0.5em;
+  }
+  ul {
+    margin: 0 0 0.5em;
+  }
+  </style>
+
+  <link rel="stylesheet" href="Page.css" type="text/css" charset="utf-8"/>
+
+  <xt:head version="1.1" templateVersion="1.0" label="WebPage">
+
+  <xt:component name="t_content_type">
+    <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Parag List TitleLevel1 TitleLevel2 LinesBlock" >
+      <xt:use types="t_row"/>
+    </xt:repeat>
+  </xt:component>
+
+  <xt:component name="t_row">
+    <div class="t_row t_dyn ie-select-hack">
+      <div class="t_menu">
+        <div class="t_menu_mask">
+          <div class="t_menu_content">        
+            <xt:menu-marker target="t_select"/><br/>
+            <xt:menu-marker/>
+          </div>
+        </div>
+      </div>
+      <xt:use types="t_parag t_list t_title1 t_title2 t_linesblock" label="Parag List TitleLevel1 TitleLevel2 LinesBlock" param="name=t_select"/>
+    </div>
+  </xt:component>
+
+  <xt:component name="t_parag" i18n="Parag">
+    <p class="x-Parag"><xt:use types="text" param="type=textarea;shape=parent;filter=wiki">Cliquez pour éditer un paragraphe</xt:use></p>
+  </xt:component>
+
+  <xt:component name="t_list" i18n="List">
+    <p class="x-ListHeader"><xt:use label="ListHeader" types="text" param="type=textarea;shape=parent - 75px;filter=wiki" option="unset">Cliquez pour éditer un en-tête de liste </xt:use><span class="xtt-hide-if-unselect"> :</span></p>
+    <ul class="x-List">
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Item">
+          <li><xt:use types="text" label="Item" param="type=textarea;shape=parent-80px;filter=wiki">élément de liste</xt:use><xt:menu-marker/></li>
+      </xt:repeat>
+    </ul>
+  </xt:component>
+
+  <xt:component name="t_title1" i18n="Titre1">
+    <h2>
+      <xt:use types="text" param="type=textarea;shape=parent">Cliquez pour éditer un titre</xt:use>
+    </h2>
+  </xt:component>
+
+  <xt:component name="t_title2" i18n="Titre2">
+    <h3>
+      <xt:use types="text" param="type=textarea;shape=parent">Cliquez pour éditer un sous-titre</xt:use>
+    </h3>
+  </xt:component>
+
+  <xt:component name="t_linesblock" i18n="Lignes">
+    <ul class="x-LinesBlock">
+      <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Line">
+          <li><xt:use types="text" label="Line" param="type=textarea;shape=parent-80px;filter=wiki">Cliquez pour éditer la ligne</xt:use><xt:menu-marker/></li>
+      </xt:repeat>
+    </ul>
+  </xt:component>
+
+  </xt:head>
+</head>
+<body style="margin-left: 100px">
+  <h1><xt:use types="text" label="PageTitle" option="set">Titre de la page</xt:use></h1>
+  <xt:use types="t_content_type" label="PageContent"/>
+</body>
+</html>

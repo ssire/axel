@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "select" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+
+    <h1>The <samp>"select"</samp> plugin</h1>
+
+    <p>The <code>"select"</code> plugin edits a choice in a list of choices presented as a popup menu.</p>
+
+    <h2>Attributes</h2>
+
+    <p>The plugin requires specific attributes on the XTiger XML <code>xt:use</code> or <code>xt:attribute</code> host element :</p>
+      
+    <ul class="attributes">
+      <li><var>values</var> (<code>list of tokens</code>) : list the values that will be linearized in the XML output, these will also be used as the labels in the popup menu unless an optional <var>i18n</var> attribute is defined</li>
+      <li><var>i18n</var> (<code>list of tokens</code>) : defines the labels to display for the values in the popup menu, both lists are enumerated in the same order</li>
+      <li><var>default</var> (<code>token</code>) : the default selection as it will appear in the label</li>
+    </ul>
+    
+    <p>The <var>values</var> and <var>i18n</var> lists are white space separated list of tokens, you can include a white space inside a token by adding an anti-slash in front of it.</p>
+
+    <p>Note that the <var>default</var> attribute is only valid when using the plugin with an <code>xt:attribute</code> XTiger XML host element. If you use it with an <code>xt:use</code> host, then you must declare the default selection inside the text content of the element.</p>
+
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+      <li><var>select_dispatch</var> (<code><b>value</b>|i18n</code>) : defines which token will be passed to the internal <code>update</code> method when its value changes, this is useful only if you write a filter compatible with this plugin, by default it will pass the value (and not the internationalized label).</li>
+    </ul>
+
+    <h2>Basic usage</h2>
+
+    <h3>As an attribute</h3>
+
+    <div class="demo extract">
+      <p>
+        I prefer <xt:attribute types="select" name="season" default="Autumn" values="Winter Spring Summer Autumn"/>
+        in <xt:attribute types="select" name="continent" default="Europe" values="Africa America Europe Oceania" option="unset"/>.
+      </p>
+    </div>
+
+    <h3>As an element</h3>
+
+    <div class="demo extract">
+      <p>
+        I prefer to pay with <xt:use types="select" label="Currency" values="EUR USD CHF" i18n="Euro Dollars Swiss-franc">USD</xt:use>.
+      </p>
+    </div>
+
+    <h2>The <samp>model</samp> parameter</h2>
+
+    <p>You can load the list of options from an external resource by giving its URL with a <sanmp>model</sanmp> parameter.</p>
+    
+    <p><i>NOT IMPLEMENTED YET</i></p>
+
+    <div class="demo extract">
+      <p>
+        I live in <xt:use types="select" label="Country" param="model=countries.xml"/>.
+      </p>
+    </div>
+
+  </body>
+</html>

@@ -1,69 +1,70 @@
-/*
- * ***** BEGIN LICENSE BLOCK *****
- * This file is part of "XTiger Forms" by S. Sire.
- *
- * "XTiger Forms" License will be added soon
- *
- * ***** END LICENSE BLOCK *****
- */
+/* AXEL demo editor */
 
 body {
-	min-width: 650px;
+  min-width: 650px;
 }
 
 #formular {
-  	background: lightgray;
+    background: lightgray;
     margin: 0;
     padding: 5px;
-		position: fixed;
-		top: 10px;
-		left: 10px;
-		right: 10px;
-		z-index: 1;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 1;
 }    
 
 #formularNoFrame {
-  	background: lightgray;
+    background: lightgray;
     margin: 0;
     padding: 5px;
-		top: 10px;
-		left: 10px;
-		right: 10px;
-		z-index: 1;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 1;
 }    
 
 #url {
-	width: 60%;
+  width: 60%;
 }    
 
 .single-line {
-	text-align: center;
+  text-align: center;
 }
 
 .hide {
-	margin-left: 100px;
+  margin-left: 100px;
 }
 
 input {
-	margin-left: 10px;
+  margin-left: 10px;
 }  
 
 #frameContainer {
-	border: none;
-	background: white;  
-	position: fixed;
-	top: 8em;
-	right: 10px;
-	bottom: 10px;
-	left: 10px;	
-	margin: 0;		
-	padding: 0;
-	z-index: 2;
+  border: none;
+  background: white;  
+  position: fixed;
+  top: 8em;
+  right: 10px;
+  bottom: 10px;
+  left: 10px; 
+  margin: 0;    
+  padding: 0;
+  z-index: 2;
 }
 
 #container {
-	border: none;
-	position: static;
-	width: 100%;
-	height: 100%;
+  border: none;
+  position: static;
+  width: 100%;
+  height: 100%;
+}
+
+#templateRepos {
+  width: 50%;
+}
+
+#fileName {
+  width: 30%;
 }

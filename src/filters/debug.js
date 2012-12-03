@@ -6,159 +6,119 @@
  *
  * @LICENSE@
  *
- * Web site : http://media.epfl.ch/Templates/
+ * Web site : https://github.com/ssire/axel
  * 
  * Author(s) : Stephane Sire, Antoine Yersin
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/**
- * <p>
- * This object acts as a filter on model's instances (formerly named editors).
- * It catches calls made on the filtered method to add some behavior. Here the
- * behavior is to produce some output on some output channel (a console, a
- * dedicated part of the DOM, alert box or whatever) as calls are made on the
- * model.
- * </p>
- * 
- * <p>
- * As this object is used in a delegation pattern, model's instances that are
- * filtered still appear as "usual" instances. That is, their external aspect is
- * kept unchanged.
- * </p>
- */
-var _DebugFilter  = (function _DebugFilter () {    
+/*****************************************************************************\
+|                                                                             |
+|  AXEL 'debug' filter                                                        |
+|                                                                             |
+|  Catches calls made on the filtered methods and print some traces           |
+|                                                                             |
+|*****************************************************************************|
+|  Prerequisites : none                                                       |
+|                                                                             |
+\*****************************************************************************/
+var _DebugFilter = (function _DebugFilter () {
 
-    function _printDebugTrace (aModel, aFunction, aValue, aComment) {
-      var _buf = '';
-      _buf += '[' + aModel.getUniqueKey() + ']';
-      _buf += ' : ' + aFunction;
-      _buf += '(';
-      if (aValue)
-        _buf += aValue;
-      _buf += ')'
-      if (aComment)
-        _buf += ' : ' + aComment;
-      xtiger.cross.log('debug', _buf);
-    };
+  function _printDebugTrace (aModel, aFunction, aValue, aComment) {
+    var _buf = '';
+    _buf += '[' + aModel.getUniqueKey() + ']';
+    _buf += ' : ' + aFunction;
+    _buf += '(';
+    if (aValue)
+      _buf += aValue;
+    _buf += ')'
+    if (aComment)
+      _buf += ' : ' + aComment;
+    xtiger.cross.log('debug', _buf);
+  };
+
+  return {
     
-    function _arrayPP (aArray) {
-      var _buf = '['
-      for (var _i = 0; _i < aArray.length; _i++) {
-        _buf += aArray[_i] + ', ';
-      }
-      return _buf;
-    }
-
-  return {      
-
-    /**
-     * Remap property
-     */
-    '->': {
-      'create': '__debugSuperCreate',
-      'init': '__debugSuperInit',
-      'load': '__debugSuperLoad',
-      'save': '__debugSuperSave',
-      'update': '__debugSuperUpdate',
-      'clear': '__debugSuperClear',
-      'getData': '__debugSuperGetData',
-      'focus': '__debugSuperFocus',
-      'unfocus': '__debugSuperUnfocus',
-      'set': '__debugSuperSet',
-      'unset': '__debugSuperUnset',
-      'awake': '__debugSuperAwake',
-      'startEditing': '__debugSuperStartEditing',
-      'stopEditing': '__debugSuperStopEditing'
+    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
+      var txt = '' + aDefaultData;
+      txt += ', ' + anOptionAttr;
+      txt += ', ' + this.getUniqueKey();
+      _printDebugTrace(this, 'init', txt);
+      this.__debug__onInit(aDefaultData, anOptionAttr, aRepeater);
     },
     
-    create : function create () {
-      _printDebugTrace(this, 'create');
-      this.__debugSuperCreate();
+    onAwake : function () {
+      _printDebugTrace(this, 'awake');
+      this.__debug__onAwake();
     },
     
-    init : function init (aDefaultData, aParams, aOption, aUniqueKey) {
-      var _params = '' + aDefaultData
-      if (typeof aParams == 'string')
-        _params += aParams;
-      else
-        _params += ', ' + _arrayPP(aParams);
-      _params += ', ' + aOption
-      _params += ', ' + aUniqueKey;
-      _printDebugTrace(this, 'init', _params);
-      this.__debugSuperInit(aDefaultData, aParams, aOption, aUniqueKey);
-    },
-    
-    load : function load (aPoint, aDataSrc) {
+    onLoad : function (aPoint, aDataSrc) {
       _printDebugTrace(this, 'load');
-      this.__debugSuperLoad(aPoint, aDataSrc);
+      this.__debug__onLoad(aPoint, aDataSrc);
     },
     
-    save : function save (aLogger) {
+    onSave : function (aLogger) {
       _printDebugTrace(this, 'save');
-      this.__debugSuperSave(aLogger);
+      this.__debug__onSave(aLogger);
     },
     
-    update : function update (aData) {
-      _printDebugTrace(this, 'update', aData, 'Old data = ' + this.__debugSuperGetData());
-      this.__debugSuperUpdate(aData);
+    update : function (aData) {
+      _printDebugTrace(this, 'update', aData, 'Old data = ' + this.__debug__getData());
+      this.__debug__update(aData);
     },
     
-    clear : function clear () {
-      _printDebugTrace(this, 'clear', null, 'Old data = ' + this.__debugSuperGetData());
-      this.__debugSuperClear();
+    clear : function () {
+      _printDebugTrace(this, 'clear', null, 'Old data = ' + this.__debug__getData());
+      this.__debug__clear();
     },
     
-    getData : function getData () {
+    getData : function () {
       _printDebugTrace(this, 'getData');
-      return this.__debugSuperGetData();
+      return this.__debug__getData();
     },
     
-    focus : function focus () {
+    focus : function () {
       _printDebugTrace(this, 'focus');
-      this.__debugSuperFocus();
+      this.__debug__focus();
     },
     
-    unfocus : function unfocus () {
+    unfocus : function () {
       _printDebugTrace(this, 'unfocus');
-      this.__debugSuperUnocus();
+      this.__debug__unfocus();
     },
     
-    set : function set () {
+    set : function () {
       if (this.isOptional())
         _printDebugTrace(this, 'set');
       else
         _printDebugTrace(this, 'set', null, 'Warning, thring to set a non-optional editor');
-      this.__debugSuperSet();
+      this.__debug__set();
     },
     
-    unset : function unset () {
+    unset : function () {
       if (this.isOptional())
         _printDebugTrace(this, 'unset');
       else
         _printDebugTrace(this, 'unset', null, 'Warning, thring to unset a non-optional editor');
-      this.__debugSuperUnet();
+      this.__debug__unset();
     },
     
-    awake : function awake () {
-      _printDebugTrace(this, 'awake');
-      this.__debugSuperAwake();
-    },
-    
-    startEditing : function startEditing (aEvent) {
+    startEditing : function (aEvent) {
       _printDebugTrace(this, 'startEditing');
-      this.__debugSuperStartEditing(aEvent);
+      this.__debug__StartEditing(aEvent);
     },
     
-    stopEditing : function stopEditing () {
+    stopEditing : function () {
       _printDebugTrace(this, 'stopEditing');
-      this.__debugSuperStopEditing();
+      this.__debug__StopEditing();
     }
-  } 
+  }
   
-})();
+  $axel.filter.register(
+    'debug', 
+    { chain : ['onAwake', 'onInit', 'onLoad', 'onSave', 'update', 'clear', 'getData', 'focus', 'unfocus', 'set', 'unset', 'startEditing', 'stopEditing'] },
+    null,
+    _DebugFilter);
+    // do not forget to apply it before use $axel.filter.applyTo({'debug' : ['text', 'content', 'link', 'video']});
+}($axel));
 
-xtiger.editor.Plugin.prototype.pluginEditors['video'].registerFilter('debug', _DebugFilter);
-xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('debug', _DebugFilter);
-xtiger.editor.Plugin.prototype.pluginEditors['richtext'].registerFilter('debug', _DebugFilter);
-xtiger.editor.Plugin.prototype.pluginEditors['link'].registerFilter('debug', _DebugFilter);

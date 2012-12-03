@@ -12,7 +12,7 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/*
+/* 2012-09-19 : DEPRECATED (still there for auto-tests)
  * Model class for a String editor
  * Can be styled with a 'class' parameter in param XTiger attribute
  * Does not support filters use 'text' primitive editor instead

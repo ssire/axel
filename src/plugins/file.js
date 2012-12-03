@@ -16,7 +16,19 @@
 // NOTE : this editor requires JQuery !!!
 ////////////////////////////////////////////
 
-xtiger.editor.FileFactory = (function FileFactory() {
+(function ($axel) {
+  
+  var _Generator = function ( aContainer, aXTUse, aDocument ) {
+    var viewNode; 
+    viewNode = xtdom.createElement (aDocument, 'span');
+    xtdom.addClassName (viewNode , 'xt-file');
+    $(viewNode).html(
+      '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
+      );
+    // xtdom.addClassName (viewNode , 'axel-drop-target');
+    aContainer.appendChild(viewNode);
+    return viewNode;
+  };
   
   var EMPTY = 0;
   var SELECTED = 1;
@@ -35,9 +47,9 @@ xtiger.editor.FileFactory = (function FileFactory() {
               '“%” a été enregistré en tant que <a target="_blank" href="%">%</a>',
               'cliquez pour remplacer <a target="_blank" href="%">%</a>' ]
       };
-  var PURIFY_NAME = function (name) {
-    var str = $.trim(name).toLowerCase();
-    var res = (str.indexOf('.pdf') !== -1) ? str.substring(0, str.indexOf('.pdf')) : str;
+  function PURIFY_NAME (name) {
+    var str = $.trim(name).toLowerCase(),
+        res = (str.indexOf('.pdf') !== -1) ? str.substring(0, str.indexOf('.pdf')) : str;
     /* Replace multi spaces with a single space */
     res = res.replace(/(\s{2,}|_)/g,' ');
     /* Replace space with a '-' symbol */
@@ -46,7 +58,278 @@ xtiger.editor.FileFactory = (function FileFactory() {
     res = res.replace(/[^a-z0-9-_]/g,'');
     return res;
   }
+
+  // you may add a closure to define private properties / methods
+  var _Editor = {
+
+    ////////////////////////
+    // Life cycle methods //
+    ////////////////////////
+    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
+      var base = this.getParam('file_base');
+      if (base && (base.charAt(base.length - 1) !== '/')) { // sanitize base URL
+        this._param.file_base = base + "/";
+        // this.configure('file_base', base + "/")
+      }
+      this.model = new fileModel(this);
+    },
+
+    // Awakes the editor to DOM's events, registering the callbacks for them
+    onAwake : function () {
+      this.vIcon1 = $('.xt-file-icon1', this._handle);
+      this.vTrans = $('.xt-file-trans', this._handle);
+      this.vPerm = $('.xt-file-perm', this._handle);
+      this.vIcon2 = $('.xt-file-icon2', this._handle);
+      this.vSave = $('.xt-file-save', this._handle).hide();
+      this.vId = $('.xt-file-id', this._handle).hide();
+      // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
+      this.vIcon1.bind({
+        'click' : $.proxy(_Editor.methods.onActivate, this),
+        'mouseenter' : $.proxy(_Editor.methods.onEnterIcon, this),
+        'mouseleave' : $.proxy(_Editor.methods.onLeaveIcon, this)
+      });
+      this.vIcon2.click( $.proxy(_Editor.methods.onDismiss, this) );
+      this.vSave.click( $.proxy(_Editor.methods.onSave, this) );
+      this.vId.change( $.proxy(_Editor.methods.onChangeId, this) );
+      // manages transient area display (works with plugin css rules)
+      $(this._handle).bind({
+       mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
+       // 'over' is set inside onEnterIcon
+      });
+      this.model.reset(this.getDefaultData());
+      this.redraw(false);
       
+    },
+
+    onLoad : function (aPoint, aDataSrc) {
+      var p, name, url = (aPoint !== -1) ? aDataSrc.getDataFor(aPoint) : this.getDefaultData();
+      if (aDataSrc.hasAttributeFor('data-input', aPoint)) { // optional original file name
+        p = aDataSrc.getAttributeFor('data-input', aPoint);
+        name = aDataSrc.getDataFor(p);
+      }
+      this.model.reset(url, name);
+      this.redraw(false);
+      
+    },
+
+    onSave : function (aLogger) {
+      var tmp;
+      aLogger.write(this._dump());
+      if ((this.model.legacy && this.model.legacy[2]) || (!this.model.legacy && this.model.name)) { // records original file name 
+        tmp = this.model.legacy ? this.model.legacy[2] : this.model.name;
+        aLogger.writeAttribute("data-input", tmp);
+      }
+    },
+
+    ////////////////////////////////
+    // Overwritten plugin methods //
+    ////////////////////////////////
+    api : {
+      // no variation
+    },
+
+    /////////////////////////////
+    // Specific plugin methods //
+    /////////////////////////////
+    methods : {
+
+      getData : function () {
+        return this.model;
+      },
+
+      _dump : function () {
+        if (this.model.legacy) {
+          return (this.model.legacy[1]) ? this.model.legacy[1] : '';
+        } else {
+          return (this.model.url) ? this.model.url : '';
+        }
+      },  
+
+      // Updates display state to the current state, leaves state unchanged 
+      // FIXME: rename to _setData ?
+      redraw : function (doPropagate) {
+        var UI = [
+          // [ icon, true to display file name inside transient area, dismiss icon ]
+          [ xtiger.bundles.file.noFileIconURL, true, null],
+          [ xtiger.bundles.file.saveIconURL, false, xtiger.bundles.file.cancelIconURL],
+          [ xtiger.bundles.file.spiningWheelIconURL, false, xtiger.bundles.file.cancelIconURL ],
+          [ xtiger.bundles.file.errorIconURL, false, xtiger.bundles.file.cancelIconURL ],
+          [ xtiger.bundles.file.pdfIconURL, false, xtiger.bundles.file.dismissIconURL ],
+          [ xtiger.bundles.file.pdfIconURL, true, null ]
+        ];
+        var tmp;
+        var config = UI[this.model.state];
+        var msg = FEEDBACK.fr[this.model.state];
+        // Updates widget view
+        this.vIcon1.attr('src', config[0]);
+        if ((this.model.state === EMPTY) || (this.model.state === READY)) {
+          this.vIcon1.addClass('xt-file-editable');
+        } else {
+          this.vIcon1.removeClass('xt-file-editable');
+        }
+        if (config[1]) { // transient feedback (file name on mouse over)
+          tmp = "“"+ (this.model.name || "pas de fichier") + "”";
+          this.vTrans.text(tmp);
+        } else {
+          this.vTrans.text('');
+        }
+        if (this.model.state === SELECTED) { // save button
+          if (this.getParam('file_gen_name') !== 'auto') {
+            this.vId.val(this.model.name);
+            this.onChangeId();
+            this.vId.show();
+          }
+          this.vSave.show();
+        } else {
+          this.vSave.hide();
+          this.vId.hide();
+        }
+        this.vPerm.text(msg || ''); // permanent feedback
+        this.configureHints();
+        if (config[2]) { // cancel / close icon
+          this.vIcon2.attr('src', config[2]);
+          this.vIcon2.removeClass('axel-core-off');
+        } else {
+          this.vIcon2.addClass('axel-core-off');
+        }
+        // auto-selection
+        if ((this.model.state === COMPLETE) && (doPropagate)) {
+          xtiger.editor.Repeat.autoSelectRepeatIter(this._handle);
+        }
+      },
+
+      configureHints : function () {
+        var a, i, tmp, tokens, vars, mb, kb, spec = HINTS.fr[this.model.state];
+        if (this.model.state === SELECTED) {
+          spec = spec[ (this.getParam('file_gen_name') === 'auto') ? 0 : 1 ];
+        }
+        if (spec.indexOf('%') !== -1) {
+          a = [];
+          if ((this.model.state === SELECTED) || (this.model.state === LOADING)) {
+            if (this.model.size > 1024) {
+              kb = this.model.size >> 10;
+              if (kb > 1024) {
+                mb = this.model.size >> 20;
+                kb = (this.model.size - (mb << 20)) >> 10;
+              } else {
+                mb = 0;
+              }
+              tmp = mb >= 1 ? mb + '.' + kb + ' MB' : kb + ' KB';
+            } else {
+              tmp = this.model.size; 
+            }
+            vars = [this.model.name, tmp, this.vId.val()];
+          } else if (this.model.state === ERROR) {
+            vars = [this.model.name, this.model.err];
+          } else if (this.model.state === COMPLETE) {
+            vars = [this.model.name, this.model.genFileURL(), this.model.url];
+          } else { // READY
+            vars = [this.model.genFileURL(), this.model.url];
+          }
+          tokens = spec.split('%');
+          for (i = 0; i < tokens.length; i++) { 
+            a.push(tokens[i]); 
+            if (i<vars.length) {
+               a.push(vars[i]);
+            }
+          }
+          this.model.hints = a.join('');
+        } else {
+          this.model.hints = spec;
+        }
+      },
+
+      // FIXME: SHOULD NOT BE CALLED currently the plugin is not filterable and thus should not be updated 
+      update : function (data) {
+        this.model.reset(data);
+        this.redraw(true);
+      },
+
+      /////////////////////////////////
+      // User Interaction Management
+      /////////////////////////////////
+      onEnterIcon : function (ev) {
+        $(ev.target.parentNode).addClass('over');
+        if (this.model.hints) {
+          tooltip = xtiger.factory('tooltipdev').getInstance(this.getDocument());
+          if (tooltip) {
+            // sticky tooltip iff the hints contains some link to click
+            tooltip.show(this.vIcon1, this.model.hints, (this.model.hints.indexOf('<a') !== -1));
+          }
+        }
+      },
+
+      onLeaveIcon : function () {
+        tooltip = xtiger.factory('tooltipdev').getInstance(this.getDocument());
+        if (tooltip) {
+          tooltip.hide();
+        }
+      },
+
+      // Handles click on the action icon vIcon1
+      // Shows file selection dialog and transitions to LOADING state unless cancelled
+      onActivate : function (ev) {
+        var fileDlg;
+        if ((this.model.state === EMPTY) || (this.model.state === READY)) {
+          fileDlg = xtiger.factory('fileinputsel').getInstance(this.getDocument());
+          if (fileDlg) { 
+            this.onLeaveIcon(); // forces tooltip dismiss because otherwise if may stay on screen
+            fileDlg.showFileSelectionDialog( this );
+          }
+        }
+      },
+
+      doSelectFile : function ( file ) {
+        this.model.gotoSelected(file);
+      },
+
+      // Handles click on the dismiss icon vIcon2
+      onDismiss : function (ev) {
+        if (this.model.state === LOADING) {
+          this.model.cancelTransmission();
+        } else if ((this.model.state === SELECTED) || (this.model.state === ERROR)) { 
+          this.model.rollback((this.model.state === ERROR));
+        } else if (this.model.state === COMPLETE) {
+          this.model.gotoReady();
+        }
+      },
+
+      onChangeId : function () {
+        this.vId.val(PURIFY_NAME(this.vId.val()));
+        this.vId.attr('size', this.vId.val().length + 2);
+        this.configureHints();
+        this.vId.blur();
+      },
+
+      onSave : function (ev) {
+        this.model.gotoLoading();
+      }
+    }
+  };
+
+  $axel.plugin.register(
+    'file', 
+    { filterable: false, optional: true },
+    { 
+      file_URL : "/fileUpload",
+      file_type : 'application/pdf',
+      file_gen_name : 'auto'
+      // file_size_limit : 1024
+    },
+    _Generator,
+    _Editor
+  );
+
+  xtiger.resources.addBundle('file', 
+    { 'noFileIconURL' : 'nofile32.png', 
+      'saveIconURL' : 'save32.png', 
+      'spiningWheelIconURL' : 'spiningwheel.gif',
+      'errorIconURL' : 'bug48.png',
+      'dismissIconURL' : 'ok16.png',
+      'cancelIconURL' : 'cancel32.png',
+      'pdfIconURL' : 'pdf32.png'
+    } );
+  
   /*****************************************************************************\
   |                                                                             |
   | Hidden file input button  - one per document                                |
@@ -195,7 +478,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
     },
     
     getPreflightOptions : function () {
-      return { 'xt-file-preflight' : this.delegate.vId.val() }
+      return { 'xt-file-preflight' : this.delegate.vId.val() };
     },
     
     rollback : function (fromErrorState) {
@@ -224,7 +507,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
     
     gotoLoading : function () {
       // pre-check if state transition is possible
-      var manager = xtiger.factory('upload').getInstance(this.delegate.curDoc);
+      var manager = xtiger.factory('upload').getInstance(this.delegate.getDocument());
       if (manager && manager.isReady()) {
         this.state = LOADING;
         // in case of immediate failure gotoError may be called in between
@@ -263,7 +546,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
 
     // Called after a transmission has started to retrieve the document id
     getDocumentId : function () {
-      return xtiger.session(this.delegate.curDoc).load('documentId');
+      return xtiger.session(this.delegate.getDocument()).load('documentId');
     },
 
     startTransmission : function (manager, uploader) {
@@ -282,7 +565,7 @@ xtiger.editor.FileFactory = (function FileFactory() {
 
     cancelTransmission : function () {
       if (this.transmission) {
-        var manager = xtiger.factory('upload').getInstance(this.delegate.curDoc);
+        var manager = xtiger.factory('upload').getInstance(this.delegate.getDocument());
         manager.cancelTransmission(this.transmission);
       }
     },
@@ -314,346 +597,6 @@ xtiger.editor.FileFactory = (function FileFactory() {
         this.delegate.redraw();
       }
     }
-  };
+  };  
 
-  
-  /*****************************************************************************\
-  |                                                                             |
-  | File input editor                                                           |
-  |                                                                             |
-  \*****************************************************************************/
-  function _FileEditor (aHandleNode, aDocument) {
-    this.curDoc = aDocument;
-    this.handle = aHandleNode;
-    this.defaultContent = null;   
-    this.model = new fileModel (this);  
-  }
-
-  _FileEditor.prototype = {
-
-    defaultParams : {
-      file_URL : "/fileUpload",
-      file_type : 'application/pdf',
-      file_gen_name : 'auto'
-      // file_size_limit : 1024
-    },
-
-    getParam : function (name)  {
-      return (this.param && this.param[name]) || this.defaultParams[name];
-    },                
-
-    can : function (aFunction) {      
-      return typeof this[aFunction] === 'function';
-    },
-
-    execute : function (aFunction, aParam) {
-      return this[aFunction](aParam);
-    },  
-
-    /////////////////////////////////
-    // Creation
-    /////////////////////////////////
-
-    init : function (aDefaultData, aParams, aOption, aUniqueKey, aRepeater) {
-      this.defaultContent = aDefaultData;
-      if (typeof (aParams) === 'object') { // FIXME: factorize params handling in AXEL
-        this.param = aParams;
-      }
-      this.awake ();
-    },
-
-    awake : function () {
-      this.vIcon1 = $('.xt-file-icon1', this.handle);
-      this.vTrans = $('.xt-file-trans', this.handle);
-      this.vPerm = $('.xt-file-perm', this.handle);
-      this.vIcon2 = $('.xt-file-icon2', this.handle);
-      this.vSave = $('.xt-file-save', this.handle).hide();
-      this.vId = $('.xt-file-id', this.handle).hide();
-      // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
-      this.vIcon1.bind({
-        'click' : $.proxy(_FileEditor.prototype.onActivate, this),
-        'mouseenter' : $.proxy(_FileEditor.prototype.onEnterIcon, this),
-        'mouseleave' : $.proxy(_FileEditor.prototype.onLeaveIcon, this)
-      });
-      this.vIcon2.click( $.proxy(_FileEditor.prototype.onDismiss, this) );
-      this.vSave.click( $.proxy(_FileEditor.prototype.onSave, this) );
-      this.vId.change( $.proxy(_FileEditor.prototype.onChangeId, this) );
-      // manages transient area display (works with plugin css rules)
-      $(this.handle).bind({
-       mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
-       // 'over' is set inside onEnterIcon
-      });
-      this.model.reset(this.defaultContent);
-      this.redraw(false);
-    },
-
-    // The seed is a data structure that should allow to "reconstruct" a cloned editor
-    makeSeed : function () {
-      if (! this.seed) { // lazy creation
-        var factory = xtiger.editor.Plugin.prototype.pluginEditors['file']; // see last line of file
-        this.seed = [factory, this.defaultContent, this.param];
-      }
-      return this.seed;
-    },  
-
-    /////////////////////////////////
-    // Content management
-    /////////////////////////////////
-
-    _dump : function () {
-      if (this.model.legacy) {
-        return (this.model.legacy[1]) ? this.model.legacy[1] : '';
-      } else {
-        return (this.model.url) ? this.model.url : '';
-      }
-    },  
-    
-    // Updates display state to the current state, leaves state unchanged 
-    // FIXME: rename to _setData ?
-    redraw : function (doPropagate) {
-      var UI = [
-        // [ icon, true to display file name inside transient area, dismiss icon ]
-        [ xtiger.bundles.file.noFileIconURL, true, null],
-        [ xtiger.bundles.file.saveIconURL, false, xtiger.bundles.file.cancelIconURL],
-        [ xtiger.bundles.file.spiningWheelIconURL, false, xtiger.bundles.file.cancelIconURL ],
-        [ xtiger.bundles.file.errorIconURL, false, xtiger.bundles.file.cancelIconURL ],
-        [ xtiger.bundles.file.pdfIconURL, false, xtiger.bundles.file.dismissIconURL ],
-        [ xtiger.bundles.file.pdfIconURL, true, null ]
-      ];
-      var tmp;
-      var config = UI[this.model.state];
-      var msg = FEEDBACK.fr[this.model.state];
-      // Updates widget view
-      this.vIcon1.attr('src', config[0]);
-      if ((this.model.state === EMPTY) || (this.model.state === READY)) {
-        this.vIcon1.addClass('xt-file-editable');
-      } else {
-        this.vIcon1.removeClass('xt-file-editable');
-      }
-      if (config[1]) { // transient feedback (file name on mouse over)
-        tmp = "“"+ (this.model.name || "pas de fichier") + "”";
-        this.vTrans.text(tmp);
-      } else {
-        this.vTrans.text('');
-      }
-      if (this.model.state === SELECTED) { // save button
-        if (this.getParam('file_gen_name') !== 'auto') {
-          this.vId.val(this.model.name);
-          this.onChangeId();
-          this.vId.show();
-        }
-        this.vSave.show();
-      } else {
-        this.vSave.hide();
-        this.vId.hide();
-      }
-      this.vPerm.text(msg || ''); // permanent feedback
-      this.configureHints();
-      if (config[2]) { // cancel / close icon
-        this.vIcon2.attr('src', config[2]);
-        this.vIcon2.removeClass('axel-core-off');
-      } else {
-        this.vIcon2.addClass('axel-core-off');
-      }
-      // auto-selection
-      if ((this.model.state === COMPLETE) && (doPropagate)) {
-        xtiger.editor.Repeat.autoSelectRepeatIter(this.handle);
-      }
-    },
-    
-    configureHints : function () {
-      var a, i, tmp, tokens, vars, mb, kb, spec = HINTS.fr[this.model.state];
-      if (this.model.state === SELECTED) {
-        spec = spec[ (this.getParam('file_gen_name') === 'auto') ? 0 : 1 ];
-      }
-      if (spec.indexOf('%') !== -1) {
-        a = [];
-        if ((this.model.state === SELECTED) || (this.model.state === LOADING)) {
-          if (this.model.size > 1024) {
-            kb = this.model.size >> 10;
-            if (kb > 1024) {
-              mb = this.model.size >> 20;
-              kb = (this.model.size - (mb << 20)) >> 10;
-            } else {
-              mb = 0;
-            }
-            tmp = mb >= 1 ? mb + '.' + kb + ' MB' : kb + ' KB';
-          } else {
-            tmp = this.model.size; 
-          }
-          vars = [this.model.name, tmp, this.vId.val()];
-        } else if (this.model.state === ERROR) {
-          vars = [this.model.name, this.model.err];
-        } else if (this.model.state === COMPLETE) {
-          vars = [this.model.name, this.model.genFileURL(), this.model.url];
-        } else { // READY
-          vars = [this.model.genFileURL(), this.model.url];
-        }
-        tokens = spec.split('%');
-        for (i = 0; i < tokens.length; i++) { a.push(tokens[i]); i<vars.length ? a.push(vars[i]) : null }
-        this.model.hints = a.join('');
-      } else {
-        this.model.hints = spec;
-      }
-    },
-
-    load : function (point, dataSrc) {
-      var p, name, url = (point !== -1) ? dataSrc.getDataFor(point) : this.defaultContent;
-      if (dataSrc.hasAttributeFor('data-input', point)) { // optional original file name
-        p = dataSrc.getAttributeFor('data-input', point);
-        name = dataSrc.getDataFor(p);
-      }
-      this.model.reset(url, name);
-      this.redraw(false);
-    },
-
-    save : function (logger) {
-      var tmp;
-      logger.write(this._dump());
-      if ((this.model.legacy && this.model.legacy[2]) || (!this.model.legacy && this.model.name)) { // records original file name 
-        tmp = this.model.legacy ? this.model.legacy[2] : this.model.name;
-        logger.writeAttribute("data-input", tmp);
-      }
-    },
-
-    // FIXME: SHOULD NOT BE CALLED currently the plugin is not filterable and thus should not be updated 
-    update : function (data) {
-      this.model.reset(data);
-      this.redraw(true);
-    },
-
-    getData : function () {
-      return this.model;
-    },
-
-    /////////////////////////////////
-    // User Interaction Management
-    /////////////////////////////////
-
-    isFocusable : function () { return false; },
-
-    // Returns the <img> tag which is used to present the photo in the document view
-    getHandle : function () { return this.handle; },
-    
-    onEnterIcon : function (ev) {
-      $(ev.target.parentNode).addClass('over');
-      if (this.model.hints) {
-        tooltip = xtiger.factory('tooltipdev').getInstance(this.curDoc);
-        if (tooltip) {
-          // sticky tooltip iff the hints contains some link to click
-          tooltip.show(this.vIcon1, this.model.hints, (this.model.hints.indexOf('<a') !== -1));
-        }
-      }
-    },
-    
-    onLeaveIcon : function () {
-      tooltip = xtiger.factory('tooltipdev').getInstance(this.curDoc);
-      if (tooltip) {
-        tooltip.hide();
-      }
-    },
-    
-    // Handles click on the action icon vIcon1
-    // Shows file selection dialog and transitions to LOADING state unless cancelled
-    onActivate : function (ev) {
-      var fileDlg;
-      if ((this.model.state === EMPTY) || (this.model.state === READY)) {
-        fileDlg = xtiger.factory('fileinputsel').getInstance(this.curDoc);
-        if (fileDlg) { 
-          this.onLeaveIcon(); // forces tooltip dismiss because otherwise if may stay on screen
-          fileDlg.showFileSelectionDialog( this );
-        }
-      }
-    },
-    
-    doSelectFile : function ( file ) {
-      this.model.gotoSelected(file);
-    },
-
-    // Handles click on the dismiss icon vIcon2
-    onDismiss : function (ev) {
-      if (this.model.state === LOADING) {
-        this.model.cancelTransmission();
-      } else if ((this.model.state === SELECTED) || (this.model.state === ERROR)) { 
-        this.model.rollback((this.model.state === ERROR));
-      } else if (this.model.state === COMPLETE) {
-        this.model.gotoReady();
-      }
-    },
-    
-    onChangeId : function () {
-      this.vId.val(PURIFY_NAME(this.vId.val()));
-      this.vId.attr('size', this.vId.val().length + 2);
-      this.configureHints();
-      this.vId.blur();
-    },
-
-    onSave : function (ev) {
-      this.model.gotoLoading();
-    }
-  }
-
-  return {  
-
-    // Returns the DOM node where the editor will be planted
-    // This node must be the last one required to recreate the object from its seed
-    // because seeding will occur as soon as this node is found
-    createModel : function (container, useNode, curDoc) {
-      var viewNode; 
-      viewNode = xtdom.createElement (curDoc, 'span');
-      xtdom.addClassName (viewNode , 'xt-file');
-      $(viewNode).html(
-        '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
-        );
-      // xtdom.addClassName (viewNode , 'axel-drop-target');
-      container.appendChild(viewNode);
-      return viewNode;
-    },
-
-    createEditorFromTree : function (handleNode, xtSrcNode, curDoc) {
-      var _model = new _FileEditor(handleNode, curDoc);
-      var _data = xtdom.extractDefaultContentXT(xtSrcNode);
-      var _param = {}, base;
-      xtiger.util.decodeParameters(xtSrcNode.getAttribute('param'), _param);
-      // if (_param['filter'])
-      //   _model = this.applyFilters(_model, _param['filter']);    
-      if (base = _param['file_base']) { // sanitize base URL
-        if (base.charAt(base.length - 1) != '/') {
-          _param['file_base'] = base + "/";
-        }
-      } 
-      _model.init(_data, _param, false);      
-      // option always false, no unique key, no repeater
-      return _model;
-    },
-
-    createEditorFromSeed : function (seed, clone, curDoc, aRepeater) {
-      var _model = new _FileEditor(clone, curDoc);
-      var _defaultData = seed[1];
-      var _param = seed[2];                  
-      // if (_param['filter'])
-      //   _model = this.applyFilters(_model, _param['filter']);
-      _model.init(_defaultData, _param, false, undefined, aRepeater);
-      // option always false, no unique key
-      return _model;
-    }
-  }
-})();
-
-/////////////////////////////////
-// Device Registrations
-/////////////////////////////////
-
-xtiger.editor.Plugin.prototype.pluginEditors['file'] = xtiger.editor.FileFactory;
-
-// Resource registration
-xtiger.resources.addBundle('file', 
-  { 'noFileIconURL' : 'nofile32.png', 
-    'saveIconURL' : 'save32.png', 
-    'spiningWheelIconURL' : 'spiningwheel.gif',
-    'errorIconURL' : 'bug48.png',
-    'dismissIconURL' : 'ok16.png',
-    'cancelIconURL' : 'cancel32.png',
-    'pdfIconURL' : 'pdf32.png'
-  } );
-
+}($axel));

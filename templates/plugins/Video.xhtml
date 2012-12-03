@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>                  
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "video" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>  
+    
+    <style type="text/css">
+      span.video {
+        display: inline-block; /* not working on IE : vertical margins will not be applied neither */
+        vertical-align: middle;
+        margin: 0 20px 10px 20px;
+      }
+    </style>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <p class="warning">You must have a live Internet connection to actually see the videos from YouTube.</p>
+
+    <h1>The "video" plugin</h1>
+    
+    <p>The <code>"video"</code> plugin is a video URL entry field. The video is shown inside an embedded video player. When the mouse is passed over it displays a popup window lens around the player that allows to change the video URL.</p>
+    
+    <p>Currently this plugin is limited to You Tube video URLs. There is also a limitation in some browsers that do not allows to play the video (the mask used to detect mouse over filters out events).</p>
+
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+      <li><var>lang</var> (<code><b>fr_FR</b></code>) : lang's code for player's GUI (must respect the video's provider's standards)</li>
+      <li><var>inputFieldMessage</var> (<code><b>Paste the video's link here</b></code>) : text appearing in the input field when the model does not contain a valid URL</li>
+      <li><var>width</var> (<code>number</code>) : width of the embedded video player</li>
+      <li><var>height</var> (<code>number</code>) : height of the flash video player</li>
+    </ul>
+
+    <h2>Empty default content</h2>
+
+    <div class="demo extract">
+      <xt:use types="video" label="Video1"/>
+    </div>
+
+    <h2>Default content set to a video URL</h2>
+    
+    <p><i>Note that in that case clicking on "delete" is possible even if the video is the default one, this is a bug</i></p>
+
+    <div class="demo extract">
+      <xt:use types="video" label="Video2">http://www.youtube.com/watch?v=VUVU14GmW18&amp;hl=fr_FR&amp;fs=1&amp;</xt:use>
+    </div>
+
+    <h2>Optional video</h2>
+
+    <div class="demo extract">
+      <p>Please select a video : 
+        <span class="video">
+          <xt:use types="video" label="Video3" option="unset" param="width=300; height=200">URL from YouTube</xt:use>
+        </span>
+      </p>
+    </div>
+
+    <h2>Repeated video</h2>
+
+    <div class="demo extract">
+      <p>Please select a video : 
+         <xt:repeat minOccurs="0" maxOccurs="*" label="Collection">
+          <span class="video"><xt:menu-marker />
+            <xt:use types="video" label="Video">URL from YouTube</xt:use>
+          </span>
+        </xt:repeat>
+      </p>
+    </div>
+    
+    <hr/>
+    <p>That template also uses the <em>inline-block</em> CSS style property which has been reported not working on Internet Explorer. In that case you should prefer <em>float</em> layout.</p>  
+  </body> 
+</html>

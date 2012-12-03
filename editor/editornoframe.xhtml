@@ -32,7 +32,7 @@ Author: Stephane Sire
 	<script type="text/javascript" src="../src/core/domdatasource.js"></script>
 	<script type="text/javascript" src="../src/core/defaultbrowser.js"></script>
 	<script type="text/javascript" src="../src/core/iebrowser.js"></script>
-	<script type="text/javascript" src="../src/core/filterable.js"></script>
+	<script type="text/javascript" src="../src/core/filter.js"></script>
 	<script type="text/javascript" src="../src/core/domlogger.js"></script>		
 	<script type="text/javascript" src="../src/core/forms.js"></script>
 	<script type="text/javascript" src="../src/editor/classical/generator.js"></script>
@@ -63,7 +63,6 @@ Author: Stephane Sire
 	
 	<!-- optional plugins -->
 	<script type="text/javascript" src="../src/plugins/link.js"></script>
-	<script type="text/javascript" src="../src/plugins/richtext.js"></script>
 	<script type="text/javascript" src="../src/plugins/video.js"></script>          
 	<script type="text/javascript" src="../src/plugins/photo.js"></script>
       
@@ -76,22 +75,11 @@ Author: Stephane Sire
   <script type="text/javascript" src="../src/filters/video.js"></script>      
 	<script type="text/javascript" src="../src/filters/autocomplete.js"></script>
 	<script type="text/javascript" src="../src/filters/debug.js"></script>  
-	<script type="text/javascript" src="../src/filters/service.js"></script>		
 	<script type="text/javascript" src="../src/filters/date.js"></script>
 	
 	<!-- contributions -->
 	<script type="text/javascript" src="../contribs/src/schemas/schemalogger.js"></script>
 	<script type="text/javascript" src="../contribs/src/schemas/schemaserializer.js"></script>
-	
-	<!-- optional services -->
-	<script type="text/javascript" src="../src/services/service.js"></script>
-	<script type="text/javascript" src="../src/services/common.js"></script>
-	<script type="text/javascript" src="../src/services/capitalize.js"></script>
-	<script type="text/javascript" src="../src/services/suggest.js"></script>
-	<script type="text/javascript" src="../src/services/translate.js"></script>
-	<script type="text/javascript" src="../src/services/toc.js"></script>
-	<script type="text/javascript" src="../src/services/debug.js"></script>
-	<script type="text/javascript" src="../src/services/date.js"></script>    
 	
 	<script type="text/javascript" src="../src/util/ioutils.js"></script>
 	<!-- optional goodies because editor.js uses xtiger.debug.loadDocument -->
@@ -102,7 +90,7 @@ Author: Stephane Sire
 	<!-- Demo Viewer Application Loading	 -->
 	<link rel="stylesheet" href="extras/editor.css" type="text/css"></link> 
 	<script type="text/javascript" src="extras/editor.js"></script>
-	<script type="text/javascript" src="../config/templates.js"></script> 
+  <script type="text/javascript" src="../templates/shared/templates.js"></script>
 	<script type="text/javascript">
 		var appController;
 		

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "wiki" filter</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+
+    <h1>The "wiki" filter</h1>
+
+    <p>The <code>"wiki"</code> filter turns a text entry field into a rich text entry field. For that purpose it interprets special character conventions (Wiki conventions) into bold, italic, verbatim and link formatting commands.</p>
+
+    <p>The conventions are the following ones :</p>
+
+    <ul>
+      <li><kbd>**bold**</kbd> generates some <b>bold</b> text</li>
+      <li><kbd>__italic__</kbd> generates some <i>italic</i> text</li>
+      <li><kbd>`verbatim`</kbd> generates some <tt>verbatim</tt> text</li>
+      <li><kbd>==link to a url==(http://www.wikipedia.com)</kbd> generates some <a href="http://www.wikipedia.com">link to a url</a></li>
+    </ul>
+
+    <p>This filter is compatible with the <code>"text"</code> plugin.</p>
+
+    <h2>Parameters</h2>
+
+    <ul class="parameters">
+
+      <ul class="parameters">
+        <li><var>'wiki_lang'</var> (<code><b>default</b>|html|span</code>) : choose between 3 XML markup syntax for XML serialization
+          <ul>
+            <li>the <code>default</code> syntax serializes to a forrest of <code>&lt;Fragment>, &lt;Fragment FragmentKind="verbatim|important"> and &lt;Link></code> elements</li>
+            <li>the <code>span</code> syntax serializes to a forrest of <code>&lt;span>, &lt;span class="verbatim|important"> and &lt;a></code> elements</li>
+            <li>the <code>html</code> syntax serializes to a forrest of mixed content with <code>text(), &lt;strong>, &lt;em> and &lt;a></code> elements</li>
+          </ul>
+        </li>
+      </ul>
+    </ul>
+
+    <p>Click on the <kbd>Dump</kbd> button in the editor menu bar to actually see the different <var>wiki_lang</var> variants in action in the serialized XML in the examples below.</p>
+
+    <h2>Example with default settings</h2>
+
+    <div class="demo extract">
+      <p>
+        <xt:use types="text" label="ExampleDefault" param="filter=wiki;type=textarea;shape=parent">Click to **enter** a __paragraph__.</xt:use>
+      </p>
+    </div>
+
+    <h2>Example with <var>wiki_lang</var> <code>span</code></h2>
+
+    <div class="demo extract">
+      <p>
+        <xt:use types="text" label="ExampleSpan" param="filter=wiki;wiki_lang=span;type=textarea;shape=parent">Click to **enter** a __paragraph__.</xt:use>
+      </p>
+    </div>
+
+    <h2>Example with <var>wiki_lang</var> <code>html</code></h2>
+
+    <div class="demo extract">
+      <p>
+        <xt:use types="text" label="ExampleHtml" param="filter=wiki;wiki_lang=html;type=textarea;shape=parent">Click to **enter** a __paragraph__.</xt:use>
+      </p>
+    </div>
+
+  </body>
+</html>

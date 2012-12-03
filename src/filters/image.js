@@ -6,7 +6,7 @@
  *
  * @LICENSE@
  *
- * Web site : http://media.epfl.ch/Templates/
+ * Web site : https://github.com/ssire/axel
  * 
  * Author(s) : Stephane Sire
  * 
@@ -14,11 +14,16 @@
 
 /*****************************************************************************\
 |                                                                             |
-|  Filter mixin to insert Image by URL or Path inside a document              |
-|    exposed through the 'text' editor factory                                |
+|  AXEL 'image' filter                                                        |
+|                                                                             |
+|  Interprets data as an image URL or path                                    |
+|  Replaces the handle with an img tag                                        |
+|                                                                             |
+|*****************************************************************************|
+|  Compatiblity: 'text' plugin                                                |
 |                                                                             |
 \*****************************************************************************/
-(function(){    
+(function ($axel) {
 
   // Tracker menu device getter / setter
   // There should be only one such device per-document
@@ -114,7 +119,7 @@
   // Drag and drop callbacks
   ////////////////////////////////////////////////////////////
 
-  // This is required to signifiy that we accept drop
+  // This is required to accept drop
   function _onDragEnter (ev) {  
     var isLink;
     if (ev.dataTransfer.types.contains) { // FF
@@ -159,11 +164,7 @@
     xtdom.preventDefault(ev);
   }   
 
-  ////////////////////////////////////////////////////////////
-  // Mouse enter callback
-  ////////////////////////////////////////////////////////////
-
-  function _onMouseEnter (ev) {                    
+  function _onMouseEnter (ev) {
     // this is the <img> event target set by jQuery
     var w, h, cdeState = {}, tmp;
     var self = ev.data, 
@@ -198,50 +199,9 @@
     
   var imageFilterMixin = {  
     
-    // Property remapping for chaining
-    '->': {
-      'awake' : '__ImageSuperAwake',
-      'update' : '__ImageSuperUpdate',
-      '_setData' : '__ImageSuperSetData',
-      'load' : '__ImageSuperLoad',
-      'startEditing' : '__ImageSuperStartEditing'
-    },  
-      
-    // Manages two cases: 
-    // 1. if aData is an image file name then generates an <img> tag 
-    // 2. if aData is a string then forwards call to default _setData
-    _setData : function (aData) {    
-      if (aData.search && (aData.search(/(png|jpg|jpeg|gif)$/i) !== -1)) { 
-        _genImageInside(this, aData);
-        this._data = aData;
-      } else {
-        var h = this.getHandle(); 
-        if (h.firstChild.nodeType !== xtdom.TEXT_NODE) {
-          xtdom.removeChildrenOf(h);
-          var t = xtdom.createTextNode(this.getDocument(), '');
-          h.appendChild(t);
-        }
-        this.__ImageSuperSetData(aData);
-      }
-    },
-  
-    // Tests if the input is not empty, nor the defaultContent (no editing)
-    // nor a correct file name in which case it replaces the input with 
-    // an error message. Forwards call to the default update.
-    update : function (aData) {   
-      if ((aData.search(/\S/) !== -1) // not empty
-        && (aData !== this.getDefaultData())  // edited content (no default)
-        && (aData.search(/(png|jpg|jpeg|gif)$/i) === -1)) { // incorrect file extension
-          this.__ImageSuperUpdate('Not a supported image file (must end with png, jpg, jpeg or gif)');
-          // be careful not to finish the error message with a correct image file extension
-      } else {
-        this.__ImageSuperUpdate(aData);
-      }
-    },    
-
-    awake : function () { 
+    onAwake : function () { 
       var curP;
-      this.__ImageSuperAwake();
+      this.__image__onAwake();
       // FIXME: experimental feature for FF - could be factorized inside text editor ?
       // FIXME: there should be an uninit to remove event listeners
       var h = this.getHandle();
@@ -257,10 +217,10 @@
       xtiger.cross.log('debug', '[Image filter] awake maxW=' + this.image_maxWidth + ' minW=' + this.image_minWidth +
                         'maxH=' + this.image_maxHeight + ' minH=' + this.image_minHeight);
     },
-
+    
     // Loads XML data from the point into the editor
-    // Converts it to an XHTML representation           
-    load : function (point, dataSrc) {       
+    // Converts it to an XHTML representation
+    onLoad : function (point, dataSrc) {       
       var src, tagname = this.getParam('image-tag') || 'Source', w, h;
       // if (! dataSrc.isEmpty(point)) {  // FIXME: a node with only an attribute is treated as empty
       var n = point[0];
@@ -274,7 +234,7 @@
       }
       // }    
       if ((! src) || (src.search(/(png|jpg|jpeg|gif)$/i) === -1)) { // no image
-        this.__ImageSuperLoad(point, dataSrc);          
+        this.__image__onLoad(point, dataSrc);          
         // FIXME: should we replace content with an error message instead ?
       } else {
         if (this.image_resizable) { // parses and applies width and height
@@ -292,7 +252,7 @@
     },             
 
     // Parses model content and serializes it as XML directly into the logger
-    save : function (logger) {
+    onSave : function (logger) {
       var src = _getImageSrcFromHandle(this),
           html = (this.getParam('image_lang') === 'html'),
           tagname = this.getParam('image-tag') || 'Source', h, img;
@@ -319,82 +279,129 @@
       if (html) {
         logger.closeTag('img');
       }
-    },  
+    },
     
-    startEditing : function (aEvent) {
-      var tracker;
-      if (this.image_resizable) {
-         tracker = _getDevice(this.getDocument(), this, true);
-         if (tracker) {
-           tracker.stopEditing(); // just in case 
-         }
-      }                        
-      this.__ImageSuperStartEditing(aEvent);
-    },        
-               
-    getData : function () {
-      return _getImageSrcFromHandle (this);
-    },    
+    methods : {
+      
+      getData : function () {
+        return _getImageSrcFromHandle(this);
+      },
+      
+      // Manages two cases: 
+      // 1. if aData is an image file name then generates an <img> tag 
+      // 2. if aData is a string then forwards call to default _setData
+      _setData : function (aData) {    
+        if (aData.search && (aData.search(/(png|jpg|jpeg|gif)$/i) !== -1)) { 
+          _genImageInside(this, aData);
+          this._data = aData;
+        } else {
+          var h = this.getHandle(); 
+          if (h.firstChild.nodeType !== xtdom.TEXT_NODE) {
+            xtdom.removeChildrenOf(h);
+            var t = xtdom.createTextNode(this.getDocument(), '');
+            h.appendChild(t);
+          }
+          this.__image___setData(aData);
+        }
+      },
+  
+      // Tests if the input is not empty, nor the defaultContent (no editing)
+      // nor a correct file name in which case it replaces the input with 
+      // an error message. Forwards call to the default update.
+      update : function (aData) {   
+        if ((aData.search(/\S/) !== -1) // not empty
+          && (aData !== this.getDefaultData())  // edited content (no default)
+          && (aData.search(/(png|jpg|jpeg|gif)$/i) === -1)) { // incorrect file extension
+            this.__image__update('Not a supported image file (must end with png, jpg, jpeg or gif)');
+            // be careful not to finish the error message with a correct image file extension
+        } else {
+          this.__image__update(aData);
+        }
+      },    
     
-    // Zoom in the image and it's handler by one unit
-    zoomIn : function () {                
-      var handle = this.getHandle(), 
-          wrapper = $('img', handle), 
-          w, h, rw, rh, z;                
-      if (wrapper.size() > 0) { // sanity check
-        w = wrapper.width();
-        h = wrapper.height();
-        rw = this.image_maxWidth ? this.image_maxWidth / w : undefined;
-        rh = this.image_maxHeight ? this.image_maxHeight / h : undefined;
-        z = rw ? ( rh ? ( rh > rw ? rw : rh ) : rw ) : rh;
-        if (z) {               
-          if (z > 1) {
-            if (z > 1.1) {
-              z = 1.1;
+      startEditing : function (aEvent) {
+        var tracker;
+        if (this.image_resizable) {
+           tracker = _getDevice(this.getDocument(), this, true);
+           if (tracker) {
+             tracker.stopEditing(); // just in case 
+           }
+        }                        
+        this.__image__startEditing(aEvent);
+      },
+
+      // Zoom in the image and it's handler by one unit
+      zoomIn : function () {                
+        var handle = this.getHandle(), 
+            wrapper = $('img', handle), 
+            w, h, rw, rh, z;                
+        if (wrapper.size() > 0) { // sanity check
+          w = wrapper.width();
+          h = wrapper.height();
+          rw = this.image_maxWidth ? this.image_maxWidth / w : undefined;
+          rh = this.image_maxHeight ? this.image_maxHeight / h : undefined;
+          z = rw ? ( rh ? ( rh > rw ? rw : rh ) : rw ) : rh;
+          if (z) {               
+            if (z > 1) {
+              if (z > 1.1) {
+                z = 1.1;
+              } else {
+                _getDevice(this.getDocument(), this, true).disable('zoomin');
+              }
+              wrapper.width(w * z).height(h * z);
+              $(handle).width(w * z).height(h * z);
+              _getDevice(this.getDocument(), this, true).enable('zoomout');
             } else {
               _getDevice(this.getDocument(), this, true).disable('zoomin');
             }
-            wrapper.width(w * z).height(h * z);
-            $(handle).width(w * z).height(h * z);
-            _getDevice(this.getDocument(), this, true).enable('zoomout');
-          } else {
-            _getDevice(this.getDocument(), this, true).disable('zoomin');
           }
         }
-      }
-    },
-               
-    // Zoom out the image and it's handler by one unit
-    zoomOut : function () {
-      var handle = this.getHandle(), 
-          wrapper = $('img', handle), 
-          w, h, rw, rh, z;                
-      if (wrapper.size() > 0) { // sanity check
-        w = wrapper.width();
-        h = wrapper.height();
-        rw = this.image_minWidth ? this.image_minWidth / w : undefined;
-        rh = this.image_minHeight ? this.image_minHeight / h : undefined;
-        z = rw ? ( rh ? ( rh > rw ? rh : rw ) : rw ) : rh;
-        if (z) {               
-          if (z < 1) {
-            if (z < 0.9) {
-              z = 0.9;
+      },
+
+      // Zoom out the image and it's handler by one unit
+      zoomOut : function () {
+        var handle = this.getHandle(), 
+            wrapper = $('img', handle), 
+            w, h, rw, rh, z;                
+        if (wrapper.size() > 0) { // sanity check
+          w = wrapper.width();
+          h = wrapper.height();
+          rw = this.image_minWidth ? this.image_minWidth / w : undefined;
+          rh = this.image_minHeight ? this.image_minHeight / h : undefined;
+          z = rw ? ( rh ? ( rh > rw ? rh : rw ) : rw ) : rh;
+          if (z) {               
+            if (z < 1) {
+              if (z < 0.9) {
+                z = 0.9;
+              } else {
+                _getDevice(this.getDocument(), this, true).disable('zoomout');
+              }
+              wrapper.width(w * z).height(h * z);
+              $(handle).width(w * z).height(h * z); 
+              _getDevice(this.getDocument(), this, true).enable('zoomin');            
             } else {
               _getDevice(this.getDocument(), this, true).disable('zoomout');
             }
-            wrapper.width(w * z).height(h * z);
-            $(handle).width(w * z).height(h * z); 
-            _getDevice(this.getDocument(), this, true).enable('zoomin');            
-          } else {
-            _getDevice(this.getDocument(), this, true).disable('zoomout');
           }
         }
       }
     }
   }; 
    
-  // Expose the filter to the 'text' plugin (i.e. text.js must have been loaded)
-  xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('image', imageFilterMixin);   
-   
-})();
+  $axel.filter.register(
+    'image',
+    { chain : ['onAwake', 'onLoad', 'update', '_setData', 'startEditing'] },
+    {
+      image_tag : 'Source',
+      image_lang : 'default', 
+      base : undefined,
+      image_maxWidth : undefined,
+      image_maxHeight : undefined,
+      image_minWidth : undefined,
+      image_minHeigth : undefined
+    },
+    imageFilterMixin
+  );
+  $axel.filter.applyTo({'image' : 'text'});
+}($axel));
 

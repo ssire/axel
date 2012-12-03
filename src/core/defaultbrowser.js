@@ -37,8 +37,8 @@ if (! (xtiger.cross.UA.gecko || xtiger.cross.UA.webKit || xtiger.cross.UA.IE || 
 }
 
 xtiger.util.countProperties = function (o) {
-  var total = 0;
-  for (var  k in o) if (o.hasOwnProperty(k))  total++;
+  var total = 0, k;
+  for (k in o) if (o.hasOwnProperty(k))  total++;
   return total;
 }
 
@@ -100,35 +100,6 @@ xtiger.util.decodeParameters = function (aString, aParams) {
         }
       } // FIXME: raise a warning (?)
   }
-}  
-
-/**
- * Adds all properties and methods of props to obj. This addition is
- * "prototype extension safe", so that instances of objects will not
- * pass along prototype defaults.
- * 
- * Mainly copied form the DOJO toolkit library.
- */
-xtiger.util.mixin = function mixin (/*Object*/ obj, /*Object*/ props) {
-  var tobj = {};
-  for(var x in props){
-    // the "tobj" condition avoid copying properties in "props"
-    // inherited from Object.prototype.  For example, if obj has a custom
-    // toString() method, don't overwrite it with the toString() method
-    // that props inherited from Object.protoype
-    if((typeof tobj[x] == "undefined") || (tobj[x] != props[x])){
-      obj[x] = props[x];
-    }
-  }
-  // IE doesn't recognize custom toStrings in for..in
-  if(xtiger.cross.UA.IE 
-    && (typeof(props["toString"]) == "function")
-    && (props["toString"] != obj["toString"])
-    && (props["toString"] != tobj["toString"]))
-  {
-    obj.toString = props.toString;
-  }
-  return obj; // Object
 }
 
 /**
@@ -469,8 +440,6 @@ xtdom.getNodeTypeXT = function (aNode) {
     return xtiger.BAG;
   } else if ((s == 'attribute') || (s == 'xt:attribute')) {
     return xtiger.ATTRIBUTE;
-  } else if ((s == 'service') || (s == 'xte:service')) {
-    return xtiger.SERVICE;
   // } else if ((s == 'menu-marker') || (s == 'xt:menu-marker')) { {
   //  return xtiger.MENU_MARKER;
   } else {
@@ -528,7 +497,7 @@ if (! xtiger.cross.UA.IE) {
   // Returns true if the node is an XTiger node
   xtdom.isXT = function isXT (node) {
     var ns = node.namespaceURI;
-    return (ns == xtiger.parser.nsXTiger) || (ns == xtiger.parser.nsXTiger_deprecated) || (ns == xtiger.parser.nsXTigerExt);
+    return (ns == xtiger.parser.nsXTiger) || (ns == xtiger.parser.nsXTiger_deprecated);
   } 
   
   // Returns true if the DOM is a xt:use node, false otherwise.
@@ -620,9 +589,8 @@ if (! xtiger.cross.UA.IE) {
   xtdom.focusAndSelect = function (aField) {
     try {
       aField.focus(); // not sure: for Safari focus must preceed select
-      // aField.select(); // variant: setSelectionRange(0, aField.value.length); 
-      aField.value = ''; // compatible with iPad 
-    }
+      aField.select(); // variant: setSelectionRange(0, aField.value.length); 
+    } // FIXME: iPad ?
     catch (e) {}
   }
 
