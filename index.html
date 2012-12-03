@@ -8,42 +8,42 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="robots" content="index,follow" />
   <meta name="revisit-after" content="2 weeks" />
-  
+
   <title>AXEL : The Adaptable XML Editing Javascript Library</title>
   <style type="text/css">
-body { 
+body {
   margin-top: 20px;
   margin-left: 40px;
   margin-right: 40px;
-}    
+}
 h1 {
   text-align: center;
   color: white;
   background: #423252;
   padding: 5px;
-}       
+}
 #header{
   margin: 30px 100px 30px 100px;
   font-size: 125%;
   line-height: 1.2;
-}           
+}
 #credits {
   width: 400px;
   float: right;
   margin: 0 0 10px 40px;
   border: solid 1px gray;
-  padding: 10px;        
+  padding: 10px;
   background: #EFEFEF;
   font-size: 95%;
-}   
+}
 #layout {
   margin: 20px 0;
   padding: 0 15px;
   border: solid 1px gray;
-} 
+}
 #article {
   line-height: 1.2;
-} 
+}
 #timestamp {
   text-align: right;
   font-size: 80%;
@@ -52,44 +52,42 @@ h1 {
 dt {
   margin-top: 0.5em;
   margin-bottom: 0.2em;
-}    
+}
 dd {
-  margin-bottom: 0.2em;  
+  margin-bottom: 0.2em;
 }
   </style>
 </head>
 <body>
-  <h1>AXEL Version 1.3.0</h1>
+  <h1>AXEL Version 1.3.1</h1>
 
   <p id="header">AXEL is a library for creating XML authoring applications based on document templates. The templates are written with a mix of XHTML and XTiger XML elements. It implements a client-side XTiger XML processor. AXEL has been first introduced at the <a href="http://www.xmlprague.cz/2010/index.html" target="_new">XML Prague 2010</a> conference and is continuously evolving since that time.</p>
-  
-  <div id="credits"> 
+
+  <div id="credits">
     <p>AXEL is developped by Stéphane Sire at <a href="http://www.oppidoc.fr" target="_blank">Oppidoc</a>.</p>
 
     <p>The first version of AXEL and XTiger XML is the results of research efforts at the <a href="http://media.epfl.ch" target="_blank">MEDIA</a> research group at EPFL and in collaboration with <a href="http://wam.inrialpes.fr/" target="_blank">project WAM</a> at INRIA, Centre de Recherche Public <a href="http://www.tudor.lu/" target="_blank">Henri Tudor</a> and <a href="http://www.madeinlocal.com" target="_blank">Useful Web Sàrl</a>.</p>
-    
+
     <p>AXEL is released as free software, under the terms of the LGPL version 2.1, please make sure that you read the license file in <a href="distrib/COPYING">distrib/COPYING</a>. You are welcome to join our efforts to improve the library and the specification at any time and to become part of the <a href="distrib/AUTHORS">contributors</a>.</p>
-    
+
   <p style="text-align: right;margin-right: 40px">Contact: <a href="mailto:s.sire@oppidoc.fr?subject=AXEL">Stéphane Sire</a></p>
   </div>
-    
+
   <div id="article">
-  
+
   <h3>AXEL for the impatient</h3>
-  
+
   <p style="font-size:110%">Try the <a href="editor/editor.xhtml" target="_new">demonstration editor</a>. Once you have opened it in your browser, select a template folder and a template file name using the two popup menus next to the <i>Template</i> label; then click on the  <i>Visualize</i> button to generate the corresponding editor. Start editing a document, and then use the <i>Dump</i> button to see the current XML content of the editor at any time.</p>
-  
-  <p style="font-size:90%"><i>NOTE</i> : the editor loading may take some time since it does not use the minified single file version of the library, but it loads each library Javascript files one-by-one.</p>
 
   <p>You can take some reading with you as you can download the <a href="http://media.epfl.ch/Templates/Article/Article.pdf">XML Prague 2010 article</a>.</p>
-  
+
   <h3>Where to start ?</h3>
 
-  <p>First, you should read the <a href="docs/integrators-guide.html">FAQ</a> and run the <a href="test/auto/loadSave.html">auto-test</a> to check that the library is running (note that you must reload the auto-test each time you run it, otherwise it may report failures, this is a <a href="distrib/ISSUES.html">known issue</a>). You should run the auto-test from within each browser you want to support. For some browsers, if you get an error accessing files, you should launch the auto-test from behind a Web server.</p>                                        
+  <p>First, you should read the <a href="docs/integrators-guide.html">FAQ</a> and run the <a href="test/auto/loadSave.html">auto-test</a> to check that the library is running (note that you must reload the auto-test each time you run it, otherwise it may report failures, this is a <a href="distrib/ISSUES.html">known issue</a>). You should run the auto-test from within each browser you want to support. For some browsers, if you get an error accessing files, you should launch the auto-test from behind a Web server.</p>
 
   <p>The best way to learn the library is to experiment with the sample templates and applications which are distributed with it. If you already know the library you may have a look at the <a href="distrib/CHANGELOG.html">CHANGELOG<a> file.</p>
 
-  <p><strong>Template authors</strong> should read the <a href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a>. It's a good idea  to open the templates from the template folder inside your favorite text editor to see how they are written. Then you can use the <a href="editor/editor.xhtml">editor.xhtml</a> application to open the templates provided with the library, or to try your own templates.</p>                                                                  
+  <p><strong>Template authors</strong> should read the <a href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a>. It's a good idea  to open the templates from the template folder inside your favorite text editor to see how they are written. Then you can use the <a href="editor/editor.xhtml">editor.xhtml</a> application to open the templates provided with the library, or to try your own templates.</p>
 
   <p><strong>Web application developers</strong>, in addition to the above links, should read the <a href="examples/tutorial/tutorial.xhtml">tutorial</a>. There are some instructions about the use of some primitive editors like 'video' or 'photo' in corresponding howto files in the docs folder.</p>
 
@@ -98,11 +96,11 @@ dd {
 
   <div id="layout">
     <h3>Project layout</h3>
-  
+
     <p>This web site is published from the <a href="https://github.com/ssire/axel" target="_new">GitHub repository</a> of the project. If you check out the repository you will get the following folders :</p>
 
     <dl>
-  
+
       <dt>axel</dt>
       <dd>All the files ready for deploying AXEL on a server, axel.js is generated from the build.lib target of the ant script in the scripts folder.</dd>
 
@@ -114,7 +112,7 @@ dd {
 
       <dt>docs</dt>
       <dd>Some <a href="docs/toc.html">documentation</a>. The <a href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a> is available on its own repository.</dd>
-  
+
       <dt>editor</dt>
 
       <dd>A demonstration editor (<a href="editor/editor.xhtml">editor.xhtml</a>) built with the library. If you launch it from your local file system and if you follow the instructions on disabling security restrictions on Firefox, you can use it to open templates and XML data files from your local file system. This is a convenient way to test and maintain template files. It also includes each library file individually from the src folder and not from the axel folder, this is because we use it to debug the library.</dd>
@@ -123,12 +121,12 @@ dd {
       <dd>A developer-oriented <a href="examples/tutorial/tutorial.xhtml">tutorial</a> that shows how to use the API to transform templates and load/save XML data.</dd>
 
       <dt>scripts</dt>
-      <dd>Ant script to automate the generation of the minified library. The server folder contains a basic server in Ruby which can be used to serve the full distribution. It has been put here for demonstration purpose and to test the integration between the library and a server. In particular it is used to test photo or file upload with the 'photo' and 'file' plugins.</dd>                                                            
-  
+      <dd>Ant script to automate the generation of the minified library. The server folder contains a basic server in Ruby which can be used to serve the full distribution. It has been put here for demonstration purpose and to test the integration between the library and a server. In particular it is used to test photo or file upload with the 'photo' and 'file' plugins.</dd>
+
       <dt>src</dt>
       <dd>The source code of the library. The axel.js file in the axel folder is generated from the content of this folder using the ant buid.lib target defined in the scripts folder.</dd>
-    
-      <dt>templates</dt>  
+
+      <dt>templates</dt>
       <dd>Xtiger XML template files.</dd>
 
       <dt>test</dt>
@@ -136,7 +134,7 @@ dd {
     </dl>
   </div>
 
-  <p id="timestamp">Last update: <span style="font-style: italic;">2012-09-20</span></p>
+  <p id="timestamp">Last update: <span style="font-style: italic;">2012-12-03</span></p>
 
 </body>
 </html>
