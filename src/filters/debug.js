@@ -38,69 +38,53 @@ var _DebugFilter = (function _DebugFilter () {
   };
 
   return {
-
-    '->': {
-      'onAwake': '__dbg__onAwake',
-      'onInit': '__dbg__onInit',
-      'onLoad': '__dbg__onLoad',
-      'onSave': '__dbg__onSave',
-      'update': '__dbg__update',
-      'clear': '__dbg__clear',
-      'getData': '__dbg__getData',
-      'focus': '__dbg__focus',
-      'unfocus': '__dbg__unfocus',
-      'set': '__dbg__set',
-      'unset': '__dbg__unset',
-      'startEditing': '__dbg__startEditing',
-      'stopEditing': '__dbg__stopEditing'
-    },
     
     onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
       var txt = '' + aDefaultData;
       txt += ', ' + anOptionAttr;
       txt += ', ' + this.getUniqueKey();
       _printDebugTrace(this, 'init', txt);
-      this.__dbg__onInit(aDefaultData, anOptionAttr, aRepeater);
+      this.__debug__onInit(aDefaultData, anOptionAttr, aRepeater);
     },
     
     onAwake : function () {
       _printDebugTrace(this, 'awake');
-      this.__dbg__onAwake();
+      this.__debug__onAwake();
     },
     
     onLoad : function (aPoint, aDataSrc) {
       _printDebugTrace(this, 'load');
-      this.__dbg__onLoad(aPoint, aDataSrc);
+      this.__debug__onLoad(aPoint, aDataSrc);
     },
     
     onSave : function (aLogger) {
       _printDebugTrace(this, 'save');
-      this.__dbg__onSave(aLogger);
+      this.__debug__onSave(aLogger);
     },
     
     update : function (aData) {
-      _printDebugTrace(this, 'update', aData, 'Old data = ' + this.__dbg__getData());
-      this.__dbg__update(aData);
+      _printDebugTrace(this, 'update', aData, 'Old data = ' + this.__debug__getData());
+      this.__debug__update(aData);
     },
     
     clear : function () {
-      _printDebugTrace(this, 'clear', null, 'Old data = ' + this.__dbg__getData());
-      this.__dbg__clear();
+      _printDebugTrace(this, 'clear', null, 'Old data = ' + this.__debug__getData());
+      this.__debug__clear();
     },
     
     getData : function () {
       _printDebugTrace(this, 'getData');
-      return this.__dbg__getData();
+      return this.__debug__getData();
     },
     
     focus : function () {
       _printDebugTrace(this, 'focus');
-      this.__dbg__focus();
+      this.__debug__focus();
     },
     
     unfocus : function () {
       _printDebugTrace(this, 'unfocus');
-      this.__dbg__unfocus();
+      this.__debug__unfocus();
     },
     
     set : function () {
@@ -108,7 +92,7 @@ var _DebugFilter = (function _DebugFilter () {
         _printDebugTrace(this, 'set');
       else
         _printDebugTrace(this, 'set', null, 'Warning, thring to set a non-optional editor');
-      this.__dbg__set();
+      this.__debug__set();
     },
     
     unset : function () {
@@ -116,21 +100,25 @@ var _DebugFilter = (function _DebugFilter () {
         _printDebugTrace(this, 'unset');
       else
         _printDebugTrace(this, 'unset', null, 'Warning, thring to unset a non-optional editor');
-      this.__dbg__unset();
+      this.__debug__unset();
     },
     
     startEditing : function (aEvent) {
       _printDebugTrace(this, 'startEditing');
-      this.__dbg__StartEditing(aEvent);
+      this.__debug__StartEditing(aEvent);
     },
     
     stopEditing : function () {
       _printDebugTrace(this, 'stopEditing');
-      this.__dbg__StopEditing();
+      this.__debug__StopEditing();
     }
   }
   
-  $axel.filter.register('debug', _DebugFilter);
-  // do not forget to apply it before use $axel.filter.applyTo({'debug' : ['text', 'content', 'link', 'video']});
+  $axel.filter.register(
+    'debug', 
+    { chain : ['onAwake', 'onInit', 'onLoad', 'onSave', 'update', 'clear', 'getData', 'focus', 'unfocus', 'set', 'unset', 'startEditing', 'stopEditing'] },
+    null,
+    _DebugFilter);
+    // do not forget to apply it before use $axel.filter.applyTo({'debug' : ['text', 'content', 'link', 'video']});
 }($axel));
 

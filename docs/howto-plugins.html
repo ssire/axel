@@ -14,7 +14,7 @@
 -----------------------------------------------------------------------------------
 
 Stéphane Sire
-Last update: 2012-09-19
+Last update: 2012-12-03
 
 Summary
 =======
@@ -31,7 +31,7 @@ Summary
     <li><a href="#onLoad">onLoad</a></li>
     <li><a href="#onSave">onSave</a></li>
   </ul>
-<li><a href="#contruction-methods">Native construction methods</a></li>
+<li><a href="#construction-methods">Native construction methods</a></li>
   <ul>
     <li><a href="#_parseFromTemplate">_parseFromTemplate</a></li> 
     <li><a href="#_parseFromTemplate">_parseFromSeed</a></li>
@@ -113,13 +113,21 @@ The filter API allows to filter any plugin method using a delegation pattern. Ho
 
 <pre id="registration">
 Plugin registration
-========
+===================
 
-The $axel.register method takes as parameter a plugin identifier, a hash with a set of flags applying to the plugin, a hash with a list of parameters with their default values, the plugin generator function and the plugin methods. 
+The $axel.plugin.register method takes as parameter a plugin identifier, an option hash, a hash with a list of parameters with their default values, the plugin generator function and the plugin methods. 
+<div class="code">
+$axel.plugin.register(
+  'identifier', 
+  { filterable: true, optional: true } | null, // option hash
+  { key : 'value' }, // parameter hash
+  _Generator, // generator function
+  _Editor // method hash
+);
+</div>
+The option hash declares a set of flags that defines whether the plugin is filterable (filterable=true) and wether it supports the basic XTiger option attribute of the XTiger host element (optional=true).
 
-The hash with a set of flags defines wether the plugin is filterable (filterable=true) and wether it supports the basic XTiger option attribute of the XTiger host element (optional=true).
-
-The hash with a set of parameters defines the default values for the parameters which can be declared on the &lt;xt:use types="identifier".../> XTiger element inside a param="key1:value1;key2=value2;..." attribute.
+The parameter hash defines the default values for the parameters which can be declared on the &lt;xt:use> or &lt;xt:attribute> XTiger elements inside the 'param' attribute.
 
 The plugin generator function is a special function that must populate a &lt;div> container with an HTML representation of the default plugin content. It must return a privileged HTML node from the representation that we call the handle. AXEL will add a special property to the DOM node of the handle to point to the Javascript plugin instance managing the handle.
   
@@ -179,7 +187,7 @@ The plugin instance should generates its XML content inside the DOM logger from 
 Typical behavior: copies the handle content as text in the DOM logger.
 </pre>              
 
-<pre id="internal-methods">
+<pre id="construction-methods">
 Native construction methods
 ===========================
 
@@ -215,7 +223,7 @@ Returns the seed that would allow to create a new plugin instance. The seed MUST
 </pre>
 
 
-<pre id="internal-methods">
+<pre id="service-methods">
 Native service methods
 ======================
 
@@ -401,7 +409,7 @@ Note that in all the plugin methods (except the plugin generator function), the 
     return handle;
   };
 
-  // you may use the closure to declare private objects and methods
+  // you may use the closure to declare private objects and methods here
 
   var _Editor = {
 

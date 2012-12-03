@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
   <head>
-    
+
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="description" content="XTiger XML based authoring application"></meta>
     <meta name="keywords" content="template, XTiger, XML"></meta>
     <meta name="author" content="Stéphane Sire"></meta>
-    
+
     <title>AXEL Editor (Version with iframe)</title>
-    
+
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css" />
     <link rel="stylesheet" href="extras/editor.css" type="text/css"></link>
@@ -20,11 +20,11 @@
     }
     </style>
     <![endif]-->
-    
+
     <!-- jQuery, jQuery-UI dependency -->
     <script type="text/javascript" src="../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="../3rd-part/jquery/js/jquery-ui-1.8.18.custom.min.js" ></script>
-    
+
     <!-- BEGIN XTiger Library Loading -->
     <script type="text/javascript" src="../src/core/loader.js"></script>
     <script type="text/javascript" src="../src/core/dom.js"></script>
@@ -39,12 +39,12 @@
     <script type="text/javascript" src="../src/core/forms.js"></script>
     <script type="text/javascript" src="../src/core/utils.js"></script>
     <script type="text/javascript" src="../src/editor/classical/generator.js"></script>
-    
+
     <!-- alternative loaders and serializers -->
     <script type="text/javascript" src="../src/editor/classical/htmlloader.js"></script>
     <script type="text/javascript" src="../src/editor/classical/xmlrobustloader.js"></script>
     <script type="text/javascript" src="../src/editor/classical/htmlserializer.js"></script>
-    
+
     <script type="text/javascript" src="../src/editor/classical/xmlloader.js"></script>
     <script type="text/javascript" src="../src/editor/classical/xmlserializer.js"></script>
     <script type="text/javascript" src="../src/editor/classical/repeat.js"></script>
@@ -52,53 +52,53 @@
     <script type="text/javascript" src="../src/editor/classical/keyboard.js"></script>
     <script type="text/javascript" src="../src/editor/classical/tabgroupmgr.js"></script>
     <script type="text/javascript" src="../src/editor/classical/string.js"></script>
-    
+
     <!-- native plugins and devices -->
     <script type="text/javascript" src="../src/plugins/text.js"></script>
     <script type="text/javascript" src="../src/plugins/select.js"></script>
     <script type="text/javascript" src="../src/devices/popup.js"></script>
     <script type="text/javascript" src="../src/devices/text.js"></script>
-    
+
     <!-- optional devices -->
     <script type="text/javascript" src="../src/devices/lens.js"></script>
     <script type="text/javascript" src="../src/devices/upload.js"></script>
     <script type="text/javascript" src="../src/devices/autocomplete.js"></script>
     <script type="text/javascript" src="../src/devices/trackermenu.js"></script>
-    
+
     <!-- optional plugins -->
     <script type="text/javascript" src="../src/plugins/link.js"></script>
     <script type="text/javascript" src="../src/plugins/video.js"></script>
     <script type="text/javascript" src="../src/plugins/photo.js"></script>
     <script type="text/javascript" src="../src/plugins/file.js"></script>
     <script type="text/javascript" src="../src/plugins/content.js"></script>
-    
+
     <!-- optional filters -->
-    <script type="text/javascript" src="../src/filters/common.js"></script>         
+    <script type="text/javascript" src="../src/filters/common.js"></script>
     <script type="text/javascript" src="../src/filters/documentid.js"></script>
     <script type="text/javascript" src="../src/filters/wiki.js"></script>
-    <script type="text/javascript" src="../src/filters/image.js"></script>  
-    <script type="text/javascript" src="../src/filters/layout.js"></script>         
-    <script type="text/javascript" src="../src/filters/video.js"></script>      
+    <script type="text/javascript" src="../src/filters/image.js"></script>
+    <script type="text/javascript" src="../src/filters/style.js"></script>
+    <script type="text/javascript" src="../src/filters/video.js"></script>
     <script type="text/javascript" src="../src/filters/autocomplete.js"></script>
     <script type="text/javascript" src="../src/filters/debug.js"></script>
     <script type="text/javascript" src="../src/filters/date.js"></script>
-    
+
     <!-- contributions -->
     <script type="text/javascript" src="../contribs/src/schemas/schemalogger.js"></script>
     <script type="text/javascript" src="../contribs/src/schemas/schemaserializer.js"></script>
     <!-- END XTiger Library Loading -->
-    
+
     <script type="text/javascript" src="extras/editor.js"></script>
     <script type="text/javascript" src="../templates/shared/templates.js"></script>
     <script type="text/javascript">
-    var appController;    
-    
-    function initApp () {                       
+    var appController;
+
+    function initApp () {
       var defaultTemplates = window.getDefaultTemplates ? getDefaultTemplates() : {};
       // Application controller
       appController = new viewerApp("../templates/", defaultTemplates);
       appController.setBase('../axel/bundles');
-      appController.setXTigerStylesheet('../axel/axel.css'); 
+      appController.setXTigerStylesheet('../axel/axel.css');
     }
     xtdom.addEventListener(window, 'load', initApp, false);
   </script>
@@ -107,11 +107,15 @@
     <div id="formular">
       <form id="formUrl" action="javascript:alert('Oops, something went wrong !')"
             onsubmit="return appController.submitPage();">
-        
+
         <p>
           <label>
             Page : <input id="url" type="text" name="url" maxlength="100" value=""/>
           </label>
+
+          <!-- HTML5 files selection: non functional see notes in editor.js  -->
+          <!-- <input type="file" id="fileInput" onchange="appController.handleFiles(this.files)"/> -->
+
           <input type="button" value="Browse"
             onclick="appController.localFileDialog(&quot;open&quot;, &quot;*.xtd; *.xhtml; *.html; *.xml&quot;, &quot;Select an XTiger Forms template&quot; , &quot;url&quot;)"/>
           <span style="position: absolute; right: 30px; margin-left: 5px">
@@ -119,10 +123,10 @@
             <input type="reset" onclick="appController.resetView()"/>
           </span>
         </p>
-        
+
         <p>
           <label>
-            Template : 
+            Template :
             <select id="foldersList" onchange="appController.updateSelectedFolder()"></select>
           </label>
           <select id="templatesList" onchange="appController.updateSelectedTemplate()"></select>
@@ -138,13 +142,13 @@
             <input type="button" value="Load" onclick="appController.localLoadInstanceData('fileName');"/>
           </span>
         </p>
-        
+
         <p id="titleUrl" class="single-line">...</p>
-        
+
         <!-- Hidden preferences panel -->
         <div id="preferences">
           <p>
-            <label>Template repository : 
+            <label>Template repository :
               <input id="templateRepos" type="text" name="templateRepos" maxlength="50" value=""/>
             </label>
             <input type="button" value="Browse"
@@ -161,7 +165,7 @@
           </p>
           <p>
             <label>
-              File name <i>(paths relative to editor.xhtml)</i>: 
+              File name <i>(paths relative to editor.xhtml)</i>:
               <input id="fileName" type="text" name="fileName" maxlength="50" value=""/>
             </label>
             <input type="button" value="Save" onclick="appController.saveToFile()"/>
@@ -176,7 +180,7 @@
         </div>
       </form>
     </div>
-    
+
     <!-- Editor area (template) -->
     <div id="frameContainer">
       <iframe id="container" src="extras/intro.xhtml"> iframe content </iframe>

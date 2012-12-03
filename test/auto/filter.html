@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8;" />
+  <title>AXEL Filter API automatic testing</title>
+  <style type="text/css">
+
+  /* Common */
+
+  body {
+    margin: 1em;
+  }
+
+  /* Editor zone */
+
+  div#editor {
+    overflow: auto;
+    height: 8em;
+  }
+
+  /* Results */
+
+  div#results {
+    border: solid 1px gray;
+    overflow: auto;
+    height: 12em;
+  }
+  div#results p, p.result {
+    padding: 0;
+    margin: 0;
+  }
+  span.failed {
+    color: red;
+  }
+  span.passed {
+    color: green;
+  }
+  span.file {
+    font-family: Courier, monospace;
+    color: brown;
+  }
+  .noshow { 
+    display: none;
+  }
+  </style>
+  <link rel="stylesheet" href="../../axel/axel.css" type="text/css"/>
+  <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="../../axel/axel.js"></script>
+  <script type="text/javascript" src="../../src/util/debug.js"></script>
+  <script types="text/javascript" src="assert.js"></script>
+  <script types="text/javascript" src="filter.js"></script>
+  <script types="text/javascript"><!--//--><![CDATA[//><!--
+    function runTest () {
+      var logger = createLog();
+      test1(logger);
+    }
+    xtdom.addEventListener(window,  'load', runTest, false);
+//--><!]]></script>
+
+</head>
+<body>
+    <h1>AXEL Filter API automatic testing</h1>
+
+    <div class="noshow">
+      <xt:use id="test1.1" types="test" param="name=test1.1">test1.1</xt:use>
+      <xt:use id="test1.2" types="test" param="name=test1.2;filter=filter1;filter1_name=test1.2">test1.2</xt:use>
+      <xt:use id="test1.3" types="test" param="name=test1.3;filter=filter1 filter2;filter1_name=test1.3;filter2_name=test1.3">test1.3</xt:use>
+      <xt:use id="test1.4" types="test" param="name=test1.4;filter=filter1">test1.4</xt:use>
+      <xt:use id="test1.5" types="test" param="name=test1.5;filter=filter1 filter2">test1.5</xt:use>
+      <span id="fakeHandle">fake handle for cloning</span>
+    </div>
+
+    <div id="results">
+    </div>
+
+</body>
+</html>

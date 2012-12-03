@@ -210,7 +210,12 @@
 
       // cursor positioning and initial text selection
       if (doSelectAll) {
-        xtdom.focusAndSelect(handle);
+        if ((editor.getParam('placeholder') !== 'clear') || mouseEvent.shiftKey) {
+          xtdom.focusAndSelect(handle);
+        } else {
+          handle.value = '';
+          try { handle.focus(); } catch (e) {}
+        }
       } else if (offset) {        
         xtdom.focusAndMoveCaretTo(handle, (offset == -1) ? handle.value.length : offset);
       } else {

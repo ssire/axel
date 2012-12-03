@@ -63,7 +63,7 @@
          _value = aDataSrc.getDataFor(aPoint);
          _default = this.getDefaultData();
          this._setData(_value || _default);
-         this.setModified(_value !==  _default);
+         this.setModified(_value && (_value !==  _default));
          this.set(false);
        } else {
          this.clear(false);
@@ -76,7 +76,9 @@
          return;
        }
        if (this._data) {
-         aLogger.write(this._data);
+         if (this.isModified() || (this.getParam('placeholder') !== 'clear')) {
+           aLogger.write(this._data);
+         }
        }
      },
 
@@ -178,6 +180,7 @@
      'text', 
      { filterable: true, optional: true },
      { 
+       placeholder : 'preserve',
        device : 'text-device',
        type : 'input',
        layout : 'placed',

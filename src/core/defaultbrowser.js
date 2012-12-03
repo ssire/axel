@@ -37,8 +37,8 @@ if (! (xtiger.cross.UA.gecko || xtiger.cross.UA.webKit || xtiger.cross.UA.IE || 
 }
 
 xtiger.util.countProperties = function (o) {
-  var total = 0;
-  for (var  k in o) if (o.hasOwnProperty(k))  total++;
+  var total = 0, k;
+  for (k in o) if (o.hasOwnProperty(k))  total++;
   return total;
 }
 
@@ -100,35 +100,6 @@ xtiger.util.decodeParameters = function (aString, aParams) {
         }
       } // FIXME: raise a warning (?)
   }
-}  
-
-/**
- * Adds all properties and methods of props to obj. This addition is
- * "prototype extension safe", so that instances of objects will not
- * pass along prototype defaults.
- * 
- * Mainly copied form the DOJO toolkit library.
- */
-xtiger.util.mixin = function mixin (/*Object*/ obj, /*Object*/ props) {
-  var tobj = {};
-  for(var x in props){
-    // the "tobj" condition avoid copying properties in "props"
-    // inherited from Object.prototype.  For example, if obj has a custom
-    // toString() method, don't overwrite it with the toString() method
-    // that props inherited from Object.protoype
-    if((typeof tobj[x] == "undefined") || (tobj[x] != props[x])){
-      obj[x] = props[x];
-    }
-  }
-  // IE doesn't recognize custom toStrings in for..in
-  if(xtiger.cross.UA.IE 
-    && (typeof(props["toString"]) == "function")
-    && (props["toString"] != obj["toString"])
-    && (props["toString"] != tobj["toString"]))
-  {
-    obj.toString = props.toString;
-  }
-  return obj; // Object
 }
 
 /**
@@ -618,9 +589,8 @@ if (! xtiger.cross.UA.IE) {
   xtdom.focusAndSelect = function (aField) {
     try {
       aField.focus(); // not sure: for Safari focus must preceed select
-      // aField.select(); // variant: setSelectionRange(0, aField.value.length); 
-      aField.value = ''; // compatible with iPad 
-    }
+      aField.select(); // variant: setSelectionRange(0, aField.value.length); 
+    } // FIXME: iPad ?
     catch (e) {}
   }
 

@@ -17,6 +17,8 @@
 |  AXEL 'optional' filter                                                     |
 |                                                                             |
 |  Only serializes data to XML if it is different from the default data       |
+|  WARNING: currently this is a READONLY filter, it does not support loading  |
+|  XML data                                                                   |
 |                                                                             |
 |*****************************************************************************|
 |  Prerequisite: none                                                         |
@@ -25,20 +27,20 @@
 (function ($axel) {
 
   var _Filter = {
-
-    '->': {
-     'onSave' : '__opt__onSave'
-    },   
-
+    
     onSave : function (aLogger) {
       if (this.isModified()) {
-        this.__opt__onSave(aLogger);
+        this.__optional__onSave(aLogger);
       } else {
         aLogger.discardNodeIfEmpty();
       }
     }
   };
 
-  $axel.filter.register('optional', _Filter);
+  $axel.filter.register(
+    'optional', 
+    { chain : [ 'onSave'] },
+    null,
+    _Filter);
   $axel.filter.applyTo({'optional' : 'text'});
 }($axel));

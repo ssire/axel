@@ -25,9 +25,6 @@
 \*****************************************************************************/
 (function ($axel) {
  
- var DEFAULT_REGION = 'fr';
- var DEFAULT_FORMAT = 'ISO_8601';
- 
  // FIXME: move to bundles ?
  var REGION = { 
      'fr': {
@@ -53,8 +50,8 @@
  // leave it unchanged in case of errot
  // FIXME: some formats such as RSS also requires to pass Day and Month name options !!!!
  var _convertDate = function ( editor, dateStr, inSpec, outSpec ) {
-   var inFormat = editor.getParam(inSpec) || DEFAULT_REGION;
-   var outFormat = editor.getParam(outSpec) || DEFAULT_FORMAT;
+   var inFormat = editor.getParam(inSpec);
+   var outFormat = editor.getParam(outSpec);
    if (inSpec === 'date_region') { // double indirection
      inFormat = REGION[inFormat] ? REGION[inFormat].dateFormat : $.datepicker.regional[''].dateFormat;
      outFormat = $.datepicker[outFormat];
@@ -98,7 +95,7 @@
    // and that contains an input or textarea edit field
    // FIXME: register keyboard manager to track TAB navigation ?
    grab : function ( editor, doSelectAll ) {
-     var tmp, _htag, region = editor.getParam('date_region') || DEFAULT_REGION;
+     var tmp, _htag, region = editor.getParam('date_region');
      $.datepicker.setDefaults((region === 'fr') ? REGION['fr'] : $.datepicker.regional['']);
      this.jhandle.val(editor.getData()); // FIXME: format data to date (?)
      this.editorHandle = editor.getHandle();
@@ -168,15 +165,9 @@
  );
 
  var datepickerFilterMixin = {
-
-   // Property remapping for chaining
-   '->': {
-     'onLoad' : '__dpkr_onLoad',
-     'onSave' : '__dpkr_onSave'
-   },
    
    onLoad : function (aPoint, aDataSrc) {
-     this.__dpkr_onLoad(aPoint, aDataSrc);
+     this.__date__onLoad(aPoint, aDataSrc);
      // post-action : converts view data to date_region format
      this._setData(_convertDate(this, this._data, 'date_format', 'date_region'));
    },
@@ -185,33 +176,43 @@
      var tmp = this._data;
      // pre-action : converts view data model to date_format
      this._data = _convertDate(this, tmp, 'date_region', 'date_format');
-     this.__dpkr_onSave(aLogger);
+     this.__date__onSave(aLogger);
      this._data = tmp; // reestablish it for next save
    },
 
-   startEditing : function ( aEvent ) {
-     var _doSelect = aEvent ? (!this.isModified() || aEvent.shiftKey) : false;
-     var picker = xtiger.factory('datepickerdev').getInstance(this.getDocument());
-     picker.grab(this, _doSelect);
-   },
+   methods : {
 
-   stopEditing : function ( isCancel ) {
-     var picker = xtiger.factory('datepickerdev').getInstance(this.getDocument());
-     picker.release(isCancel);
-   },
+     startEditing : function ( aEvent ) {
+       var _doSelect = aEvent ? (!this.isModified() || aEvent.shiftKey) : false;
+       var picker = xtiger.factory('datepickerdev').getInstance(this.getDocument());
+       picker.grab(this, _doSelect);
+     },
+
+     stopEditing : function ( isCancel ) {
+       var picker = xtiger.factory('datepickerdev').getInstance(this.getDocument());
+       picker.release(isCancel);
+     },
    
-   // Experimental method to change parameters - to be part of future Param API ?
-   // FIXME: indirection for datepicker('option', key, value) ?
-   configure : function (key, value) {
-     if ((value === undefined) || (((key === 'minDate') || (key === 'maxDate')) && isNaN(new Date(value).getDay()))) { 
-       delete this._param[key];
-     } else {
-       this._param[key] = value;
-       // FIXME: this.configure(key, value)
+     // Experimental method to change parameters - to be part of future Param API ?
+     // FIXME: indirection for datepicker('option', key, value) ?
+     configure : function (key, value) {
+       if ((value === undefined) || (((key === 'minDate') || (key === 'maxDate')) && isNaN(new Date(value).getDay()))) { 
+         delete this._param[key];
+       } else {
+         this._param[key] = value;
+         // FIXME: this.configure(key, value)
+       }
      }
    }
  };
-
- $axel.filter.register('date', datepickerFilterMixin);
+ 
+ $axel.filter.register(
+    'date', 
+    { chain : [ 'onLoad', 'onSave' ] },
+    { 
+      date_region : 'fr',
+      date_format : 'ISO_8601'
+    },
+    datepickerFilterMixin);
  $axel.filter.applyTo({ 'date' : 'text' });
 }($axel));

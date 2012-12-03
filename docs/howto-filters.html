@@ -7,174 +7,210 @@
 	<title>How to develop a primitive editor filter in AXEL</title>
   <link rel="stylesheet" type="text/css" href="docu.css" />	
 </head>
-<body> 
+<body>
 <pre>
 -----------------------------------------------------------------------------------
 ---------------- How to develop a primitive editor filter in AXEL  ----------------
 -----------------------------------------------------------------------------------
 
 Stéphane Sire
-Last update: June 22nd, 2010  
+Last update: 2012-12-03
 
 Summary
 =======
-</pre> 
-   
+</pre>
+
 <ul>
-<li><a href="#intro">Primitive editor filters</a></li>
+<li><a href="#intro">Filter functionalities</a></li>
+<li><a href="#registration">Filter registration</a></li>
+<li><a href="#application">Filter application</a></li>
 <li><a href="#delegation">Creating delegation method call chains</a></li>
-<li><a href="#scope">Scope of Filters</a></li>
-<li><a href="#extension">Filter extension mechanism</a></li>
-<li><a href="#registration">Filter registration with primitive editor plugins</a></li>
 <li><a href="#parameters">Filter parameters</a></li>
-<li><a href="#skeleton">Filter skeleton</a></li>
+<li><a href="#scope">Scope of Filters</a></li>
+<li><a href="#skeleton">Filter file skeleton</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 
 <pre id="intro">
-Primitive editor filters
-========================
+Filter functionalities
+======================
 
-Primitive editor filters are objects that can be "applied" on a primitive editor to replace some of its methods with new methods implemented by the filter. 
+Filters are objects that can be "applied" on a primitive editor plugin to replace some of its methods with new methods implemented by the filter.
 
-Filters are declared on the "filter" parameter of the xt:use element.
-
-For example <xt:use types='text' param="filter=wiki capitalize"/> applies the filter wiki and then the filter capitalize on the 'text' primitive editor.
-
-The declaration order of the filter element imports as the methods will be redefined from left to right. Hence if both wiki and capitalize filters redefine the "load" method, with the declaration above the "load" method of the capitalize filter will be called.        
+Filters are declared on the "filter" parameter of the xt:use element. The example below applies the 'wiki' filter and then the 'capitalize' filter on the 'text' primitive editor.
+<div class="code">
+&lt;xt:use types='text' param="filter=wiki capitalize"/>
+</div>
+The declaration order of the filter element is significant as filtered plugin methods will be redefined applying filter methods in declaration order (from left to right). Hence if both 'wiki' and 'capitalize' filters redefine the 'onLoad' method, this is the 'onLoad' method of the capitalize filter that will be called with the declaration order above.
 
 The choice of which methods to filter depends on the desired effects. Basically the filter can belong to one of the following categories:
 
-- category A : filters with no side effect on the edited content, such filters will generally look for some specific data inside the content model and forward it to other components; such filters may build and maintain a toc, generate collaboration events outside of the application, etc.; see 'service' filter in servicefilter.js
+- category A : filters with no side effect on the edited content, such filters will generally look for some specific data inside the content model and forward it to other components; such filters may build and maintain a toc, generate collaboration events outside of the application, etc. (e.g. the 'event' filter that generates a custom DOM event for some specific life cycle methods call)
 
-- category B : some filters that change the user text entry but not the handle nor the target content model, such filters may do some small typographical corrections such as capitalizing some words, expanding some abbreviations, proposing some contextual input aids while typing, etc.; we do not have currently any example
+- category B : some filters that change the user text entry but not the handle nor the target content model; such filters may do some small typographical corrections such as capitalizing some words, expanding some abbreviations, proposing some contextual input aids while typing, etc. (e.g. the 'autocomplete' filter)
 
-- category C : some filters that change the handle and/or the target content model; such filter can improve the presentation of the edited content (e.g. displaying a video player if the input is a video URL), they can also allow to edit sub-content model using special rules to interpret the input (e.g. the 'wiki' filter in 'wiki.js') 
-
-The "howto-plugins" document lists the methods that delegate filters can override. 
+- category C : some filters that change the handle and/or the target content model; such filter can improve the presentation of the edited content (e.g. displaying a video player if the input is a video URL), they can also allow to edit sub-content model using special rules to interpret the input (e.g. the 'wiki' filter in 'wiki.js', the 'date' filter that dynamically replaces the input device of a 'text' editor with a datepicker device to select a date)
 </pre>
-       
+
+<pre id="registration">
+Filter registration
+===================
+
+The $axel.filter.register method takes as parameter a filter identifier, a hash with a set of options applying to the plugin, a hash with a list of parameters with their default values, and the filter methods.
+<div class="code">
+$axel.filter.register(
+  'identifier',
+  { chain : ['names'] } | null, // option hash
+  { key : value } | null // parameter hash
+  _FilterMethods // method hash
+);
+</div>
+The option hash only supports a single 'chain' option. The 'chain' option value is an array of method names as explained in the section "Creating delegation method call chains". You can replace the hash with a 'null' value if the filter does not chain method calls.
+
+The parameter hash defines the default values for the extra parameters which can be declared on the param attribute of the xt:use or xt:attribute element holding the filter's declaration. This is explained in the "Filter parameters" section.
+
+The method hash declares the filter's methods inside the following structure :
+
+- overriden life cycle methods are stored under first level keys of the hash  ("onInit", "onAwake", "onLoad", "onSave")
+- overriden native plugin methods are stored under a first level "api" key that must contain a hash with the methods
+- all other overriden methods (or filter new methods) are stored under a first level "methods" key that must contain a hash with the methods
+
+you can omit a method hash entry if you do not define any method within that entry.
+
+The "this" object inside overriden methods will refer to the plugin instance. Note that it is always possible to use a closure to define filter's private variables and methods.
+
+According to the specification above, there are most chance that Category A filters can be shared on many different primitive editors. Category B may eventually be shared on all the primitive editor plugins that define a very similar entry field (e.g. a text entry field). Category C are most probably specific to a given primitive editor plugin because they depend on the structure of its handle.
+</pre>
+
+<pre id="application">
+Filter application
+==================
+
+In addition to being registered, the filter must be applied to a plugin before a template author can use it inside a template. This decoupling between registration and application allows to share filter's code between different plugins.
+<div class="code">
+$axel.filter.applyTo({'name' : 'plugin'}); // applies 'name' filter to 'plugin' class
+or
+$axel.filter.applyTo({'name' : ['plugin1', 'plugin2', ...]}); // applies 'name' filter to several 'plugin' classes
+</div>
+The $axel.filter.applyTo method takes as parameter a hash where each key must be a previously registered filter. The value associated with the key is either a string identifier representing the target plugin, or a list of string identifiers representing the target plugins. The second form is a syntactic sugar to apply the filter to several plugins.
+
+The filter application must be declared after the filter registration, otherwise the filter identifier will not be recognized. It must be declared after the plugin's registration for the same reason.
+
+Filters are usually applied to their target plugins directly within the filter source file, however there are some situations where you may need to declare it elsewhere due to the loading order of source files. <i>Note that we are planning a deferred mechanism to become independent of load order in the future</i>.
+</pre>
+
 <pre id="delegation">
 Creating delegation method call chains
 ======================================
 
-It is the responsability of a filter to call the previous filter method (or ultimately the original model method if it is the first in the list). For that purpose, the filter must rename the method it filters to a new name that it can invoke with the "this" object (without remapping method names there would be an infinite loop). It can rename methods by creating a '->' hash object of key-value pairs where the method of the chained object with name "key" will be called in the filter with the new name "value".
+It is the responsability of a filter to call the previous filter's method (or ultimately the original plugin's method if  the filter is the first in the list or the only one). For that purpose, when registering the filter you must declare the names of the plugin methods that you wish to chain in a 'chain' parameter (see the filter file skeleton below).
 
-Hence if a filter 'wiki' object has the following property: 
+As a consequent AXEL will create a new method called '__name__method' where "name" is the name of the filter, and "method" is the name of the original method, and it will remap that method to the original one. This way you will be able to invoke the original method with the "this" object from the method that overrides it (without remapping method names there would be an infinite loop).
 
- '->': {	'load': '_wikiSuperLoad' }
- 
-Then it can call the "load" method of its latest predecessor in the filter chain that implements it with "this._wikiSuperLoad(...)" in its own "load" method. You should follow the recommendation in the "coding-style.txt" document to properly name the remapped methods.                
+For instance if you register the hypothetical 'capitalize' filter like this (where _CapitalizeFilter declares an 'update' method to override the original one) :
 
-There is no rule to determine where to call the predecessor's method, but you must pay lot of attention to potential side effects of different positions.                        
+<div class="code">
+$axel.filter.register(
+  'capitalize',
+  { chain : [ 'update' ] },
+  null
+  _CapitalizeFilter
+);
+</div>
 
-You must also be careful that some filters, usually the one that change the handle and/or the target content model, must break the delegation method call chains and not perpetuate the call to the overriden method. That is the case each time the extended functionalities are incompatible with the default behavior of the model object. Such filter must document it so that template authors now they cannot put filters before these filters in a filter chain.
+then the new 'update' method in your capitalize filter will be able to call the original 'update' method of the plugin (or of the preceeding filter if it has already overridden it) as '__capitalize__update'.
+
+There is no rule to determine where to call the predecessor's method, but you must pay lot of attention to potential side effects of different positions.
+
+You must also be careful that some filters, usually the one that change the handle and/or the target content model, must break the delegation method call chains and not perpetuate the call to the overriden method. That is the case each time the extended functionalities are incompatible with the default behavior of the plugin. Such filter must document it so that template authors know they cannot put filters before these filters in a filter chain.
 
 This delegation pattern is inspired from Alex Russell's blog [1].
-</pre>
-      
-<pre id="scope">
-Scope of Filters
-================
-
-The filter delegate can redefine some methods of the model object it is applied to. It can also create new methods inside the filtered object. In terms of object-oriented programming a filtered model object is a mixin between the model class and the filter object.
-
-The current implementation of filters supposes that each filter will be represented by a unique filter object shared at the application level. Hence if a filter needs to store state information at the model instance level it must either store this data either inside each model instance (which is usually one of the parameters of the delegate methods), or it must maintain it in some caches as each model is associated with a unique key identifier accessible with model.getUniqueKey().     
-
-EXPLIQUER que le filter peut utiliser "this" et que c'est le "this" de l'objet auquel il a été appliqué 
-</pre>
-     
-<pre id="extension">
-Filter extension mechanism
-==========================
-
-Explain can / execute pattern 
-</pre>
-
-<pre id="registration">
-Filter registration with primitive editor plugins 
-=================================================
-
-A filter can only be applied to a primitive editor if the corresponding filter object has been registered on the editor plugin factory. This can be done at the end of the filter source file. The registration method can depend on the plugin, we recommend to define a registerFilter method with two parameters: the unique filter key and the filter object. 
-
-For example the 'wiki' filter registers on the 'text' primitive editor factory with the following line:
-
-xtiger.editor.Plugin.prototype.pluginEditors['text'].registerFilter('wiki', _WikiFilter);
-
-Where _WikiFilter is the global object that defines the filter.
-
-Primitive editor plugins are strongly encouraged to follow a consistant API which is documented in the "howto-plugins" document. The benefit is that if it is consistent enough, the same filter can be applied to several different primitive editor types. However there are some limitations as some plugins may be specific and require specific filters.
-
-According to the specification above, there are most chance that Category A filters can be shared on many different primitive editors. Category B may eventually be shared on all the primitive editor plugins that support a single text entry field. Category C are most probably specific to a given primitive editor plugin because they depend on the structure of its handle.      
 </pre>
 
 <pre id="parameters">
 Filter parameters
-=================                
+=================
 
-To be developped
+As each plugin can define parameters which can be used by the template author to configure the plugin, each filter can define some extra parameters to configure the filter. These parameters and their default values are declared when registering the filter (see section on "Filter registration").
 
-using model.getParam() to define some filter parameters
+It is highly recommended to prefix the name of the filter's parameters with 'filter_' where "filter" is the name of the filter. This should avoid parameter name collisions between plugins and filters.
+
+As for the plugin's parameters, the filter's parameters can be retrieved with the native "getParam" method of the plugin object.
 </pre>
-     
-<pre id="skeleton">              
-Filter skeleton
-===============
 
-The following template can be used to write a new filter object. As you can see we suggest to avoid anonymous function and use meaningful identifiers even if they are not seen from outside the filter's closure, since it will facilitate debugging. 
+<pre id="scope">
+Scope of Filters
+================
 
-var _myServiceFilter  = (function _myServiceFilter () {    
+The filter delegate can redefine some methods of the plugin object it is applied to. It can also create new methods inside the filtered object. In terms of object-oriented programming a filtered object is a mixin between the plugin object and the filter object.
 
-  /////////////////////////////////////////////////
-  /////    Static myService Mixin Part     ////////
-  /////////////////////////////////////////////////
-  
-  var _myFunc = function _myFunc (...) { 
-    ...
+The current implementation of filters generates a new mixin class for each combination of plugin and filter chain declaration that replaces the original plugin class. Hence if a filter needs to associate state information with an instance, it can store this data either inside the plugin instance (using the 'this' context object but being careful to avoid property name collisions), or it can maintain it in some private cache as each plugin instance is associated with a unique key identifier accessible with the 'getUniqueKey' method.
+</pre>
+
+<pre id="skeleton">
+Filter file skeleton
+====================
+
+The code below can be used as a template for writing a new filter. Note that in all the filter methods, the this object will refer to the filtered plugin instance.
+
+<div class="code">
+(function ($axel) {
+
+  // you may use the closure to declare private objects and methods here
+
+  var _Filter = {
+
+    /////////////////////////////////////////////////////////
+    // Overriden Plugin Life cycle methods                 //
+    // (declare only the methods that you really override) //
+    /////////////////////////////////////////////////////////
+    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
+    },
+
+    onAwake : function () {
+    },
+
+    onLoad : function (aPoint, aDataSrc) {
+    },
+
+    onSave : function (aLogger) {
+    },
+
+    //////////////////////////////////////
+    // Overridden native plugin methods //
+    // (should be rare...)              //
+    //////////////////////////////////////
+    api : {
+      // see plugin howto
+    },
+
+    //////////////////////////////////////////////////////
+    // Overriden specific plugin methods or new methods //
+    //////////////////////////////////////////////////////
+    methods : {
+      // see plugin howto for most common methods
+      // see each individual plugin for the others
+    }
   };
 
-	return {  
-	
-    ///////////////////////////////////////////////////
-    /////     Instance myService Mixin Part    ////////
-    ///////////////////////////////////////////////////
-
-		// Property remapping for chaining
-		'->': {
-		  'update': '__myServiceUpdate', 
-      ...
-		},
-		                             
-		/** example if you override update and chain it */
-		update : function (...) {
-		 this.__myServiceUpdate(...);
-		 ...
-		 _myFunc (...); // example calling a private static method
-		 ...		  
-		}  
-		
-		/** add any other method from the filtered object that you want to override */
-
-		/** add any other method you want to add to the filtered object to be called with can() / execute() */
-		 
-  };
-		
-})();
-
-// Do not forget to register your filter on any compatible primitive editor plugin
-xtiger.editor.Plugin.prototype.pluginEditors['plugin_identifier'].registerFilter('filter_identifier', _myServiceFilter);  
-
-As a consequence of the last line, template authors are then able to write:
-
-&lt;xt:use types="plugin_identifier" param="filter=filter_identifier" />
+  $axel.filter.register(
+    'name',
+    { chain : [ 'name', 'of', 'methods', 'to', 'chain'] },
+    { key : 'value' },
+    _Filter
+  );
+  $axel.filter.applyTo({'name' : 'plugin'}); // applies 'name' filter to 'plugin' class
+}($axel));
+</code>
 </pre>
 
 <pre id="references">
 References
 ==========
 
-[1] http://alex.dojotoolkit.org/2008/10/delegate-delegate-delegate/ 
+[1] http://alex.dojotoolkit.org/2008/10/delegate-delegate-delegate/
 </pre>
+
 </body>
 </html>
 

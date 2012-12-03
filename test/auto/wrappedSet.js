@@ -51,18 +51,10 @@ function assert_array (version, logger, data, truth) {
   }
 }
 
-function assert_string (version, logger, data, truth, explain) {
-  if (data.length !== truth.length) {
-    logFailure(version + " " + explain + ' : string mismatch, got "' + data + '" instead of "' + truth + '"');
-  } else {
-    logSuccess(version + " " + explain);
-  }
-}
-
 function test1 ( logger ) {
   var set, truth;
   prewrap("1. ", logger, '../templates/WrappedSet.xhtml');
-  truth =  'hello world';
+  truth =  'Hello World';
   set = $axel(document.getElementById('test-1')).text();
   assert_string("1.1", logger, set, truth, 'getElementById');
   set = $axel($('#test-1').get()).text();

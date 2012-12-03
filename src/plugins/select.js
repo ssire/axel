@@ -156,6 +156,8 @@
            return;
          }
          this._setData(val);
+         // updates isModified, this is meaningful iff default value is a "no choice"
+         this.setModified(aData !== this.i18nFilter(this.defaultScreenData, false));
          this.set(true);
        },
 
