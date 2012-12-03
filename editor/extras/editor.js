@@ -101,16 +101,16 @@ Utility.FileListAction.prototype = {
         // false:synchronous thus we don't need to define xhr.onreadystatechange 
         // see http://developer.mozilla.org/en/XMLHttpRequest
         xhr.send(null);
-          if((xhr.status  == 200) || (xhr.status  == 0)) { // second test is for local usage -no Web server (from XHR MozDev doc)
-        listing = xhr.responseText;
-        this.status = 1;
+        if((xhr.status  == 200) || (xhr.status  == 0)) { // second test is for local usage -no Web server (from XHR MozDev doc)
+          listing = xhr.responseText;
+          this.status = 1;
         } else { 
-            this.error = "Impossible to open folder : '" + src + "'. Error : " + xhr.status;
-        this.status = 0;
-      }
+          this.error = "Could not read folder : '" + src + "' content (" + xhr.status + "), menu content has been filled with defaults.";
+          this.status = 0;
+        }
     } catch (e) {
       xhr.abort();
-      this.error = "Impossible to open folder : '" + url + "'. " + e.name + ' : ' + e.message;
+      this.error = "Could not read folder : '" + url + "' (" + e.name + ' : ' + e.message + "), menu content has been filled with defaults.";
       this.status = 0;
     }
     if (0 != this.status ) { // Parses result to extract file names
@@ -381,10 +381,18 @@ viewerApp.prototype = {
       xtdom.addClassName (body, 'preview');
       xtdom.setAttribute(n, 'value', 'Edit'); 
       this.previewMode = 1;
+      if (window.jQuery) {
+        // triggers preview event on main document
+        $(document).triggerHandler('axel-preview-on', [this]);
+      }
     } else {
       xtdom.removeClassName (body, 'preview')
       xtdom.setAttribute(n, 'value', 'Preview'); 
       this.previewMode = 0;
+      if (window.jQuery) {
+        // triggers preview event on main document
+        $(document).triggerHandler('axel-preview-off', [this]);        
+      }
     }
   },
 
@@ -816,9 +824,9 @@ viewerApp.prototype = {
       list = new Utility.FileListAction ();
       list.loadxTigerTmplFrom(Utility.makeURLForFile(model.path, this.PROXY));
       if (list.isInError()) { // in error, leave template list to default
-        this.log(list.error, 1);
+        this.log(list.error, 0); // shows as an info message
       } else if (list.isEmpty()) { // empty, leave template list to default
-        this.log("Template files list from '" + model.path + "', is empty, menu set to defaults", 0);
+        this.log("Template files list from '" + model.path + "' is empty, menu content has been filled with defaults.", 0);
       } else { // sucess
         model.files = list.getFiles(); // overrides defaults
       }

@@ -37,8 +37,8 @@ if (! (xtiger.cross.UA.gecko || xtiger.cross.UA.webKit || xtiger.cross.UA.IE || 
 }
 
 xtiger.util.countProperties = function (o) {
-  var total = 0;
-  for (var  k in o) if (o.hasOwnProperty(k))  total++;
+  var total = 0, k;
+  for (k in o) if (o.hasOwnProperty(k))  total++;
   return total;
 }
 
@@ -589,9 +589,8 @@ if (! xtiger.cross.UA.IE) {
   xtdom.focusAndSelect = function (aField) {
     try {
       aField.focus(); // not sure: for Safari focus must preceed select
-      // aField.select(); // variant: setSelectionRange(0, aField.value.length); 
-      aField.value = ''; // compatible with iPad 
-    }
+      aField.select(); // variant: setSelectionRange(0, aField.value.length); 
+    } // FIXME: iPad ?
     catch (e) {}
   }
 

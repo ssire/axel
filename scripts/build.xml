@@ -119,7 +119,7 @@ Author(s) : Stephane Sire
       <file file="${build.dir}/library-header-js.txt"/>
       <file file="${build.dir}/${product.name}-min.js"/>
     </concat>
-        <delete file="${build.dir}/${product.name}-tmp.js"/>
+    <delete file="${build.dir}/${product.name}-tmp.js"/>
     <delete file="${build.dir}/library-header-js.txt"/>
     <delete file="${build.dir}/${product.name}-min.js"/>
     

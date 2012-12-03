@@ -181,7 +181,6 @@ function test1 ( logger ) {
   truth =  'plugin "test1.4" test() filter1 "filter1 default name" test()';
   assert_string("2.4", logger, res, truth, 'clone of plugin with one filter and no parameter declaration on template');
   // test 2.5
-  debugger;
   accu = [];
   editor25.test(accu);
   res = accu.join(' ');
