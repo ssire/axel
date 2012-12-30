@@ -36,9 +36,9 @@ div.hilite {
 
     <ul class="parameters">
       <li><var>style_property</var> (<code>class</code>) : name of the CSS property that will be affected by the filter</li>
-
       <li><var>style_root_class</var> (<code>undefined</code>) : class name that a DOM element must hold to become an ancestor of an element controlled by the filter</li>
       <li><var>style_target_class</var> (<code>undefined</code>) : class name that the descendants of the root element must carry to be controlled by the filter</li>
+      <li><var>style_rule_selector</var> (<code>undefined</code>) : CSS selector the filter will use to dynamically insert and update a CSS rule that will set the <var>style_property</var> targeted by the selector to the current editor's value; this is an alternative mechanism to the <var>style_root_class</var>/<var>style_target_class</var> mechanism; both can be used in parallel</li>
     </ul>
     
     <p>Currently the filter only applies to the closest ancestor of the editing field with the <var>style_root_class</var> class name, and to the first of its descendants holding the <var>style_target_class</var> class name.</p>
@@ -63,6 +63,16 @@ div.hilite {
     <div class="demo extract">
       <p>Please type in a width in percent : <xt:use types="text" label="StylePercentWidth" option="unset" param="filter=style;style_property=width;style_root_class=toplevel;style_target_class=style2;style_unit=%">25</xt:use>%
         or in pixels : <xt:use types="select" label="StylePixelWidth" option="unset" values="100 200 300 400 500" param="filter=style;style_property=width;style_root_class=toplevel;style_target_class=style2;style_unit=px">100</xt:use>px</p>
+    </div>
+    
+    <h3>Using the <var>style_rule_selector</var> selector</h3>
+
+    <div>
+      <p>The selector below will change the left margin for all the paragraphs inside the document.</p>
+    </div>
+
+    <div class="demo extract">
+      <p>Please select size for the left margin of &lt;p> elements : <xt:use types="text" label="LeftMargin" option="unset" param="filter=style;style_rule_selector=p;style_property=margin-left;style_unit=px">0</xt:use>px</p>
     </div>
 
     <h2>The "width" filter</h2>
@@ -89,7 +99,6 @@ div.hilite {
     <div class="demo extract">
       <p>Please enter a width : <xt:use types="text" label="Width1" option="unset" param="filter=width;width_root_class=toplevel;width_target_class=width1">200</xt:use>px</p>
     </div>
-
 
   </body>
 </html>

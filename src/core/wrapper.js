@@ -37,7 +37,14 @@
 \*****************************************************************************/
 (function (GLOBAL) {
   
+  var MAX = 10000;
+  var TOTAL;
+  
   function _nodeIter (n, accu, seethrough) { 
+    if (++TOTAL > MAX) {
+      xtiger.cross.log('error', 'reached iteration limit (' + MAX + ')');
+      return;
+    }
     if (n.xttPrimitiveEditor) {
       accu.push(n.xttPrimitiveEditor);
     }
@@ -46,10 +53,15 @@
     }
   }
 
-  function _sliceIter (begin, end, accu, seethrough) {
+	// origin is optional, it is the Choice editor from where a recursive call has been initiated
+  function _sliceIter (begin, end, accu, seethrough, origin) {
     var cur = begin, 
         go = true,
         c;
+    if (TOTAL++ > 500) {
+      xtiger.cross.log('error', 'reached iteration limit (' + MAX + ')');
+      return;
+    }
     while (cur && go) {
       // manage repeats
       if (cur.startRepeatedItem && !seethrough) {
@@ -61,15 +73,16 @@
           continue;
         }  
       }
-      if (cur.beginChoiceItem) {
+      if (cur.beginChoiceItem && (cur.beginChoiceItem != origin)) {
         c = cur.beginChoiceItem;
         if (c.items[c.curItem][0] !== c.items[c.curItem][1]) {
-          _sliceIter(c.items[c.curItem][0], c.items[c.curItem][1], accu, seethrough);
+          _sliceIter(c.items[c.curItem][0], c.items[c.curItem][1], accu, seethrough, c);
         } else {
           // a choice slice starts and end on the same node
           _nodeIter(c.items[c.curItem][0], accu, seethrough); 
         }
         cur = c.items[c.items.length - 1][1]; // sets cur to the last choice
+        xtiger.cross.log('debug', 'jump to end of last slice ' + cur.tagName ? cur.tagName : '#t');
       } else {
         // FIXME: we have an ambiguity <xt:use types="a b"><xt:use label="within_a"...
         // and <xt:use label="within_a"><xt:use types ="a b"....
@@ -98,17 +111,22 @@
     
     dump : function () {
       return this.stack.join(' ');
-    }
+    },
     
+    reset : function () {
+      this.stack = []
+    }
   };
 
   function _WrappedSet (targets, seethrough) {
     var i;
+    TOTAL = 0;
     this.seethrough = seethrough; // to show optional repetitions content
     this.list = [];
     for (i = 0; i < targets.length; i++) {
       _nodeIter(targets[i], this.list, seethrough);
     }
+    xtiger.cross.log('debug', 'built wrapped set seethrough = [' + seethrough + ']');
   }
 
   _WrappedSet.prototype = {
@@ -145,6 +163,16 @@
       return logger.dump(); 
     },
 
+    values : function () {
+      var i, tmp, logger = new _Logger(), res = [];
+      for (i = 0; i < this.list.length; i++) {
+        this.list[i].save(logger);
+        res.push(logger.dump());
+        logger.reset();
+      }
+      return res; 
+    },
+
     configure : function (option, value) {
       var i;
       for (i = 0; i < this.list.length; i++) {
@@ -172,9 +200,11 @@
         xtiger.cross.log('warning', 'jQuery missing to interpet wrapped set selector "' + nodes  + '"');
         target = [];
       }
-    } else if (Object.prototype.toString.call(nodes) === "[object Array]") { // isArray
+    } else if (Object.prototype.toString.call(nodes) === "[object Array]") { // array of DOM nodes
       target = nodes;
-    } else if (nodes) { // would be nice to detect a jQuery wrapped set ([object Object] ?) to call get()
+    } else if (nodes instanceof GLOBAL.jQuery) { // wrapped set
+      target = nodes.get();
+    } else if (nodes) { 
       target = [ nodes ];
     } else {
       xtiger.cross.log('warning', 'empty wrapped set selector');

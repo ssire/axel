@@ -166,10 +166,10 @@ xtiger.util.Form.prototype = {
   },
   
   // Call this method if you didn't include the style sheet in the document you have transformed to a form
-  injectStyleSheet : function (url, logger) {   
+  injectStyleSheet : function (url, logger) {
     var head = this.curDoc ? this.curDoc.getElementsByTagName('head')[0] : null;
     if (head) {
-      var link = document.createElement('link');
+      var link = this.curDoc.createElement('link');
       link.setAttribute('rel','stylesheet');
       link.setAttribute('type', 'text/css');
       link.setAttribute('href', url); 

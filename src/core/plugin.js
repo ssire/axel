@@ -106,7 +106,8 @@ xtiger.editor.Plugin.prototype = {
 
    // Initializes _param, _option, _content from the seed
    _parseFromSeed : function (aSeed) {
-     this._param = aSeed[1];
+     this._param = {};
+     $axel.extend(this._param, aSeed[1], false, true); // takes a snapshot
      this._content = aSeed[2];
      this._option = aSeed[3];
    },

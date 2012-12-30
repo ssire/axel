@@ -454,27 +454,36 @@ viewerApp.prototype = {
         this.log('Self-transformed template detected : the editor has failed to plug on its AXEL object', 1);
       }
     } else {
-      this.curForm = new xtiger.util.Form (xttMakeLocalURLFor(this.baseUrl));
-      if (this.curForm.setTemplateSource (iframeDoc, errLog)) {
-        this.curForm.enableTabGroupNavigation ();
-        e = document.getElementById('formUrl');
-        if (e.profile.checked) {
-          console.profile();
-        }
-        if (! this.curForm.transform(errLog)) {
-          this.log('Transformation failed', 1);
-        } else {
-          this.log('Transformation success', 0);
-          if (window.jQuery) {
-            // triggers completion event on main document
-            $(document).triggerHandler('axel-editor-ready', [this]);
+      if ($('div[data-template]', iframeDoc).add('body[data-template="#"]', iframeDoc).length === 0) {
+        this.curForm = new xtiger.util.Form (xttMakeLocalURLFor(this.baseUrl));
+        if (this.curForm.setTemplateSource (iframeDoc, errLog)) {
+          this.curForm.enableTabGroupNavigation ();
+          e = document.getElementById('formUrl');
+          if (e.profile.checked) {
+            console.profile();
+          }
+          if (! this.curForm.transform(errLog)) {
+            this.log('Transformation failed', 1);
+          } else {
+            this.log('Transformation success', 0);
+            if (window.jQuery) {
+              // triggers completion event on main document
+              $(document).triggerHandler('axel-editor-ready', [this]);
+            }
+          }
+          if (e.profile.checked) {
+            console.profileEnd();
+          }
+          if (! errLog.inError()) { // injects axel.css in iframe
+            this.curForm.injectStyleSheet(xttMakeLocalURLFor(this.xtStylesheet), errLog);
           }
         }
-        if (e.profile.checked) {
-          console.profileEnd();
-        }
-        if (! errLog.inError()) { // injects axel.css in iframe
-          this.curForm.injectStyleSheet(xttMakeLocalURLFor(this.xtStylesheet), errLog);
+      } else {
+        this.curForm = undefined;
+        this.log('Template with embedded transformation command detected - use AXEL-FORMS editor to transform it !', 1);
+        if (window.jQuery) {
+          // triggers completion event on main document => forward to AXEL-FORMS
+          $(document).triggerHandler('axel-editor-ready', [this]);
         }
       }
       if (errLog.inError()) { // summarizes errors
@@ -667,8 +676,37 @@ viewerApp.prototype = {
         e[inputName].value = filePath;
       }
     }
-  },    
-        
+  }, 
+  
+  // Opens a window with an iframe to display the current template source code
+  // It uses the view-source: URL protocol with relative URLs, so currently it works 
+  // only with Firefox (chrome does not seem to like relative URLs)
+  // FIXME: show the template with a full source code editor and add a test command
+  // (see for instance http://javascript.info/play/html)
+  viewTemplateSource : function () {
+    var location, win, div;
+    if (appController.checkTemplate()) {
+      location = "view-source:" + document.getElementById("url").value;
+      win = window.open(null, "Template source", 'width=800,height=800,top=100,left=100,location=no,toolbar=no,menubar=no');
+      win.focus();
+      // creates a document in popup window and default message for unsupported browsers
+      win.document.open();
+      win.document.write('To actually see the template source code in this window you must use a browser supporting the view-source protocol');
+      win.document.close();
+      win.document.title = "Source of '" + document.getElementById("url").value + "'";
+      div = win.document.createElement('div');
+      div.innerHTML = '<iframe src="' + "JavaScript:'To actually see the template source code in this window you must use a browser supporting the view-source protocol with relative URLs like Firefox'" + '" frameborder="0" style="width:100%;height:100%"><iframe>';
+      win.document.body.replaceChild( div, win.document.body.firstChild );
+      win.document.body.style.margin = "0";
+      win.onload = function() { 
+        var doc = win.frames[0].document;
+        $('pre', doc).css('white-space', 'pre-wrap'); // trick to wrap lines (Firefox)
+      }
+      // actually instructs to view template source
+      $('iframe', div).attr('src',location);
+    }
+  },
+  
   /*****************************************************/
   /*                                                   */
   /*            Utilities                              */
@@ -725,7 +763,7 @@ viewerApp.prototype = {
 
   checkTemplate : function () {
     if (! this.curForm) { 
-      alert('You must open a template first !');    
+      alert('You must select and visualize a template first !');    
       return false;
     } 
     return true;

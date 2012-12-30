@@ -150,18 +150,19 @@
 
        // Updates data model
        update : function (aData) { 
+         var tmp, isadef;
          if (aData === this._data) { // no change
-           return; 
-           // FIXME: should we use isModified instead ? 
-           // filters would just need to call setModified and not this._data ?
+           return;
          }
          // normalizes text (empty text is set to _defaultData)
-         if (aData.search(/\S/) === -1 || (aData === this.getDefaultData())) {
+         tmp = aData.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+         isadef = tmp === this.getDefaultData();
+         if ((tmp.length === 0) || (isadef && (this.getParam('placeholder') !== 'preserve'))) {
            this.clear(true);
            return;
          }
-         this._setData(aData);
-         this.setModified(true);
+         this._setData(tmp);
+         this.setModified(!isadef);
          this.set(true);
        },
 

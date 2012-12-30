@@ -60,7 +60,7 @@
       <form id="formUrl" action="javascript:alert('Oops, something went wrong !')"
             onsubmit="return appController.submitPage();">
 
-        <p>
+        <p style="position: relative">
           <label>
             Page : <input id="url" type="text" name="url" maxlength="100" value=""/>
           </label>
@@ -70,23 +70,24 @@
 
           <input type="button" value="Browse"
             onclick="appController.localFileDialog(&quot;open&quot;, &quot;*.xtd; *.xhtml; *.html; *.xml&quot;, &quot;Select an XTiger Forms template&quot; , &quot;url&quot;)"/>
-          <span style="position: absolute; right: 30px; margin-left: 5px">
+          <span style="float: right; margin-right: 25px">
             <input type="submit" value="Visualize"/>
             <input type="reset" onclick="appController.resetView()"/>
           </span>
         </p>
 
-        <p>
+        <p style="position: relative">
           <label>
             Template :
             <select id="foldersList" onchange="appController.updateSelectedFolder()"></select>
           </label>
           <select id="templatesList" onchange="appController.updateSelectedTemplate()"></select>
           <input id="prefs" type="button" value="Preferences" onclick="appController.setPreferences();"/>
-          <span style="position: absolute; left: 46%">
+          <span style="margin-left: 20px">
             <input type="button" id="previewToggle" value="Preview" onclick="appController.doToggleViewMode();"/>
+            <input type="button" id="previewToggle" value="Source" onclick="javascript:appController.viewTemplateSource(event)"/>
           </span>
-          <span style="position: absolute; right: 30px">
+          <span style="float: right;margin-right: 25px">
             <input type="button" value="Schema" onclick="appController.dumpSchema();"/>
             <input type="button" value="Dump" onclick="appController.dump();"/>
             <input type="button" value="Input" onclick="appController.inputInstanceData();"/>

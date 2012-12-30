@@ -95,8 +95,12 @@ Coding Guidelines
 -----------------
                                           
 We currently do not have strong coding conventions as you will see by yourself
-when browsing the source code, however respect at least that one:
-**Soft Tabs at 2 spaces per Tab !**.
+when browsing the source code, however respect at least these ones :
+
+* soft tabs
+* 2 spaces per tab
+* remove spaces at the end of lines (you may use a filter such as `sed -E 's/[ ]+$//g'`)
+* test source files with jslint
 
 Each plugin should be documented in a self-describing template file inside 
 the templates/plugins folder.

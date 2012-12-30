@@ -293,6 +293,9 @@ xtiger.cross.log = function  (channel, msg) {
   case 'debug' :
     xtiger.cross.print('[dd] ' + msg);
     break;
+  case 'stack-trace' :
+    xtiger.cross.print('[tt] ' + msg);
+    break;
   default :
     //xtiger.cross.print('[' + channel + '] ' + msg);
   }
