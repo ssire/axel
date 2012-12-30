@@ -379,7 +379,7 @@ xtiger.editor.Repeat.prototype = {
       var m = new xtiger.editor.Repeat ();
       m.initFromSeed (editorSeed, this.curDoc);
       dict[editorSeed[3]] = m; // FIXME : use a better hash key than another object ?
-      xtiger.cross.log('stack-trace', 'cloning repeat editor', m.dump(), '(' + editorSeed[3] + ')');
+      // xtiger.cross.log('stack-trace', 'cloning repeat editor', m.dump(), '(' + editorSeed[3] + ')');
     }                     
     return m;
   },  
@@ -453,12 +453,12 @@ xtiger.editor.Repeat.prototype = {
       clone.xttPrimitiveEditor = factory.createEditorFromSeed (seed, clone, this.curDoc, this);
     }
 
-    // service cloning
-    if (node.xttService) {
-      var seed = node.xttService;
-      var factory = seed[0];      
-      clone.xttService = factory.createServiceFromSeed (seed, clone, this.curDoc, this);
-    }
+    // service cloning - DEPRECATED
+    // if (node.xttService) {
+    //   var seed = node.xttService;
+    //   var factory = seed[0];      
+    //   clone.xttService = factory.createServiceFromSeed (seed, clone, this.curDoc, this);
+    // }
   },
   
   // Creates a clone of the container including cloning of special attributes
@@ -540,7 +540,7 @@ xtiger.editor.Repeat.prototype = {
   },
     
   // Adds a new Slice copied from the repeater model at the end of the slices
-  // Returns the index of the new slice
+  // Returns the index of the new slice - Called when loading XML data
   appendSlice : function () {   
     var lastIndex = this.items.length - 1;
     var lastNode = this.getLastNodeForSlice(lastIndex);
@@ -549,7 +549,10 @@ xtiger.editor.Repeat.prototype = {
     var copy = this.getOneCopy (index); // clones the model and creates a new slice
     xtdom.moveChildrenOfAfter (copy, lastNode);
     this.plantSlice (index, lastIndex);       
-    this.dispatchEvent(index, 'duplicate');
+    this.dispatchEvent(index, 'duplicate'); // DEPRECATED
+    if ($axel.binding) {
+      $axel.binding.install(this.curDoc, index[0], index[1]);
+    }
     return lastIndex + 1;  
   },
   
@@ -641,12 +644,11 @@ xtiger.editor.Repeat.prototype = {
     
   // Dispatches an event (which is converted to a builtin method call) on a slice
   dispatchEvent : function (slice, name) {
-        var cur = slice[0];
-        do {
+    var cur = slice[0];
+    do {
       this.callPrimitiveEditors(cur, name);
       cur = cur.nextSibling;                          
-        } while (cur && (cur != slice[1]));
-    
+    } while (cur && (cur != slice[1]));
   },  
   
   addItem : function (mark, position, useTrash) {    
@@ -666,15 +668,8 @@ xtiger.editor.Repeat.prototype = {
       slice = saved[1];     
       xtdom.moveNodesAfter (slice, preceeding[1]);
       this.trash.splice(i, 1);
-      // Replaced with 'duplicate' event (see infra)
-      // cur = newIndex[0]; // dispatches a kind of 'paste' event to interested primitive editors
-      //      this.callPrimitiveEditors(cur, 'paste');
-      //      end = newIndex[1];      
-      //      while (cur != end) {    
-      //        this.callPrimitiveEditors(cur, 'paste');        
-      //        cur = cur.nextSibling;
-      //      }
-    } else { // creates and pastes a default item (from the Repeater's model)
+      // TODO: 'pasted' event
+    } else { // creates a default item (from the Repeater's model)
       newIndex = [null, null, null, null];
       n = this.getOneCopy (newIndex, position);
       xtdom.moveChildrenOfAfter (n, preceeding[1]);
@@ -688,7 +683,10 @@ xtiger.editor.Repeat.prototype = {
     }       
     this.configureMenuForSlice (position + 1); // configuration for added item            
     this.configureMenuForSlice (this.total-1); // configuration for last item   
-    this.dispatchEvent(newIndex, 'duplicate'); // FIXME: add a 'fromClipboard' arg ?
+    this.dispatchEvent(newIndex, 'duplicate'); // DEPRECATED
+    if (!saved && $axel.binding) {
+      $axel.binding.install(this.curDoc, newIndex[0], newIndex[1]);
+    }
   },
   
   // FIXME: prevoir d'iterer sur tous les editeurs (choice, repeat, primitive) et d'appeler une methode

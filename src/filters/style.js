@@ -71,7 +71,7 @@
   };
 
   $axel.filter.register(
-    'width', 
+    'width',
     { chain : [ 'set', 'clear'] },
     null,
     _Filter);
@@ -93,13 +93,13 @@
 |                                                                             |
 \*****************************************************************************/
 (function ($axel) {
-  
-  function _getTarget ( me ) {
+
+  function _getTarget ( me, dontComplain ) {
     var rootcn = me.getParam('style_root_class'),
         targetcn = me.getParam('style_target_class'),
-        root = $(me.getHandle(true)).closest('.' + rootcn),
-        res = targetcn ? root.find('.' + targetcn).first() : root;
-    if (! res) {
+        root = rootcn ? $(me.getHandle(true)).closest('.' + rootcn) : null,
+        res = (root && targetcn) ? root.find('.' + targetcn).first() : root;
+    if ((! res) && (! dontComplain)) {
       xtiger.cross.log('warning', "'style' filter could not find target node");
     }
     return res;
@@ -107,22 +107,42 @@
 
   var _Filter = {
 
+    // the default value MUST match the default CSS settings
+    // FIXME: enforce it ?
      onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
        this.__style__onInit(aDefaultData, anOptionAttr, aRepeater);
-       this._CurStyleValue = aDefaultData; 
+       this._CurStyleValue = aDefaultData;
        // works with 'select' iff aDefaultData is the target XML value (not the i18n one)
      },
-     
+
      methods : {
 
+       // TBD
+       // update : function () {
+       //   if (this.getParam('style_unit')) {
+       //      vérifier que c'est un nombre et afficher erreur sinon (utiliser style_error_target ou data_validation_error pour afficher ?)
+       //   }
+       // },
+
        set : function ( doPropagate ) {
-         var value, prop, values, target;
+         var value, prop, values, target, sel, doc, rule, unit = this.getParam('style_unit');
          this.__style__set(doPropagate);
-         values = this.getParam('values');
-         target = _getTarget(this);
+         // CSS rule mode
+         sel = this.getParam('style_rule_selector');
+         if (sel) {
+           doc = this.getDocument();
+           rule = sel + ' {' + this.getParam('style_property') + ':' + this.getData() + (unit ? unit + '}' : '}');
+           if (! this._StyleRuleHandle) {
+             this._StyleRuleHandle = $("<style type='text/css'> </style>", doc).appendTo($("head", doc));
+           }
+           this._StyleRuleHandle.text(rule);
+         }
+         // direct target mode
+         target = _getTarget(this, sel);
          if (target) {
            prop = this.getParam('style_property') || 'class';
-           if (values) { // this is a 'select' plugin
+           values = this.getParam('values');
+           if (values) { // this is a 'select' plugin (FIXME: api this.getPluginType())
             value = this.getData();
             if (this._CurStyleValue) {
               if (prop === 'class') {
@@ -130,24 +150,36 @@
               }
             }
             this._CurStyleValue = value;
-           } else {
-            value = this.getParam('style_value') || this.getData();
+           } else { // not a 'select' plugin
+             value = this.getParam('style_value') || this.getData();
            }
-          (prop === 'class') ? target.addClass(value) : target.css(prop, value);
+           if (prop === 'class') {
+              target.addClass(value)
+           } else {
+              target.css(prop, unit ? value + unit : value);
+           }
          }
        },
 
        unset : function ( doPropagate ) {
-         var value, prop, target;
+         var value, prop, target, sel, doc;
          this.__style__unset(doPropagate);
          prop = this.getParam('style_property') || 'class';
-         target = _getTarget(this);
+         // CSS rule mode
+         sel = this.getParam('style_rule_selector');
+         if (sel && this._StyleRuleHandle) {
+           this._StyleRuleHandle.text('');
+         }
+         // direct target mode
+         target = _getTarget(this, sel);
+         xtiger.cross.log('debug', 'unset');
          if (target) {
            prop = this.getParam('style_property') || 'class';
            if (this.getParam('values')) { // this is a 'select' plugin
              value = this._CurStyleValue;
            } else {
              value = this.getParam('style_value') || this.getData();
+             xtiger.cross.log('debug', 'unset with value ' + value)
            }
            if (value) {
              (prop === 'class') ? target.removeClass(value) : target.css(prop, '');
@@ -157,9 +189,9 @@
        }
     }
   };
-  
+
   $axel.filter.register(
-    'style', 
+    'style',
     { chain : ['onInit', 'set', 'unset'] },
     null,
     _Filter);

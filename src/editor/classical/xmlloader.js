@@ -141,7 +141,7 @@ xtiger.editor.BasicLoader.prototype = {
             if (tmpState[3] && this.hasDataFor(cur.endRepeatedItem, point, dataSrc)) { // did we exhaust the data source ?
               var repeater = cur.endRepeatedItem;
               while (this.hasDataFor(repeater, point, dataSrc)) {
-                xtiger.cross.log('stack-trace', '>>[ extra ]>> start repetition for', repeater.dump());   
+                // xtiger.cross.log('stack-trace', '>>[ extra ]>> start repetition for' + repeater.dump());   
                 var tmpStack = [point]; // simulates stack for handling the repeated repeat
                 var pos = repeater.appendSlice();
                 var begin = repeater.getFirstNodeForSlice(pos);

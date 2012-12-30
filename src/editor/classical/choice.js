@@ -71,7 +71,7 @@ xtiger.editor.Choice.prototype = {
   setEndChoiceItem : function (clone) { 
     this.items [this.items.length - 1][1] = clone;
     if (this.items.length == this.expectedLength) {
-      xtiger.cross.log('stack-trace', 'Choice initialization terminated after cloning, size=' + this.expectedLength);
+      // xtiger.cross.log('stack-trace', 'Choice initialization terminated after cloning, size=' + this.expectedLength);
       this.initializeSelectedItem (0);  // FIXME : check that it's not too early
     }
   },  
