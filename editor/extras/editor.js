@@ -687,7 +687,7 @@ viewerApp.prototype = {
     var location, win, div;
     if (appController.checkTemplate()) {
       location = "view-source:" + document.getElementById("url").value;
-      win = window.open(null, "Template source", 'width=800,height=800,top=100,left=100,location=no,toolbar=no,menubar=no');
+      win = window.open(null, "Template source", 'width=800,height=800,location=no,toolbar=no,menubar=no');
       win.focus();
       // creates a document in popup window and default message for unsupported browsers
       win.document.open();

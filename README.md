@@ -5,8 +5,12 @@ AXEL is a lightweight, open source (LGPL v2.1), Javascript library for
 generating XML authoring applications that run inside the browser. Like
 form-based systems, such as XForms, it turns a description of a Web page with
 some editable fields into an editor. Unlike form-based systems, it is targeted
-at generating a broader scope of user interfaces from *data-centric* ones to
-*document-centric* ones.
+at generating *document-centric* user interfaces.
+
+You should also check the [AXEL-FORMS](https://github.com/ssire/axel-forms) 
+extensions to AXEL. They provide additional constructs to create more *form-oriented* 
+user interfaces. They also provide microformat instructions to easily embed AXEL into 
+web pages.
 
 How does it work ?
 ------------------
