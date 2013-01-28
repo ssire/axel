@@ -130,15 +130,21 @@
          // CSS rule mode
          sel = this.getParam('style_rule_selector');
          if (sel) {
-           doc = this.getDocument();
            rule = sel + ' {' + this.getParam('style_property') + ':' + this.getData() + (unit ? unit + '}' : '}');
+         }
+         sel = this.getParam('style_rule');
+         if (sel) {
+           rule = sel.replace(/\$_/g, this.getData());
+         }
+         if (rule) {
+           doc = this.getDocument();
            if (! this._StyleRuleHandle) {
              this._StyleRuleHandle = $("<style type='text/css'> </style>", doc).appendTo($("head", doc));
            }
            this._StyleRuleHandle.text(rule);
          }
          // direct target mode
-         target = _getTarget(this, sel);
+         target = _getTarget(this,  rule !== undefined);
          if (target) {
            prop = this.getParam('style_property') || 'class';
            values = this.getParam('values');
@@ -166,20 +172,20 @@
          this.__style__unset(doPropagate);
          prop = this.getParam('style_property') || 'class';
          // CSS rule mode
-         sel = this.getParam('style_rule_selector');
+         sel = this.getParam('style_rule_selector') || this.getParam('style_rule');
          if (sel && this._StyleRuleHandle) {
            this._StyleRuleHandle.text('');
          }
          // direct target mode
          target = _getTarget(this, sel);
-         xtiger.cross.log('debug', 'unset');
+         // xtiger.cross.log('debug', 'unset');
          if (target) {
            prop = this.getParam('style_property') || 'class';
            if (this.getParam('values')) { // this is a 'select' plugin
              value = this._CurStyleValue;
            } else {
              value = this.getParam('style_value') || this.getData();
-             xtiger.cross.log('debug', 'unset with value ' + value)
+             // xtiger.cross.log('debug', 'unset with value ' + value)
            }
            if (value) {
              (prop === 'class') ? target.removeClass(value) : target.css(prop, '');
