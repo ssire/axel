@@ -2,87 +2,110 @@
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>AXEL beta User's Manual</title>
+  <title>AXEL User's Manual</title>
+  <style type="text/css" media="screen">
+    body {
+      margin: 1em 2em;
+    }
+  </style>
 </head>
-<body>                        
+<body>
 
-<p style="font-size:150%;font-style:italic">This manuel is very incomplete and still in progress, please consult the <a href="../readme.html">readme</a> file to learn how to use AXEL at the moment. Any help welcome to create more documentation !</p>  
-  
+<p style="font-size:90%;font-style:italic">This manuel is still in progress, Any help welcome to create more documentation !</p>
+
 <h1>Developing Applications with AXEL</h1>
 
-<p>This guide explains how to use the AXEL library within your application. Before reading this guide you should read the <a href="../readme.html">readme</a> file. You can also consult the <a href="../distrib/CHANGELOG.html">CHANGELOG</a> of the library at any time.</p>
-                                                             
 <h2>Introduction</h2>
 
-<p>The AXEL Javascript library transforms XHTML documents that follow the <a  href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a> into custom XML editors running inside a browser window. These editors allow to edit XML documents conformant with an XML document model implicitly defined by the template. The library is entirely client-side, the only interactions with the server are to get a template, and to load and save XML data ; all this can be realized with Ajax calls. Thus AXEL can be deployed on top of any Web framework. There are two different ways to use the library:</p>
+<p>The AXEL Javascript library transforms XHTML documents that follow the <a  href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a> into custom XML editors running inside a browser window. These editors allow to edit XML documents conformant with an XML document model implicitly defined by the template. The library is client-side, the only interactions with the server are to get a template and to load and save XML data; all this can be realized with Ajax calls. AXEL can be deployed on top of any Web framework.</p>
+
+<h2>Template authoring and testing</h2>
+
+<p>The classical workflow to develop an XTiger template is the following one :</p>
+
+<ol>
+  <li>create the template file with your favorite source code editor, save it with an <code>.xhtml</code> extension</li>
+  <li>cut and paste the file path into the AXEL demonstration editor <i>Page</i> field, hit <i>Visualize</i> to generate the editor</li>
+  <li>enter some data and hit the <i>Dump</i> button to see the XML output</li>
+  <li>select and copy the actual output from the output window</li>
+  <li>hit the <i>Visualize</i> button to regenerate the editor again</li>
+  <li>hit the <i>Input</i> button to open the input window, paste the text you copied from the output window into it, click on the <i>Load</i> button and check everything is ok</li>
+  <li>make any change to your template file and starts again in step 1 until you are satisfied</li>
+</ol>
+
+<p>The <code>.xhtml</code> extension is the best way we have found to force most browsers MIME-Type sniffer algorithm to detect the file as an <code>"application/xhtml+xml"</code> file which is required to properly parse XTiger XML elements. There is an <a href="integrators-guide.html#serve">FAQ entry</a> on this subject.</p> 
+
+<p>This workflow has been tested with Firefox because it allows local file access inside the browser window which allows to start the demonstration editor from the file system and use it to load templates also from the file system. We do our best efforts to support the other major browsers: Safari and Chrome, Opera, Internet Explorer (version 7 and above).</p>
+
+<p>During development, if you want to apply the workflow above, you may need to change one of the security settings in Firefox to give access to the local file system URLs to the XMLHttpRequest object. For that purpose open the about:config URL inside your browser and set security.fileuri.strict_origin_policy to false (with one click) (source: <a
+ href="http://kb.mozillazine.org/Security.fileuri.strict_origin_policy">http://kb.mozillazine.org/Security.fileuri.strict_origin_policy</a>).
+</p>
+
+<p>Here are a few screen shots summarizing the different steps.</p>
+  
+<p class="image"><img src="images/template-1.png" alt="snapshot"/><br/>Editor generated from the <code>../../examples/tutorial/Hello-World.xhtml</code> template by entering its path and hitting the <i>Visualize</i> button (steps 1 and 2)</p>
+
+<p class="image"><img src="images/template-2.png" alt="snapshot"/><br/>Copying XML output after entering some data and hitting the <i>Dump</i> button (steps 3 and 4)</p>
+
+<p class="image"><img src="images/template-3.png" alt="snapshot"/><br/>Pasting previous XML output into the input window displayed by hitting the <i>Input</i> button, in the background you can notice that the editor has been regenerated by hitting the <i>Visualize</i> button, next step would be to hit the <i>Load</i> button to send back the XML to the editor (steps 5 and 6)</p>
+
+
+<h2>Template transformation</h2>
+
+<p>Once you have created some template you can use some Javascript code to transform the templates into editors and serve them from you application server. Basically there are different ways to do this :</p>
 
 <ul>
-  <li>you can include the library in a Web page, load the template as a separate file (e.g. inside an iframe within the Web page, or alternatively with an Ajax request) then transform it (e.g. transform the template loaded in the iframe or with Ajax request) and copy the result somewhere inside your Web page</li>      
-  
-  <li>you can include the library directly inside a template file, open the template inside a window or
-inside an iframe, then transform it right after loading ; the resulting
-template is an <span style="font-style: italic;">auto-editable</span> template.</li>
+  <li>you can include the library directly inside a template file (<a href="../examples/tutorial/tutorial.xhtml">try it !</a>), open the template inside a window or inside an iframe, then transform it right after loading ; the resulting template is an <span style="font-style: italic;">auto-editable</span> template</li>
+
+  <li>you can include the library in a Web page (<a href="../examples/tutorial/tutorial2.html">try it !</a>), load the template inside an iframe within the Web page then transform the iframe content </li>
+
+  <li>you can include the library in a Web page (<a href="../examples/tutorial/tutorial3.html">try it !</a>), load the template with an Ajax request (XHR object) then transform it and copy the result somewhere inside your Web page</li>
+
+  <li>you can use the <a href="https://github.com/ssire/axel-forms/wiki/The-%27template%27-command" target="_new">'template'</a> command from the <a href="http://ssire.github.com/axel-forms/" target="_new">AXEL-FORMS</a> extension to transform the template without writing any Javascript code, but with micro-format instructions (see <a href="https://github.com/ssire/axel-forms/wiki/Prerequisites" target="_new">doc</a>)</li>
 </ul>
 
-<p>The advantage of the first method is that you can keep your template independant from the library and its location (no URL dependency). This is a better practice for instance if you share your template with other developers who do not have necessarily the same environment. However you can also keep templates independant from the library location with the second method (i.e. auto-editable templates), if your Web server injects the library and the onload Javascript handler when serving the template to the user.</p>   
+<p>The advantage of the last three methods is that you can keep your template independant from the library and its location (no URL dependency). This is a better practice for instance if you share your template with other developers who do not have necessarily the same environment. However you can also keep templates independant from the library location with the first method if your server injects the library and the onload Javascript handler when serving the template to the user.</p>
 
-<p>The AXEL library provides some utility functions and an xtiger.util.Form class that manage template file loading, template transformation and XML content generation and loading inside the document generated from the template.</p>
+<p>The AXEL library provides some utility functions and an <code>xtiger.util.Form class</code> that manage template file loading, template transformation and XML content generation and loading inside the document generated from the template.</p>
 
-<p>The best thing to learn how to use the library is to read the instructions below and to have a look inside the source files of the sample applications that comes with it:</p>
+<p>In addition to the tutorials above (the <i>try it !</i> links), you may have a look inside the source files of the demonstration editing applications :</p>
 
 <ul>
   <li>editor/<a href="../editor/editor.xhtml" target="_blank">editor.xhtml</a> loads the library in a main Web page, then it loads templates within an iframe within that page and transforms them (in-place transformation)</li>
 
- <li>editor/<a href="../editor/editornoframe.xhtml" target="_blank">editornoframe.xhtml</a> loads the library in a main Web page, then it loads templates with an XMLHTTPRequest object, transforms them and copy the result within a div container within the main Web page</li>
-</ul>           
+ <li><i>BROKEN</i> editor/<a href="../editor/editornoframe.xhtml" target="_blank">editornoframe.xhtml</a> loads the library in a main Web page, then it loads templates with an XMLHTTPRequest object, transforms them and copy the result within a div container within the main Web page</li>
+</ul>
 
-<h2>Deploying the library</h2>       
+<h2>Deploying the library</h2>
 
-<blockquote>Please read the <a href="integrators-guide.html">FAQ</a> for more information</blockquote>
+<p>Please read the <a href="integrators-guide.html">FAQ</a> for more information.</p>
 
-<h3>Generating the axel.js file</h3>             
+<h3>Generating the axel.js file</h3>
 
-<p>You need to install the Yahoo Javascript compressor utility first, and update its path inside scripts/ant.properties in order to generate the minified version of the library with the build.lib target of the scripts/build.xml ant script. </p>
+<p>You need to install the Yahoo Javascript compressor utility first, and update its path inside <code>scripts/ant.properties</code> in order to generate the minified version of the library with the build.lib target of the scripts/build.xml ant script. </p>
 
-<p>You can edit the scripts/build.xml file to select which plugins you want to include within the library. For instance (see below for a description of the available plugins and their dependencies) the list contains actually :</p>
+<p>You can edit the <code>scripts/ant.properties</code> file to select which plugins or filters you want to include within the library.</p>
 
-<div>
-<pre>&lt;filelist dir="${plugins.src.dir}"<br> files="text.js textdevice.js popupdevice.js select.js wiki.js image.js <br /> lensdevice.js link.js richtext.js buttonbardevice.js uploaddevice.js<br> photo.js documentid.js layout.js"/&gt;</pre>
-                                                 
 <h3>Including the axel.css stylsheets</h3>
 
-<p>You must also include the <span style="font-weight: bold;">library global CSS file</span> in your application. For instance this CSS is required to hide / show the editing fields of the primitive editors as the user clicks on them. A standard one is given in bundles/xtiger.css. For a Web page that loads the template with Ajax, or for an auto-editable template you just need to include it with: </p>
+<p>You must also include the <span style="font-weight: bold;">library CSS file</span> in your application. For instance this CSS is required to hide / show the editing fields of the primitive editors as the user clicks on them. You can use the default one into <code>axel/axel.css</code>. For a Web page that loads the template with Ajax, or for an auto-editable template you just need to include it with : </p>
 
-<pre>&lt;link rel="stylesheet" href="{PATH_TO_BUNDLES}/bundles/xtiger.css" type="text/css"/&gt;</pre>
+<pre>&lt;link rel="stylesheet" href="{PATH_TO_AXEL}/axel.css" type="text/css"/&gt;</pre>
 </div>
 
-<p>If you are using a Web page and then load the template inside an iframe in a second time, you may find handy to call the injectStyleSheet({CSS_FILE_URL}) method of the xtiger.util.Form object just after the template transformation, to inject the style sheet in host iframe (see example below). This way you can keep your templates independant from the AXEL style sheet location. </p>
+<p>If you are using a Web page and then load the template inside an iframe in a second time, you may find handy to call the <code>injectStyleSheet({CSS_FILE_URL})</code> method of <code>the xtiger.util.Form</code> object right after the template transformation, to inject the style sheet in host iframe.</p>
 
 <h3>Deploying the bundles</h3>
 
-<p>The <span style="font-weight: bold;">bundles/ folder</span> must also be copied into the Web application as you will give its access path to the xtiger.util.Form contructor (see below). This folder contains different resources used by the core libary editors and by the plugin editors, such as images. For instance it defines the minus and plus icons which are used by the repetition editor.</p>
+<p>The <code>bundles</code> folder which is under the <code>axel</code> folder must be available on the web too so that you can give its access path to the <code>xtiger.util.Form</code> contructor. This folder contains resources used by the core libary editors and by the plugin editors, such as images. For instance it defines the minus and plus icons which are used by the repetition editor.</p>
 
-<p>In summary you should at least have the following resources from the AXEL distribution into your deployment environment:</p>
+<p>In summary, for a quick start you can copy the <code>axel</code> folder from the distribution into your deployment environment :</p>
 
-<pre>lib/axel.js<br>bundles/xtiger.css<br>bundles/* (all the other folders within bundles)</pre>
-
-<h2>Using the <tt>xtige.util.Form</tt> object to transform templates into editors</h2>    
-
-<p>The main library entry point is the <tt>xtiger.util.Form</tt> object which is described in the <a href="../examples/tutorial/tutorial.xhtml">tutorial</a>. You import that object into your application when you import the all-in-one minified version of the library which is contained in the axel/ folder and which is called axel-<span style="font-style: italic;">version</span>.js (or alternatively axel.js). You can also build this file with an ant script.</p>
-
-<h2>Debugging note</h2>
-
-<p>We develop the library with Firefox (actually 3.6) and do our best efforts to support the other major browsers: Safari and Chrome, Opera, Internet Explorer (version 7 and above). However we advise you to use Firefox for development and for testing the library. The main reason is that if you allow local file access inside Firefox, you will be able to try and test all the examples directly from your file system without the need to run a Web server, which is very convenient.</p>
-
-<h3>How to enable access to local files on Firefox ?</h3>
-
-<p>Since Firefox version 3 you need to change one of the security settings to give access to local file system URLs to the XMLHttpRequest object. For that purpose open the about:config URL inside your browser and set security.fileuri.strict_origin_policy to false (with one click).</p>
-
-<p>Source: <a
- href="http://kb.mozillazine.org/Security.fileuri.strict_origin_policy">http://kb.mozillazine.org/Security.fileuri.strict_origin_policy</a>
-</p>
+<pre>axel/axel.js
+axel/axel.css
+axel/bundles/* (everything inside bundles)</pre>
 
 <hr />
-<p style="text-align: right; margin-right: 10%">Last update: Stéphane Sire, May 20 2010</p>
+<p style="text-align: right; margin-right: 10%">Last update: Stéphane Sire, 2013-01-27</p>
 </body>
 </html>
