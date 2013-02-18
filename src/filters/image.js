@@ -44,8 +44,8 @@
   // If optional w and h are given sets image size once loaded
   function _genImageInside (editor, src, w, h) {
     var handle = editor.getHandle(),
-        base = editor.getParam('base'),
-        cur = xtdom.createElement(editor.getDocument(), 'img');
+        cur = xtdom.createElement(editor.getDocument(), 'img'),
+        base;
     if (editor.image_resizable) { // FIXME: not sure this is really needed (GC...)
       $('img', handle).unbind('mouseenter');
     }                 
@@ -53,6 +53,9 @@
     if ((w !== undefined) || (h !== undefined)) {
       // pre-defined size (loading from XML data file)
       $(cur).one('load', [handle, w, h], _onLoad);
+    }
+    if (src.substr(0,5) !== 'http:') {
+      base = editor.getParam('base');
     }
     xtdom.setAttribute(cur, 'src', base ? base + src : src);
     xtdom.setAttribute(cur, 'alt', 'image ' + src);
