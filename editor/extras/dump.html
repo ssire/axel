@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>AXEL editor's input</title>
+  <title>AXEL editor's dump</title>
   <style>
     body {
       padding: 0.5em 2em;
@@ -30,30 +30,25 @@
   </style>
 
   <script type="text/javascript">
-    function loadInstanceData() {
+    function storeDump() {
       var t = document.getElementById ('input');
       var val = t.value;
       if (! val.match(/^\s*$/)) {
         if (window.opener) {
-          window.opener.AXEL_editor_handleInstanceData(val);
+          window.opener.AXEL_editor_storeInstanceData(val);
         }
-      }
-    }
-    function retrieveInstanceData() {
-      if (window.opener) {
-        window.opener.AXEL_editor_retrieveInstanceData();
       }
     }
   </script>
 </head>
 
 <body>
-  <p class="center">Paste some XML data or click “Retrieve” to paste the last dump<br/>Press “Load” to load it inside the editor</p>
+  <p class="center">Click “Store” to save document content for future reuse in “Input” window</p>
   <div id="content">
     <textarea id="input" rows="40" cols="20"></textarea>
   </div>
   <div id="footer">
-    <p class="center"><input type='button' value="Retrieve" onclick="retrieveInstanceData();"/> <input type='button' value="Load" onclick="loadInstanceData();"/> <input type='button' value="Close" onclick="javascript:window.close();"/></p>
+    <p class="center"><input type='button' value="Store" onclick="storeDump();"/> <input type='button' value="Close" onclick="javascript:window.close();"/></p>
   </div>
 </body>
 </html>

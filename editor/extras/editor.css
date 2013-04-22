@@ -13,7 +13,7 @@ body {
     left: 10px;
     right: 10px;
     z-index: 1;
-}    
+}
 
 #formularNoFrame {
     background: lightgray;
@@ -23,35 +23,49 @@ body {
     left: 10px;
     right: 10px;
     z-index: 1;
-}    
+}
 
 #url {
   width: 60%;
-}    
+}
 
-.single-line {
-  text-align: center;
+#fileToLoad {
+  top: -20px;
+  left: 0;
+  position: absolute;
+  visibility: hidden;
 }
 
 .hide {
   margin-left: 100px;
 }
 
-input {
-  margin-left: 5px;
-}  
+.info {
+  color: black;
+  text-align: center;
+}
+
+.error {
+  color: red;
+}
+
+.hint {
+  font-weight: bold;
+}
 
 #frameContainer {
   border: none;
-  background: white;  
+  background: white;
   position: fixed;
   top: 8em;
   right: 10px;
   bottom: 10px;
-  left: 10px; 
-  margin: 0;    
+  left: 10px;
+  margin: 0;
   padding: 0;
   z-index: 2;
+  transition: top 0.5s ease-in;
+  -webkit-transition: top 0.5s ease-in;
 }
 
 #container {

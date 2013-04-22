@@ -82,6 +82,7 @@
     <script type="text/javascript" src="../src/filters/autocomplete.js"></script>
     <script type="text/javascript" src="../src/filters/debug.js"></script>
     <script type="text/javascript" src="../src/filters/date.js"></script>
+    <script type="text/javascript" src="../src/filters/optional.js"></script>
 
     <!-- contributions -->
     <script type="text/javascript" src="../contribs/src/schemas/schemalogger.js"></script>
@@ -90,92 +91,78 @@
 
     <script type="text/javascript" src="extras/editor.js"></script>
     <script type="text/javascript" src="../templates/shared/templates.js"></script>
-    <script type="text/javascript">
-    var appController;
-
-    function initApp () {
-      var defaultTemplates = window.getDefaultTemplates ? getDefaultTemplates() : {};
-      // Application controller
-      appController = new viewerApp("../templates/", defaultTemplates);
-      appController.setBase('../axel/bundles');
-      appController.setXTigerStylesheet('../axel/axel.css');
-    }
-    xtdom.addEventListener(window, 'load', initApp, false);
-  </script>
   </head>
   <body>
     <div id="formular">
-      <form id="formUrl" action="javascript:alert('Oops, something went wrong !')"
-            onsubmit="return appController.submitPage();">
+      <form id="formUrl" action="javascript:alert('Oops, something went wrong !')">
 
         <p style="position: relative">
           <label>
-            Page : <input id="url" type="text" name="url" maxlength="100" value=""/>
+            Template file : <input id="url" type="text" name="url" maxlength="100" value=""/>
           </label>
 
           <!-- HTML5 files selection: non functional see notes in editor.js  -->
           <!-- <input type="file" id="fileInput" onchange="appController.handleFiles(this.files)"/> -->
 
-          <input type="button" value="Browse"
-            onclick="appController.localFileDialog(&quot;open&quot;, &quot;*.xtd; *.xhtml; *.html; *.xml&quot;, &quot;Select an XTiger Forms template&quot; , &quot;url&quot;)"/>
-          <span style="float: right; margin-right: 25px">
-            <input type="submit" value="Visualize"/>
-            <input type="reset" onclick="appController.resetView()"/>
+          <input id="transform" type="submit" value="Transform"/>
+          <span style="float: right; margin-right: 20px">
+            <input id="resetEditor" type="button" value="Reset"/>
+            <input id="browseTemplate" class="mozilla" type="button" value="Browse"/>
           </span>
         </p>
 
         <p style="position: relative">
-          <label>
-            Template :
-            <select id="foldersList" onchange="appController.updateSelectedFolder()"></select>
-          </label>
-          <select id="templatesList" onchange="appController.updateSelectedTemplate()"></select>
-          <input id="prefs" type="button" value="Preferences" onclick="appController.setPreferences();"/>
+          <label>Preselection : <select id="foldersList"></select></label> <select id="templatesList"></select>
           <span style="margin-left: 20px">
-            <input type="button" id="previewToggle" value="Preview" onclick="appController.doToggleViewMode();"/>
-            <input type="button" id="previewToggle" value="Source" onclick="javascript:appController.viewTemplateSource(event)"/>
+            Template :
+            <input id="sourceTemplate" class="editing" type="button" value="Source"/>
+            <input id="dumpSchema" class="editing" type="button" value="Schema"/>
           </span>
-          <span style="float: right;margin-right: 25px">
-            <input type="button" value="Schema" onclick="appController.dumpSchema();"/>
-            <input type="button" value="Dump" onclick="appController.dump();"/>
-            <input type="button" value="Input" onclick="appController.inputInstanceData();"/>
-            <input type="button" value="Save" onclick="appController.localSaveInstanceData('fileName');"/>
-            <input type="button" value="Load" onclick="appController.localLoadInstanceData('fileName');"/>
+          <span style="margin-left: 20px">
+            Document :
+            <input id="previewToggle" class="editing" style="margin-right: 10px" type="button" value="Preview"/>
+            <input id="dump" class="editing" type="button" value="Dump"/>
+            <input id="download" class="editing" type="button" value="Download"/>
+            <input id="directInput" class="editing" style="margin-left: 10px" type="button" value="Input"/>
+            <input id="load" class="editing" type="button" value="Load"/><input type="file" id="fileToLoad" accept=".xml,.xhtml,application/xhtml+xml,text/xml"/>
+            <input id="new" class="editing" style="margin-left: 10px" type="button" value="New"/>
           </span>
         </p>
 
-        <p id="titleUrl" class="single-line">...</p>
+        <div style="float: right;margin-right: 20px; font-size: 80%">
+          Preferences : <input id="prefs" type="button" value="Show" style="font-size: 60%"/>
+        </div>
+
+        <p id="titleUrl" class="hint">Enter a template file path in the input field above or preselect one then hit [Transform] to generate the editor</p>
 
         <!-- Hidden preferences panel -->
         <div id="preferences">
           <p>
-            <label>Template repository :
-              <input id="templateRepos" type="text" name="templateRepos" maxlength="50" value=""/>
+            <label>Template folder :
+              <input id="templateRepos" type="text" name="templateRepos" maxlength="100" value=""/>
             </label>
-            <input type="button" value="Browse"
-              onclick="appController.localFileDialog(&quot;folder&quot;, null, &quot;Select a folder that contains some XTiger Forms templates&quot;, &quot;templateRepos&quot;)"/>
-            <input type="button" value="Ok" onclick="appController.savePreferences()"/>
+            <input id="setTemplateFolder" type="button" value="Set"/>
+            <input id="browseTemplateFolder" class="mozilla" type="button" value="Browse"/>
             <span style="position: absolute; right: 30px">
+              <input type="checkbox" value="Profile" name="profile"/>
+              <label for="profile">Profile</label>
+            </span>
+          </p>
+          <p>
+            <label>
+              XHR output file :
+              <input id="fileName" type="text" name="fileName" maxlength="100" value=""/>
+            </label>
+            <input id="saveToFile" class="editing" type="button" value="Save"/>
+            <input id="loadFromFile" class="editing" type="button" value="Load"/>
+            <span style="position: absolute; right: 30px">
+              Serialization :
               <input type="radio" value="standard" name="algorithm" checked="true"/>
               <label for="robust">Std</label>
               <input type="radio" value="html" name="algorithm"/>
               <label for="html">Html</label>
               <input type="radio" value="robust" name="algorithm"/>
               <label for="robust">Robust</label>
-            </span>
-          </p>
-          <p>
-            <label>
-              File name <i>(paths relative to editor.xhtml)</i>:
-              <input id="fileName" type="text" name="fileName" maxlength="50" value=""/>
-            </label>
-            <input type="button" value="Save" onclick="appController.saveToFile()"/>
-            <input type="button" value="Load" onclick="appController.loadFromFile()"/>
-            <input type="button" value="Dump" onclick="appController.dumpToServer();" disabled="disabled"/>
-            <i>(remote server only)</i>
-            <span style="position: absolute; right: 30px">
-              <input type="checkbox" value="Profile" name="profile"/>
-              <label for="profile">Profile</label>
             </span>
           </p>
         </div>

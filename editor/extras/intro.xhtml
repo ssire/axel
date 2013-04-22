@@ -21,37 +21,53 @@
     #copyright > a {
       color: gray;
     }
+    a {
+      color: navy;
+      text-decoration: none;
+    }
+    #no-iframe {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
-  <h1>AXEL Demonstration Editor</h1>
-  <p style="font-size:120%;text-align:center;color:navy">Select a template file then click on <code>Visualize</code> to generate the corresponding document editor</p>
-  <p>This application can be run either from a web server or directly from your local file system (URL starting with <tt>file:///</tt>).</p>
+  <h1>AXEL Template-driven Document Editor</h1>
+  <p>This application can be run either from a web server or directly from your local file system (URL starting with <tt>file:///</tt>). It is targeted first at <a target="blank" href="http://ssire.github.io/xtiger-xml-spec/">XTiger XML document template</a> creators so that they can test their templates.</p>
   <p>If you open the editor from the local file system you need to authorize access to local URL from the XMLHTTPRequest object. For <strong>Firefox</strong> type <tt>about:config</tt> in the URL bar then click on <tt>security.fileuri.strict_origin_policy</tt>
     to set it to <tt>false</tt> (source: <a href="http://kb.mozillazine.org/Security.fileuri.strict_origin_policy"
     target="blank">mozillazine.org</a>). We didn't find how to do it with other browsers, so if you know let us know.</p>
-<p>If you open the editor from a web server (URL starting with <tt>http://</tt>), including a WebDav server, it should work
-  on most browsers.</p>
+  <p>If you open the editor from a web server (URL starting with <tt>http://</tt>), including a WebDav server, it should work on most browsers.</p>
   <ul>
-    <li>Page : enter a file URL to open a template file as a document to edit</li>
-    <li>Template : select directly a predefined template file</li>
-    <li>[Visualize] : open the selected template file</li>
+    <li>Template file : enter a file path relative to the editor's location, or an absolute path to select a template file</li>
+    <li>Preselection : select directly a predefined template file</li>
+    <li><b>[Transform] : generate the document editor from the selected template file</b></li>
+    <li>[Source] : display the template source code inside a new window (Firefox only)</li>
+    <li>[Schema] : extracts a schematic representation of the template target data model (<i>to be used on an empty document</i>)</li>
     <li>[Preview] : hide / show user interface controls to edit document structure</li>
-    <li>[Source] : open a window with the current template source code (Firefox only)</li>
     <li>[Dump] : dump the XML content of the current document inside a popup window</li>
+    <li>[Download] : download the document data to your download folder (<i>not on all browsers</i>)</li>
     <li>[Input] : enter XML data from a popup window to the current document</li>
-    <li>[Save] : prompts a dialog to select a local XML file name and saves the XML content to it (Firefox &lt; 17 only)</li>
-    <li>[Load] : prompts a dialog to select a local XML file name and loads XML data from it (Firefox &lt; 17 only)</li>
+    <li>[Load] : prompt a dialog to select a local XML file name and load data from it (<i>not on all browsers</i>)</li>
   </ul>
-  <p>The [Preferences] button opens a pannel with more commands :</p>
+  <p>The Preferences pannel adds more commands :</p>
   <ul>
-    <li>Template repository [Ok] : enter the path of a folder containing templates, they will be listed in the Template popup menu</li>
-    <li>File name [Save] [Load] [Dump]: save/load XML content in the current document, depending on the browser, [Save] and [Load] may work only if you have opened the application from a local server such as the test server proposed in <kbd>scripts/server</kbd>.
-    [Dump] asks the server to only dump the data without saving it, it works only with the test server.</li>
+    <li>Template folder [Set] : enter the path of a folder to include its template files in the preselection popup as <i>#yours#</i></li>
+    <li>Output file [Save] [Load]: saves/load document data using XMLHTTRequest, it may work or not depending on the browser / version and access mode (file system or web server), for test purpose you can open the application from the test server in <kbd>scripts/server</kbd>.</li>
   </ul>
-  <p>The template files listed in the "Template" popup menu are stored inside the "templates" folder.</p>
+  <p>The preselection templates are defined inside the <tt>templates/shared/templates.js</tt> file of the distribution.</p>
+  <p id="no-iframe">NOTE: the template file URL must have the same origin as the editor itself because of cross-domain access restrictions in web browsers. The reason is that the AXEL library inside the editor must be granted access to the iframe that contains the template file.</p>
 
-  <p id="copyright">AXEL editor, by Stéphane Sire, <a href="http://media.epfl.ch" target="_new">Media Research</a> and <a href="http://www.oppidoc.fr" target="_new">Oppidoc</a></p>
+  <p id="copyright">AXEL editor, (c) 2013 Stéphane Sire, <a href="http://www.oppidoc.fr" target="_new">Oppidoc</a> and <a href="http://media.epfl.ch" target="_new">Media Research</a></p>
+
+  <script type="text/javascript" charset="utf-8">
+    var n;
+    if (window.parent !== window) {
+      n = document.getElementById('no-iframe');
+      if (n) {
+        n.style.display = 'block';
+      }
+    }
+  </script>
 </body>
 </html>
