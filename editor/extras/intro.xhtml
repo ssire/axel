@@ -46,14 +46,14 @@
     <li>[Schema] : extracts a schematic representation of the template target data model (<i>to be used on an empty document</i>)</li>
     <li>[Preview] : hide / show user interface controls to edit document structure</li>
     <li>[Dump] : dump the XML content of the current document inside a popup window</li>
-    <li>[Download] : download the document data to your download folder (<i>not on all browsers</i>)</li>
+    <li>[Download] : download the document data to your download folder (HTML5 feature <i>not on all browsers</i>)</li>
     <li>[Input] : enter XML data from a popup window to the current document</li>
-    <li>[Load] : prompt a dialog to select a local XML file name and load data from it (<i>not on all browsers</i>)</li>
+    <li>[Load] : prompt a dialog to select a local XML file name and load data from it (HTML5 feature <i>not on all browsers</i>)</li>
   </ul>
   <p>The Preferences pannel adds more commands :</p>
   <ul>
     <li>Template folder [Set] : enter the path of a folder to include its template files in the preselection popup as <i>#yours#</i></li>
-    <li>Output file [Save] [Load]: saves/load document data using XMLHTTRequest, it may work or not depending on the browser / version and access mode (file system or web server), for test purpose you can open the application from the test server in <kbd>scripts/server</kbd>.</li>
+    <li>Output file [Write] [Read]: saves/load document data using Ajax, it may work or not depending on the browser / version and access mode (file system or web server), for test purpose you can open the application from the test server in <kbd>scripts/server</kbd>.</li>
   </ul>
   <p>The preselection templates are defined inside the <tt>templates/shared/templates.js</tt> file of the distribution.</p>
   <p id="no-iframe">NOTE: the template file URL must have the same origin as the editor itself because of cross-domain access restrictions in web browsers. The reason is that the AXEL library inside the editor must be granted access to the iframe that contains the template file.</p>

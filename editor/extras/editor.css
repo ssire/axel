@@ -1,7 +1,7 @@
 /* AXEL demo editor */
 
 body {
-  min-width: 650px;
+  min-width: 960px;
 }
 
 #formular {
@@ -23,6 +23,10 @@ body {
     left: 10px;
     right: 10px;
     z-index: 1;
+}
+
+body.noframe #prefsPanel {
+  display: none;
 }
 
 #url {
@@ -76,9 +80,9 @@ body {
 }
 
 #templateRepos {
-  width: 50%;
+  width: 500px;
 }
 
 #fileName {
-  width: 30%;
+  width: 440px;
 }
