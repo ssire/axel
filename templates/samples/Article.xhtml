@@ -16,7 +16,9 @@
 
       <xt:component name="Parag">
         <div class="content">
-          <xt:use types="text" handle="p" param="shape=parent;type=textarea;layout=float;filter=wiki">Describe the project here</xt:use>
+          <p>
+            <xt:use types="text" param="shape=parent;type=textarea;filter=wiki">Describe the project here</xt:use>
+          </p>
         </div>
       </xt:component>
 
@@ -58,13 +60,13 @@
 
       <xt:component name="SubTitle">
         <div class="content">
-          <xt:use types="text" handle="h3" param="shape=parent;type=textarea;layout=float">Sub Section Title</xt:use>
+          <xt:use types="text" handle="h3" param="shape=parent;type=textarea">Sub Section Title</xt:use>
         </div>
       </xt:component>
 
       <xt:component name="SubSubTitle">
         <div class="content">
-          <xt:use types="text" handle="h4" param="shape=parent;type=textarea;layout=float">Sub Sub Section Title</xt:use>
+          <xt:use types="text" handle="h4" param="shape=parent;type=textarea">Sub Sub Section Title</xt:use>
         </div>
       </xt:component>
 
@@ -200,6 +202,19 @@
       <xt:component name="loc">
         <xt:use types="text" label="city" param="type=input">city</xt:use>,
         <xt:use types="text" label="country" param="type=input">country</xt:use>
+      </xt:component>
+      
+      <xt:component name="Illustration">
+        <div class="photo content">
+          <div class="photo-spacer">
+            <xt:use types="photo" label="Photo" param="photo_URL=./images;trigger=click;class=article"/>
+            <br/>
+            Ratio : <xt:attribute types="text" name="Ratio" default="100"/> %
+          </div>
+          <p class="photo caption">
+            <xt:use types="text" label="Caption" param="shape=parent-20px;type=textarea" option="unset">Cliquez pour saisir la légende</xt:use>
+          </p>
+        </div>
       </xt:component>
 
     </xt:head>

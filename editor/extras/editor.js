@@ -2,7 +2,7 @@
  *
  * author      : Stéphane Sire
  * contact     : s.sire@oppidoc.fr
- * last change : 2013-04-26
+ * last change : 2013-04-27  
  *
  * AXEL demo editor
  */
@@ -38,13 +38,16 @@
       return (0 === document.location.href.indexOf('file://'));
     },
 
-    // Returns fn if the application hasn't been launched from a file:// URL
-    // Returns a URL obtained by appending the path component of the file:// URL to fn otherwise
+    // Rewrite fn if it is a local relative path by appending it to the base URL of the editor
     getAbsoluteFilePath : function (fn) {
-      if (fn.charAt(0) !== '/') { // not an absolute path (except on Windows...)
-        var localPath = document.location.href.match(/file:\/\/(\/.*)\/[^\/]*/);
-        if (localPath) {
-          return (localPath[1] + '/' + fn);
+      var m, tmp = window.location.href;
+      if ((fn.indexOf('file') === 0) && (fn.charAt(0) !== '/') && (fn.charAt(0) !== '\\')) {
+        if (window.location.hash) {
+          tmp = tmp.substring(0, tmp.indexOf('#'));
+        }
+        m = tmp.match(/file:\/\/(\/.*)\/[^\/]*/);
+        if (m) {
+          return (m[1] + '/' + fn);
         }
       }
       return fn;
@@ -531,10 +534,11 @@
         if (this.curForm) {
           this.log('Self-transformed template detected : the editor has managed to plug on its AXEL object', 0);
           $('input.editing').removeAttr('disabled'); // enable editor's commands
+          $(document).triggerHandler('axel-template-transformed', [this]);
         } else {
           this.log('Self-transformed template detected : the editor has failed to plug on its AXEL object', 1);
         }
-      } else { // AXEL-FORMS compatibility
+      } else {
         if ($('div[data-template]', iframeDoc).add('body[data-template="#"]', iframeDoc).length === 0) {
           this.curForm = new xtiger.util.Form (this.xttMakeLocalURLFor(this.config.baseUrl));
           if (this.curForm.setTemplateSource (iframeDoc, errLog)) {
@@ -547,10 +551,9 @@
               this.log('Transformation failed', 1);
             } else {
               this.log('Transformation success', 0);
-              if (window.jQuery) {
-                // triggers completion event on main document
-                $(document).triggerHandler('axel-editor-ready', [this]);
-              }
+              // triggers completion event on main document
+              $(document).triggerHandler('axel-editor-ready', [this]);
+              $(document).triggerHandler('axel-template-transformed', [this]);
             }
             if (e.profile.checked) {
               console.profileEnd();
@@ -563,10 +566,9 @@
         } else {
           this.curForm = undefined;
           this.log('Template with embedded transformation command detected - use AXEL-FORMS editor to transform it !', 1);
-          if (window.jQuery) {
-            // triggers completion event on main document => forward to AXEL-FORMS
-            $(document).triggerHandler('axel-editor-ready', [this]);
-          }
+          // triggers completion event on main document => forward to AXEL-FORMS
+          $(document).triggerHandler('axel-editor-ready', [this]);
+          $(document).triggerHandler('axel-template-transformed', [this]);          
         }
         if (errLog.inError()) { // summarizes errors
           alert(errLog.printErrors());
@@ -1049,31 +1051,58 @@
     // Implements hash conversion to preselection so that for instance
     // #samples/Article directly transform the Article.xhtml template
     loadFromHash : function () {
-      var t, module, name, i, j;
-      if (location.hash && (location.hash.split('/').length === 2)) {
-        t = location.hash.split('/');
-        module = t[0].substr(1);
-        name = t[1];
-        for (i = 0; i < this.menuModel.length; i++) {
-          if (this.menuModel[i].name === module) {
-            break;
-          }
+      var t, module, name, data, i, j, tpl = location.hash;
+      // analyses hash part of the URL of the form #template[+data]
+      if (tpl) {
+        t = tpl.indexOf('+');
+        if (t !== -1) {
+          data = $.trim(tpl.substring(t + 1));
+          tpl = tpl.substring(1, t);
+        } else {
+          tpl = tpl.substring(1);
         }
-        if (i < this.menuModel.length) {
-          this.installTemplateMenu(i);
-          this.setSelection(document.getElementById('foldersList'), i);
-          for (j = 0; j < this.menuModel[i].files.length; j++) {
-            if (this.menuModel[i].files[j].substr(0, name.length) === name) {
+      }
+      // automatic loading of template if any 
+      if ((tpl.indexOf('http') === 0) ||(tpl.indexOf('file') === 0)) { // template path by full URL
+        $('#url').val(tpl);
+        updateTransform();
+        this.transform();
+      } else { // template path by module/file convention
+        t = tpl ? tpl.split('/') : [];
+        if (t.length === 2) {
+          module = t[0];
+          name = t[1];
+          for (i = 0; i < this.menuModel.length; i++) {
+            if (this.menuModel[i].name === module) {
               break;
             }
           }
-          if (j < this.menuModel[i].files.length) { // hash points to a preselection
-            this.setSelection(document.getElementById('templatesList'), j);
-            this.updateTemplateFile();
-            // location.hash = ""; // otherwise it breaks axel.css injetion into iframe
-            this.transform();
+          if (i < this.menuModel.length) {
+            this.installTemplateMenu(i);
+            this.setSelection(document.getElementById('foldersList'), i);
+            for (j = 0; j < this.menuModel[i].files.length; j++) {
+              if (this.menuModel[i].files[j].substr(0, name.length) === name) {
+                break;
+              }
+            }
+            if (j < this.menuModel[i].files.length) { // hash points to a preselection
+              this.setSelection(document.getElementById('templatesList'), j);
+              this.updateTemplateFile();
+              // location.hash = ""; // otherwise it breaks axel.css injetion into iframe
+              this.transform();
+            }
           }
         }
+      }
+      // automatic loading of data if any (bind only once to event)
+      // FIXME: prevent callback execution if template fail to transform ?
+      if (data) {
+        $(document).one('axel-template-transformed', function (event, controller) {
+          $('#fileName').val(data);
+          controller.readDocument();
+          controller.log('Loading document "' + data + '"', 0);
+          }
+        );
       }
     }
   };
