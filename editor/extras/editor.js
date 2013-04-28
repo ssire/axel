@@ -2,7 +2,7 @@
  *
  * author      : Stéphane Sire
  * contact     : s.sire@oppidoc.fr
- * last change : 2013-04-27  
+ * last change : 2013-04-28
  *
  * AXEL demo editor
  */
@@ -18,7 +18,7 @@
         this.error = 'uncalled';
         this.list = null;
     },
-    
+
     // Class to open a window for logging data
     // Alternative could be to make it directly a DOMLogger (?)
     LogWin : function ( name, width, height, isTranscoding ) {
@@ -39,9 +39,9 @@
     },
 
     // Rewrite fn if it is a local relative path by appending it to the base URL of the editor
-    getAbsoluteFilePath : function (fn) {
+    makeAbsoluteUrl : function (fn) {
       var m, tmp = window.location.href;
-      if ((fn.indexOf('file') === 0) && (fn.charAt(0) !== '/') && (fn.charAt(0) !== '\\')) {
+      if (Utility.isLocalSession() && (fn.indexOf('file') === 0) && (fn.charAt(0) !== '/') && (fn.charAt(0) !== '\\')) {
         if (window.location.hash) {
           tmp = tmp.substring(0, tmp.indexOf('#'));
         }
@@ -56,6 +56,8 @@
     // Turns url into a effective url that can be used to load a resource file.
     // Simply escapes url characters if the caller has been started from a local file, otherwise
     // appends the proxy string so that the url is accessed through a proxy.
+    // FIXME: cleanup PROXY stuff to use a preference "Proxy" to be used together
+    // with a custom web server implementing the Proxy to fetch templates and XML files (e.g. with Oppidum)
     makeURLForFile : function (url, proxy) {
       if ((Utility.isLocalSession()) || (url.indexOf('file://') === 0) || (url.indexOf('http://') === -1)) {
         return url;
@@ -429,7 +431,7 @@
     // FIXME: broken since FF 17 !!!
     fileDialog : function (mode, filter, msg, inputName) {
       if (this.checkFireFox()) {
-        var filePath = xtiger.util.fileDialog(mode, filter, msg);
+        var filePath = this.doFileDialog(mode, filter, msg);
         if (filePath) {
           var e = document.getElementById('formUrl');
             e[inputName].value = filePath;
@@ -568,7 +570,7 @@
           this.log('Template with embedded transformation command detected - use AXEL-FORMS editor to transform it !', 1);
           // triggers completion event on main document => forward to AXEL-FORMS
           $(document).triggerHandler('axel-editor-ready', [this]);
-          $(document).triggerHandler('axel-template-transformed', [this]);          
+          $(document).triggerHandler('axel-template-transformed', [this]);
         }
         if (errLog.inError()) { // summarizes errors
           alert(errLog.printErrors());
@@ -668,33 +670,36 @@
 
     // Dumps the currently opened template document in a new window
     dumpDocument : function () {
-      var dump,
-          _this = this,
-          algo = this.getPreferredAlgo('save');
-          params = "width=600,height=400,status=yes,resizable=yes,scrollbars=yes";
+      var algo = this.getPreferredAlgo('save');
+          params = "width=600,height=400,status=yes,resizable=yes,toolbar=no,location=no";
       if (algo && this.checkTemplate ()) {
         if (xtiger.cross.UA.IE) {
-          this.dumpPopupWindow = window.open(this.config.path2dumpDlg);
+          if ((! this.dumpPopupWindow) || (this.dumpPopupWindow.closed)) {
+            this.dumpPopupWindow = window.open(this.config.path2dumpDlg);
+            // $(this.dumpPopupWindow).one('load', $.proxy(this.doDumpDocument, this)); // does not work
+            this.doDumpDocument();
+          } else {
+            this.doDumpDocument();
+          }
         } else {
-          this.dumpPopupWindow = window.open(this.config.path2dumpDlg, "Document Data Dump", params);
-          this.dumpPopupWindow.focus ();
+          if ((! this.dumpPopupWindow) || (this.dumpPopupWindow.closed)) {
+            this.dumpPopupWindow = window.open(this.config.path2dumpDlg, "dumpDocument", params);
+            this.dumpPopupWindow.focus();
+            $(this.dumpPopupWindow).one('load', $.proxy(this.doDumpDocument, this));
+          } else {
+            this.doDumpDocument(); // already there
+          }
         }
-        this.chooseSerializer();
-        dump = new xtiger.util.DOMLogger ();
-        this.curForm.serializeData (dump);
-        $(this.dumpPopupWindow).bind('load', function () { $('#input', _this.dumpPopupWindow.document).val(dump.dump('*')); });
       }
     },
 
     // Try to read document using XHR 'get' or any browser's dependent method
     readDocument : function () {
-      if (this.checkTemplate()) {
-        var n = document.getElementById('fileName');
-        var fn = n.value;
-        if (! fn.match(/^\s*$/)) {
-          var url = Utility.isLocalSession() ? Utility.getAbsoluteFilePath(fn) : fn;
-          this.doAjaxLoad(url, fn);
-        }
+      var url,
+          fn = $.trim($('#fileName').val())
+      if (fn) {
+        url = Utility.makeAbsoluteUrl(fn);
+        this.doAjaxLoad(url, fn);
       }
     },
 
@@ -749,30 +754,19 @@
     },
 
     // Try to save document using XHR 'post' method or any other browser's dependent method
+    // FIXME: make it compatible with webDAV ('post', 'put', etc. ?)
     writeDocument : function  () {
-      var n, fn, url, result, sos, algo;
-      if (this.checkTemplate ()) {
-        n = document.getElementById('fileName');
-        fn = n.value;
-        if (fn.search(/\S/) !== -1) { // not empty string
-          url = Utility.isLocalSession() ? Utility.getAbsoluteFilePath(fn) : fn;
-          if (confirm('Are your sure you want to save current data to "' + fn + '" ?')) {
-            result = new xtiger.util.Logger();
-            this.chooseSerializer();
-            if (xtiger.cross.UA.gecko && Utility.isLocalSession()) { // Uses FF local save
-              this.doAjaxSave(url, fn);
-            } else {
-              if (this.curForm.postDataToUrl(url, xtiger.cross.getXHRObject())) {
-                this.log('Data saved : ' + this.curForm.msg, 0);
-              } else {
-                if (Utility.isLocalSession()) {
-                  sos = "Data save failed most probably because POST is not support by your browser when writing to the local file system";
-                  this.log(sos, 1);
-                } else {
-                  this.log(this.curForm.msg, 1);
-                }
-              }
-            }
+      var filePath, url, result;
+      filePath = $.trim($('#fileName').val());
+      if (filePath) {
+        url = Utility.makeAbsoluteUrl(filePath);
+        if (confirm('Are your sure you want to save current data to "' + filePath + '" ?')) {
+          result = new xtiger.util.Logger();
+          this.chooseSerializer();
+          if (xtiger.cross.UA.gecko && Utility.isLocalSession()) { // Uses FF local save
+            this.doXPCOMSave(url, filePath);
+          } else {
+            this.doAjaxSave(url, xtiger.cross.getXHRObject());
           }
         }
       }
@@ -784,6 +778,15 @@
     /*                                                   */
     /*****************************************************/
 
+    // Dumps cur form content inside dump window
+    doDumpDocument :function () {
+      var dump = new xtiger.util.DOMLogger ();
+      this.chooseSerializer();
+      if (this.curForm) {
+        this.curForm.serializeData (dump);
+      }
+      $('#input', this.dumpPopupWindow.document).val(dump.dump('*'));
+    },
 
     // HTML5 file input dialog handler that loads local file into the document
     doLoadLocalFileIntoDocument : function (ev) {
@@ -812,6 +815,7 @@
     },
 
     // Implementation for "Read" command to read document using Ajax
+    // FIXME: use Ajax XHR 'GET' from jQuery (?)
     doAjaxLoad : function (url, name) {
       var dataSrc, loader, endt, duration,
           startt = new Date(),
@@ -819,6 +823,17 @@
       if (e.profile && e.profile.checked) { console.profile(); }
       var result = new xtiger.util.Logger();
       var data = xtiger.debug.loadDocument(url, result);
+      // FIXME: when using Ajax XHR directly check if this legacy code is still useful with FF (?)
+      // if (xhr.responseXML) {
+      //   this.loadData (new xtiger.util.DOMDataSource (xhr.responseXML), logger);
+      // } else {
+      //   var res = xhr.responseText;
+      //   res = res.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, ""); // bug 336551 MDC
+      //   xtiger.cross.log('warning', 'attempt to use string parser on ' + url + ' instead of responseXML');
+      //   if (! dataSource.initFromString(res)) { // second trial
+      //     this._report (0, 'failed to create data source for data from file ' + url + '. Most probably no documentElement', logger);
+      //   }
+      // }
       if (data) {
         dataSrc = new xtiger.util.DOMDataSource(data);
         loader = this.getPreferredLoader();
@@ -835,17 +850,77 @@
       if (e.profile && e.profile.checked) { console.profileEnd(); }
     },
 
-    // Implementation for "Write" command to write command using Ajax
-    // Saves the file to an absolute path "path" on the local disk (FF only)
+    // DEPRECATED: FF only method that stopped to work from FF 17 (privilege manager changes)
+    // Saves the file to an absolute path "path" on the local disk
     // The path must contain the file name, "name" is just here for feedback messages
-    doAjaxSave : function (path, name) {
-      var startt = new Date();
-      if (this.curForm.saveDataToFile (path)) {
+    doXPCOMSave : function (path, name) {
+      var dump,
+          file, outputStream, uc, data_stream, result,
+          success = true,
+          startt = new Date();
+      // XPCOM component (nsILocalFile)
+      try {
+        netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+      } catch (e) {
+        this.log('Permission to save data to "' + path + '" was denied. Exception : ' + e.name + '/' + e.message, 1);
+        success = false;
+      }
+      if (success) {
+        try {
+          // converts template to a string buffer
+          dump = new xtiger.util.DOMLogger ();
+          this.curForm.serializeData(dump);
+          // creates and/or saves file
+          file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+          file.initWithPath(filename);
+          if (file.exists() === false) {
+            file.create( Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 420 );
+          }
+          outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
+          outputStream.init( file, 0x04 | 0x08 | 0x20, 420, 0 );
+          //UTF-8 convert
+          uc = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+          uc.charset = "UTF-8";
+          data_stream = uc.ConvertFromUnicode(dump.dump('*'));
+          result = outputStream.write(data_stream, data_stream.length );
+          outputStream.close();
+        } catch (e) {
+          this.log('Cannot save data to file "' + path + '". Exception : ' + e.name + '/' + e.message, 1);
+          success = false;
+        }
+      }
+      if (success) {
         var endt = new Date();
         var duration = endt.getTime() - startt.getTime();
         this.log('File "' + name + '" saved in ' + duration + 'ms', 0);
-      } else {
-        this.log(this.curForm.msg, 1);
+      }
+    },
+
+    // Saves XML content of the current document to a URL using XMLHTTPRequest
+    // TODO: rewrite with $.ajax
+    doAjaxSave : function (url, xhr, logger) {
+      var dump;
+      // 1. converts template to a string buffer
+      dump = new xtiger.util.DOMLogger ();
+      this.curForm.serializeData(dump);
+      // 2. sends it with a synchronous POST request
+      try {
+        xhr.open("POST", url,  false);
+        xhr.setRequestHeader("Content-Type", "application/xml; charset=UTF-8");
+        xhr.send(dump.dump('*')); // FIXME: not sure Javascript is UTF-8 by default ?
+        if (xhr.readyState === 4) {
+          // case 0 for local save
+          if ((xhr.status === 200) || (xhr.status === 201) || (xhr.status === 0)) {
+            this.log('Data saved to ' + url, 0);
+          } else {
+            this.log('Can\'t post data to "' + url + '". Error : ' + xhr.status, 1);
+          }
+        } else {
+          this.log('Can\'t post data to "' + url + '". Error readyState is ' + xhr.readyState, 1);
+        }
+      } catch (e) {
+        xhr.abort();
+        this.log('Can\'t post data to "' + url + '". Exception : ' + e.name + '/' + e.message, 1);
       }
     },
 
@@ -859,6 +934,41 @@
             this.log (this.curForm.msg, 1);
           }
         }
+      }
+    },
+
+    // FireFox only method
+    // Opens a dialog for opening a local file or folder depending on the mode
+    // Uses a filter if not null and specifies the msg to display in the dialog box
+    // See https://developer.mozilla.org/en/nsIFilePicker
+    // Returns a FireFox file object or false if the selection was cancelled
+    doFileDialog : function (mode, filter, msg) {
+      var fp;
+      try {
+         netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+      } catch (e) {
+         alert("Permission to get enough privilege was denied.");
+         return false;
+      }
+      var nsIFilePicker = Components.interfaces.nsIFilePicker;
+      fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+      if (filter) {
+        fp.appendFilter("My filter", filter);
+      }
+      var m;
+      if (mode == 'open') {
+        m = nsIFilePicker.modeOpen;
+      } else if (mode == 'save') {
+        m = nsIFilePicker.modeSave;
+      } else { // assumes 'folder'
+        m = nsIFilePicker.modeGetFolder;
+      }
+      fp.init(window, msg, m);
+      var res = fp.show();
+      if ((res == nsIFilePicker.returnOK) || (res == nsIFilePicker.returnReplace)){
+        return fp.file.path;
+      } else {
+        return false;
       }
     },
 
@@ -1062,7 +1172,7 @@
           tpl = tpl.substring(1);
         }
       }
-      // automatic loading of template if any 
+      // automatic loading of template if any
       if ((tpl.indexOf('http') === 0) ||(tpl.indexOf('file') === 0)) { // template path by full URL
         $('#url').val(tpl);
         updateTransform();

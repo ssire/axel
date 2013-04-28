@@ -631,15 +631,19 @@ xtiger.editor.Repeat.prototype = {
   callPrimitiveEditors : function (top, action) {             
     var treeWalker = xtiger.cross.makeTreeWalker (top, xtdom.NodeFilter.SHOW_ELEMENT,
         function (n) { 
-            if (n.xttPrimitiveEditor && n.xttPrimitiveEditor.can(action)) {
+            if (n.xttPrimitiveEditor && n.xttPrimitiveEditor.can && n.xttPrimitiveEditor.can(action)) {
               return xtdom.NodeFilter.FILTER_ACCEPT
             } else {
               return xtdom.NodeFilter.FILTER_SKIP; 
             }
         } );
-    while(treeWalker.nextNode()) {
-      treeWalker.currentNode.xttPrimitiveEditor.execute(action, this);
-    }   
+    try {
+      while(treeWalker.nextNode()) {
+        treeWalker.currentNode.xttPrimitiveEditor.execute(action, this);
+      }   
+    } catch (e) {
+      // xtiger.cross.log('error', 'Exception in tree walker');
+    }
   }, 
     
   // Dispatches an event (which is converted to a builtin method call) on a slice

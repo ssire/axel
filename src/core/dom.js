@@ -12,10 +12,17 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/*
- * This file declares xtdom functions which are not browser dependent
- * Browser dependent functions are declared either in defaultbrowser.js or iebrowser.js
- */
+/*****************************************************************************\
+|                                                                             |
+|  xtdom module                                                               |
+|                                                                             |
+|  Low level functions to plug into the DOM                                   |
+|  Not browser dependent                                                      |
+|                                                                             |
+|*****************************************************************************|
+|  See defaultbrowser.js or iebrowser.js for browser depedent functions       |
+|                                                                             |
+\*****************************************************************************/
 
 xtdom.counterId = 0;
   
@@ -325,102 +332,12 @@ xtdom.findPos = function (obj) {
   return [curleft,curtop];
 };
 
-/**
- * <p>
- * Returns the absolute position (top-left corner) of the given element, that
- * is, the offset that will place the given element at his current position if
- * its position attribute is "absolute". The position is given relatively of the
- * containing block (see CSS spec) of the given element.
- * </p>
- * 
- * From http://www.quirksmode.org/js/findpos.html
- * 
- * <p>
- * NOTE The method does not support (yet) floating elements and may reacts
- * imprevisibly if such elements are encountered.
- * </p>
- * 
- * @param {DOM Document}
- *            aDocument The document that contains the element to analyse
- * @param {HTMLElement}
- *            aElement An HTML element from which the position is deduced
- * @return {integer[]} An array representing the top and the left absolute
- *         offset
- */
-xtdom.findPosAsSibling = function (aDocument, aElement) {
-  var _curleft = _curtop = 0;
-  var _obj = aElement;
-  if (_obj.offsetParent) {
-    _curleft += _obj.offsetLeft;
-    _curtop += _obj.offsetTop;
-    
-    while (_obj = _obj.offsetParent) {
-      if (aDocument.defaultView)
-        var _pos = aDocument.defaultView.getComputedStyle(_obj, null).getPropertyValue('position');
-      else if (a)
-      /* correcting scroll */
-      if (_obj.scrollTop && _pos == 'absolute') {
-        _curtop -= _obj.scrollTop;
-      }     
-      if (_obj.scrollLeft && (_pos == 'absolute')) {
-        _curleft -= _obj.scrollLeft;
-      }
-      if (_pos == 'absolute' || _pos == 'fixed' || _pos == 'relative')
-        break; // The containing block is found
-      
-      _curleft += _obj.offsetLeft;
-      _curtop += _obj.offsetTop;
-    }
-  }
-  return [_curleft, _curtop];
-}
-
-/**
- * <p>
- * returns true if the second
- * </p>
- */
-xtdom.isOffsetAncestorOf = function (aNode, anAncestor) {
-  var _n = aNode.offsetParent;
-  while(_n != null) {
-    if (_n === anAncestor)
-      return true;
-    _n = _n.offsetParent;
-  }
-  return false;
-}
-
-/**
- * <p>
- * This method is used to find the following position: Given a reference node
- * and a container (that is, an HTML element able to contains a block HTML
- * element), we want to insert into the container a node that, when positioned
- * with absolute positioning and the offsets returned by this method, is
- * displayed right above the given reference node.
- * </p>
- *
- * @deprecated
- * 
- * @param {HTMLElement}
- *            aElement An HTML element from which the position is deduced
- * @param {HTMLElement}
- *            aElement An HTML element that contains the first one
- */
-xtdom.findPostitionFrom = function (aNode, aContainer) {
-  if (!aNode || !aContainer)
-    return null;
-  var _document = aNode.ownerDocument;
-  var _offsetAncestor = aContainer;
-  while(!xtdom.isOffsetAncestor(aNode, _offsetAncestor))
-    _offsetAncestor = _offsetAncestor.offsetParent;
-  
-}        
-          
 // Returns an array with the width and height of aHandle's window   
 // plus the scroll width and height
 // This is useful to calculate how far aHandle (in absolute position)
 // is to the window border
 // From http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
+// FIXME: move to popup device ?
 xtdom.getWindowLimitFrom = function (aHandle) {  
   var myWidth = 0, myHeight = 0, scrollLeft = 0, scrollTop = 0;
   var oDoc = aHandle.ownerDocument;                

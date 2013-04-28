@@ -12,11 +12,19 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-/*
- * The xtiger.cross object is a single global object used by XTiger Library. 
- * It contains utility function for adapting the library to different browsers.
- * @module xtiger.cross
- */
+/*****************************************************************************\
+|                                                                             |
+|  xtdom, xtiger.cross, xtiger.util modules                                   |
+|                                                                             |
+|  Low level utility functions                                                |
+|                                                                             |
+|*****************************************************************************|
+|  Some of these functions are browser dependent in which case this file      |
+|  defines the non IE version, see iebrowser.js for the IE version            |
+|                                                                             |
+|  See also dom.js                                                            |
+|                                                                             |
+\*****************************************************************************/
 
 // user agent detection
 xtiger.cross.UA = {
@@ -105,8 +113,7 @@ xtiger.util.decodeParameters = function (aString, aParams) {
 /**
  * Implements the "map" feature for arrays.
  * 
- * This function does not affect the given array. It returns a freshly created
- * one.
+ * This function does not affect the given array. It returns a freshly created one.
  */
 xtiger.util.array_map = function array_map (aArray, aCallback) {
   if (! (typeof aArray == 'object' && typeof aCallback == 'function'))
@@ -122,8 +129,7 @@ xtiger.util.array_map = function array_map (aArray, aCallback) {
  * Implements the "filter" feature for arrays. Returns an array whose elements
  * are on the given array AND satisfies the given predicate.
  * 
- * This function does not affect the given array. It returns a freshly created
- * one.
+ * This function does not affect the given array. It returns a freshly created one.
  * 
  * @param {[any]}
  *            An array to filter
@@ -141,83 +147,6 @@ xtiger.util.array_filter = function array_filter (aArray, aCallback) {
       _buf.push(aArray[_i]);
   }
   return _buf;
-}
-
-xtiger.util.array_contains = function array_contains (aArray, aElement) {
-  if (typeof aArray != 'object')
-    return false;
-  for (var _i = 0; _i < aArray.length; _i++) {
-    if (aArray[_i] == aElement)
-      return true;
-    if (typeof(aArray[_i]) == 'object' && typeof(aElement) == 'object')
-      if (xtiger.util.object_compare(aArray[_i], aElement))
-        return true;
-  }
-  return false;
-}
-
-/**
- * <p>
- * Compares two objects. Returns true if and only if these objects share
- * extaclty the same set of properties and if and only if all those properties
- * are equals.
- * </p>
- * 
- * <p>
- * For performance reasons, the algorithm returns false at the first noticed
- * difference.
- * </p>
- * 
- * <p>
- * The algorithm was found (and slightly adapted) at
- * http://stackoverflow.com/questions/1068834/object-comparison-in-javascript/1144249#1144249
- * </p>
- * 
- * @param aObject1
- * @param aObject2
- * @return {boolean}
- */
-xtiger.util.object_compare = function object_compare (aObject1, aObject2) {
-  for (_prop in aObject1) {
-      if(typeof(aObject2[_prop]) == 'undefined') 
-        return false;
-  }
-
-  for (_prop in aObject1) {
-      if (aObject1[_prop]) {
-          switch(typeof(aObject1[_prop]))
-          {
-                  case 'object': // recursive
-                          if (!xtiger.util.object_compare(aObject1[_prop], aObject2[_prop])) { 
-                            return false;
-                          }
-                          break;
-                  case 'function':
-                          if (typeof(aObject2[_prop]) == 'undefined'
-                            || (_prop != 'equals' && aObject1[_prop].toString() != aObject2[_prop].toString())) {
-                            return false;
-                            }
-                          break;
-                  default:
-                          if (aObject1[_prop] != aObject2[_prop]) {
-                            return false;
-                          }
-          }
-      }
-      else {
-          if (aObject2[_prop]) {
-              return false;
-          }
-      }
-  }
-
-  for(_prop in aObject2) {
-      if(typeof(aObject1[_prop])=='undefined') {
-        return false;
-      }
-  }
-
-  return true;
 }
 
 //////////////////
@@ -407,22 +336,10 @@ if (! document.createTreeWalker) {
   
   xtiger.cross.makeTreeWalker =
     function (n, type, filter) { return new xtiger.util.TreeWalker(n, type, filter) }
-    
 } else {
-  
-  // FIXME: currently it uses "document" although it should be passed the document !!!
-  if (xtiger.cross.UA.webKit || xtiger.cross.UA.IE) {
-        
-    xtiger.cross.makeTreeWalker =
-      function (n, type, filter) { return document.createTreeWalker(n, type, filter, false) }
-  } else {
-    
-    xtiger.cross.makeTreeWalker =
-      function (n, type, filter) {
-        var filterFunc = { acceptNode: filter };
-        return document.createTreeWalker(n, type, filterFunc, false);
-      }   
-  }
+  xtiger.cross.makeTreeWalker =
+    function (n, type, filter) { filter.acceptNode = filter; return n.ownerDocument.createTreeWalker(n, type, filter, false) }
+  // see http://stackoverflow.com/questions/5982648/recommendations-for-working-around-ie9-treewalker-filter-bug
 }  
 
 /**
