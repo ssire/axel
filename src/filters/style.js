@@ -110,8 +110,14 @@
     // the default value MUST match the default CSS settings
     // FIXME: enforce it ?
      onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
+       var expr;
        this.__style__onInit(aDefaultData, anOptionAttr, aRepeater);
-       this._CurStyleValue = aDefaultData;
+       expr = this.getParam('style_value');
+       if (expr) {
+         this._CurStyleValue = expr.replace(/\$_/g, aDefaultData);
+       } else {
+         this._CurStyleValue = aDefaultData;
+      }
        // works with 'select' iff aDefaultData is the target XML value (not the i18n one)
      },
 
@@ -125,16 +131,16 @@
        // },
 
        set : function ( doPropagate ) {
-         var value, prop, values, target, sel, doc, rule, unit = this.getParam('style_unit');
+         var value, prop, values, target, expr, doc, rule, unit = this.getParam('style_unit');
          this.__style__set(doPropagate);
          // CSS rule mode
-         sel = this.getParam('style_rule_selector');
-         if (sel) {
-           rule = sel + ' {' + this.getParam('style_property') + ':' + this.getData() + (unit ? unit + '}' : '}');
+         expr = this.getParam('style_rule_selector');
+         if (expr) {
+           rule = expr + ' {' + this.getParam('style_property') + ':' + this.getData() + (unit ? unit + '}' : '}');
          }
-         sel = this.getParam('style_rule');
-         if (sel) {
-           rule = sel.replace(/\$_/g, this.getData());
+         expr = this.getParam('style_rule');
+         if (expr) {
+           rule = expr.replace(/\$_/g, this.getData());
          }
          if (rule) {
            doc = this.getDocument();
@@ -149,15 +155,22 @@
            prop = this.getParam('style_property') || 'class';
            values = this.getParam('values');
            if (values) { // this is a 'select' plugin (FIXME: api this.getPluginType())
-            value = this.getData();
-            if (this._CurStyleValue) {
-              if (prop === 'class') {
-                target.removeClass(this._CurStyleValue);
-              }
-            }
-            this._CurStyleValue = value;
+             value = this.getData();
+             if (this._CurStyleValue) {
+               if (prop === 'class') {
+                 target.removeClass(this._CurStyleValue);
+               }
+             }
+             this._CurStyleValue = value;
            } else { // not a 'select' plugin
              value = this.getParam('style_value') || this.getData();
+           }
+           expr = this.getParam('style_value');
+           if (expr) {
+             value = expr.replace(/\$_/g, value);
+             if (this._CurStyleValue) {
+               this._CurStyleValue = value; // rewrite it too
+             }
            }
            if (prop === 'class') {
               target.addClass(value)
@@ -168,16 +181,16 @@
        },
 
        unset : function ( doPropagate ) {
-         var value, prop, target, sel, doc;
+         var value, prop, target, expr, doc;
          this.__style__unset(doPropagate);
          prop = this.getParam('style_property') || 'class';
          // CSS rule mode
-         sel = this.getParam('style_rule_selector') || this.getParam('style_rule');
-         if (sel && this._StyleRuleHandle) {
+         expr = this.getParam('style_rule_selector') || this.getParam('style_rule');
+         if (expr && this._StyleRuleHandle) {
            this._StyleRuleHandle.text('');
          }
          // direct target mode
-         target = _getTarget(this, sel);
+         target = _getTarget(this, expr);
          // xtiger.cross.log('debug', 'unset');
          if (target) {
            prop = this.getParam('style_property') || 'class';

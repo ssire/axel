@@ -244,27 +244,8 @@ xtiger.editor.Repeat.prototype = {
       insertPoint.parentNode.replaceChild(rightImg, insertPoint);
       width = insertPoint.getAttribute('size') || width; // fixme: inherit class attribute instead
     } else {
-      // 2nd case: checks if the repeater is the repeater of a single auto-wrapped element
-      var counter = 0;
-      var cur = container.firstChild;
-      while (cur) {
-        if (cur.nodeType == xtdom.ELEMENT_NODE) {
-          var curclass = cur.className;
-          if (curclass && (-1 != curclass.indexOf('xtt-auto-wrapped'))) { // TODO check if shouldn't be replaced by axel-auto-wrapped
-            if (counter == 0) {
-              insertPoint = cur;
-            } 
-            counter++;                    
-          }
-        }       
-        cur = cur.nextSibling;
-      }
-      if (counter == 1) { // inserts the menu just after the autowrapped element
-        insertPoint.appendChild(rightImg);
-      } else {
-        // 3rd case: inserts the menu at the end of the slice
-        container.appendChild(rightImg);        
-      }
+      // 2nd case: inserts the menu at the end of the slice
+      container.appendChild(rightImg);        
     } 
     
     // finishes menu configuration
@@ -631,15 +612,19 @@ xtiger.editor.Repeat.prototype = {
   callPrimitiveEditors : function (top, action) {             
     var treeWalker = xtiger.cross.makeTreeWalker (top, xtdom.NodeFilter.SHOW_ELEMENT,
         function (n) { 
-            if (n.xttPrimitiveEditor && n.xttPrimitiveEditor.can(action)) {
+            if (n.xttPrimitiveEditor && n.xttPrimitiveEditor.can && n.xttPrimitiveEditor.can(action)) {
               return xtdom.NodeFilter.FILTER_ACCEPT
             } else {
               return xtdom.NodeFilter.FILTER_SKIP; 
             }
         } );
-    while(treeWalker.nextNode()) {
-      treeWalker.currentNode.xttPrimitiveEditor.execute(action, this);
-    }   
+    try {
+      while(treeWalker.nextNode()) {
+        treeWalker.currentNode.xttPrimitiveEditor.execute(action, this);
+      }   
+    } catch (e) {
+      // xtiger.cross.log('error', 'Exception in tree walker');
+    }
   }, 
     
   // Dispatches an event (which is converted to a builtin method call) on a slice

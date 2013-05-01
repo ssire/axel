@@ -49,7 +49,7 @@
     </xt:component>   
 
     <xt:component name="ArticleInProceedings">
-      <span>(<xt:use types="string" label="PublishingYear">Year</xt:use>) <strong><xt:use types="string" label="Title">Title</xt:use></strong>.</span>
+      <span>(<xt:use types="text" label="PublishingYear">Year</xt:use>) <strong><xt:use types="text" label="Title">Title</xt:use></strong>.</span>
       <span><xt:use types="authorList"/> in <xt:use types="proceedingsForArticle" label="Proceedings"/>.</span>
     </xt:component>
 
@@ -62,7 +62,7 @@
     <xt:component name="Publication">
       <xt:menu-marker size="20"/>
       <div style="border: solid 1px gray; margin-bottom: 10px">
-        <p>Publication (<xt:use types="string" label="PublicationId">id</xt:use>) : <xt:use types="bibRef"/></p>
+        <p>Publication (<xt:use types="text" label="PublicationId">id</xt:use>) : <xt:use types="bibRef"/></p>
       </div>
     </xt:component>
     
@@ -73,15 +73,15 @@
     </xt:component>
     
     <xt:component name="proceedingsForArticle">
-(<xt:use types="string" label="PublishingYear">Year</xt:use>) <xt:use types="string" label="ProceedingsTitle">Conference name</xt:use> [<xt:use types="string" label="ShortName" option="unset">short name</xt:use>] <xt:use types="Location" label="Location"/>, <xt:use types="string" label="Dates">dates</xt:use>
+(<xt:use types="text" label="PublishingYear">Year</xt:use>) <xt:use types="text" label="ProceedingsTitle">Conference name</xt:use> [<xt:use types="text" label="ShortName" option="unset">short name</xt:use>] <xt:use types="Location" label="Location"/>, <xt:use types="text" label="Dates">dates</xt:use>
     </xt:component>
 
     <xt:component name="Location">
-      <xt:use types="string" label="City">City</xt:use>, <xt:use types="string" label="State">Country</xt:use>
+      <xt:use types="text" label="City">City</xt:use>, <xt:use types="text" label="State">Country</xt:use>
     </xt:component>
 
     <xt:component name="author">
-      <xt:use types="string" label="FirstName">First Name</xt:use> <xt:use types="string" label="LastName">Last Name</xt:use><xt:menu-marker/>,
+      <xt:use types="text" label="FirstName">First Name</xt:use> <xt:use types="text" label="LastName">Last Name</xt:use><xt:menu-marker/>,
     </xt:component>
         
   </xt:head>
@@ -94,7 +94,7 @@
 <body>  
 <blockquote style="font-style: italic">This is an unfinished template, it currently only defines Paper > ArticleInProceedings bibliographic entries.</blockquote> 
 <hr/> 
-<h1><xt:use types="string" label="TopicTitle">Publications</xt:use></h1>
+<h1><xt:use types="text" label="TopicTitle">Publications</xt:use></h1>
 <xt:repeat minOccurs="1" maxOccurs="30" pseudoLabel="Publication">
   <xt:use types="Publication" label="Publication"/>
 </xt:repeat>

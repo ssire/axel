@@ -13,7 +13,7 @@
 ----------------    AXEL integrator's FAQ   --------------------
 ----------------------------------------------------------------
 
-Last update: Sept 11, 2012 by S.Sire
+Last update: 2013-05-01 by S.Sire
 
 This document gives some advices for integrating AXEL into your application.
 It is presented as a FAQ. You are welcome to share your experience to improve
@@ -109,8 +109,8 @@ means something is wrong. You are encouraged to create your own configuration
 and make extensive tests on your own data when ugrading the library to a newer
 version.
 
-Currently all the tests configured by default PASS on Firefox 3, Safari 4,
-Opera 10.
+Currently all the tests configured by default PASS on Firefox, Safari, Chrome,
+Opera and Internet Explorer (except the test based on the 'content' plugin).
 
 The tests with the "richtext" plugin FAIL on Opera and Internet Explorer. 
 This is due to some minor differences in the serialization
@@ -259,12 +259,11 @@ How to know which files to include in the library ?
 All the files in "src/core" are required except "iebrowser.js" which is
 required only to run on Internet Explorer.
 
-All the files in "src/editor/classical" are required except "string.js" and
-"xmlrobustloader.js". "string.js" is required only if your templates use the
-'string' primitive editor. "xmlrobustloader.js" is required only to use the
-robust loader algorithm. In that case you can omit "xmlloader.js" if you don't
-use the basic loader algorithm. You must leave "xmlloader.js" after
-"xmlrobustloader.js" to set the default loader algorithm to the basic one.
+All the files in "src/editor/classical" are required except "xmlrobustloader.js"
+which is required only to use the robust loader algorithm. In that case you may 
+also omit the "xmlloader.js" file if you don't use the basic loader algorithm. 
+You must leave "xmlloader.js" after "xmlrobustloader.js" to set the default loader 
+algorithm to the basic one.
 
 You need the files in "src/plugins" according to the primitive editors you use
 in your templates:
@@ -274,8 +273,6 @@ text.js:      'text' primitive editor (depends on text.js device)
 select.js:    'select' primitive editor (depends on popup.js device)
 
 link.js:      'link' primitive editor (depends on popup.js device)
-
-richtext.js:  'richtext' primitive editor (depends on popup.js device)
 
 photo.js:     'photo' upload primitive editor (depends on popup.js, upload devices
               and documentid.js filter)
@@ -292,12 +289,12 @@ popup.js:     popup menu that may segmented
 
 lens.js:      generic lens device (mega popup) for all lens based primitive editor
 
-upload.js:    transfers a file (image file) to a server through an iframe
+upload.js:    transfers a file (e.g. image file) to a server through an iframe
               requires a server that implements a corresponding communication 
               protocol
 
 autocomplete.js: communication layer for the 'autocomplete' filter
-                 requires a server that implements the autocomplete protocol 
+(UNSUPPORTED)    requires a server that implements the autocomplete protocol 
 
 You need the files in "src/filters" according to the filters you use in your
 template. The only exception is "documentid.js" which can be required to use 
@@ -320,20 +317,21 @@ video.js:     YouTube 'filter' of the 'text' primitive editor, alternative to
 debug.js:     'debug' filter for each of the primitive editors
 
 autocomplete.js: 'autocomplete' filter for 'text' editor 
-                 (depends on autocomplete.js and popup.js device)
+(UNSUPPORTED)    (depends on autocomplete.js and popup.js device)
 </pre>
 
 <pre id="loading">
 How to choose between the basic XML loading algorithm or the robust one ?
 =========================================================================
 
+This is an OPTIONAL section you do not need to understand for using the library.
+
 When loading XML data in a template with xtiger.util.Form.loadData, as
 described in the tutorial, the library uses the XML loading algorithm defined
 by the defaultLoader property of xtiger.editor.Generator. That property is set
 by the latest of the two source files "xmlrobustloader.js" and "xmlloader.js"
-which is included in the library. The basic algorithm is set as the default
-one in this distribution (i.e. "xmlloader.js" is included after
-"xmlrobustloader.js").
+which is included in the library. The pre-built "axel.js" file does include 
+only the basic algorithm (i.e. "xmlloader.js").
 
 Alternatively you can explicitly set the loader object by calling the
 setLoader method of xtiger.util.Form with either a new

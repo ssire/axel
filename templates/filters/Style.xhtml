@@ -14,6 +14,15 @@ div.hilite {
   background: yellow;
   border: solid 2px red;
 }
+div.grid1 {
+  width: 33%;
+}
+div.grid2 {
+  width: 66%;
+}
+div.grid3 {
+  width: 100%;
+}
     </style>
 
     <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
@@ -64,7 +73,17 @@ div.hilite {
       <p>Please type in a width in percent : <xt:use types="text" label="StylePercentWidth" option="unset" param="filter=style;style_property=width;style_root_class=toplevel;style_target_class=style2;style_unit=%">25</xt:use>%
         or in pixels : <xt:use types="select" label="StylePixelWidth" option="unset" values="100 200 300 400 500" param="filter=style;style_property=width;style_root_class=toplevel;style_target_class=style2;style_unit=px">100</xt:use>px</p>
     </div>
-    
+
+    <h3>With parameter <var>style_value</var></h3>
+
+    <div class="hilite style3 grid2">
+      <p>This div's width is controlled by the text entry fields below through a grid<i>x</i> class (there are three possible values from 1 to 3). The interest of the <tt>style_value</tt> parameter in that case is to serialize an integer instead of a full class name so that it is compatible with any grid system (e.g. custom system, 960 or Bootstrap).</p>
+    </div>
+
+    <div class="demo extract">
+      <p>Please choose a cell span : <xt:use types="select" label="StyleCellSpan"  param="filter=style;style_property=class;style_root_class=toplevel;style_target_class=style3;style_value=grid$_" values="1 2 3">2</xt:use></p>
+    </div>
+
     <h3>Using the <var>style_rule_selector</var> selector</h3>
 
     <div>

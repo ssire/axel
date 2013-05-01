@@ -12,16 +12,24 @@
  * 
  * ***** END LICENSE BLOCK ***** */
 
-// FIXME: this class should be renamed xtiger.util.Template or xtiger.util.Document
-// as it wraps a template turned into an editor with it's current data
-
-/*
- * Creates an XTiger Form that can be used to transform a template.
- * baseUrl is the path to the icons used by the generated editor
- *
- * You can use this class as-is, or as an example of how to integrate 
- * XTiger Forms in the client-side of your application
- */
+ /*****************************************************************************\
+ |                                                                             |
+ |  xtiger.util.Form module                                                    |
+ |                                                                             |
+ |  Class for calling AXEL parser and generator to transform a template into   |
+ |  an editor, then to load and/or save XML data from/to the editor.           |
+ |                                                                             |
+ |*****************************************************************************|
+ |  This class can be used as en entry point to AXEL                           |
+ |  You may prefer to use higher-level command objects defined in AXEL-FORMS   |
+ |                                                                             |
+ |  Note that we will probably migrate some or all of its functionalities      |
+ |  into the $axel wrapper set object                                          |
+ |                                                                             |
+ |                                                                             |
+ \*****************************************************************************/
+ 
+// baseIconsUrl is the path to the icons used by the generated editor
 xtiger.util.Form = function (baseIconsUrl) {
   this.baseUrl = baseIconsUrl;  
   this.doTab = false;  
@@ -193,6 +201,7 @@ xtiger.util.Form.prototype = {
   },
   
   // Loads XML data into a template from a string
+  // DEPRECATED: use loadData instead plus initFromString to load the string into the data source
   loadDataFromString : function (str, logger) {
     var dataSource = new xtiger.util.DOMDataSource ();
     if (dataSource.initFromString (str)) {
@@ -203,127 +212,8 @@ xtiger.util.Form.prototype = {
     return (this.status == 1);
   },
   
-  // Loads XML data into a template from a URL
-  // FIXME: check url is { document: url1, name : url2, ... } for tide loading
-  loadDataFromUrl : function (url, logger) {
-    var doc, source;    
-    var res = false;
-    doc = xtiger.cross.loadDocument(url, logger);
-    if (doc) {
-      res = this.loadData(new xtiger.util.DOMDataSource(doc), logger);
-    }
-    return res;
-  },
-  
-  // Dumps current form data into a DOMLogger accumulator
-  /**
-   * @param {Logger} The logger which 
-   */
+  // Dumps editor's content into a DOMLogger accumulator
   serializeData : function (accumulator) {
     this.editor.serializeData (this.root, accumulator, this.serializer);
-  },
-  
-  /////////////////////////////////////////////////////
-  // Following functions are deprecated
-  // or should be move somewhere else (xtiger.util.* ?)
-  /////////////////////////////////////////////////////
-  
-  // DEPRECATED : use loadDataFromUrl instead
-  // Loads data into the form from a file URL and a XMLHttpRequest object
-  loadDataFromFile : function (url, xhr, logger) {
-    try {
-      xhr.open("GET", url, false);
-      xhr.send(null);
-      if ((xhr.status  == 200) || (xhr.status  == 0)) {
-        if (xhr.responseXML) {
-          this.loadData (new xtiger.util.DOMDataSource (xhr.responseXML), logger);
-        } else {
-          var res = xhr.responseText;
-          res = res.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, ""); // bug 336551 MDC
-          xtiger.cross.log('warning', 'attempt to use string parser on ' + url + ' instead of responseXML');
-          if (! dataSource.initFromString(res)) { // second trial
-            this._report (0, 'failed to create data source for data from file ' + url + '. Most probably no documentElement', logger);
-          }
-        }
-      } else { 
-        this._report(0, 'failed to load XML data from file ' + url + ". XHR status : " + xhr.status, logger);
-      }
-    } catch (e) {                                                                                          
-      this._report(0, 'failed to open XML data file ' + url + ". Exception : " + e.name + '/' + e.message, logger);
-    }
-    return (this.status == 1);    
-  },  
-  
-  // Saves XML content of the current document to a URL using XMLHTTPRequest
-  postDataToUrl : function (url, xhr, logger) {   
-    // 1. converts template to a string buffer
-    var log = new xtiger.util.DOMLogger ();
-    var data = this.editor.serializeData (this.root, log, this.serializer);
-    log.close();
-    // 2. sends it with a sycnhronous POST request
-    try {
-        xhr.open( "POST", url,  false);
-      xhr.setRequestHeader("Content-Type", "application/xml; charset=UTF-8");
-      // FIXME: do we need to set "Content-Length" ?
-        xhr.send(log.dump('*')); // FIXME: not sure Javascript is UTF-8 by default ?
-        if (xhr.readyState  == 4) {
-            if((xhr.status  == 200) || (xhr.status  == 201) || (xhr.status  == 0)) {
-          this._report(1, xhr.responseText, logger);
-          } else { 
-          this._report(0, 'can\'t post data to "' + url + '". Error : ' + xhr.status, logger);
-        }
-          } else {
-        this._report(0, 'can\'t post data to "' + url + '". Error readyState is ' + xhr.readyState, logger);
-      }
-    } catch (e) {
-      xhr.abort();
-      this._report(0, 'can\'t post data to "' + url + '". Exception : ' + e.name + '/' + e.message, logger);
-    }
-    return (this.status == 1);    
-  },  
-                          
-  // Firefox only
-  // Saves form data into a file, filename must contain an absolute path (i.e. "/tmp/myFile") 
-  // TODO: use http://www.w3.org/TR/file-writer-api/ instead
-  saveDataToFile : function (filename, logger) {
-    if (xtiger.cross.UA.gecko) { 
-      // tries with an XPCOM component (nsILocalFile)   
-      try {  
-        netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");  
-      } catch (e) { 
-        this._report(0, 'Permission to save data to file "' + filename + '" was denied. Exception : ' + e.name + '/' + e.message, logger);
-        return false;
-      }  
-      try {  
-        // converts template to a string buffer
-        var log = new xtiger.util.DOMLogger ();
-        var data = this.editor.serializeData (this.root, log, this.serializer);
-        log.close();
-        // creates and/or saves file    
-        var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);  
-        file.initWithPath(filename);
-        if (file.exists() == false) {  
-          file.create( Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 420 );  
-        }  
-        var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]  
-                 .createInstance(Components.interfaces.nsIFileOutputStream);  
-        outputStream.init( file, 0x04 | 0x08 | 0x20, 420, 0 );   
-        //UTF-8 convert  
-        var uc = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]  
-          .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);  
-        uc.charset = "UTF-8";  
-        var data_stream = uc.ConvertFromUnicode(log.dump('*'));
-        var result = outputStream.write(data_stream, data_stream.length );  
-        outputStream.close();
-        this._report(1, 'Data saved to "' + filename + '"', logger);  
-      } catch (e) { 
-        this._report(0, 'Cannot save data to file "' + filename + '". Exception : ' + e.name + '/' + e.message, logger);
-      }  
-    } else { 
-      // tries with XMLHttpRequest
-      this.postDataToUrl (filename, xtiger.cross.getXHRObject());
-    } 
-    return (this.status == 1);    
   }
-  
 };
