@@ -109,8 +109,8 @@ means something is wrong. You are encouraged to create your own configuration
 and make extensive tests on your own data when ugrading the library to a newer
 version.
 
-Currently all the tests configured by default PASS on Firefox 3, Safari 4,
-Opera 10.
+Currently all the tests configured by default PASS on Firefox, Safari, Chrome,
+Opera and Internet Explorer (except the test based on the 'content' plugin).
 
 The tests with the "richtext" plugin FAIL on Opera and Internet Explorer. 
 This is due to some minor differences in the serialization
@@ -274,8 +274,6 @@ select.js:    'select' primitive editor (depends on popup.js device)
 
 link.js:      'link' primitive editor (depends on popup.js device)
 
-richtext.js:  'richtext' primitive editor (depends on popup.js device)
-
 photo.js:     'photo' upload primitive editor (depends on popup.js, upload devices
               and documentid.js filter)
 
@@ -291,12 +289,12 @@ popup.js:     popup menu that may segmented
 
 lens.js:      generic lens device (mega popup) for all lens based primitive editor
 
-upload.js:    transfers a file (image file) to a server through an iframe
+upload.js:    transfers a file (e.g. image file) to a server through an iframe
               requires a server that implements a corresponding communication 
               protocol
 
 autocomplete.js: communication layer for the 'autocomplete' filter
-                 requires a server that implements the autocomplete protocol 
+(UNSUPPORTED)    requires a server that implements the autocomplete protocol 
 
 You need the files in "src/filters" according to the filters you use in your
 template. The only exception is "documentid.js" which can be required to use 
@@ -319,7 +317,7 @@ video.js:     YouTube 'filter' of the 'text' primitive editor, alternative to
 debug.js:     'debug' filter for each of the primitive editors
 
 autocomplete.js: 'autocomplete' filter for 'text' editor 
-                 (depends on autocomplete.js and popup.js device)
+(UNSUPPORTED)    (depends on autocomplete.js and popup.js device)
 </pre>
 
 <pre id="loading">

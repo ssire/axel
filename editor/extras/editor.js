@@ -363,6 +363,10 @@
     /*               Primary commands                    */
     /*                                                   */
     /*****************************************************/
+    
+    activateDocumentCommands : function () {
+      $('input.editing').removeAttr('disabled'); // enable editor's commands
+    },
 
     resetEditor : function () {
       if ($('body').hasClass('noframe')) {
@@ -494,7 +498,7 @@
           this.curForm.setTargetDocument (document, 'containerNoFrame', true);
           this.curForm.enableTabGroupNavigation ();
           this.curForm.transform (result);
-          $('input.editing').removeAttr('disabled'); // enable editor's commands
+          this.activateDocumentCommands();
         }
         if (result.inError()) { this.log(result.printErrors(), 1); }
       }
@@ -535,7 +539,7 @@
         // see form.js currrently only one form per document
         if (this.curForm) {
           this.log('Self-transformed template detected : the editor has managed to plug on its AXEL object', 0);
-          $('input.editing').removeAttr('disabled'); // enable editor's commands
+          this.activateDocumentCommands();
           $(document).triggerHandler('axel-template-transformed', [this]);
         } else {
           this.log('Self-transformed template detected : the editor has failed to plug on its AXEL object', 1);
@@ -562,7 +566,7 @@
             }
             if (! errLog.inError()) { // injects axel.css in iframe
               this.curForm.injectStyleSheet(this.xttMakeLocalURLFor(this.config.xtStylesheet), errLog);
-              $('input.editing').removeAttr('disabled'); // enable editor's commands
+              this.activateDocumentCommands();
             }
           }
         } else {
