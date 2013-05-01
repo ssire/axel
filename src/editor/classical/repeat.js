@@ -244,27 +244,8 @@ xtiger.editor.Repeat.prototype = {
       insertPoint.parentNode.replaceChild(rightImg, insertPoint);
       width = insertPoint.getAttribute('size') || width; // fixme: inherit class attribute instead
     } else {
-      // 2nd case: checks if the repeater is the repeater of a single auto-wrapped element
-      var counter = 0;
-      var cur = container.firstChild;
-      while (cur) {
-        if (cur.nodeType == xtdom.ELEMENT_NODE) {
-          var curclass = cur.className;
-          if (curclass && (-1 != curclass.indexOf('xtt-auto-wrapped'))) { // TODO check if shouldn't be replaced by axel-auto-wrapped
-            if (counter == 0) {
-              insertPoint = cur;
-            } 
-            counter++;                    
-          }
-        }       
-        cur = cur.nextSibling;
-      }
-      if (counter == 1) { // inserts the menu just after the autowrapped element
-        insertPoint.appendChild(rightImg);
-      } else {
-        // 3rd case: inserts the menu at the end of the slice
-        container.appendChild(rightImg);        
-      }
+      // 2nd case: inserts the menu at the end of the slice
+      container.appendChild(rightImg);        
     } 
     
     // finishes menu configuration

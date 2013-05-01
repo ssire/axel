@@ -88,7 +88,7 @@
 
   <script type="text/javascript" src="extras/editor.js"></script>
   <script type="text/javascript" src="../templates/shared/templates.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" charset="utf-8">
     // Used by some plugins that upload files to the server (e.g. photo.js) with uploaddevice.js
     function finishTransmission(status, msg) {
       var manager = xtiger.factory('upload').getInstance(document);
@@ -96,6 +96,22 @@
         manager.reportEoT(status, msg);
       }
     }
+
+    (function () {
+      function initApp () {
+        var appController, defaultTemplates = window.getDefaultTemplates ? getDefaultTemplates() : {};
+        appController = new document.AxelDemoEditor("../templates/", defaultTemplates);
+        appController.configure({
+          baseUrl : '../axel/bundles',
+          xtStylesheet : '../axel/axel.css',
+          path2inputDlg : 'extras/input.html',
+          path2dumpDlg : 'extras/dump.html',
+          path2intro : 'extras/intro.xhtml'
+        })
+        appController.run();
+      }
+      jQuery(function() { initApp(); });
+    }());
   </script>
 </head>
 <body class="noframe">

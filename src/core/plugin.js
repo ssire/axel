@@ -35,10 +35,9 @@ xtiger.editor.Plugin.prototype = {
  // Returns a factory for the xtigerSrcNode if it corresponds to a primitive editor
  // typesArray is an Array containing the list of types for the node
  getEditorFor : function (xtigerSrcNode, typesArray){
-   var factory;
+   var factory, editor;
    if (typesArray.length === 1) { // currently only 'singleton' use/bag may be primitive editors...
-     var wrapper = xtigerSrcNode.getAttribute('wrapper');
-     var editor = (wrapper) ? 'string' : typesArray[0]; // FIXME: wrapper only supported with types='string'
+     editor = typesArray[0];
      factory = this.pluginEditors[editor];
    }
    return factory;
@@ -47,12 +46,11 @@ xtiger.editor.Plugin.prototype = {
  // Returns true if the xtigerSrcNode corresponds to a primitive editor
  // typesStr is a String representing the list of types for the node
  hasEditorFor : function (xtigerSrcNode, typesStr) {
-   var res;
+   var res, editor;
    if (this.pluginEditors[typesStr]) {
      res = true;
    } else {
-     var wrapper = xtigerSrcNode.getAttribute('wrapper');
-     var editor = (wrapper) ? 'string' : typesStr; // FIXME: wrapper only supported with types='string'
+     var editor = typesStr;
      res = (this.pluginEditors[editor] !== undefined);
    }
    return res;
