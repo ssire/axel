@@ -10,8 +10,8 @@
  * 
  * Author(s) : Stephane Sire
  * 
- * ***** END LICENSE BLOCK ***** */      
-  
+ * ***** END LICENSE BLOCK ***** */
+
 /////////////////////////////////////////////////////////////////////////////
 // The following methods are used to enable buttons behaviors with buttons // 
 // declared in templates. They should be grouped into a class soon.        //
@@ -52,6 +52,8 @@ function installButtons () {
   } 
 }   
 
+
+
 ////////////////////////////////////////////////////////
 // A simple Editor Bar make a template auto-editable // 
 ///////////////////////////////////////////////////////
@@ -81,7 +83,7 @@ var EditorBar = function Editor (spec) {
       if (filePath) {            
         startt = new Date();
         name = filePath.match(/[^\/]*\.(xml|xhtml|html)$/)[0];
-        data = xtiger.debug.loadDocument(filePath, my.errLog);
+        data = xtiger.cross.loadDocument(filePath, my.errLog);
         if (data) {
           dataSrc = new xtiger.util.DOMDataSource(data);
           if (my.form.loadData(dataSrc, my.errLog)) {

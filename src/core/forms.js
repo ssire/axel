@@ -11,6 +11,46 @@
  * Author(s) : Stephane Sire
  * 
  * ***** END LICENSE BLOCK ***** */
+ 
+/*****************************************************************************\
+|                                                                             |
+|  xtiger.util.Logger module                                                  |
+|                                                                             |
+|  A logger for keeping error messages while performing error-prone actions   |
+|  xtiger.util.Form uses it as an optional parameter to report errors         |
+|                                                                             |
+|*****************************************************************************|
+|  NOTE: we most probably will deprecate this and use exceptions instead)     |
+|                                                                             |
+\*****************************************************************************/
+
+xtiger.util.Logger = function () {
+ this.errors = [];
+}
+
+xtiger.util.Logger.prototype = {
+
+ // Returns true if the logger has recorded some error message
+ inError : function () {
+   return (this.errors.length > 0);
+ },
+
+ // If msg contains '$$$', it will be substituted with the file name contained in optional url
+ logError : function (msg, url) {
+   if (msg.indexOf('$$$') != -1) {
+     var m = url.match(/([^\/]*)$/); // should extract trailing file name
+     var name = m ? m[1] : url;
+     this.errors.push (msg.replace('$$$', '"' + name + '"'));
+   } else {
+     this.errors.push (msg);
+   }
+ },
+
+ // Returns a concatenation of error messages
+ printErrors : function () {
+   return this.errors.join(';');
+ }
+}
 
  /*****************************************************************************\
  |                                                                             |

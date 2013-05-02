@@ -84,9 +84,9 @@
 		function loadDataToTemplate (result) {
 			var source;
 			var docs = {};
-			docs['document'] = xtiger.debug.loadDocument(MAIN_DATA_FILE, result); // main document
+			docs['document'] = xtiger.cross.loadDocument(MAIN_DATA_FILE, result); // main document
 			// note that you could sanity check if (docs['document'])...
-			docs[FLOW_NAME] = xtiger.debug.loadDocument(FLOW_DATA_FILE, result); // separate flow
+			docs[FLOW_NAME] = xtiger.cross.loadDocument(FLOW_DATA_FILE, result); // separate flow
 			// note that you could sanity check if (docs[FLOW_NAME])...
 			source = new xtiger.util.DOMDataSource(docs);
 			FORM.loadData(source, result); // loads data into the template
