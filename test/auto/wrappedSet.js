@@ -4,7 +4,7 @@ function prewrap ( version, logger, template, data, results) {
       editor;
   try { // load and transform template
     logAction(logger, version + ' loading template', template);
-    editor = xtiger.debug.loadDocument(template, result);
+    editor = universalLoadDocument(template, result);
     if (editor) {
       form = new xtiger.util.Form('../../axel/bundles');
       form.setTemplateSource (editor); 

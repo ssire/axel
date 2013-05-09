@@ -33,7 +33,8 @@ function getDefaultTemplates () {
       "Wiki.xhtml",
       "Image.xhtml",
       "Video.xhtml",
-      "Style.xhtml"
+      "Style.xhtml",
+      "Optional.xhtml"
       ]
     },
     {

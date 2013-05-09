@@ -363,7 +363,7 @@
     /*               Primary commands                    */
     /*                                                   */
     /*****************************************************/
-    
+
     activateDocumentCommands : function () {
       $('input.editing').removeAttr('disabled'); // enable editor's commands
     },
@@ -491,7 +491,7 @@
       if (s.search(/\S/) !== -1) {
         var url = Utility.makeURLForFile(s, this.PROXY);
         var result = new xtiger.util.Logger();
-        var xtDoc = xtiger.debug.loadDocument(url, result);
+        var xtDoc = this.doLoadDocument(url, result);
         if (xtDoc) {
           this.curForm = new xtiger.util.Form (this.xttMakeLocalURLFor(this.config.baseUrl));
           this.curForm.setTemplateSource (xtDoc);
@@ -826,7 +826,7 @@
           e = document.getElementById('formUrl');
       if (e.profile && e.profile.checked) { console.profile(); }
       var result = new xtiger.util.Logger();
-      var data = xtiger.debug.loadDocument(url, result);
+      var data = this.doLoadDocument(url, result);
       // FIXME: when using Ajax XHR directly check if this legacy code is still useful with FF (?)
       // if (xhr.responseXML) {
       //   this.loadData (new xtiger.util.DOMDataSource (xhr.responseXML), logger);
@@ -974,6 +974,44 @@
       } else {
         return false;
       }
+    },
+
+    // Loads the XHTML document at URL
+    // Experimental version that uses XMLHTTPRequest object on all browser except IE
+    // On IE (IE8, IE7 ?, untested on IE6) it uses the MSXML2.DOMDocument ActiveX for parsing XML documents into an IXMLDOMElement
+    // as a benefit it can open templates / XML documents from the local file system on IE
+    // Accepts an optional logger (xtiger.util.Logger) object to report errors
+    // Returns the document (should be a DOM Document object) or false in case of error
+    doLoadDocument : function (url, logger) {
+      if (window.navigator.appName == "Microsoft Internet Explorer") { // will try with MSXML2.DOMDocument
+      var errMsg;
+      try {
+         var xtDoc = new ActiveXObject("MSXML2.DOMDocument.6.0");
+         xtDoc.async = false;
+         xtDoc.resolveExternals = false;
+         xtDoc.validateOnParse = false;
+         xtDoc.setProperty("ProhibitDTD", false); // true seems to reject files with a DOCTYPE declaration
+         xtDoc.load(url);
+         if (xtDoc.parseError.errorCode != 0) {
+             errMsg = xtDoc.parseError + ' ' + xtDoc.parseError.reason;
+         } else {
+           return xtDoc; // OK, returns the IXMLDOMElement DOM element
+         }
+       } catch (e) {
+         errMsg = e.name;
+       }
+       if (errMsg) {
+         if (logger) {
+           logger.logError('Error while loading $$$ : ' + errMsg, url);
+         } else {
+           alert("ERROR:" + errMsg);
+         }
+           xtDoc = null;
+       }
+      } else {
+        return xtiger.cross.loadDocument(url, logger);
+      }
+      return false;
     },
 
     /*****************************************************/

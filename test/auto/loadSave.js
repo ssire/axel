@@ -45,7 +45,7 @@ TestEntry.prototype = {
     /* 1. load template */
       try {
       logAction(this.logEntry, 'loading template', this.templateFile);
-      this.template = xtiger.debug.loadDocument(this.templateFile, result);
+      this.template = universalLoadDocument(this.templateFile, result);
       if (this.template) {
         form = new xtiger.util.Form('../../axel/bundles');
         form.setTemplateSource (this.template);
@@ -155,7 +155,7 @@ TestInspector.prototype = {
     if (ok = form.transform ()) {
 
       // 2. Loads test data into template
-      var xmlDoc = xtiger.debug.loadDocument (this.curEntry.xmlFile); // prints its own alert
+      var xmlDoc = universalLoadDocument (this.curEntry.xmlFile); // prints its own alert
       // we cannot reuse xmlDoc from this.curEntry because DOMDataSource "consumes" attributes
       if (xmlDoc) {
         var dataSrc = new xtiger.util.DOMDataSource(xmlDoc);

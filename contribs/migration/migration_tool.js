@@ -118,7 +118,7 @@ SchemaEntry.prototype = {
 		/* 1. load template */ 
 	    try {	
 			logAction(this.logEntry, 'loading template', this.templateUrl);
-			this.template = xtiger.debug.loadDocument(this.templateUrl, result);
+			this.template = xtiger.cross.loadDocument(this.templateUrl, result);
 			if (this.template) {
 				form = new xtiger.util.Form('../../axel/bundles');
 				form.setTemplateSource (this.template); 
