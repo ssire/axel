@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>XTiger XML / AXEL Executive Summary</title>
+  <link rel="stylesheet" type="text/css" href="docu.css" />
+  <style type="text/css">
+body {
+  line-height: 1.3;
+  font-family: Arial, Verdana, sans-serif;
+  color: #432;
+  margin: 30px 40px;
+}
+a {
+  text-decoration: none;
+  outline: none;
+}
+h1, h2, h3 {
+  font-family: Trebuchet, sans-serif;
+  color: #222;
+  line-height: 1.4;
+}
+h1 {
+  font-size: 1.6em;
+  margin: 0 4em 1em 4em;
+}
+h2 {
+  font-size: 1.4em;
+  font-weight: normal;
+  margin: 1em 2em;
+}
+h3 {
+  font-size: 1.2em;
+  font-weight: normal;
+}
+pre {
+  color: black;
+  background: #EDC;
+  padding: 5px;
+  margin: 0;
+}
+code {
+  margin: 0;
+}
+h2:first-letter {
+  font-size: 2em;
+  float: left;
+}
+  </style>
+</head>
+
+<body>
+  <h1 id="executive_summary_how_to_write_xtiger_xml_document_templates_for_axel_version_1_">Executive summary : How to write XTiger XML document templates for AXEL version 1 ?</h1>
+
+  <p>This document summarizes the <a href="http://ssire.github.io/xtiger-xml-spec/" target="xtiger-specification">XTiger XML specification</a> and its implementation in the AXEL library. Some of the links open the AXEL demonstration editor with a self-demonstrating template of the feature described. Open them and test the corresponding editor, then click on the Dump button of the editor to see the generated XML output document; with Firefox (recommended) click on the Source button to see the template source. Some other links open either the specification itself or some extra documentation.</p>
+
+  <h2 id="1_you_need_to_write_the_xtiger_xml_template_document_as_an_xhtml_file_with_the_xt_namespace_prefix_associated_with_the_http_nsinriaorg_xtiger_namespace">1 You need to write the XTiger XML <a href="../editor/editor.xhtml#samples/Template" target="axel-demo-editor">template document</a> as an XHTML file with the <code>"xt"</code> namespace prefix associated with the <code>"http://ns.inria.org/xtiger"</code> namespace.</h2>
+
+  <p>Limitation: you MUST call the XTiger prefix <code>"xt"</code> </p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
+  </code></pre>
+
+  <h2 id="2_you_must_declare_an_xthead_section_inside_the_html_head_section_at_least_you_must_declare_the_name_of_the_xml_root_element_of_the_xml_output_document_in_a_label_attribute_spec">2 You must declare an <code>xt:head</code> section inside the HTML head section. At least you must declare the name of the XML root element of the XML output document in a <code>label</code> attribute (<a href="http://ssire.github.io/xtiger-xml-spec/#head" target="xtiger-specification">spec</a>).</h2>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:head label="Document"/&gt;
+  </code></pre>
+
+  <h2 id="3_you_can_create_simple_entry_fields_with_primitive_editors_primitive_editors_are_implemented_as_javascript_classes_that_we_call_plugin_howto_axel_comes_with_a_pre_defined_set_of_plugins_8220text8221_8220select8221_8220photo8221_8220file8221_8220link8221_8220video8221_8220content8221_the_last_5_are_still_unstable_and_subject_to_future_change">3 You can create simple entry fields with primitive editors. Primitive editors are implemented as Javascript classes that we call plugin (<a href="howto-plugins.html" target="_blank">howto</a>). AXEL comes with a pre-defined set of plugins: <a href="../editor/editor.xhtml#plugins/Text" target="axel-demo-editor">&#8220;text&#8221;</a>, <a href="../editor/editor.xhtml#plugins/Text" target="axel-demo-editor">&#8220;select&#8221;</a>, <a href="../editor/editor.xhtml#plugins/Text" target="axel-demo-editor">&#8220;photo&#8221;</a>, &#8220;file&#8221;, <a href="../editor/editor.xhtml#plugins/Text" target="axel-demo-editor">&#8220;link&#8221;</a>, <a href="../editor/editor.xhtml#plugins/Text" target="axel-demo-editor">&#8220;video&#8221;</a>, <a href="../editor/editor.xhtml#plugins/Text" target="axel-demo-editor">&#8220;content&#8221;</a> (the last 5 are still unstable and subject to future change).</h2>
+
+  <p>You can insert a primitive editor that generates some content in the XML output document with an <a href="../editor/editor.xhtml#basics/Use" target="axel-demo-editor">&#8220;xt:use&#8221;</a> element. The <code>types</code> attribute must contain the plugin name. The content of the <code>xt:use</code> element initializes the default content of the primitive editor. You can also declare a <code>label</code> attribute, it will open a new XML tag in the XML output document where the primitive editor will serialize its content (<a href="http://ssire.github.io/xtiger-xml-spec/#use" target="xtiger-specification">spec</a>). </p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:use types="text" label="Name"&gt;Click to edit your name&lt;/xt:use&gt;
+  </code></pre>
+
+  <p>To insert a primitive editor to generate an XML attribute you must use the <a href="../editor/editor.xhtml#basics/Attribute" target="axel-demo-editor">&#8220;xt:attribute&#8221;</a> element with a <code>types</code> attribute set to the plugin name and a <code>name</code> attribute set to the attribute name (<a href="http://ssire.github.io/xtiger-xml-spec/#attribute" target="xtiger-specification">spec</a>). </p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:attribute types="text" name="Nickname"&gt;Click to edit your nickname&lt;/xt:use&gt;
+  </code></pre>
+
+  <p>Limitation: when using the <code>xt:attribute</code> element with a plugin like the <code>"select"</code> plugin that defines a finite choice between different values defined by a <code>values</code> attribute, the default value MUST be declared inside a <code>default</code> attribute of the <code>xt:attribute</code> (and not in the <code>xt:attribute</code> content as with the <code>xt:use</code> element).</p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:attribute types="select" name="Color" values="red green blue" default="red"/&gt;
+  </code></pre>
+
+  <p>Some plugins are not compatible with the <code>xt:attribute</code> element when their XML output content model is not a scalar value. This is the case for the &#8220;link&#8221; plugin for instance that generates two sibling XML elements that cannot be stored inside an XML attribute.</p>
+
+  <p>Each plugin defines its own parameters that you can set in the <code>param</code> attribute of the <code>xt:use</code> or <code>xt:attribute</code> element. See the demonstration template for each plugin in the &#8220;plugins&#8221; folder of the templates for a description of each parameter.</p>
+
+  <p>Note: AXEL-FORMS extends AXEL with two form-oriented plugins: <a target="axel-forms-demonstration-editor" href="http://ssire.github.io/axel-forms/editor/editor.xhtml#plugins/Input">&#8220;input&#8221;</a>, <a target="axel-forms-demonstration-editor" href="http://ssire.github.io/axel-forms/editor/editor.xhtml#plugins/Choice">&#8220;choice&#8221;</a>.</p>
+
+  <h2 id="3bis_you_can_specialize_a_primitive_editor_by_applying_filters_each_filter_is_implemented_by_a_javascript_class_and_has_a_unique_identifier_howto_you_set_one_or_more_filters_on_a_primitive_editor_with_the_filter_parameter_of_the_param_attribute_axel_comes_wit_a_set_of_pre_defined_filters_8220date8221_8220wiki8221_8220style8221_8220optional8221_8220image8221_8220video8221_the_last_2_are_unsupported_and_for_illustrative_purpose">3bis You can specialize a primitive editor by applying filters. Each filter is implemented by a Javascript class and has a unique identifier (<a href="howto-filters.html" target="_blank">howto</a>). You set one or more filters on a primitive editor with the <code>filter</code> parameter of the <code>param</code> attribute. AXEL comes wit a set of pre-defined filters: <a href="../editor/editor.xhtml#filters/Date" target="axel-demo-editor">&#8220;date&#8221;</a>, <a href="../editor/editor.xhtml#filters/Wiki" target="axel-demo-editor">&#8220;wiki&#8221;</a>, <a href="../editor/editor.xhtml#filters/Style" target="axel-demo-editor">&#8220;style&#8221;</a>, <a href="../editor/editor.xhtml#filters/Optional" target="axel-demo-editor">&#8220;optional&#8221;</a>, <a href="../editor/editor.xhtml#filters/Image" target="axel-demo-editor">&#8220;image&#8221;</a>, <a href="../editor/editor.xhtml#filters/Video" target="axel-demo-editor">&#8220;video&#8221;</a> (the last 2 are unsupported and for illustrative purpose)</h2>
+
+  <p>You can set several filters as a whitespace separated list. Some filters are exclusive of each other. Each filter adds its own parameters that you can declare inside the <code>param</code> attribute. Usually their name starts with the filter unique identifier followed by underscore. See the demonstration template for each filer in the &#8220;filters&#8221; folder of the templates for a description of each parameter.</p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:use types="text" param="filter=date"&gt;0/1/01/2012&lt;/xt:use&gt;
+  </code></pre>
+
+  <p>Limitation: the &#8220;date&#8221; filter currently defines the user&#8217;s language as French to display date, the self-describing template explains how to add other regions.</p>
+
+  <h2 id="4_you_can_create_xml_hierarchical_structures_by_declaring_xtcomponent_elements_identified_by_a_unique_name_attribute_in_the_xthead_section_of_the_template_then_you_can_insert_those_components_at_any_position_inside_the_document_or_inside_another_component_with_an_xtuse_element_with_a_types_attribute_set_to_the_name_of_the_xtcomponent_element_spec">4 You can create XML hierarchical structures by declaring <code>xt:component</code> elements identified by a unique <code>name</code> attribute in the <code>xt:head</code> section of the template. Then you can insert those components at any position inside the document, or inside another component, with an <code>xt:use</code> element with a <code>types</code> attribute set to the name of the <code>xt:component</code> element (<a href="http://ssire.github.io/xtiger-xml-spec/#component" target="xtiger-specification">spec</a>).</h2>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:component name="a_contact"&gt;
+  &lt;xt:use types="text" label="Name"&gt;Name&lt;/xt:use&gt; (&lt;xt:use types="text" label="Phone"&gt;phone number&lt;/xt:use&gt;)
+&lt;/xt:component&gt;
+...
+&lt;xt:use types="a_contact" label="Person"/&gt;
+</code></pre>
+
+  <p>You can set the <code>label</code> attribute on the <code>xt:use</code> element to open a new XML tag in the XML output document where the output of the component will be inserted. This is the classical way to create hierarchical data structures : each time you set a label attribute on an <code>xt:use</code> element you generate one level deeper in the output hierarchy.</p>
+
+  <h2 id="5_you_can_leave_the_choice_between_several_xml_structures_to_the_end_user_by_using_a_whitespace_separated_list_of_component_names_in_the_types_attribute_of_the_xtuse_element_used_to_insert_the_components_the_alternatives_will_be_presented_to_the_end_user_with_a_popup_menu_to_select_between_the_different_components">5 You can leave the choice between several XML structures to the end user by using a whitespace separated list of component names in the <code>types</code> attribute of the <code>xt:use</code> element used to insert the components. The alternatives will be presented to the end user with a popup menu to select between the different components.</h2>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:use types="a_parag a_list an_illustration"/&gt;
+  </code></pre>
+
+  <p>The choice will open a new tag named after the selected component name into the XML output document. You can rewrite the tag name if you do not want it to match the component name by using a <code>label</code> attribute. In that case the label attribute must contain the tag names to be used for each component name.</p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:use types="a_parag a_list an_illustration" label="para list fig"/&gt;
+  </code></pre>
+
+  <p>Limitation: you can not create alternatives between primitive editors since you can only instantiate one primitive editor at a time in an <code>xt:use</code> or an <code>xt:attribute</code> element. Consequently you cannot neither create mixed alternatives between XML structures and primitive editors. To create a choice between several primitive editors, you MUST wrap them into different components.</p>
+
+  <h2 id="6_you_can_create_repeatable_document_fragments_with_the_8220xtrepeat8221_element_you_must_either_give_it_a_label_using_a_label_attribute_to_open_a_new_xml_tag_in_the_xml_output_document_or_you_must_indicate_in_a_pseudolabel_attribute_the_possible_elements_or_attributes_that_will_start_a_repeated_slice_spec">6 You can create repeatable document fragments with the <a href="../editor/editor.xhtml#basics/Repeat" target="axel-demo-editor">&#8220;xt:repeat&#8221;</a> element. You must either give it a label using a <code>label</code> attribute to open a new XML tag in the XML output document, or you must indicate in a <code>pseudoLabel</code> attribute the possible elements or attributes that will start a new fragment (<a href="http://ssire.github.io/xtiger-xml-spec/#repeat" target="xtiger-specification">spec</a>).</h2>
+
+  <p>The <code>pseudoLabel</code> attribute is a hint for the XML loading algorithm. It contains a whitespace separated list of tokens. Each token that starts with <code>"@"</code> identifies an attribute name, the other one identify an element name. When loading XML data into the document each matching will produce a new fragment repetition. A matching element is either an element with a name found in the pseudo-label list, or an element carrying an attribute found in the pseudo-label list.</p>
+
+  <p>You can limit the number of repetitions with the <code>minOccurs</code> and <code>maxOccurs</code> attribute of the <code>xt:repeat</code> element.</p>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="parag list illustration"&gt;
+  &lt;xt:use types="parag list illustration"/&gt;
+&lt;/xt:repeat&gt;
+</code></pre>
+
+  <p>Limitation: currently <code>maxOccurs</code> only supports the values <code>1</code> and <code>*</code>, any other value is converted to <code>*</code> (unbounded repetition)</p>
+
+  <h2 id="7_you_can_control_the_placement_of_the_repetition_menu_position_and_with_the_xtmenu_marker_element_the_first_xtmenu_marker_element_found_inside_an_xtrepeat_element_will_be_replaced_by_the_repetition_menu_spec">7 You can control the placement of the repetition menu position (+) and (-) with the <code>xt:menu-marker</code> element. The first <code>xt:menu-marker</code> element found inside an <code>xt:repeat</code> element will be replaced by the repetition menu (<a href="http://ssire.github.io/xtiger-xml-spec/#marker" target="xtiger-specification">spec</a>).</h2>
+
+  <p>Example:</p>
+
+  <pre><code>&lt;xt:repeat minOccurs="0" maxOccurs="*" label="Contacts"&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Contact &lt;xt:menu-marker/&gt;&lt;/legend&gt;
+    &lt;p&gt;&lt;xt:use types="text" label="Name"&gt;Click to enter a name&lt;/xt:use&gt;&lt;/p&gt;
+  &lt;/fieldset&gt;
+&lt;/xt:repeat&gt;
+</code></pre>
+
+  <h2 id="8_you_can_change_the_default_style_of_the_axel_editor_using_the_predefined_class_attributes_set_by_axel_on_the_document_element_spec">8 You can change the default style of the AXEL editor using the predefined class attributes set by AXEL on the document element (<a href="http://ssire.github.io/xtiger-xml-spec/#styling" target="xtiger-specification">spec</a>).</h2>
+
+  <p>Example:</p>
+
+  <pre><code>.axel-core-editable:hover {
+  outline: solid 1px blue;
+}
+</code></pre>
+</body>
+</html>
