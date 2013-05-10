@@ -43,7 +43,7 @@
 
 <p>Here are a few screen shots summarizing the different steps.</p>
   
-<p class="image"><img src="images/template-1.png" alt="snapshot"/><br/>Editor generated from the <code>../../examples/tutorial/Hello-World.xhtml</code> template by entering its path and hitting the <i>Visualize</i> button (steps 1 and 2)</p>
+<p class="image"><img src="images/template-1.png" alt="snapshot"/><br/>Editor generated from the <code>../../tutorial/Hello-World.xhtml</code> template by entering its path and hitting the <i>Visualize</i> button (steps 1 and 2)</p>
 
 <p class="image"><img src="images/template-2.png" alt="snapshot"/><br/>Copying XML output after entering some data and hitting the <i>Dump</i> button (steps 3 and 4)</p>
 
@@ -55,11 +55,11 @@
 <p>Once you have created some template you can use some Javascript code to transform the templates into editors and serve them from you application server. Basically there are different ways to do this :</p>
 
 <ul>
-  <li>you can include the library directly inside a template file (<a href="../examples/tutorial/tutorial.xhtml">try it !</a>), open the template inside a window or inside an iframe, then transform it right after loading ; the resulting template is an <span style="font-style: italic;">auto-editable</span> template</li>
+  <li>you can include the library directly inside a template file (<a href="../tutorial/tutorial.xhtml">try it !</a>), open the template inside a window or inside an iframe, then transform it right after loading ; the resulting template is an <span style="font-style: italic;">auto-editable</span> template</li>
 
-  <li>you can include the library in a Web page (<a href="../examples/tutorial/tutorial2.html">try it !</a>), load the template inside an iframe within the Web page then transform the iframe content </li>
+  <li>you can include the library in a Web page (<a href="../tutorial/tutorial2.html">try it !</a>), load the template inside an iframe within the Web page then transform the iframe content </li>
 
-  <li>you can include the library in a Web page (<a href="../examples/tutorial/tutorial3.html">try it !</a>), load the template with an Ajax request (XHR object) then transform it and copy the result somewhere inside your Web page</li>
+  <li>you can include the library in a Web page (<a href="../tutorial/tutorial3.html">try it !</a>), load the template with an Ajax request (XHR object) then transform it and copy the result somewhere inside your Web page</li>
 
   <li>you can use the <a href="https://github.com/ssire/axel-forms/wiki/The-%27template%27-command" target="_new">'template'</a> command from the <a href="http://ssire.github.com/axel-forms/" target="_new">AXEL-FORMS</a> extension to transform the template without writing any Javascript code, but with micro-format instructions (see <a href="https://github.com/ssire/axel-forms/wiki/Prerequisites" target="_new">doc</a>)</li>
 </ul>
@@ -73,7 +73,7 @@
 <ul>
   <li>editor/<a href="../editor/editor.xhtml" target="_blank">editor.xhtml</a> loads the library in a main Web page, then it loads templates within an iframe within that page and transforms them (in-place transformation)</li>
 
- <li><i>BROKEN</i> editor/<a href="../editor/editornoframe.xhtml" target="_blank">editornoframe.xhtml</a> loads the library in a main Web page, then it loads templates with an XMLHTTPRequest object, transforms them and copy the result within a div container within the main Web page</li>
+ <li>editor/<a href="../editor/editornoframe.xhtml" target="_blank">editornoframe.xhtml</a> loads the library in a main Web page, then it loads templates with an XMLHTTPRequest object, transforms them and copy the result within a div container within the main Web page</li>
 </ul>
 
 <h2>Deploying the library</h2>

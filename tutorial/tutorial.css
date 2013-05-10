@@ -1,0 +1,111 @@
+body { 
+  margin: 20px 10px;
+  font-family: Optima,'Trebuchet MS', Helvetica, sans-serif;  
+  background-color: #999;
+}
+
+div.content {
+  background: white;
+  padding: 20px 15px;
+	-moz-box-shadow: 2px 2px 1px #000;  
+  -webkit-box-shadow: 2px 2px 1px #000; 
+}
+
+h1 {
+  text-align: center;
+}
+
+h1, span.step {
+  font-family: Tahoma, Geneva, sans-serif;  
+}
+
+p.step {
+  margin-top: 2em;
+}
+
+span.stepTitle {
+  font-size: 120%;
+}
+
+div.source {
+  display: none;
+  border: dotted 1px black;
+  padding: 0.2em; 
+  margin: 1em 0 1em 5%;
+  background: rgb(238, 238, 238);
+  font-family: monospace;
+}
+
+div.explanation {
+  display: none;
+  border: dotted 1px black;
+  margin: 0.5em 0 1em 5%;
+  padding: 0.2em;
+  background: rgb(255, 255, 170); 
+}  
+
+p.explain {
+  text-align: right;
+  padding: 0;
+  margin: 0 1em 0.2em 0;
+}
+
+span.button {
+  font-size: 80%;
+  border-bottom: dotted 1px darkviolet;
+  color: darkviolet;
+}
+
+div#document {
+  position: relative;
+  margin: 0 auto;
+  width: 500px;
+  border: inset 1px black;
+  overflow: hidden; 
+}
+
+p.template {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  background-color: blue; 
+  padding: 0;
+  margin: 0;
+}
+
+iframe#container, div#container {
+  width: 100%;
+  padding-top: 1.5em; 
+  overflow: hidden;
+  min-height: 100px;
+}
+
+@media print {   
+	.noprint { 
+		display: none
+	}
+
+	body { 
+		margin: 20px;
+		font-family: Optima,'Trebuchet MS', Helvetica, sans-serif; 
+		background-color: white;
+	}  
+
+	div.content {
+		background: white;
+		padding: 0;
+		-moz-box-shadow: none; 
+		-webkit-box-shadow: none;  
+	}
+
+	div.source {
+		background: white;
+		border: none;
+	}
+
+	div.explanation {
+		background: white;
+		border: none;
+	}      
+}
