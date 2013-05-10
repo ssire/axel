@@ -9,6 +9,7 @@
 
      Version 0.5
      12 May 2010
+     FIXME: remove flow
 
      Before running this transformation, clean up the XTiger XML template
      using transformation XTigerCleanup.xsl.

@@ -243,12 +243,8 @@ xtiger.util.Form.prototype = {
   // Loads XML data into a template from a string
   // DEPRECATED: use loadData instead plus initFromString to load the string into the data source
   loadDataFromString : function (str, logger) {
-    var dataSource = new xtiger.util.DOMDataSource ();
-    if (dataSource.initFromString (str)) {
-      this.loadData(dataSource, logger);
-    } else {
-      this._report (0, 'failed to parse string data source', logger);
-    }
+    var dataSource = new xtiger.util.DOMDataSource(str);
+    this.loadData(dataSource, logger);
     return (this.status == 1);
   },
   

@@ -17,28 +17,20 @@
  * This implementation encapsulates an XML Document object containing the data, which is either
  * passed directly (initFromDocument) or which can be passed from a string (initFromString)
  */
-xtiger.util.DOMDataSource = function (sources) {  
+xtiger.util.DOMDataSource = function (source) {
   var d; // XML document
   this.xml = null; // main XML data
-  this.flow = {}; // seperate flows
   this.stack = [];  
-  if (sources) {
-    if (sources.constructor === {}.constructor) { // hash list case
-      for (var k in sources) {
-        d = sources[k];
-        if (d) { // sanity check
-          (k == 'document') ? this.initFromDocument(d) : this.initFlowFromDocument(d, k);
-        }
-      }
-    } else {
-      this.initFromDocument (sources); // assumes it's a single document
-    } 
+  if (typeof source === "string") {
+    this.initFromString(source);
+  } else {
+    this.initFromDocument(source);
   }
 }
 
 xtiger.util.DOMDataSource.prototype = {
 
-  // Return true of the data source has been initialized, false otherwise
+  // Return true of the data source has been correctly initialized, false otherwise
   hasData : function () {
     return (null != this.xml);
   },   
@@ -47,60 +39,24 @@ xtiger.util.DOMDataSource.prototype = {
   _setRootNode : function (n) {
     this.xml = n;
   },
-  
-  // Internal method to set a flow document from a DOM element node
-  _setFlowNode : function (name, n) {
-    this.flow[name] = [0, n]; // 0 means uninitialized
-  },
-  
-  // Internal method to initialize the source from a DOM element node
-  // Pre-condition: tide is a <xt:tide> element
-  _initFromTide : function (tide) {
-    var c = tide.childNodes;
-    for (var i = 0; i < c.length; i++) {
-      var cur = c.item(i);
-      if (cur.nodeType == xtdom.ELEMENT_NODE) {
-        if (this.xml == null) { // 1st child has main data
-          this._setRootNode(cur);
-        } else {
-          this._setFlowNode(xtdom.getLocalName(cur), cur);
-        }
-      }
-    }
-  },                              
 
-  // DEPRECATED : Initializes data source from a DOM Document 
+  // Initializes data source from a DOM Document 
   // Note that document may be false or undefined to simplify error management
   // Returns true on sucess, false otherwise
-  initFromDocument : function (doc) {     
+  initFromDocument : function (doc) {
+    var root;
     this.xml = null;                      
     if (doc && doc.documentElement) {
-      var root = doc.documentElement;
-      // check if it's a document with tide/flow
-      var tideOn = root.nodeName == 'tide' || root.nodeName == 'xt:tide'; // FIXME: prefix, case sensitivity
-      if (tideOn) {   
-        this._initFromTide (root);
-      } else {
-        this._setRootNode(root);
-      }
+      root = doc.documentElement;
+      this._setRootNode(root);
     }
     return (this.xml != null);
   },
-    
-  // DEPRECATED
-  // FIXME: make name optional and sets the name of the flow from the document root in case it is not defined
-  initFlowFromDocument : function (doc, name) { 
-    var xml = (doc && doc.documentElement) ? this._setFlowNode(name, doc.documentElement) : false;
-    return xml != false;
-  },
-  
-  /**
-   * Inits *this* data source with a string
-   * @param str
-   * @return
-   */
+
+  // Initializes data source with a string
   initFromString : function (str) {
     var res = true;
+    this.xml = null;                      
     try {
       var parser = xtiger.cross.makeDOMParser ();
       var doc = parser.parseFromString(str, "text/xml");
@@ -111,54 +67,7 @@ xtiger.util.DOMDataSource.prototype = {
     }
     return res;
   },   
-                                             
-  // label, if present, is the opening label corresponding to the opening flow 
-  // If both have the same value the root of the flow is considered as belonging 
-  // to the target data model otherwise it is just regarded as a flow name
-  openFlow : function (name, curPoint, label) {               
-    if (this.flow[name]) {      
-      if ( 0 === this.flow[name][0]) { // initializes the flow
-        if (label && (name == label)) { // 
-          this.flow[name] = [name, this.flow[name][1]]; // name is taken as an arbitrary root
-        } else {
-          this.flow[name] = this.makeRootVector(this.flow[name][1]); // root name is not part of data model 
-        }  
-      }
-      this.stack.push([name, curPoint]);
-      return this.flow[name];
-    }
-    return false;
-  },
-  
-  closeFlow : function (name, curPoint) {      
-    var saved = (this.stack.length > 0) ? this.stack[this.stack.length - 1] : false;
-    if (saved && (name == saved[0])) { // sanity check
-      this.stack.pop();
-      if (this.stack.length > 0) {  // FIXME: not sure about this test ?
-        // NOT TESTED : For nested flow (e.g. flow a in flow b) - I am really not sure about this...
-        this.flow[name] = curPoint;
-      } // otherwise the root vector for the flow has been consumed up to the point
-      return saved[1]; // restore previous point to continue from it
-    } 
-    return false;
-  },
-  
-  // clonePoint : function (point) {
-  //  var msg = '';
-  //  var res = [];
-  //  if (point instanceof Array) {
-  //    for (var i = 0; i < point.length; i++) {
-  //      res.push(point[i]);
-  //      msg = msg + point[i];
-  //    }
-  //  } else {
-  //    res = point;
-  //    msg = point;
-  //  }   
-  //  xtiger.cross.log('data-trace', 'clonePoint cloned', msg);
-  //  return res;   
-  // },
-              
+
   // FIXME: currently for an attribute point it returns the name of the parent node
   // and not the name of the attribute (see getAttributeFor)
   nameFor : function (point) {       
