@@ -16,9 +16,7 @@
 
       <xt:component name="Parag">
         <div class="content">
-          <p>
-            <xt:use types="text" param="shape=parent;type=textarea;filter=wiki">Describe the project here</xt:use>
-          </p>
+          <xt:use types="text" handle="p" param="shape=parent;type=textarea;filter=wiki">Click to edit a paragraph</xt:use>
         </div>
       </xt:component>
 
@@ -98,6 +96,7 @@
 
       <xt:component name="refbook">
         <p class="refbook biblio-entry">
+          <span class="key">[<xt:use types="text" label="key">key</xt:use>]</span>
           <xt:repeat minOccurs="1" label="authors">
             <xt:use types="bibauthor" label="author" />
           </xt:repeat>
@@ -108,6 +107,7 @@
 
       <xt:component name="refarticle">
         <p class="refarticle biblio-entry">
+          <span class="key">[<xt:use types="text" label="key">key</xt:use>]</span>
           <xt:repeat minOccurs="1" label="authors">
             <xt:use types="bibauthor" label="author"/>
           </xt:repeat>
@@ -122,6 +122,7 @@
 
       <xt:component name="refreport">
         <p class="refreport biblio-entry">
+          <span class="key">[<xt:use types="text" label="key">key</xt:use>]</span>
           <xt:repeat minOccurs="1" label="authors">
             <xt:use types="bibauthor" label="author"/>
           </xt:repeat>
@@ -142,7 +143,11 @@
             <xt:menu-marker/>
             <br />
         </xt:repeat>
-        <xt:repeat minOccurs="1" label="address">
+            <span class="orgname">
+                <xt:use types="text" label="orgname" option="unset">Organisation</xt:use>
+            </span>
+            <br/>
+        <xt:repeat minOccurs="0" label="address">
             <span class="addr"><xt:use types="text" label="line">Address line</xt:use></span><xt:menu-marker/>
             <br />
         </xt:repeat>
@@ -179,12 +184,12 @@
             <xt:use types="text" label="heading">SECTION HEADING</xt:use>
             <xt:menu-marker/>
           </h2>
-          <xt:repeat pseudoLabel="SubTitle Parag List Code Figure SubSubTitle" minOccurs="1">
+          <xt:repeat pseudoLabel="SubTitle Parag List Code Figure Illustration SubSubTitle" minOccurs="1">
             <div class="row">
                 <span class="left-repeater">
                 <xt:menu-marker/>
               </span>
-              <xt:use types="Parag List Code Figure SubTitle SubSubTitle"/>
+              <xt:use types="Parag List Code Figure SubTitle SubSubTitle Illustration"/>
             </div>
           </xt:repeat>
         </div>
@@ -287,7 +292,8 @@
     }
     textarea {
       background-color: white ! important;
-      border: 1px dashed grey;
+      outline: 1px dashed grey;
+      border: none;
     }
 
     /***************** Preview Mode *****************/

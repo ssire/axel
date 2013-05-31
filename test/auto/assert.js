@@ -38,7 +38,7 @@ function universalLoadDocument  (url, logger) {
 
 function assert_string (version, logger, data, truth, explain) {
   if ((data.length !== truth.length) || (data !== truth)) {
-    logFailure(version + " " + explain + ' : string mismatch, got "' + data + '" instead of "' + truth + '"');
+    logFailure(version + " " + explain + ' : string mismatch, got "' + xtiger.util.encodeEntities(data) + '" instead of "' + xtiger.util.encodeEntities(truth) + '"');
   } else {
     logSuccess(version + " " + explain);
   }

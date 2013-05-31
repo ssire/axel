@@ -26,9 +26,9 @@ xtiger.editor.BasicSerializer.prototype = {
 	// Walks through the tree starting at n and renders model data as it encounters it
 	// Accepts an optional rootTagName for the document, uses 'document' by default
 	serializeData : function (n, logger, rootTagName) {
-		logger.openTag(rootTagName || 'document');
+		logger.openTag(rootTagName || 'data');
 		this.serializeDataIter (n, logger);
-		logger.closeTag(rootTagName || 'document');	
+		logger.closeTag(rootTagName || 'data');	
 	},
 	
 	// Manage the Choice current slice

@@ -56,8 +56,8 @@ textarea.axel-text-placed,
 input.axel-text-placed,
 textarea.axel-text-float,
 input.axel-text-float {
-  margin: inherit;
-  padding: inherit;
+  margin: 0;
+  padding: 0;
   color: inherit;
   font-style: inherit;
   font-size: inherit;
@@ -74,12 +74,6 @@ textarea.axel-text-float,
 input.axel-text-float {
   position: absolute;
   display: inline;
-}
-
-textarea.axel-text-placed,
-input.axel-text-placed {
-  position: relative;
-  left: -2px; /* assumes 2px input field border ? (empirical)  */
 }
 
 /* Style for text container */
@@ -258,9 +252,9 @@ object.axel-repeat-unset {
 /*****************/
 /** Core styles **/
 
-/* Style for ediatble parts of the template */
+/* Style for editable parts of the template */
 .axel-core-editable {
-  border: thin dashed #bbffdd;
+  outline: thin dashed #bbffdd;
 }
 
 /* Style for error message within the template as a result of a problem in the transformation process */

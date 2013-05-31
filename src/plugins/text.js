@@ -94,7 +94,7 @@
 
        // Request to take focus (from tab navigation manager)
        focus : function () {
-         this.startEditing({shiftKey: !this.isModified()});
+         this.startEditing();
        },
 
        // Request to leave focus (fro tab navigation manager)
@@ -137,9 +137,10 @@
          return (s && s.charAt(0) === 'p') ? this._handle.parentNode : this._handle;
        },
 
-        // Starts editing the field's model
+       // Starts editing the field's model. Selects all text if the field's content is
+       // still the default value or if triggered from a user event with SHIFT key pressed
        startEditing : function (aEvent) {
-         var _doSelect = aEvent ? (!this.isModified() || aEvent.shiftKey) : false;
+         var _doSelect = !this.isModified() || (aEvent && aEvent.shiftKey);
          this._device.startEditing(this, aEvent, _doSelect);
        },
 

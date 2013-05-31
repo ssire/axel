@@ -45,9 +45,9 @@ object.axel-repeat-unset {
 /*****************/
 /** Core styles **/
 
-/* Style for ediatble parts of the template */
+/* Style for editable parts of the template */
 .axel-core-editable {
-  border: thin dashed #bbffdd;
+  outline: thin dashed #bbffdd;
 }
 
 /* Style for error message within the template as a result of a problem in the transformation process */

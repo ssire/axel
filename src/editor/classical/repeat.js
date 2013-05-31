@@ -480,14 +480,16 @@ xtiger.editor.Repeat.prototype = {
   },   
       
   // Keeps only one slice and updates this.total
-  // not used at that time
-  reset : function () {                 
-    var start = this.min + 1;
-    for (var i = start; i < this.total; i++ ) { // extra slices to delete
-      this.removeItemAtIndex (i, false);
-    }                  
-    this.total = this.min; 
-    this.configureMenuForSlice (0);
+  // TODO: clear all primitive editors in slice
+  reset : function () {
+    var i = this.total;
+    while (i-- > 1) {
+      this.removeItemAtIndex(this.total-1, false);
+    }
+    this.total = this.min;
+    this.configureMenuForSlice(0);
+    this.dispatchEvent(this.items[0], 'clear');
+    this.unactivateSliceAt(0);
   },
   
   // Inserts a slice index into the list of slices of the repeater at a given position
@@ -683,8 +685,19 @@ xtiger.editor.Repeat.prototype = {
     } else {
       this.configureMenuForSlice (this.total-1); // configures menu for last item   
     }
-  },            
-    
+  },
+
+  removeLastItems : function (nb) {   
+    while (nb-- > 0) {
+      this.removeItemAtIndex(this.total-1, false); // FIXME: block 'remove' events
+    }
+    if (this.total <= 1) {
+      this.configureMenuForSlice (0); // configures menu for 1st item
+    } else {
+      this.configureMenuForSlice (this.total-1); // configures menu for last item   
+    }
+  },
+
   removeItemAtIndex : function (position, useTrash) {   
     var cur, next;
     this.originPosition = position;     
@@ -693,22 +706,22 @@ xtiger.editor.Repeat.prototype = {
     var slice = useTrash ? [] : null;
     if (index[0] == index[1]) { // start == end  (i.e. the repeated use was auto-wrapped)
       if (useTrash) { slice.push (index[0]);  } 
-      this.callPrimitiveEditors(index[0], 'remove');
+      // this.callPrimitiveEditors(index[0], 'remove'); // DEPRECATED
       index[0].parentNode.removeChild(index[0]);      
     } else {
       // deletes the forest between index[0] and index [1], including themselves
       // PRE-CONDITION: works only if index[0] and index [1] are siblings ! (should be the case by construction)       
-      this.dispatchEvent(index, 'remove');
+      // this.dispatchEvent(index, 'remove'); // DEPRECATED
       // do the real thing      
       next = index[0].nextSibling;
       if (useTrash) { slice.push (index[0]); }
-      // this.callPrimitiveEditors(index[0], 'remove');
+      // this.callPrimitiveEditors(index[0], 'remove'); // DEPRECATED
       index[0].parentNode.removeChild(index[0]);
       while (next && (next != index[1])) {
         cur = next;
         next = next.nextSibling;
         if (useTrash) { slice.push (cur); }        
-        // this.callPrimitiveEditors(cur, 'remove');
+        // this.callPrimitiveEditors(cur, 'remove'); // DEPRECATED
         index[1].parentNode.removeChild(cur);
       }
       if (useTrash) { 

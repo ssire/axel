@@ -77,10 +77,16 @@ xtiger.util.DOMDataSource.prototype = {
       return null; // point must be -1
     }
   },
-  
+
   lengthFor : function (point) {
     if (point instanceof Array) {
       return point.length - 1;
+      // FIXME: should we consider no content as content ? I do not think since it may be an empty node with attribute(s)
+      // if ((point.length === 2) && (point[1] === null)) {
+      //   return 0;
+      // } else {
+      //   return point.length - 1;
+      // }
     } else {
       return 0;
     }   

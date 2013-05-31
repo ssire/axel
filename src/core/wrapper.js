@@ -40,8 +40,17 @@
 \*****************************************************************************/
 (function (GLOBAL) {
 
+  var settings = {}; // cached $axel settings
   var MAX = 10000;
   var TOTAL;
+
+  function _raiseError ( errMsg ) {
+    if (settings.error) {
+      settings.error(errMsg);
+    } else {
+      alert(errMsg);
+    }
+  }
 
   function _nodeIter (n, accu, seethrough) {
     if (++TOTAL > MAX) {
@@ -99,6 +108,7 @@
     }
   }
 
+  // Fake DOMLogger used to collect text content only (PCData)
   function _Logger () {
     this.stack = [];
   }
@@ -115,6 +125,12 @@
     dump : function () {
       return this.stack.join(' ');
     },
+    
+    openTag : function (name) {
+    },
+
+    closeTag : function (name) {
+    },
 
     reset : function () {
       this.stack = []
@@ -122,54 +138,150 @@
   };
 
   function _WrappedSet (targets, seethrough) {
-    var i;
-    // xtiger.cross.log('debug', 'reset wrapped set iteration counter (' + TOTAL + ')');
-    TOTAL = 0;
     this.seethrough = seethrough; // to show optional repetitions content
-    this.list = [];
-    for (i = 0; i < targets.length; i++) {
-      _nodeIter(targets[i], this.list, seethrough);
-    }
+    this.targets = targets; // FIXME: should we make a copy ?
+    this.first = targets[0];
   }
 
   _WrappedSet.prototype = {
 
+    // lazy evaluation for wrapped set node list
+    _list : function () {
+      var i;
+      // xtiger.cross.log('debug', 'reset wrapped set iteration counter (' + TOTAL + ')');
+      TOTAL = 0;
+      if (this.targets) {
+        this.list = [];
+        for (i = 0; i < this.targets.length; i++) {
+          _nodeIter(this.targets[i], this.list, this.seethrough);
+        }
+        delete this.targets;
+      }
+      return this.list;
+    },
+    
+    // FIXME: directly accept an XML document template as source input (cf. load)
+    transform : function ( optTemplateUrl ) {
+      if (settings.bundlesPath) {
+        if (this.first) {
+          var status = new xtiger.util.Logger(), editor;
+          try { // load and transform template
+            editor = optTemplateUrl ? new xtiger.cross.loadDocument(optTemplateUrl, status) : document;
+            if (editor) {
+              form = new xtiger.util.Form(settings.bundlesPath);
+              if (editor !== document) {
+                form.setTemplateSource(editor);
+                form.setTarget(this.first, true);
+              } else {
+                form.srcDoc = document;
+                form.curDoc = document;
+                form.srcForm = this.first;
+              } 
+              if (settings.enableTabGroupNavigation) {
+                form.enableTabGroupNavigation();
+              }
+              form.transform(status);
+            }
+            if (status.inError()) {
+              _raiseError(status.printErrors());
+            } else {
+              this.first.xttHeadLabel = form.getEditor().headLabel;
+            }
+          } catch (e) {
+            _raiseError('exception ' + e.name + ' ' + e.message);
+          }
+        } else {
+          _raiseError('cannot load template into empty wrapped set');
+        }
+      } else {
+        _raiseError('missing "bundlesPath" to transform template');
+      }
+      return this;
+    },
+    
+    xml : function () {
+      var algo, accu, res = '';
+      if (this.first) {
+        accu = new xtiger.util.DOMLogger();
+        algo = settings.serializer || xtiger.editor.Generator.prototype.defaultSerializer;
+        if (algo) {
+          algo.serializeData(this.first, accu, this.first.xttHeadLabel);
+          res = accu.dump();
+        } else {
+          _raiseError('missing XML serializer algorithm');
+        }
+      }
+      return res;
+    },
+    
+    // Load XML data into the 1st node of the wrapped set
+    // The source may be an XML string, a URL string, or an XML document object
+    load : function ( source ) {
+      var algo, dataSrc, status, input = source;
+      if (this.first) {
+        algo = settings.loader || xtiger.editor.Generator.prototype.defaultLoader;
+        status = new xtiger.util.Logger();
+        if (algo) {
+          if (typeof source === "string") {
+            if (source.replace(/^\s*/,'').charAt(0) === '<') { // assumes XML string
+              input = source;
+            } else { // assumes URL 
+              input = xtiger.cross.loadDocument(source, status);
+            }
+          } else if (! source) {
+            status.logError('undefined or missing XML data source')
+          }
+          if (input && !status.inError()) {
+            dataSrc = new xtiger.util.DOMDataSource(input);
+            algo.loadData(this.first, dataSrc);
+          } else {
+            _raiseError(status.printErrors());
+          }
+        } else {
+          _raiseError('missing XML serializer algorithm');
+        }
+      } else {
+        _raiseError('cannot load XML data source into empty wrapped set');
+      }
+      return this;
+    },
+
     length : function () {
-      return this.list.length;
+      return this._list().length;
     },
 
     get : function (rank) {
-      return this.list[rank];
+      return this._list()[rank];
     },
 
     clear : function (propagate) {
-      var i;
-      for (i = 0; i < this.list.length; i++) {
-        this.list[i].clear(propagate);
+      var i, list = this._list();
+      for (i = 0; i < list.length; i++) {
+        list[i].clear(propagate);
       }
       return this;
     },
 
     update : function (data) {
-      var i;
-      for (i = 0; i < this.list.length; i++) {
-        this.list[i].update(data);
+      var i, list = this._list();
+      for (i = 0; i < list.length; i++) {
+        list[i].update(data);
       }
       return this;
     },
 
     text : function () {
-      var i, logger = new _Logger();
-      for (i = 0; i < this.list.length; i++) {
-        this.list[i].save(logger);
+      var i, list = this._list(), logger = new _Logger();
+      for (i = 0; i < list.length; i++) {
+        list[i].save(logger);
       }
       return logger.dump();
     },
 
     values : function () {
-      var i, tmp, logger = new _Logger(), res = [];
-      for (i = 0; i < this.list.length; i++) {
-        this.list[i].save(logger);
+      var i, list = this._list(), logger = new _Logger(), res = [];
+      for (i = 0; i < list.length; i++) {
+        list[i].save(logger);
         res.push(logger.dump());
         logger.reset();
       }
@@ -177,17 +289,17 @@
     },
 
     configure : function (option, value) {
-      var i;
-      for (i = 0; i < this.list.length; i++) {
-        this.list[i].configure(option, value);
+      var i, list = this._list();
+      for (i = 0; i < list.length; i++) {
+        list[i].configure(option, value);
       }
       return this;
     },
 
     apply : function (func, toHandle) {
-      var i;
-      for (i = 0; i < this.list.length; i++) {
-        func(toHandle ? this.list[i].getHandle() : this.list[i]);
+      var i, list = this._list();
+      for (i = 0; i < list.length; i++) {
+        func(toHandle ? list[i].getHandle() : list[i]);
       }
       return this;
     }
@@ -238,6 +350,10 @@
         }
       }
     }
+  };
+  
+  _axel.setup = function setup ( hash ) {
+    _axel.extend(settings, hash);
   };
   
   // Limits max iteration counter

@@ -148,8 +148,7 @@
       var selObj, selRange;
       // the following code used to work at least on Firefox
       // but for now the getRangeAt(0) throws an exception because there are no range defined for a click !
-      if (mouseEvent && window.getSelection &&          
-            (editor.getParam('clickthrough') == 'true')) {
+      if (window.getSelection && (editor.getParam('clickthrough') === 'true')) {
         selObj = window.getSelection();  
         if (selObj && (selObj.rangeCount > 0)) {     
           selRange = selObj.getRangeAt(0);
@@ -187,7 +186,7 @@
           xtdom.addClassName(handle, editor.getParam('hasClass'));
         }
         // saves cursor offset (where the user has clicked)
-        if (!doSelectAll) { 
+        if ((!doSelectAll) && mouseEvent) { 
           offset = this._computeOffset(mouseEvent, editor);
         }
         coldStart = true;
@@ -207,7 +206,7 @@
       if (editor.getParam('enablelinebreak') == 'true') {
         this.keyboard.enableRC();
       }
-
+      
       // cursor positioning and initial text selection
       if (doSelectAll) {
         if ((editor.getParam('placeholder') !== 'clear') || mouseEvent.shiftKey) {
@@ -216,10 +215,10 @@
           handle.value = '';
           try { handle.focus(); } catch (e) {}
         }
-      } else if (offset) {        
-        xtdom.focusAndMoveCaretTo(handle, (offset == -1) ? handle.value.length : offset);
+      } else if (offset && (offset !== -1)) {        
+        xtdom.focusAndMoveCaretTo(handle, offset);
       } else {
-         xtdom.focusAndMoveCaretTo(handle, handle.value.length);
+        xtdom.focusAndMoveCaretTo(handle, handle.value.length);
       }
 
       shape = this.currentEditor.getParam('shape');
@@ -237,8 +236,6 @@
       // always adjusts dimensions since input field has a border the span handle didn't have
       this.metrics.adjustWidth(handle, ((this.field.deviceType === 'textarea') && (shape === 'parent')));
       this.metrics.adjustHeight(handle);
-      // does not adjust for 'self' shape which seems to cause small vertical alignment (empirical)
-      handle.style.top = (shape === 'parent') ? '-2px' : '0';
       if (coldStart) {
         // must be called at the end as on FF 'blur' is triggered when grabbing
         xtdom.addEventListener(handle, 'blur', this.blurHandler, false);

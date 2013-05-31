@@ -503,11 +503,12 @@
       // a popup menu to select between editing or opening the link in a new window.
       // DOES NOT forward the call if it is called from a mouse event and the user 
       // clicked on a link. DOES forward it otherwise.
-      startEditing : function startEditing (optMouseEvent, optSelectAll) {
+      startEditing : function startEditing (optMouseEvent) {
+        var _target, _tname;
         if (optMouseEvent) {
-          var _target = xtdom.getEventTarget(optMouseEvent);
-          var _tname = xtdom.getLocalName(_target);
-          if (/^a$/i.test(_tname)) { // clicked on a link
+          _target = xtdom.getEventTarget(optMouseEvent);
+          _tname = xtdom.getLocalName(_target);
+          if (_tname.toUpperCase() === 'A') { // clicked on a link
             xtdom.preventDefault(optMouseEvent);
             xtdom.stopPropagation(optMouseEvent); // prevents link opening
             var _popupdevice = _getPopupDevice(this.getDocument());
@@ -519,7 +520,7 @@
             return;
           }
         }
-        this.__wiki__startEditing(optMouseEvent, optSelectAll);
+        this.__wiki__startEditing(optMouseEvent);
       },
 
       // Callback for the popup device used to manage link edition

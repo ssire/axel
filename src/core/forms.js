@@ -56,6 +56,8 @@ xtiger.util.Logger.prototype = {
  |                                                                             |
  |  xtiger.util.Form module                                                    |
  |                                                                             |
+ |  WILL BE DEPRECATED - use $axel wrapper object instead                      |
+ |                                                                             |
  |  Class for calling AXEL parser and generator to transform a template into   |
  |  an editor, then to load and/or save XML data from/to the editor.           |
  |                                                                             |
@@ -159,20 +161,27 @@ xtiger.util.Form.prototype = {
     this.targetContainerId = anId;
     this.doEmptyTarget = doReplace;
   },
+
+  setTarget : function (node, doReplace) {
+    this.curDoc = node.ownerDocument;
+    this.targetContainer = node;
+    this.doEmptyTarget = doReplace || true;
+  },
                               
   // Transforms template into editor
   // log is an optional logger to report errors
   transform : function (logger) {
+    var parser;
     // FIXME: check this.srcDoc is set...
     if (! this.srcForm) {
       this._report (0, 'no template to transform', logger);
       return false;
     }
     this.editor = new xtiger.editor.Generator (this.baseUrl);
-    this.parser = new xtiger.parser.Iterator (this.srcDoc, this.editor);
-    if (this.targetContainerId) { // checks if the transformation require a cross-document copy
-      var n = this.curDoc.getElementById(this.targetContainerId);
-      if (n) {        
+    parser = new xtiger.parser.Iterator (this.srcDoc, this.editor);
+    if (this.targetContainer || this.targetContainerId) { // checks if the transformation require a cross-document copy
+      var n = this.targetContainer || this.curDoc.getElementById(this.targetContainerId);
+      if (n) {
         if (this.doEmptyTarget) {
           xtdom.removeChildrenOf (n);
         }
@@ -182,7 +191,7 @@ xtiger.util.Form.prototype = {
         this._report (0, 'transformation aborted because target container "' + this.targetContainerId + '" not found in target document', logger);
         return false;
       }
-      this.parser.importComponentStructs (this.curDoc); // to import component definitions
+      parser.importComponentStructs (this.curDoc); // to import component definitions
     } else {
       this.root = this.srcForm;
     }   
@@ -200,7 +209,7 @@ xtiger.util.Form.prototype = {
     }
     // finally makes form available to other plugins (e.g. lens may need it to know where to insert their wrapper)
     xtiger.session(this.curDoc).save('form', this);
-    this.parser.transform (this.root, this.curDoc);
+    parser.transform (this.root, this.curDoc);
     this._report (1, 'document transformed', logger);    
     return (this.status == 1);    
   },
@@ -226,7 +235,7 @@ xtiger.util.Form.prototype = {
     } else {
       this._report (0, "cannot inject editor's style sheet because target document has no head section", logger);
     }
-    return (this.status == 1);    
+    return (this.status == 1);
   },   
   
   // Loads XML data into a template which has been previously loaded into a DOMDataSource
@@ -237,7 +246,7 @@ xtiger.util.Form.prototype = {
     } else {
       this._report (0, 'data source empty', logger);      
     }
-    return (this.status == 1);    
+    return (this.status == 1);
   },
   
   // Loads XML data into a template from a string

@@ -195,11 +195,9 @@
         cdeState['zoomin'] =  false;
       }
       _tracker.startEditing(self, this, cdeState);  
-    } else {
-      xtiger.cross.log('debug', '[Image filter] avoiding reentrant MouseEnter call');
-    }   
-  }       
-    
+    } //else xtiger.cross.log('debug', '[Image filter] avoiding reentrant MouseEnter call');
+  }
+
   var imageFilterMixin = {  
     
     onAwake : function () { 
@@ -217,13 +215,11 @@
       this.image_minWidth = _dim2int(this.getParam("image_minwidth")); 
       this.image_minHeight = _dim2int(this.getParam("image_minheight"));
       this.image_resizable = this.image_maxWidth || this.image_maxHeight || this.image_minWidth || this.image_minHeight;
-      xtiger.cross.log('debug', '[Image filter] awake maxW=' + this.image_maxWidth + ' minW=' + this.image_minWidth +
-                        'maxH=' + this.image_maxHeight + ' minH=' + this.image_minHeight);
     },
     
     // Loads XML data from the point into the editor
     // Converts it to an XHTML representation
-    onLoad : function (point, dataSrc) {       
+    onLoad : function (point, dataSrc) {
       var src, tagname = this.getParam('image-tag') || 'Source', w, h;
       // if (! dataSrc.isEmpty(point)) {  // FIXME: a node with only an attribute is treated as empty
       var n = point[0];

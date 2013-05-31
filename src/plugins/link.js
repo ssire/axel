@@ -127,7 +127,7 @@
      },
      
      focus: function () {
-       this.startEditing(null);
+       this.startEditing();
      },
      
      unfocus: function () {
@@ -177,7 +177,7 @@
      },
      
      startEditing: function (aEvent) {
-       var _doSelect = aEvent ? (!this.isModified() || aEvent.shiftKey) : false;
+       var _doSelect = !this.isModified() || (aEvent && aEvent.shiftKey);
        this._device.startEditing(this, 'linkLensWrapper', _doSelect);
        if (aEvent) {
          xtdom.stopPropagation(aEvent);// otherwise stopEditing gets called on IE
