@@ -1,14 +1,14 @@
-body { 
+body {
   margin: 20px 10px;
-  font-family: Optima,'Trebuchet MS', Helvetica, sans-serif;  
+  font-family: Optima,'Trebuchet MS', Helvetica, sans-serif;
   background-color: #999;
 }
 
 div.content {
   background: white;
   padding: 20px 15px;
-	-moz-box-shadow: 2px 2px 1px #000;  
-  -webkit-box-shadow: 2px 2px 1px #000; 
+  -moz-box-shadow: 2px 2px 1px #000;
+  -webkit-box-shadow: 2px 2px 1px #000;
 }
 
 h1 {
@@ -16,7 +16,16 @@ h1 {
 }
 
 h1, span.step {
-  font-family: Tahoma, Geneva, sans-serif;  
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
+p.deprecated > i {
+  color: red;
+}
+p.deprecated {
+  background: yellow;
+  text-align: center;
+  font-size: 1.8em;
 }
 
 p.step {
@@ -30,10 +39,9 @@ span.stepTitle {
 div.source {
   display: none;
   border: dotted 1px black;
-  padding: 0.2em; 
+  padding: 0.2em;
   margin: 1em 0 1em 5%;
   background: rgb(238, 238, 238);
-  font-family: monospace;
 }
 
 div.explanation {
@@ -41,8 +49,8 @@ div.explanation {
   border: dotted 1px black;
   margin: 0.5em 0 1em 5%;
   padding: 0.2em;
-  background: rgb(255, 255, 170); 
-}  
+  background: rgb(255, 255, 170);
+}
 
 p.explain {
   text-align: right;
@@ -56,12 +64,12 @@ span.button {
   color: darkviolet;
 }
 
-div#document {
+#document, .editor {
   position: relative;
   margin: 0 auto;
   width: 500px;
   border: inset 1px black;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 p.template {
@@ -69,43 +77,69 @@ p.template {
   top: 0;
   left: 0;
   color: white;
-  background-color: blue; 
+  background-color: blue;
   padding: 0;
   margin: 0;
 }
 
 iframe#container, div#container {
   width: 100%;
-  padding-top: 1.5em; 
+  padding-top: 1.5em;
   overflow: hidden;
   min-height: 100px;
 }
 
-@media print {   
-	.noprint { 
-		display: none
-	}
+table {
+  border-spacing: 8px 0;
+}
 
-	body { 
-		margin: 20px;
-		font-family: Optima,'Trebuchet MS', Helvetica, sans-serif; 
-		background-color: white;
-	}  
+th, td {
+  padding: 8px;
+}
 
-	div.content {
-		background: white;
-		padding: 0;
-		-moz-box-shadow: none; 
-		-webkit-box-shadow: none;  
-	}
+th {
+  border-top: solid 1px black;
+  border-right: solid 1px black;
+  border-left: solid 1px black;
+}
 
-	div.source {
-		background: white;
-		border: none;
-	}
+td {
+  border-bottom: solid 1px black;
+  border-right: solid 1px black;
+  border-left: solid 1px black;
+  vertical-align: top;
+}
 
-	div.explanation {
-		background: white;
-		border: none;
-	}      
+td div.sample {
+ padding: 0;
+ margin: 0;
+}
+
+@media print {
+  .noprint {
+    display: none
+  }
+
+  body {
+    margin: 20px;
+    font-family: Optima,'Trebuchet MS', Helvetica, sans-serif;
+    background-color: white;
+  }
+
+  div.content {
+    background: white;
+    padding: 0;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+
+  div.source {
+    background: white;
+    border: none;
+  }
+
+  div.explanation {
+    background: white;
+    border: none;
+  }
 }

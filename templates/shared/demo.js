@@ -26,7 +26,7 @@ $(
               });           
         return '&lt;' + prefix + n + ' ' + accu.join(' ') + '>' + tmp.join() + '&lt;/' + prefix + n + '>';
       } else if (el.textContent) {
-        return '&lt;' + prefix + n + ' ' + accu.join(' ') + '>' + el.textContent.replace('&', '&amp;', 'g') + '&lt;/' + prefix + n + '>';
+        return '&lt;' + prefix + n + ' ' + accu.join(' ') + '>' + el.textContent.replace('&', '&amp;', 'g').replace('<', '&amp;lt;', 'g') + '&lt;/' + prefix + n + '>';
       } else {
         return '&lt;' + prefix + n + ' ' + accu.join(' ') + '/>';
       }

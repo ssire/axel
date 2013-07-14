@@ -50,7 +50,7 @@ xtdom.removeElement = function (element) {
 
 // Returns true if node is an XTiger element or if it contains at least one
 xtdom.containsXT = function (node) {
-  if (node.nodeType == xtdom.ELEMENT_NODE) {
+  if (node.nodeType === xtdom.ELEMENT_NODE) {
     if (xtdom.isXT(node)) {
       return true; 
     } else {

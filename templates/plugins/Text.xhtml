@@ -18,7 +18,7 @@
 
     <h1>The <samp>"text"</samp> plugin</h1>
 
-    <p>The <code>"text"</code> plugin is a text editing field. As a static view, it shows its content inside a <code>span</code> handle. When clicked, it replaces the handle content with an <code>input</code> or <code>textarea</code> entry field.</p>
+    <p>The <code>"text"</code> plugin is a text editing field. As a static view, it shows its content inside a <code>span</code> handle. When clicked, it replaces the handle content with an <code>input</code> or <code>textarea</code> entry field. You can specify a different handle element name by declaring it inside a <code>handle</code> attribute. The use of a custom handle element may be useful to change the look and feel of the static view wich is styled with an <code>axel-core-editable</code> class (see default styling inside <code>axel.css</code>).</p>
     
     <h2>Parameters</h2>
 
@@ -68,5 +68,26 @@
       <p><xt:use types="text" label="Input" param="type=input;shape=parent;layout=placed">your content here</xt:use></p>
       <p><xt:use types="text" label="Input" param="type=input;shape=parent;layout=float">your content here</xt:use></p>
     </div>
+
+    <h3>With <var>enablelinebreak</var> set to <code>"true"</code></h3>
+
+    <p>Don't forget to insert the editing field inside a &lt;pre> element to make carriage returns visible, and to hit the SHIFT key at the same time as the Return key to insert a carriage return, for instance this is the way to create a source code entry field.</p>
+
+    <div class="demo extract">
+      <pre><xt:use types="text" label="SourceCode" param="enablelinebreak=true;type=textarea;shape=parent">var i;
+for (i=0;i&lt;10;i++) {
+  window.console.log(i);
+}
+</xt:use></pre>
+  </div>
+
+      <p>The same thing using XTiger XML <code>handle</code> attribute to generate the handle as a &lt;pre> element instead of the default &lt;span> element. The only difference is that the (thin dashed) feedback around the handle of the editable area (set by a <code>.axel-core-editable</code> CSS rule in <code>axel.css</code>) will be rectangular as the handle is block level in that case.</p>
+
+      <div class="demo extract"><xt:use handle="pre" types="text" label="SourceCode" param="enablelinebreak=true;type=textarea;shape=parent">var i;
+for (i=0;i&lt;10;i++>0) {
+  window.console.log(i);
+}
+</xt:use></div>
+    
   </body>
 </html>

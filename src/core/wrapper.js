@@ -166,7 +166,7 @@
         if (this.first) {
           var status = new xtiger.util.Logger(), editor;
           try { // load and transform template
-            editor = optTemplateUrl ? new xtiger.cross.loadDocument(optTemplateUrl, status) : document;
+            editor = optTemplateUrl ? (typeof optTemplateUrl === 'string' ? new xtiger.cross.loadDocument(optTemplateUrl, status) : optTemplateUrl) : document;
             if (editor) {
               form = new xtiger.util.Form(settings.bundlesPath);
               if (editor !== document) {
@@ -317,7 +317,7 @@
       }
     } else if (Object.prototype.toString.call(nodes) === "[object Array]") { // array of DOM nodes
       target = nodes;
-    } else if (nodes instanceof GLOBAL.jQuery) { // wrapped set
+    } else if (GLOBAL.jQuery && (nodes instanceof GLOBAL.jQuery)) { // wrapped set
       target = nodes.get();
     } else if (nodes) {
       target = [ nodes ];

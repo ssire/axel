@@ -40,7 +40,7 @@ use/debug/extend the library.
 If you are just interested in using and deploying AXEL, all you need to do is
 to copy the `axel` folder to your Web server. Then you can start deploying
 your own document templates following the instructions in
-`tutorial/tutorial.xhtml`.
+`tutorial/index.xhtml`.
 
 In all the cases, once you have cloned the main AXEL git repo by running `git
 clone git://github.com/ssire/axel.git`, you should read the `readme.html`.
