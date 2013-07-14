@@ -46,7 +46,7 @@
   	<!-- BEGIN AXEL block -->	
 	<link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
 	<script type="text/javascript" src="../../axel/axel.js"></script>
-	<script type="text/javascript" src="../../src/util/debug.js"></script>
+	<script type="text/javascript" src="../auto/assert.js"></script>
 		
 	<script type="text/javascript">
  	  var FORM; 
@@ -55,7 +55,7 @@
 	
 		function init () {
 			var result = new xtiger.util.Logger();
-      var xtDoc = xtiger.debug.loadDocument(XTD_FILE, result);
+      var xtDoc = universalLoadDocument(XTD_FILE, result);
 			if (xtDoc) {
 				FORM = new xtiger.util.Form("../../axel/bundles");
 				FORM.setTemplateSource(xtDoc);

@@ -26,9 +26,9 @@ xtiger.editor.BasicSerializer.prototype = {
 	// Walks through the tree starting at n and renders model data as it encounters it
 	// Accepts an optional rootTagName for the document, uses 'document' by default
 	serializeData : function (n, logger, rootTagName) {
-		logger.openTag(rootTagName || 'document');
+		logger.openTag(rootTagName || 'data');
 		this.serializeDataIter (n, logger);
-		logger.closeTag(rootTagName || 'document');	
+		logger.closeTag(rootTagName || 'data');	
 	},
 	
 	// Manage the Choice current slice
@@ -103,15 +103,9 @@ xtiger.editor.BasicSerializer.prototype = {
 	},
 	
 	serializeDataIter : function (n, logger) { 
-		var curFlow, curLabel;		   
+		var curLabel;
 		if (n.xttOpenLabel) {            
 			curLabel = n.xttOpenLabel;
-			if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-				var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-				curFlow = m[1];
-				curLabel = m[2];
-				logger.openFlow(curFlow, curLabel);
-			}
 			if (curLabel.charAt(0) == '@') {
 				logger.openAttribute(curLabel.substr(1, curLabel.length - 1));				
 			} else {
@@ -127,23 +121,13 @@ xtiger.editor.BasicSerializer.prototype = {
 			this.serializeDataSlice(n.firstChild, n.lastChild, logger);		
 		}
 		if (n.xttCloseLabel) {         
-			curFlow = false;
 			curLabel = n.xttCloseLabel;
-			if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-				var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-				curFlow = m[1];
-				curLabel = m[2];
-		  }
 			if (curLabel.charAt(0) == '@') {
 				logger.closeAttribute(curLabel.substr(1, curLabel.length - 1));				
 			} else {
 				logger.closeTag(curLabel);
 			}
-			// now closes separate flow if necessary
-			if (curFlow) {
-				logger.closeFlow(curFlow);
-			}
-		}			                           		
+		}
 	}
 }
 

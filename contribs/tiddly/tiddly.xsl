@@ -26,6 +26,44 @@
      Version 0.2
      23 Nov 2010
   -->
+  
+<!-- RESCUED FROM src/core/utils.js  
+  
+  // FireFox only method
+  // Opens a dialog for opening a local file or folder depending on the mode
+  // Uses a filter if not null and specifies the msg to display in the dialog box
+  // See https://developer.mozilla.org/en/nsIFilePicker
+  // Returns a FireFox file object or false if the selection was cancelled
+  xtiger.util.fileDialog = function (mode, filter, msg) {
+    var fp;
+    try {  
+       netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");  
+    } catch (e) {  
+       alert("Permission to get enough privilege was denied.");  
+       return false;
+    }  
+    var nsIFilePicker = Components.interfaces.nsIFilePicker;
+    fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+    if (filter) {
+      fp.appendFilter("My filter", filter);       
+    }                  
+    var m;
+    if (mode == 'open') {
+      m = nsIFilePicker.modeOpen;
+    } else if (mode == 'save') {
+      m = nsIFilePicker.modeSave;     
+    } else { // assumes 'folder'
+      m = nsIFilePicker.modeGetFolder;
+    }
+    fp.init(window, msg, m);    
+    var res = fp.show();
+    if ((res == nsIFilePicker.returnOK) || (res == nsIFilePicker.returnReplace)){
+      return fp.file.path;
+    } else {
+      return false;
+    }
+  }  
+-->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 

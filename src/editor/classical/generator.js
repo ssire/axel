@@ -304,10 +304,6 @@ xtiger.editor.Generator.prototype = {
     if (container.firstChild.xttOpenLabel) {
       xtiger.cross.log('warning', 'use "' + label + '" and use "' + container.firstChild.xttOpenLabel + '" with same START !' );
     }   
-    var flow = xtigerSrcNode.getAttribute('flow');
-    if (flow) {
-      label = '!' + flow + '!' + label; 
-    }
     container.firstChild.xttOpenLabel = label;    
     if (container.lastChild.xttCloseLabel) {
       xtiger.cross.log('warning', 'use "' + label + '" and use "' + container.lastChild.xttCloseLabel + '" with same END !' );

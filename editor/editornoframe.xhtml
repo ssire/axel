@@ -1,169 +1,194 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
- "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!-- 	
+<!DOCTYPE html>
 
-Demonstration application for editing XTiger XML with AXEL library
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Template-driven document editor done with AXEL (Adaptable XML Editing Library)"></meta>
+  <meta name="keywords" content="editor, authoring application, template, XTiger, XML, AXEL"></meta>
+  <meta name="author" content="Stéphane Sire"></meta>
+  <title>AXEL Editor (Version with no iframe)</title>
 
-Author: Stephane Sire
-
--->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:space="preserve">
-<head>
-	<title>AXEL Editor (Version with no iframe)</title>
-	<meta name="author" content="Stéphane Sire"></meta>
-  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"></meta> 
-  <meta http-equiv="X-UA-Compatible" content="IE=8;"></meta>
-	
-	<link rel="stylesheet" href="../axel/axel.css" type="text/css"></link>
-	<link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css"></link> 
-	
-	<!-- Dependency for some filters -->
-  <!-- <script type="text/javascript" src="../3rd-part/jquery-1.5.1.min.js"></script> -->
-  <script src="../3rd-part/jquery/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+  <!-- Styles (injected inside generated editor's  frame in the other version of the editor) -->
+  <link rel="stylesheet" href="../axel/axel.css" type="text/css"></link>
+  <link rel="stylesheet" href="../axel/bundles/photo/photo.css" type="text/css"></link>
   
-	<!-- Dependency for 'date' filter -->
-	<link rel="stylesheet" href="../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css" type="text/css" charset="utf-8" />
-	<script src="../3rd-part/jquery/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
-	
-	<!-- BEGIN XTiger Library Loading -->
-	<script type="text/javascript" src="../src/core/loader.js"></script>
-	<script type="text/javascript" src="../src/core/dom.js"></script>
-	<script type="text/javascript" src="../src/core/parser.js"></script>
-	<script type="text/javascript" src="../src/core/domdatasource.js"></script>
-	<script type="text/javascript" src="../src/core/defaultbrowser.js"></script>
-	<script type="text/javascript" src="../src/core/iebrowser.js"></script>
-	<script type="text/javascript" src="../src/core/filter.js"></script>
-	<script type="text/javascript" src="../src/core/domlogger.js"></script>		
-	<script type="text/javascript" src="../src/core/forms.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/generator.js"></script>
+  <!-- Styles -->
+  <link rel="stylesheet" type="text/css" href="../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css" />
+  <link rel="stylesheet" href="extras/editor.css" type="text/css"></link>
+
+  <!-- jQuery, jQuery-UI dependency -->
+  <script type="text/javascript" src="../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="../3rd-part/jquery/js/jquery-ui-1.8.18.custom.min.js" ></script>
+
+  <!-- BEGIN XTiger Library Loading -->
+  <script type="text/javascript" src="../src/core/loader.js"></script>
+  <script type="text/javascript" src="../src/core/dom.js"></script>
+  <script type="text/javascript" src="../src/core/parser.js"></script>
+  <script type="text/javascript" src="../src/core/domdatasource.js"></script>
+  <script type="text/javascript" src="../src/core/defaultbrowser.js"></script>
+  <script type="text/javascript" src="../src/core/iebrowser.js"></script>
+  <script type="text/javascript" src="../src/core/domlogger.js"></script>
+  <script type="text/javascript" src="../src/core/wrapper.js"></script>
+  <script type="text/javascript" src="../src/core/plugin.js"></script>
+  <script type="text/javascript" src="../src/core/filter.js"></script>
+  <script type="text/javascript" src="../src/core/forms.js"></script>
+  <script type="text/javascript" src="../src/core/utils.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/generator.js"></script>
 
   <!-- alternative loaders and serializers -->
-	<script type="text/javascript" src="../src/editor/classical/htmlloader.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/xmlrobustloader.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/htmlserializer.js"></script>
-	
+  <script type="text/javascript" src="../src/editor/classical/htmlloader.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/xmlrobustloader.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/htmlserializer.js"></script>
+
   <script type="text/javascript" src="../src/editor/classical/xmlloader.js"></script>
   <script type="text/javascript" src="../src/editor/classical/xmlserializer.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/repeat.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/choice.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/keyboard.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/tabgroupmgr.js"></script>
-	<script type="text/javascript" src="../src/editor/classical/string.js"></script>
-	
-	<!-- native plugins and devices -->
-	<script type="text/javascript" src="../src/plugins/text.js"></script>
-	<script type="text/javascript" src="../src/plugins/select.js"></script>
-	<script type="text/javascript" src="../src/devices/popup.js"></script>
-	<script type="text/javascript" src="../src/devices/text.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/repeat.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/choice.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/keyboard.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/tabgroupmgr.js"></script>
+  <script type="text/javascript" src="../src/editor/classical/string.js"></script>
 
-	<!-- optional devices -->
-	<script type="text/javascript" src="../src/devices/lens.js"></script>
-	<script type="text/javascript" src="../src/devices/upload.js"></script>
-	<script type="text/javascript" src="../src/devices/autocomplete.js"></script>
-	
-	<!-- optional plugins -->
-	<script type="text/javascript" src="../src/plugins/link.js"></script>
-	<script type="text/javascript" src="../src/plugins/video.js"></script>          
-	<script type="text/javascript" src="../src/plugins/photo.js"></script>
-      
+  <!-- native plugins and devices -->
+  <script type="text/javascript" src="../src/plugins/text.js"></script>
+  <script type="text/javascript" src="../src/plugins/select.js"></script>
+  <script type="text/javascript" src="../src/devices/popup.js"></script>
+  <script type="text/javascript" src="../src/devices/text.js"></script>
+
+  <!-- optional devices -->
+  <script type="text/javascript" src="../src/devices/lens.js"></script>
+  <script type="text/javascript" src="../src/devices/upload.js"></script>
+  <script type="text/javascript" src="../src/devices/autocomplete.js"></script>
+  <script type="text/javascript" src="../src/devices/trackermenu.js"></script>
+
+  <!-- optional plugins -->
+  <script type="text/javascript" src="../src/plugins/link.js"></script>
+  <script type="text/javascript" src="../src/plugins/video.js"></script>
+  <script type="text/javascript" src="../src/plugins/photo.js"></script>
+  <script type="text/javascript" src="../src/plugins/file.js"></script>
+  <script type="text/javascript" src="../src/plugins/content.js"></script>
+
   <!-- optional filters -->
-  <script type="text/javascript" src="../src/filters/common.js"></script>         
-	<script type="text/javascript" src="../src/filters/documentid.js"></script>
-	<script type="text/javascript" src="../src/filters/wiki.js"></script>
-  <script type="text/javascript" src="../src/filters/image.js"></script>  
-  <script type="text/javascript" src="../src/filters/layout.js"></script>         
-  <script type="text/javascript" src="../src/filters/video.js"></script>      
-	<script type="text/javascript" src="../src/filters/autocomplete.js"></script>
-	<script type="text/javascript" src="../src/filters/debug.js"></script>  
-	<script type="text/javascript" src="../src/filters/date.js"></script>
-	
-	<!-- contributions -->
-	<script type="text/javascript" src="../contribs/src/schemas/schemalogger.js"></script>
-	<script type="text/javascript" src="../contribs/src/schemas/schemaserializer.js"></script>
-	
-	<script type="text/javascript" src="../src/util/ioutils.js"></script>
-	<!-- optional goodies because editor.js uses xtiger.debug.loadDocument -->
-	<script type="text/javascript" src="../src/util/debug.js"></script>
-	<!-- END XTiger Library Loading -->
+  <script type="text/javascript" src="../src/filters/common.js"></script>
+  <script type="text/javascript" src="../src/filters/documentid.js"></script>
+  <script type="text/javascript" src="../src/filters/wiki.js"></script>
+  <script type="text/javascript" src="../src/filters/image.js"></script>
+  <script type="text/javascript" src="../src/filters/style.js"></script>
+  <script type="text/javascript" src="../src/filters/video.js"></script>
+  <script type="text/javascript" src="../src/filters/autocomplete.js"></script>
+  <script type="text/javascript" src="../src/filters/debug.js"></script>
+  <script type="text/javascript" src="../src/filters/date.js"></script>
+  <script type="text/javascript" src="../src/filters/optional.js"></script>
 
-	
-	<!-- Demo Viewer Application Loading	 -->
-	<link rel="stylesheet" href="extras/editor.css" type="text/css"></link> 
-	<script type="text/javascript" src="extras/editor.js"></script>
+  <!-- contributions -->
+  <script type="text/javascript" src="../contribs/src/schemas/schemalogger.js"></script>
+  <script type="text/javascript" src="../contribs/src/schemas/schemaserializer.js"></script>
+  <!-- END XTiger Library Loading -->
+
+  <script type="text/javascript" src="extras/editor.js"></script>
   <script type="text/javascript" src="../templates/shared/templates.js"></script>
-	<script type="text/javascript">
-		var appController;
-		
-		// Used by some plugins that upload files to the server (e.g. photo.js) with uploaddevice.js
-		function finishTransmission(status, msg) { 
-			var manager = xtiger.factory('upload').getInstance(document);
-			if (manager) {
-				manager.reportEoT(status, msg);
-			}
-		}
-		
-		function initApp () {
-		  var defaultTemplates = (typeof(getDefaultTemplates) != typeof(undefined))  ? getDefaultTemplates() : [];
-			var prefs = document.getElementById('preferences');
-			prefs.style['display'] = 'none';
- 			appController = new viewerApp("../templates/", defaultTemplates);  
-			appController.setBase('../axel/bundles')
-		}
-		xtdom.addEventListener(window,  'load', initApp, false);
-	</script>
+  <script type="text/javascript" charset="utf-8">
+    // Used by some plugins that upload files to the server (e.g. photo.js) with uploaddevice.js
+    function finishTransmission(status, msg) {
+      var manager = xtiger.factory('upload').getInstance(document);
+      if (manager) {
+        manager.reportEoT(status, msg);
+      }
+    }
+
+    (function () {
+      function initApp () {
+        var appController, defaultTemplates = window.getDefaultTemplates ? getDefaultTemplates() : {};
+        appController = new document.AxelDemoEditor("../templates/", defaultTemplates);
+        appController.configure({
+          baseUrl : '../axel/bundles',
+          xtStylesheet : '../axel/axel.css',
+          path2inputDlg : 'extras/input.html',
+          path2dumpDlg : 'extras/dump.html',
+          path2intro : 'extras/intro.xhtml'
+        })
+        appController.run();
+      }
+      jQuery(function() { initApp(); });
+    }());
+  </script>
 </head>
-<body>
-	<div id="formularNoFrame">
-	    <form id="formUrl" action="javascript:alert('Oops, something went wrong !')" onsubmit="return appController.submitPageNoFrame();">
-			<p>
-		        <label>Page : 
-							<input id='url' type='text' name='url' maxlength='100' value=""/>
-						</label>
-		        <span style="position: absolute; right: 30px; margin-left: 5px">
-						<input type='submit' value="Visualize"/><input type='reset' onclick='appController.resetView()'/>
-						</span>
-			</p>
-			<p>
-        <label>Page shortcut : 
-					<select id='templatesList' onchange='appController.updateSelectedTemplate()'></select>
-				</label>
-				<input type='button' value="Preferences" onclick="appController.setPreferences();"/>
-				<span style="position: absolute; right: 30px"> 
-					<input type='button' value="Dump" onclick="appController.dump();"/>
-					<input type='button' value="Input" onclick="appController.inputInstanceData();"/>
-				</span>
-			</p>
-	        <p id="titleUrl" class="single-line">...</p>			
-			<div id="preferences">					
-				<p>
-		        <label>Template repository : 
-							<input id='templateRepos' type='text' name='templateRepos' maxlength='50' value=""/>
-						</label>
-						<input type='button' value="Ok" onclick="appController.savePreferences()"/>
-						<input class = "hide" type='button' value="Hide" onclick="appController.hidePreferences()"/>
-						<span style="position: absolute; right: 30px">
-							<input type="radio" value="standard" name="algorithm" checked="true"/>
-							<label for="robust">Std</label>
-							<input type="radio" value="html" name="algorithm"/>
-							<label for="html">Html</label>
-							<input type="radio" value="robust" name="algorithm"/>
-							<label for="robust">Robust</label>
-						</span>						
-				<p>
-				</p>
-		        	<label>File name <i>(paths relative to editornoframe.xhtml)</i>: 
-							<input id='fileName' type='text' name='fileName' maxlength='50' value=""/>
-						</label>
-						<input type='button' value="Save" onclick="appController.saveToFile()"/>
-						<input type='button' value="Load" onclick="appController.loadFromFile()"/>
-						<input type='button' value="Post" onclick="appController.dumpToServer();" disabled="true"/>
-						<i>(remote server only)</i>
-				</p>
-			</div>
-	    </form>
-	  </div>         
-  	<div id="containerNoFrame">
-  		<p>Your Template here</p>
-  	</div>	
+<body class="noframe">
+  <div id="formularNoFrame">
+    <form id="formUrl" action="javascript:alert('Oops, something went wrong !')">
+
+      <p style="position: relative">
+        <label>
+          Template file : <input id="url" type="text" name="url" maxlength="100" value=""/>
+        </label>
+
+        <input id="transform" type="submit" value="Transform"/>
+        <span style="float: right; margin-right: 20px">
+          <input id="reset" type="button" value="Reset"/>
+          <input id="browseTemplate" class="mozilla" type="button" value="Browse"/>
+        </span>
+      </p>
+
+      <p style="position: relative">
+        <label>Preselection : <select id="foldersList"></select></label> <select id="templatesList"></select>
+        <span style="margin-left: 20px">
+          Template :
+          <input id="sourceTemplate" class="editing" type="button" value="Source"/>
+          <input id="dumpSchema" class="editing" type="button" value="Schema"/>
+        </span>
+        <span style="margin-left: 20px">
+          Document :
+          <input id="preview" class="editing" style="margin-right: 10px" type="button" value="Preview"/>
+          <input id="dump" class="editing" type="button" value="Dump"/>
+          <input id="download" class="editing" type="button" value="Download"/>
+          <input id="input" class="editing" style="margin-left: 10px" type="button" value="Input"/>
+          <input id="load" class="editing" type="button" value="Load"/><input type="file" id="fileToLoad" accept=".xml,.xhtml,application/xhtml+xml,text/xml"/>
+          <input id="new" class="editing" style="margin-left: 10px" type="button" value="New"/>
+        </span>
+      </p>
+
+      <div style="float: right;margin-right: 20px; font-size: 80%">
+        Preferences : <input id="preferences" type="button" value="Show" style="font-size: 60%"/>
+      </div>
+
+      <p id="titleUrl" class="hint">Enter a template file path in the input field above or preselect one then hit [Transform] to generate the editor</p>
+
+      <!-- Hidden preferences panel -->
+      <div id="prefsPanel">
+        <p>
+          <label>Template folder :
+            <input id="templateRepos" type="text" name="templateRepos" maxlength="100" value=""/>
+          </label>
+          <input id="setTemplateFolder" type="button" value="Set"/>
+          <input id="browseTemplateFolder" class="mozilla" type="button" value="Browse"/>
+          <span style="position: absolute; right: 30px">
+            <input type="checkbox" value="Profile" name="profile"/>
+            <label for="profile">Profile</label>
+          </span>
+        </p>
+        <p>
+          <label>
+            XHR output file :
+            <input id="fileName" type="text" name="fileName" maxlength="100" value=""/>
+          </label>
+          <input id="write" class="editing" type="button" value="Write"/>
+          <input id="read" class="editing" type="button" value="Read"/>
+          <span style="position: absolute; right: 30px">
+            Serialization :
+            <input type="radio" value="standard" name="algorithm" checked="true"/>
+            <label for="robust">Std</label>
+            <input type="radio" value="html" name="algorithm"/>
+            <label for="html">Html</label>
+            <input type="radio" value="robust" name="algorithm"/>
+            <label for="robust">Robust</label>
+          </span>
+        </p>
+      </div>
+    </form>
+  </div>
+  <div id="containerNoFrame">
+    <p>This is the version of the editor that loads a template in memory using an XHR object (Ajax), transforms it, and then copy the resulting editor into this div. The <a href="extras/intro.xhtml" target="_blank">explanations</a> are the same as for the version of the <a href="editor.xhtml">editor with iframe</a>. The difference is that it does not load the CSS or Javascript files that the template may include.</p>
+  </div>
 </body>
 </html>

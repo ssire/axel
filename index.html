@@ -59,7 +59,7 @@ dd {
   </style>
 </head>
 <body>
-  <h1>AXEL Version 1.3.1</h1>
+  <h1>AXEL Version 1.3.2</h1>
 
   <p id="header">AXEL is a library for creating XML authoring applications based on document templates. The templates are written with a mix of XHTML and XTiger XML elements. It implements a client-side XTiger XML processor. AXEL has been first introduced at the <a href="http://www.xmlprague.cz/2010/index.html" target="_new">XML Prague 2010</a> conference and is continuously evolving since that time.</p>
 
@@ -76,8 +76,10 @@ dd {
   <div id="article">
 
   <h3>AXEL for the impatient</h3>
+  
+  <p style="font-size:110%">Read the <a href="docs/xtiger-summary.html" target="_new">executive summary</a> about XTiger XML document templates and AXEL.</p>
 
-  <p style="font-size:110%">Try the <a href="editor/editor.xhtml" target="_new">demonstration editor</a>. Once you have opened it in your browser, select a template folder and a template file name using the two popup menus next to the <i>Template</i> label; then click on the  <i>Visualize</i> button to generate the corresponding editor. Start editing a document, and then use the <i>Dump</i> button to see the current XML content of the editor at any time.</p>
+  <p>Try the <a href="editor/editor.xhtml" target="_new">demonstration editor</a>. Once you have opened it in your browser, select a template folder and a template file name using the two popup menus next to the <i>Preselection</i> label; then click on the  <i>Transform</i> button to generate the corresponding editor. Start editing a document, and then use the <i>Dump</i> button to see the current XML content of the editor at any time.</p>
 
   <p>You can take some reading with you as you can download the <a href="http://media.epfl.ch/Templates/Article/Article.pdf">XML Prague 2010 article</a>.</p>
 
@@ -89,14 +91,18 @@ dd {
 
   <p><strong>Template authors</strong> should read the <a href="http://ssire.github.com/xtiger-xml-spec/">XTiger XML language specification</a>. It is a good idea to look at the source of the demonstration templates in the <a href="templates/">templates</a> folder. With <b>Firefox</b> you can click on the <i>Source</i> button in the <a href="editor/editor.xhtml">demonstration editor</a> to display the source of the current template. You can also write your own templates and test them with the demonstration editor by entering their path and clicking on <i>Visualize</i>.</p>
 
-  <p><strong>Web application developers</strong> should read the <a href="examples/tutorial/tutorial.xhtml">tutorial</a> in addition to the above links. There are some instructions about the use of some primitive editors like 'video' or 'photo' in corresponding HOWTO files in the <a href="docs/toc.html">documentation</a> folder. You can also find useful information into the <a href="https://github.com/ssire/axel/wiki" target="_blank">wiki</a></p>
+  <p><strong>Web application developers</strong> should read the <a href="tutorial/index.xhtml">tutorial</a> in addition to the above links. There are some instructions about the use of some primitive editors like 'video' or 'photo' in corresponding HOWTO files in the <a href="docs/toc.html">documentation</a> folder. You can also find useful information into the <a href="https://github.com/ssire/axel/wiki" target="_blank">wiki</a></p>
 
   <p><strong>Plugins or Filters developers</strong> can consult the HOWTO files which are in the <a href="docs/toc.html">documentation</a> folder in addition to the above links. They can also look at the existing plugin or filter source files in the <code><a href="src/plugins">src/plugins</a></code> or <code><a href="src/filters">src/filter</a></code> folders.</p>
   </div>
   
   <h3>Related projects</h3>
 
-  <p>You should also check the <a href="http://ssire.github.com/axel-forms/" target="_new">AXEL-FORMS</a> extensions to AXEL. They provide additional constructs to create more <i>form-oriented</i> user interfaces. They also provide microformat instructions to easily embed AXEL into web pages.</p>
+  <p>You should also check the <a href="http://ssire.github.com/axel-forms/" target="_new">AXEL-FORMS</a> extensions to AXEL. They provide additional constructs to create more <i>form-oriented</i> user interfaces. They also provide microformat instructions to easily embed AXEL into web pages. If your are looking for a fully XML-oriented backend you may also check the <a href="http://ssire.github.io/oppidum/" target="_new">Oppidum</a> framework.</p>
+
+  <h3>Mailing list</h3>
+
+  <p>Check the <a href="http://groups.google.com/group/axel-dev" target="_blank">axel-dev</a> mailing list for assistance</p>
 
   <div id="layout">
     <h3>Project layout</h3>
@@ -121,8 +127,8 @@ dd {
 
       <dd>A demonstration editor (<a href="editor/editor.xhtml">editor.xhtml</a>) built with the library. If you launch it from your local file system and if you follow the instructions on disabling security restrictions on Firefox, you can use it to open templates and XML data files from your local file system. This is a convenient way to test and maintain template files. It also includes each library file individually from the src folder and not from the axel folder, this is because we use it to debug the library.</dd>
 
-      <dt>examples</dt>
-      <dd>A developer-oriented <a href="examples/tutorial/tutorial.xhtml">tutorial</a> that shows how to use the API to transform templates and load/save XML data.</dd>
+      <dt>tutorial</dt>
+      <dd>A developer-oriented <a href="tutorial/index.xhtml">tutorial</a> that shows how to use the API to transform templates and load/save XML data.</dd>
 
       <dt>scripts</dt>
       <dd>Ant script to automate the generation of the minified library. The server folder contains a basic server in Ruby which can be used to serve the full distribution. It has been put here for demonstration purpose and to test the integration between the library and a server. In particular it is used to test photo or file upload with the 'photo' and 'file' plugins.</dd>
@@ -138,7 +144,7 @@ dd {
     </dl>
   </div>
 
-  <p id="timestamp">Last update: <span style="font-style: italic;">2013-01-01</span></p>
+  <p id="timestamp">Last update: <span style="font-style: italic;">2013-05-31</span></p>
 
 </body>
 </html>

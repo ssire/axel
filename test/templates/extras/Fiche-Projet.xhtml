@@ -138,7 +138,7 @@
 <body>         
   <h1><xt:use types="text" param="shape=parent;type=textarea;layout=placed" label="Title">Project title</xt:use></h1>
   
-  <p>Project type: <xt:use types="string" label="ProjectType">master or semester</xt:use></p>     
+  <p>Project type: <xt:use types="text" label="ProjectType">master or semester</xt:use></p>     
   
   <div id="content">
     <xt:repeat label="Description" minOccurs="1">
@@ -148,6 +148,6 @@
     </xt:repeat>                 
   </div>
 
-  <p id="contact">Contact person: <xt:repeat minOccurs="1" pseudoLabel="ContactPerson"><xt:use types="string" label="ContactPerson">id</xt:use><xt:menu-marker/><em> or </em></xt:repeat></p> 
+  <p id="contact">Contact person: <xt:repeat minOccurs="1" pseudoLabel="ContactPerson"><xt:use types="text" label="ContactPerson">id</xt:use><xt:menu-marker/><em> or </em></xt:repeat></p> 
 </body> 
 </html>        

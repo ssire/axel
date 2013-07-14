@@ -53,8 +53,8 @@ textarea.axel-text-placed,
 input.axel-text-placed,
 textarea.axel-text-float,
 input.axel-text-float {
-  margin: inherit;
-  padding: inherit;
+  margin: 0;
+  padding: 0;
   color: inherit;
   font-style: inherit;
   font-size: inherit;
@@ -71,12 +71,6 @@ textarea.axel-text-float,
 input.axel-text-float {
   position: absolute;
   display: inline;
-}
-
-textarea.axel-text-placed,
-input.axel-text-placed {
-  position: relative;
-  left: -2px; /* assumes 2px input field border ? (empirical)  */
 }
 
 /* Style for text container */

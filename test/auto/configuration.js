@@ -13,7 +13,6 @@ var tests = {
         '../templates/extras/Curriculum.xhtml' : '../data/extras/cvHaddock.xml',
         '../templates/extras/Carte-Resto.xhtml' : '../data/extras/carteResto1.xml',
         '../templates/extras/Publications.xhtml' : '../data/extras/publications.xml',
-        '../templates/extras/Fiche-Cafe-Flow.xhtml' : '../data/extras/ficheCafeFlow.xml',
         '../templates/extras/Fiche-Projet.xhtml' : '../data/extras/ficheProjetW.xml',
         '../../templates/samples/Article.xhtml' : '../../data/article/final.xml',
         '../templates/Link.xhtml' : '../data/link.xml',

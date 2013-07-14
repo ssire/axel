@@ -21,11 +21,11 @@ function frameLoaded () {
 function transform () {
   if (! checkLevel(1))  return;
   var result = new xtiger.util.Logger();
-  form = new xtiger.util.Form('../../axel/bundles');
+  form = new xtiger.util.Form('../axel/bundles');
   form.setTemplateSource(iframe.contentDocument);
     form.enableTabGroupNavigation();
   if (form.transform(result)) {
-    form.injectStyleSheet('../../axel/axel.css', result); // relative to template path !
+    form.injectStyleSheet('../axel/axel.css', result); // relative to template path !
   }
   if (result.inError()) { // Optional feedback about errors
     alert(result.printErrors());

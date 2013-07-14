@@ -200,19 +200,10 @@ xtiger.editor.RobustLoader.prototype = {
   // Manages xttOpenLabel, xttCloseLabel and atomic primitive editors
   // Recursively call loadDataSlice on the children of the node n 
   loadDataIter : function (n, dataSrc, stack) {
-    var curFlow, curLabel;
+    var curLabel;
     var point = stack[ stack.length - 1 ];
     if (n.xttOpenLabel) {     
       curLabel = n.xttOpenLabel;
-      if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-        var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-        curFlow = m[1];
-        curLabel = m[2];
-        // window.console.log('Open Flow ' + curFlow + ' at point ' +  dataSrc.nameFor(point));
-        point = dataSrc.openFlow(curFlow, point, curLabel) || point; // changes the point to the separate flow
-        // FIXME: what to do if no flow, theoritically it is possible to ignore it 
-        // then we should also ignore it in closeFlow (that means data aggregation was done server side)
-      }
       var attr = false;
       // moves inside data source tree
       if (curLabel.charAt(0) == '@') {          
@@ -239,12 +230,6 @@ xtiger.editor.RobustLoader.prototype = {
     }
     if (n.xttCloseLabel) { 
       curLabel = n.xttCloseLabel;
-      if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-        var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-        curFlow = m[1];
-        curLabel = m[2];
-        dataSrc.closeFlow(curFlow, point); // restores point to the previous flow (or top)
-      }
       this._depile(stack);     
     }                                       
   },            
@@ -326,19 +311,10 @@ xtiger.editor.RobustLoader.prototype = {
 
   // see above
   wouldLoadDataIter : function (n, dataSrc, stack) {
-    var curFlow, curLabel;
+    var curLabel;
     var point = stack[ stack.length - 1 ];
     if (n.xttOpenLabel) {     
       curLabel = n.xttOpenLabel;
-      if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-        var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-        curFlow = m[1];
-        curLabel = m[2];
-        // window.console.log('Open Flow ' + curFlow + ' at point ' +  dataSrc.nameFor(point));
-        point = dataSrc.openFlow(curFlow, point, curLabel) || point; // changes the point to the separate flow
-        // FIXME: what to do if no flow, theoritically it is possible to ignore it 
-        // then we should also ignore it in closeFlow (that means data aggregation was done server side)
-      }
       var attr = false;
       if (curLabel.charAt(0) == '@') {          
         attr = true;
@@ -373,14 +349,7 @@ xtiger.editor.RobustLoader.prototype = {
     }
     if (n.xttCloseLabel) { 
       curLabel = n.xttCloseLabel;
-      if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-        var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-        curFlow = m[1];
-        curLabel = m[2];
-        dataSrc.closeFlow(curFlow, point); // restores point to the previous flow (or top)
-      } else {
-        this._depile(stack);     
-      }
+      this._depile(stack);     
     }
     return false;
   }

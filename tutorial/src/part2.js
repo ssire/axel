@@ -22,7 +22,7 @@ function load () {
 // The template is taken from xtDoc and the resulting editor is copied into a div within a target document
 function transform () {
   if (! checkLevel(1))  return;
-  form = new xtiger.util.Form('../../axel/bundles');
+  form = new xtiger.util.Form('../axel/bundles');
   form.setTemplateSource(xtDoc);
   form.setTargetDocument (document, 'container', true);
   form.enableTabGroupNavigation();

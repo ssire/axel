@@ -11,17 +11,67 @@
  * Author(s) : Stephane Sire
  * 
  * ***** END LICENSE BLOCK ***** */
+ 
+/*****************************************************************************\
+|                                                                             |
+|  xtiger.util.Logger module                                                  |
+|                                                                             |
+|  A logger for keeping error messages while performing error-prone actions   |
+|  xtiger.util.Form uses it as an optional parameter to report errors         |
+|                                                                             |
+|*****************************************************************************|
+|  NOTE: we most probably will deprecate this and use exceptions instead)     |
+|                                                                             |
+\*****************************************************************************/
 
-// FIXME: this class should be renamed xtiger.util.Template or xtiger.util.Document
-// as it wraps a template turned into an editor with it's current data
+xtiger.util.Logger = function () {
+ this.errors = [];
+}
 
-/*
- * Creates an XTiger Form that can be used to transform a template.
- * baseUrl is the path to the icons used by the generated editor
- *
- * You can use this class as-is, or as an example of how to integrate 
- * XTiger Forms in the client-side of your application
- */
+xtiger.util.Logger.prototype = {
+
+ // Returns true if the logger has recorded some error message
+ inError : function () {
+   return (this.errors.length > 0);
+ },
+
+ // If msg contains '$$$', it will be substituted with the file name contained in optional url
+ logError : function (msg, url) {
+   if (msg.indexOf('$$$') != -1) {
+     var m = url.match(/([^\/]*)$/); // should extract trailing file name
+     var name = m ? m[1] : url;
+     this.errors.push (msg.replace('$$$', '"' + name + '"'));
+   } else {
+     this.errors.push (msg);
+   }
+ },
+
+ // Returns a concatenation of error messages
+ printErrors : function () {
+   return this.errors.join(';');
+ }
+}
+
+ /*****************************************************************************\
+ |                                                                             |
+ |  xtiger.util.Form module                                                    |
+ |                                                                             |
+ |  WILL BE DEPRECATED - use $axel wrapper object instead                      |
+ |                                                                             |
+ |  Class for calling AXEL parser and generator to transform a template into   |
+ |  an editor, then to load and/or save XML data from/to the editor.           |
+ |                                                                             |
+ |*****************************************************************************|
+ |  This class can be used as en entry point to AXEL                           |
+ |  You may prefer to use higher-level command objects defined in AXEL-FORMS   |
+ |                                                                             |
+ |  Note that we will probably migrate some or all of its functionalities      |
+ |  into the $axel wrapper set object                                          |
+ |                                                                             |
+ |                                                                             |
+ \*****************************************************************************/
+ 
+// baseIconsUrl is the path to the icons used by the generated editor
 xtiger.util.Form = function (baseIconsUrl) {
   this.baseUrl = baseIconsUrl;  
   this.doTab = false;  
@@ -111,20 +161,27 @@ xtiger.util.Form.prototype = {
     this.targetContainerId = anId;
     this.doEmptyTarget = doReplace;
   },
+
+  setTarget : function (node, doReplace) {
+    this.curDoc = node.ownerDocument;
+    this.targetContainer = node;
+    this.doEmptyTarget = doReplace || true;
+  },
                               
   // Transforms template into editor
   // log is an optional logger to report errors
   transform : function (logger) {
+    var parser;
     // FIXME: check this.srcDoc is set...
     if (! this.srcForm) {
       this._report (0, 'no template to transform', logger);
       return false;
     }
     this.editor = new xtiger.editor.Generator (this.baseUrl);
-    this.parser = new xtiger.parser.Iterator (this.srcDoc, this.editor);
-    if (this.targetContainerId) { // checks if the transformation require a cross-document copy
-      var n = this.curDoc.getElementById(this.targetContainerId);
-      if (n) {        
+    parser = new xtiger.parser.Iterator (this.srcDoc, this.editor);
+    if (this.targetContainer || this.targetContainerId) { // checks if the transformation require a cross-document copy
+      var n = this.targetContainer || this.curDoc.getElementById(this.targetContainerId);
+      if (n) {
         if (this.doEmptyTarget) {
           xtdom.removeChildrenOf (n);
         }
@@ -134,7 +191,7 @@ xtiger.util.Form.prototype = {
         this._report (0, 'transformation aborted because target container "' + this.targetContainerId + '" not found in target document', logger);
         return false;
       }
-      this.parser.importComponentStructs (this.curDoc); // to import component definitions
+      parser.importComponentStructs (this.curDoc); // to import component definitions
     } else {
       this.root = this.srcForm;
     }   
@@ -152,7 +209,7 @@ xtiger.util.Form.prototype = {
     }
     // finally makes form available to other plugins (e.g. lens may need it to know where to insert their wrapper)
     xtiger.session(this.curDoc).save('form', this);
-    this.parser.transform (this.root, this.curDoc);
+    parser.transform (this.root, this.curDoc);
     this._report (1, 'document transformed', logger);    
     return (this.status == 1);    
   },
@@ -178,7 +235,7 @@ xtiger.util.Form.prototype = {
     } else {
       this._report (0, "cannot inject editor's style sheet because target document has no head section", logger);
     }
-    return (this.status == 1);    
+    return (this.status == 1);
   },   
   
   // Loads XML data into a template which has been previously loaded into a DOMDataSource
@@ -189,141 +246,19 @@ xtiger.util.Form.prototype = {
     } else {
       this._report (0, 'data source empty', logger);      
     }
-    return (this.status == 1);    
-  },
-  
-  // Loads XML data into a template from a string
-  loadDataFromString : function (str, logger) {
-    var dataSource = new xtiger.util.DOMDataSource ();
-    if (dataSource.initFromString (str)) {
-      this.loadData(dataSource, logger);
-    } else {
-      this._report (0, 'failed to parse string data source', logger);
-    }
     return (this.status == 1);
   },
   
-  // Loads XML data into a template from a URL
-  // FIXME: check url is { document: url1, name : url2, ... } for tide loading
-  loadDataFromUrl : function (url, logger) {
-    var doc, source;    
-    var res = false;
-    doc = xtiger.cross.loadDocument(url, logger);
-    if (doc) {
-      res = this.loadData(new xtiger.util.DOMDataSource(doc), logger);
-    }
-    return res;
+  // Loads XML data into a template from a string
+  // DEPRECATED: use loadData instead plus initFromString to load the string into the data source
+  loadDataFromString : function (str, logger) {
+    var dataSource = new xtiger.util.DOMDataSource(str);
+    this.loadData(dataSource, logger);
+    return (this.status == 1);
   },
   
-  // Dumps current form data into a DOMLogger accumulator
-  /**
-   * @param {Logger} The logger which 
-   */
+  // Dumps editor's content into a DOMLogger accumulator
   serializeData : function (accumulator) {
     this.editor.serializeData (this.root, accumulator, this.serializer);
-  },
-  
-  /////////////////////////////////////////////////////
-  // Following functions are deprecated
-  // or should be move somewhere else (xtiger.util.* ?)
-  /////////////////////////////////////////////////////
-  
-  // DEPRECATED : use loadDataFromUrl instead
-  // Loads data into the form from a file URL and a XMLHttpRequest object
-  loadDataFromFile : function (url, xhr, logger) {
-    try {
-      xhr.open("GET", url, false);
-      xhr.send(null);
-      if ((xhr.status  == 200) || (xhr.status  == 0)) {
-        if (xhr.responseXML) {
-          this.loadData (new xtiger.util.DOMDataSource (xhr.responseXML), logger);
-        } else {
-          var res = xhr.responseText;
-          res = res.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, ""); // bug 336551 MDC
-          xtiger.cross.log('warning', 'attempt to use string parser on ' + url + ' instead of responseXML');
-          if (! dataSource.initFromString(res)) { // second trial
-            this._report (0, 'failed to create data source for data from file ' + url + '. Most probably no documentElement', logger);
-          }
-        }
-      } else { 
-        this._report(0, 'failed to load XML data from file ' + url + ". XHR status : " + xhr.status, logger);
-      }
-    } catch (e) {                                                                                          
-      this._report(0, 'failed to open XML data file ' + url + ". Exception : " + e.name + '/' + e.message, logger);
-    }
-    return (this.status == 1);    
-  },  
-  
-  // Saves XML content of the current document to a URL using XMLHTTPRequest
-  postDataToUrl : function (url, xhr, logger) {   
-    // 1. converts template to a string buffer
-    var log = new xtiger.util.DOMLogger ();
-    var data = this.editor.serializeData (this.root, log, this.serializer);
-    log.close();
-    // 2. sends it with a sycnhronous POST request
-    try {
-        xhr.open( "POST", url,  false);
-      xhr.setRequestHeader("Content-Type", "application/xml; charset=UTF-8");
-      // FIXME: do we need to set "Content-Length" ?
-        xhr.send(log.dump('*')); // FIXME: not sure Javascript is UTF-8 by default ?
-        if (xhr.readyState  == 4) {
-            if((xhr.status  == 200) || (xhr.status  == 201) || (xhr.status  == 0)) {
-          this._report(1, xhr.responseText, logger);
-          } else { 
-          this._report(0, 'can\'t post data to "' + url + '". Error : ' + xhr.status, logger);
-        }
-          } else {
-        this._report(0, 'can\'t post data to "' + url + '". Error readyState is ' + xhr.readyState, logger);
-      }
-    } catch (e) {
-      xhr.abort();
-      this._report(0, 'can\'t post data to "' + url + '". Exception : ' + e.name + '/' + e.message, logger);
-    }
-    return (this.status == 1);    
-  },  
-                          
-  // Firefox only
-  // Saves form data into a file, filename must contain an absolute path (i.e. "/tmp/myFile") 
-  // TODO: use http://www.w3.org/TR/file-writer-api/ instead
-  saveDataToFile : function (filename, logger) {
-    if (xtiger.cross.UA.gecko) { 
-      // tries with an XPCOM component (nsILocalFile)   
-      try {  
-        netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");  
-      } catch (e) { 
-        this._report(0, 'Permission to save data to file "' + filename + '" was denied. Exception : ' + e.name + '/' + e.message, logger);
-        return false;
-      }  
-      try {  
-        // converts template to a string buffer
-        var log = new xtiger.util.DOMLogger ();
-        var data = this.editor.serializeData (this.root, log, this.serializer);
-        log.close();
-        // creates and/or saves file    
-        var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);  
-        file.initWithPath(filename);
-        if (file.exists() == false) {  
-          file.create( Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 420 );  
-        }  
-        var outputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]  
-                 .createInstance(Components.interfaces.nsIFileOutputStream);  
-        outputStream.init( file, 0x04 | 0x08 | 0x20, 420, 0 );   
-        //UTF-8 convert  
-        var uc = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]  
-          .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);  
-        uc.charset = "UTF-8";  
-        var data_stream = uc.ConvertFromUnicode(log.dump('*'));
-        var result = outputStream.write(data_stream, data_stream.length );  
-        outputStream.close();
-        this._report(1, 'Data saved to "' + filename + '"', logger);  
-      } catch (e) { 
-        this._report(0, 'Cannot save data to file "' + filename + '". Exception : ' + e.name + '/' + e.message, logger);
-      }  
-    } else { 
-      // tries with XMLHttpRequest
-      this.postDataToUrl (filename, xtiger.cross.getXHRObject());
-    } 
-    return (this.status == 1);    
   }
-  
 };

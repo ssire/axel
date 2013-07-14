@@ -144,15 +144,9 @@ xtiger.editor.SchemaSerializer.prototype = {
 	},
 	
 	serializeDataIter : function (n, logger, origin, originIndex) { 
-		var curFlow, curLabel;		   
+		var curLabel;
 		if (n.xttOpenLabel) {            
 			curLabel = n.xttOpenLabel;
-			if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-				var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-				curFlow = m[1];
-				curLabel = m[2];
-				logger.openFlow(curFlow, curLabel);
-			}
 			if (curLabel.charAt(0) == '@') {
 				// logger.openTag('ATTRIBUT');
 				// logger.openAttribute(curLabel.substr(1, curLabel.length - 1));				
@@ -180,23 +174,13 @@ xtiger.editor.SchemaSerializer.prototype = {
 			}
 		}
 		if (n.xttCloseLabel) {         
-			curFlow = false;
 			curLabel = n.xttCloseLabel;
-			if (curLabel.charAt(0) == '!') { // double coding "!flow!label" to open a separate flow
-				var m = curLabel.match(/^!(.*?)!(.*)$/); // FIXME: use substr...
-				curFlow = m[1];
-				curLabel = m[2];
-		  }
 			if (curLabel.charAt(0) == '@') {
 				// logger.closeAttribute(curLabel.substr(1, curLabel.length - 1));				
 			} else {
 				logger.closeTag(curLabel);
 			}
-			// now closes separate flow if necessary
-			if (curFlow) {
-				logger.closeFlow(curFlow);
-			}
-		}			                           		
+		}
 	}
 }
 

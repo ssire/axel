@@ -183,7 +183,7 @@
    methods : {
 
      startEditing : function ( aEvent ) {
-       var _doSelect = aEvent ? (!this.isModified() || aEvent.shiftKey) : false;
+       var _doSelect = !this.isModified() || (aEvent && aEvent.shiftKey);
        var picker = xtiger.factory('datepickerdev').getInstance(this.getDocument());
        picker.grab(this, _doSelect);
      },
