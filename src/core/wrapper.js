@@ -38,17 +38,26 @@
 |             utility method to merge objects                                 |
 |                                                                             |
 \*****************************************************************************/
+
+// TODO:
+// - $axel().execute() to execute command (integration with $axel.command)
+
 (function (GLOBAL) {
 
   var settings = {}; // cached $axel settings
   var MAX = 10000;
   var TOTAL;
 
-  function _raiseError ( errMsg ) {
-    if (settings.error) {
-      settings.error(errMsg);
+  // AXEL proteiform error message function (exported as $axel.error)
+  function _raiseError ( msg, opt ) {
+    if (typeof opt === "function") {
+      opt(msg);
+    } else if ((typeof opt === 'object') && opt.error) {
+      opt.error(msg);
+    } else if (typeof settings.error === "function") {
+      settings.error(msg);
     } else {
-      alert(errMsg);
+      alert(msg);
     }
   }
 
@@ -125,7 +134,7 @@
     dump : function () {
       return this.stack.join(' ');
     },
-    
+
     openTag : function (name) {
     },
 
@@ -159,16 +168,34 @@
       }
       return this.list;
     },
-    
-    // FIXME: directly accept an XML document template as source input (cf. load)
-    transform : function ( optTemplateUrl ) {
-      if (settings.bundlesPath) {
+
+    // The function transforms an XTiger XML template and inserts the result inside the first wrapped set element
+    // The XTiger XML template may be specified a) as an XML document, b) as an optional url string from where
+    // it will be loaded first, or otherwise c) it is assumed to be embedded inside the first wrapped set element
+    // with the xt:head section inside the current document.
+    // An optional hash configuration object may be passed to overwrite some transformation parameters.
+    transform : function ( optTemplate ) {
+      var status, editor, bp, tabnav, config = {};
+      // initializations
+      if (typeof optTemplate === 'object') { // either configuration object or XML document
+        if (typeof optTemplate.documentElement === 'undefined') { // FIXME: test for real XML (and not just HTML) ?
+          config = optTemplate;
+        } else {
+          editor = optTemplate; // assumes an XML document
+        }
+      } else if (arguments.length > 1) { // configuration parameters in 2nd position
+        config = arguments[1];
+      }
+      bp = config.bundlesPath || settings.bundlesPath;
+      tabnav = (config.enableTabGroupNavigation === true) || settings.enableTabGroupNavigation;
+      // transformation
+      if (bp) {
         if (this.first) {
-          var status = new xtiger.util.Logger(), editor;
+          status = new xtiger.util.Logger();
           try { // load and transform template
-            editor = optTemplateUrl ? (typeof optTemplateUrl === 'string' ? new xtiger.cross.loadDocument(optTemplateUrl, status) : optTemplateUrl) : document;
-            if (editor) {
-              form = new xtiger.util.Form(settings.bundlesPath);
+            editor = editor || typeof optTemplate === 'string' ? new xtiger.cross.loadDocument(optTemplate, status) : document;
+            if (editor && !status.inError()) {
+              form = new xtiger.util.Form(bp);
               if (editor !== document) {
                 form.setTemplateSource(editor);
                 form.setTarget(this.first, true);
@@ -176,29 +203,29 @@
                 form.srcDoc = document;
                 form.curDoc = document;
                 form.srcForm = this.first;
-              } 
-              if (settings.enableTabGroupNavigation) {
+              }
+              if (tabnav) {
                 form.enableTabGroupNavigation();
               }
               form.transform(status);
             }
             if (status.inError()) {
-              _raiseError(status.printErrors());
+              _raiseError(status.printErrors(), config);
             } else {
               this.first.xttHeadLabel = form.getEditor().headLabel;
             }
           } catch (e) {
-            _raiseError('exception ' + e.name + ' ' + e.message);
+            _raiseError('exception ' + e.name + ' ' + e.message, config);
           }
         } else {
-          _raiseError('cannot load template into empty wrapped set');
+          _raiseError('cannot load template into empty wrapped set', config);
         }
       } else {
-        _raiseError('missing "bundlesPath" to transform template');
+        _raiseError('missing "bundlesPath" to transform template', config);
       }
       return this;
     },
-    
+
     xml : function () {
       var algo, accu, res = '';
       if (this.first) {
@@ -213,7 +240,7 @@
       }
       return res;
     },
-    
+
     // Load XML data into the 1st node of the wrapped set
     // The source may be an XML string, a URL string, or an XML document object
     load : function ( source ) {
@@ -225,8 +252,14 @@
           if (typeof source === "string") {
             if (source.replace(/^\s*/,'').charAt(0) === '<') { // assumes XML string
               input = source;
-            } else { // assumes URL 
+            } else { // assumes URL
               input = xtiger.cross.loadDocument(source, status);
+              // FIXME: give a chance to interpret error message ?
+              // if (data) {
+              //   if ($('error > message', data).size() > 0) {
+              //     $axel.command.logError($('error > message', data).text());
+              //     // FIXME: disable commands targeted at this editor ?
+              //   }
             }
           } else if (! source) {
             status.logError('undefined or missing XML data source')
@@ -244,6 +277,11 @@
         _raiseError('cannot load XML data source into empty wrapped set');
       }
       return this;
+    },
+
+    // Return true if the first node in wrapped set has been transformed to an editor
+    transformed : function () {
+      return this.first && (typeof this.first.xttHeadLabel === 'string')
     },
 
     length : function () {
@@ -351,11 +389,12 @@
       }
     }
   };
-  
+
   _axel.setup = function setup ( hash ) {
     _axel.extend(settings, hash);
   };
-  
+  _axel.error = _raiseError;
+  _axel.defaults = settings;
   // Limits max iteration counter
   _axel.setIterationLimit = function (nb) { MAX = nb; };
 

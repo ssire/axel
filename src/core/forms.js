@@ -38,9 +38,7 @@ xtiger.util.Logger.prototype = {
  // If msg contains '$$$', it will be substituted with the file name contained in optional url
  logError : function (msg, url) {
    if (msg.indexOf('$$$') != -1) {
-     var m = url.match(/([^\/]*)$/); // should extract trailing file name
-     var name = m ? m[1] : url;
-     this.errors.push (msg.replace('$$$', '"' + name + '"'));
+     this.errors.push (msg.replace('$$$', '"' + url + '"'));
    } else {
      this.errors.push (msg);
    }
