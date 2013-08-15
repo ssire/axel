@@ -8,11 +8,12 @@
   
   <xt:head version="1.1" templateVersion="1.0" label="Root">   
     <xt:component name="t_pdflink">
-      <xt:use types="text" label="LinkText">click to edit document anchor name</xt:use>
+      <xt:use types="text" label="LinkText">click to edit document anchor name</xt:use><br/>
       <xt:use types="file" label="LinkRef" param="file_URL=/formdata;file_base=../../data/docs;file_gen_name=manual"/>
     </xt:component>
   </xt:head>
 
+  <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
   <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
   <script type="text/javascript" src="../../axel/axel.js"></script>
 
@@ -59,11 +60,7 @@
   
 <h1>Interactive (GUI) test case for <tt>'file'</tt> editor</h1>
 
-<h2><xt:use types="text" label="Title">Click to edit a title</xt:use> 
-  <span class="docid">
-    <xt:attribute types="text" label="DocumentId" param="filter=documentId" default="file" name="documentId"/>
-  </span>
-</h2> 
+<h2><xt:use types="text" label="Title">Click to edit a title</xt:use></h2> 
 
 <p class="explic avertissement">Pour utiliser ce template vous devez le lancer depuis le serveur Web fourni en exemple dans <tt>scripts/server.rb</tt> seul moyen d'activer la sauvagarde des fichiers, leur URL sera définie par rapport au serveur d'exemple.</p>
 

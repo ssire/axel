@@ -14,21 +14,21 @@
  
 (function ($axel) {
 
- var _Generator = function ( aContainer, aXTUse, aDocument ) {
-   var viewNode = xtdom.createElement (aDocument, 'img');
-   xtdom.setAttribute (viewNode, 'src', xtiger.bundles.photo.photoIconURL);
-   xtdom.addClassName (viewNode , 'axel-drop-target');
-   xtdom.addClassName (viewNode , 'axel-photo-model');
-   aContainer.appendChild(viewNode);
-   return viewNode;   
- };
-
  // you may add a closure to define private properties / methods
  var _Editor = {
 
    ////////////////////////
    // Life cycle methods //
    ////////////////////////
+   onGenerate : function ( aContainer, aXTUse, aDocument ) {
+     var viewNode = xtdom.createElement (aDocument, 'img');
+     xtdom.setAttribute (viewNode, 'src', xtiger.bundles.photo.photoIconURL);
+     xtdom.addClassName (viewNode , 'axel-drop-target');
+     xtdom.addClassName (viewNode , 'axel-photo-model');
+     aContainer.appendChild(viewNode);
+     return viewNode;
+   },
+   
    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
      var base = this.getParam('photo_base');
      if (base && (base.charAt(base.length - 1) !== '/')) { // sanitize base URL
@@ -223,7 +223,6 @@
    { 
      trigger : 'click' // 'click' or 'mouseover' DOM events (see awake)      
    },
-   _Generator,
    _Editor
  );
  

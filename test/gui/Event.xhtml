@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+    <head>
+        <!-- Use UTF-8 and avoid the xml protocol declaration at the top for Internet Explorer -->
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8;" />
+        <meta name="description" content="XTiger XML document template" />
+        <meta name="keywords" content="template, XTiger" />
+
+        <title>Release Tests :: 'event' filter features</title>
+
+        <xt:head version="1.1" templateVersion="1.0" label="Test">
+        </xt:head>
+
+        <link rel="stylesheet" type="text/css" href="../../axel/axel.css" />
+        <script type="text/javascript" src="../../axel/axel.js"></script>
+        <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+        
+        <script type="text/javascript">
+          var form;
+          function init() {
+            $axel.setup({ bundlesPath : '../../axel/bundles', tabGroupNavigation: true });
+            $axel('body').transform();
+            $('#text_1').bind('axel-update', function (ev, ed) { alert( 'Got ' + ev.type + ' with value ' + ev.value + ' from editor ' + ed); }); 
+          }
+          xtdom.addEventListener(window,  'load', init, false);
+        </script>
+
+        <style type="text/css">
+            body {
+                width: 90%;
+                margin-left: 5%
+            }
+            .instruction {
+                width: 90%;
+                border: thin solid black;
+                padding: 10px;
+                margin-left: 5%;
+            }
+            .test {
+                width: 70%;
+                border: thin solid grey;
+                padding: 10px;
+                margin-left: 15%
+            }
+            .test > li {
+                 list-style: none
+            }
+        </style>
+
+    </head>
+    <body>
+        <h1>Release Tests :: 'event' filter features</h1>
+
+        <p>This template provides test cases for the AXEL 'event' filter</p>
+
+        <p class="instruction">Check that editing the following text field triggers an 'axel-update' event upon validation</p>
+
+        <ul class="test" id="text_1">
+            <li>Text: <xt:use types="text" label="text_1" param="filter=event">enter some text</xt:use></li>
+        </ul>
+    </body>
+</html>

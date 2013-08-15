@@ -14,22 +14,22 @@
  
 (function ($axel) {
 
- var _Generator = function ( aContainer, aXTUse, aDocument ) {
-   var _h = xtdom.createElement(aDocument, 'span'); /* Creates the handle */
-   xtdom.addClassName (_h , 'axel-core-on');
-   xtdom.addClassName (_h, 'axel-core-editable');
-   xtdom.addClassName (_h, 'axel-link-handle');
-   _h.appendChild(xtdom.createTextNode(aDocument, ''));
-   aContainer.appendChild(_h);
-   return _h;
- };
-
  // you may add a closure to define private properties / methods
  var _Editor = {
 
    ////////////////////////
    // Life cycle methods //
    ////////////////////////
+   onGenerate : function ( aContainer, aXTUse, aDocument ) {
+     var _h = xtdom.createElement(aDocument, 'span'); /* Creates the handle */
+     xtdom.addClassName (_h , 'axel-core-on');
+     xtdom.addClassName (_h, 'axel-core-editable');
+     xtdom.addClassName (_h, 'axel-link-handle');
+     _h.appendChild(xtdom.createTextNode(aDocument, ''));
+     aContainer.appendChild(_h);
+     return _h;
+   },
+
    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
      var devname = this.getParam('device') || this.getParam('defaultDevice');
      if (aDefaultData && aDefaultData.text && aDefaultData.url) { /* sets up initial content */
@@ -203,7 +203,6 @@
      trigger: "click",
      padding: '10'
    },
-   _Generator,
    _Editor
  );
  

@@ -14,7 +14,7 @@
 -----------------------------------------------------------------------------------
 
 Stéphane Sire
-Last update: 2012-12-03
+Last update: 2013-08-03
 
 Summary
 =======
@@ -26,6 +26,7 @@ Summary
 <li><a href="#registration">Plugin registration</a></li>
 <li><a href="#life-cycle-methods">Life cycle methods</a></li>
   <ul>                         
+    <li><a href="#onGenerate">onGenerate</a></li>
     <li><a href="#onInit">onInit</a></li>
     <li><a href="#onAwake">onAwake</a></li> 
     <li><a href="#onLoad">onLoad</a></li>
@@ -80,7 +81,7 @@ Primitive editor plugins (or plugins) roles are :
 * to convert data from and to XML (respectively XML loading and XML linearization)
 * to manage user interaction with the view(s) (e.g. switching from static to editing view)
 
-Plugin code should respect some conventions described in this document. They should implement a minimal API. A part of this API is provided as native methods with a default implementation.
+Plugin code should respect some conventions described in this document. They should implement a minimal API. A part of this API is provided as native methods with a default implementation which is inherited by the plugin per-construction.
 
 Each plugin registers itself with the $axel.register method to the AXEL engine with the same identifier that is used to insert it inside a template with an &lt;xt:use types="identifier".../> XTiger element.
 
@@ -98,11 +99,11 @@ The Plugin API is divided into different categories of methods :
 - native service methods
 - other methods
 
-Life cycle methods ("onInit", "onAwake", "onLoad", "onSave") must be implemented to manage plugin instantiation and to read and write XML data to a target document.
+Life cycle methods ("onGenerate", "onInit", "onAwake", "onLoad", "onSave") must be implemented to manage plugin instantiation and to read and write XML data to a target document.
 
-Native construction methods are used to manage the two different ways to create plugin instances : at transformation time and at interaction time. The plugin instances created during the template parsing and generation phases (transformation time) use a special _parseFromTemplate method to initialize themselves from an XTiger host node. The plugin instances created dynamically after user has repeated a slice or loaded some XML content use a special seeding mechanism. They are initialized with seed data provided by a source plugin instance that was created at transformation time.
+Native construction methods are called by the AXEL processor to create the plugin instances. Three different execution flows lead to the creation of plugin instances. The first one is during template parsing and generation phases (i.e. when calling $axel.transform function to generate an editor from an XTiger XML template). At that time some private methods of the plugin API are called to read the plugin parameters and the plugin default content from the XTiger host node (i.e. the corresponding xt:use or xt:attribute element). The second flow leading to the creation of plugin instances is at interaction time, when the user click on a repeater to generate a new document slice. The third flow is when loading some XML content generates a new document slice. These last two flows use a special seeding mechanism to reconstruct the plugin instance initial state from the state that was saved during the first flow. 
 
-Native service methods define some basic services common to all plugins. They give access to common state information such as the document the plugin instance belongs to, the plugin parameters, default content, option status, and so on.
+Native service methods define some basic services common to all plugins. They give access to common state information such as the document the plugin instance belongs to, the plugin parameters, default content, optionality status, and so on.
 
 The plugin registration process adds a default implementation of all the native methods to the plugin class unless you overwrite them.
 
@@ -115,13 +116,12 @@ The filter API allows to filter any plugin method using a delegation pattern. Ho
 Plugin registration
 ===================
 
-The $axel.plugin.register method takes as parameter a plugin identifier, an option hash, a hash with a list of parameters with their default values, the plugin generator function and the plugin methods. 
+The $axel.plugin.register method takes as parameter a plugin identifier, an option hash, a hash with a list of parameters with their default values and the plugin methods. 
 <div class="code">
 $axel.plugin.register(
   'identifier', 
   { filterable: true, optional: true } | null, // option hash
   { key : 'value' }, // parameter hash
-  _Generator, // generator function
   _Editor // method hash
 );
 </div>
@@ -129,15 +129,13 @@ The option hash declares a set of flags that defines whether the plugin is filte
 
 The parameter hash defines the default values for the parameters which can be declared on the &lt;xt:use> or &lt;xt:attribute> XTiger elements inside the 'param' attribute.
 
-The plugin generator function is a special function that must populate a &lt;div> container with an HTML representation of the default plugin content. It must return a privileged HTML node from the representation that we call the handle. AXEL will add a special property to the DOM node of the handle to point to the Javascript plugin instance managing the handle.
-  
 The plugin methods must be stored into a hash with the following structure : 
 
-- life cycle methods are stored under first level keys of the hash  ("onInit", "onAwake", "onLoad", "onSave")
+- life cycle methods are stored under first level keys of the hash  ("onGenerate", "onInit", "onAwake", "onLoad", "onSave")
 - overwritten native plugin methods are stored under a first level "api" key that must contain a hash with the methods
 - all other methods are stored under a first level "methods" key that must contain a hash with the methods
 
-In all the plugin methods (except the plugin generator function), the this object will refer to a plugin instance. The plugin instance will be automatically created by the AXEL engine, so that you do not need to define the plugin constructor function.
+In all the plugin methods the this object will refer to a plugin instance. The plugin instance will be automatically created by the AXEL engine, so that you do not need to define the plugin constructor function.
 
 Note that it is always possible to use a closure to define more plugin private variables and methods. See the existing plugins.
 </pre>
@@ -146,7 +144,16 @@ Note that it is always possible to use a closure to define more plugin private v
 Life cycle methods
 ==================
 
-There are 4 life cycle methods that must be implemented by each plugin class.
+There are 5 life cycle methods that must be implemented by each plugin class.
+</pre>
+
+<pre id="onGenerate">
+onGenerate
+~~~~~~~~~~
+
+The plugin instance must create its HTML markup inside the &lt;div> container passed as parameter. The method must return a privileged HTML node from its representation that we call the handle. AXEL will add a special property to the DOM node of the handle to point to the Javascript plugin instance managing the handle.
+
+Note that in the current version of AXEL the plugin instance has not yet been initialized when calling onGenerate, thus you cannot read the default plugin default content or the plugin parameters with the getDefaultData or getParam methods. In general you should not need to call any of the plugin methods inside the onGenerate method as its purpose is purely to create the HTML representation and nothing else. You should postpone any other operation to the onInit or onAwake method calls.
 </pre>
 
 <pre id="onInit">
@@ -158,7 +165,7 @@ The plugin instance should initialize its content model with the default content
 Note that the final parameter (aReapeater) is defined if and only if the plugin instance is beeing created by repeating a slice in a repeater, which occurs either if the user has clicked on a "plus" control, or if s/he has loaded XML data from a file. When aRepeater is not defined, the plugin instance is beeing created from the template during the initial template transformation.
 
 Typical behavior : initializes the handle with the default content from the template.
-</init>
+</pre>
       
 <pre id="onAwake">
 onAwake
@@ -191,7 +198,9 @@ Typical behavior: copies the handle content as text in the DOM logger.
 Native construction methods
 ===========================
 
-All these methods have a default implementation that should be sufficient in most cases.
+Those methods should be considered as private inherited method. We just discuss them for documentation purpose although you can perfectly skip that section.
+
+Note that these native methods create some instance properties that should be considered as reserved names (_param, _content, _option, _seed and _document, _key, _handle, _isModified).
 </pre>
 
 <pre id="_parseFromTemplate">
@@ -256,7 +265,7 @@ Returns the document the plugin instance belongs too.
 getHandle
 ~~~~~~~~~
 
-Returns the DOM node that was identified as the handle by the plugin generator function.
+Returns the DOM node that was identified as the handle by the plugin onGenerate method.
 </pre>
 
 <pre id="getOption">
@@ -399,15 +408,10 @@ Plugin file skeleton
 
 The code below can be used as a template for writing a new plugin.
 
-Note that in all the plugin methods (except the plugin generator function), the this object will refer to a plugin instance. The plugin instance will be automatically created by the AXEL engine, so that you do not need to define the plugin constructor function.
+The this object refer to the plugin instance in all the plugin methods below. The plugin instance will be automatically created by the AXEL engine, so you DO NOT NEED to define a plugin constructor function.
 
 <div class="code">
 (function ($axel) {
-
-  var _Generator = function ( aContainer, aXTUse, aDocument ) {
-    var handle;
-    return handle;
-  };
 
   // you may use the closure to declare private objects and methods here
 
@@ -416,6 +420,11 @@ Note that in all the plugin methods (except the plugin generator function), the 
     ////////////////////////
     // Life cycle methods //
     ////////////////////////
+    onGenerate : function ( aContainer, aXTUse, aDocument ) {
+      var handle;
+      return handle;
+    };
+    
     onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
     },
 
@@ -460,7 +469,6 @@ Note that in all the plugin methods (except the plugin generator function), the 
     { 
      key : 'value'
     },
-    _Generator,
     _Editor
   );
 

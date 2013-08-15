@@ -18,18 +18,6 @@
 
 (function ($axel) {
   
-  var _Generator = function ( aContainer, aXTUse, aDocument ) {
-    var viewNode; 
-    viewNode = xtdom.createElement (aDocument, 'span');
-    xtdom.addClassName (viewNode , 'xt-file');
-    $(viewNode).html(
-      '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
-      );
-    // xtdom.addClassName (viewNode , 'axel-drop-target');
-    aContainer.appendChild(viewNode);
-    return viewNode;
-  };
-  
   var EMPTY = 0;
   var SELECTED = 1;
   var LOADING = 2;
@@ -65,6 +53,19 @@
     ////////////////////////
     // Life cycle methods //
     ////////////////////////
+    
+    onGenerate : function ( aContainer, aXTUse, aDocument ) {
+      var viewNode; 
+      viewNode = xtdom.createElement (aDocument, 'span');
+      xtdom.addClassName (viewNode , 'xt-file');
+      $(viewNode).html(
+        '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
+        );
+      // xtdom.addClassName (viewNode , 'axel-drop-target');
+      aContainer.appendChild(viewNode);
+      return viewNode;
+    },
+
     onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
       var base = this.getParam('file_base');
       if (base && (base.charAt(base.length - 1) !== '/')) { // sanitize base URL
@@ -239,10 +240,8 @@
         }
       },
 
-      // FIXME: SHOULD NOT BE CALLED currently the plugin is not filterable and thus should not be updated 
+      // Proxy method to use 'event' filter
       update : function (data) {
-        this.model.reset(data);
-        this.redraw(true);
       },
 
       /////////////////////////////////
@@ -309,14 +308,13 @@
 
   $axel.plugin.register(
     'file', 
-    { filterable: false, optional: true },
+    { filterable: true, optional: true },
     { 
       file_URL : "/fileUpload",
       file_type : 'application/pdf',
       file_gen_name : 'auto'
       // file_size_limit : 1024
     },
-    _Generator,
     _Editor
   );
 
@@ -531,6 +529,7 @@
       this.url = value;
       this.state = COMPLETE;
       this.delegate.redraw(true); // true to autoselect
+      this.delegate.update(value); // limited filtering support
     },
 
     // only exit from ERROR is rollback()

@@ -14,16 +14,6 @@
 
 (function ($axel) {
 
-  // Plugin static view: span showing current selected option
-  var _Generator = function ( aContainer, aXTUse, aDocument ) {
-   var viewNode = xtdom.createElement (aDocument, 'span');
-   var t = xtdom.createTextNode(aDocument, '');
-   viewNode.appendChild(t);
-   xtdom.addClassName (viewNode, 'axel-core-editable');
-   aContainer.appendChild(viewNode);
-   return viewNode;
-  };
-
   var _Editor = (function () {
  
    function _getDevice ( doc ) {
@@ -55,6 +45,16 @@
      ////////////////////////
      // Life cycle methods //
      ////////////////////////
+
+     // Plugin static view: span showing current selected option
+     onGenerate : function ( aContainer, aXTUse, aDocument ) {
+      var viewNode = xtdom.createElement (aDocument, 'span');
+      var t = xtdom.createTextNode(aDocument, '');
+      viewNode.appendChild(t);
+      xtdom.addClassName (viewNode, 'axel-core-editable');
+      aContainer.appendChild(viewNode);
+      return viewNode;
+     },
 
      onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
        this.defaultScreenData = aDefaultData; // directly in screen (localized) form
@@ -211,7 +211,6 @@
     { 
      select_dispatch : 'value'  // alternative is 'display'
     },
-    _Generator,
     _Editor
   );
 }($axel));

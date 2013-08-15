@@ -32,7 +32,7 @@
       update : function (aData) {
         this.__event__update(aData);
         // triggers 'axel-update' event
-        $(this.getHandle()).trigger('axel-update', this);
+        $(this.getHandle()).trigger({ type: 'axel-update', value : aData }, this);
       }
     }
   };
@@ -42,5 +42,5 @@
     { chain : [ 'update'] },
     null,
     _Filter);
-  $axel.filter.applyTo({'event' : 'text'});
+  $axel.filter.applyTo({'event' : ['text','file']});
 }($axel));

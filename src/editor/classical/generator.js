@@ -259,14 +259,13 @@ xtiger.editor.Generator.prototype = {
   //
   // FIXME: END OF RECURSION should also address the possible Choice editor under way to call addChoiceItem....
   genIteratedTypeContent  : function (kind, xtigerSrcNode, container, accu, types) { 
-    var factory;
+    var factory, srcUseOrBag;
     if (factory = this.plugins.getEditorFor(xtigerSrcNode, types)) { 
         // END OF RECURSION for primitive editors and xt:attribute elements
         // assumes default content was pushed on the stack
-        var editorHandle = factory.createModel (container, xtigerSrcNode, this.curDoc);
-        var srcUseOrBag = ('attribute' === kind) ? xtigerSrcNode : this.peekTopContext (); // attribute node not saved onto the context
-        // currently srcUseOrBag and xtigerSrcNode are the same because terminal editors can only be on single choice xt:use        
-        editorHandle.xttPrimitiveEditor = factory.createEditorFromTree (editorHandle, srcUseOrBag, this.curDoc);        
+        srcUseOrBag = ('attribute' === kind) ? xtigerSrcNode : this.peekTopContext (); // attribute node not saved onto the context
+        // currently srcUseOrBag and xtigerSrcNode are the same because terminal editors can only be on single choice xt:use
+        factory.createEditor(container, xtigerSrcNode, this.curDoc, srcUseOrBag);
     } else {
         for (var i = 0; i < types.length; i++) {
           var curComponentForType = this.iterator.getComponentForType(types[i]);

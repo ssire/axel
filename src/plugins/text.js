@@ -2,27 +2,17 @@
  *
  * @COPYRIGHT@
  *
- * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@ 
+ * This file is part of the Adaptable XML Editing Library (AXEL), version @VERSION@
  *
  * @LICENSE@
  *
  * Web site : http://media.epfl.ch/Templates/
- * 
+ *
  * Author(s) : Stéphane Sire
- * 
+ *
  * ***** END LICENSE BLOCK ***** */
 
  (function ($axel) {
-
-   var _Generator = function ( aContainer, aXTUse, aDocument ) {
-     var htag = aXTUse.getAttribute('handle') || 'span',
-         h = xtdom.createElement(aDocument, htag),
-         t = xtdom.createTextNode(aDocument, '');
-     h.appendChild(t);
-     xtdom.addClassName(h, 'axel-core-on');
-     aContainer.appendChild(h);
-     return h;
-   };
 
    var _Editor = {
 
@@ -30,10 +20,20 @@
      // Life cycle methods //
      ////////////////////////
 
+     onGenerate : function ( aContainer, aXTUse, aDocument ) {
+       var htag = aXTUse.getAttribute('handle') || 'span',
+           h = xtdom.createElement(aDocument, htag),
+           t = xtdom.createTextNode(aDocument, '');
+       h.appendChild(t);
+       xtdom.addClassName(h, 'axel-core-on');
+       aContainer.appendChild(h);
+       return h;
+     },
+
      onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
-       var devfactory, 
+       var devfactory,
            devname = this.getParam('device');
-       if ((! aDefaultData) || (typeof aDefaultData !== 'string')) { 
+       if ((! aDefaultData) || (typeof aDefaultData !== 'string')) {
          this._content = 'click to edit'; // FIXME: setDefaultData() ? finalize API...
        }
        this._data = this.getDefaultData(); // Quirck in case _setData is overloaded and checks getDefaultData()
@@ -43,7 +43,7 @@
        }
        devfactory = devname ? xtiger.factory(devname) : xtiger.factory(this.getParam('defaultDevice'));
        this._device = devfactory.getInstance(this.getDocument(), this.getParam('type'), this.getParam('layout'));
-        // HTML element to represents an editor containing no data 
+        // HTML element to represents an editor containing no data
        this._noData = this._handle.firstChild; // ?
      },
 
@@ -52,14 +52,14 @@
        var _this = this;
        if (!this.getParam('noedit')) {
          xtdom.addClassName(this._handle, 'axel-core-editable');
-         xtdom.addEventListener(this._handle, 'click', 
+         xtdom.addEventListener(this._handle, 'click',
            function(ev) { _this.startEditing(ev); }, true);
        }
      },
 
      onLoad : function (aPoint, aDataSrc) {
        var _value, _default;
-       if (aPoint !== -1) { 
+       if (aPoint !== -1) {
          _value = aDataSrc.getDataFor(aPoint);
          _default = this.getDefaultData();
          this._setData(_value || _default);
@@ -150,7 +150,7 @@
        },
 
        // Updates data model
-       update : function (aData) { 
+       update : function (aData) {
          var tmp, isadef;
          if (aData === this._data) { // no change
            return;
@@ -168,7 +168,7 @@
        },
 
        // Clears the model and sets its data to the default data.
-       // Unsets it if it is optional and propagates the new state if asked to.     
+       // Unsets it if it is optional and propagates the new state if asked to.
        clear : function (doPropagate) {
          this._setData(this.getDefaultData());
          this.setModified(false);
@@ -179,9 +179,9 @@
    };
 
    $axel.plugin.register(
-     'text', 
+     'text',
      { filterable: true, optional: true },
-     { 
+     {
        placeholder : 'preserve',
        device : 'text-device',
        type : 'input',
@@ -191,7 +191,6 @@
        clickthrough : 'true', // FIXME: use a real boolean ?
        enablelinebreak : 'false'
      },
-     _Generator,
      _Editor
    );
  }($axel));

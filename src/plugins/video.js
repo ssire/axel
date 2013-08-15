@@ -14,33 +14,33 @@
  
 (function ($axel) {
 
- var _Generator = function ( aContainer, aXTUse, aDocument ) {
-   var _width, _height, _img, _tmp,
-       _h = xtdom.createElement(aDocument, 'div');
-   xtdom.addClassName (_h , 'axel-core-on');
-   xtdom.addClassName (_h, 'axel-core-editable');
-   _img = xtdom.createElement(aDocument, 'img');
-   _img.src = xtiger.bundles.video.tvIconURL;
-   _h.appendChild(_img);
-   // Sets handle width and height;
-   _tmp = xtdom.createElement(aDocument, 'div');
-   _tmp.style.visibility = 'hidden';
-   aDocument.getElementsByTagName('body')[0].appendChild(_tmp);
-   _tmp.appendChild(_h);
-   _width = _img.offsetWidth;
-   _height = _img.offsetHeight;
-   _h.style.width = (_width > 2 ? _width : 80) + 'px'; // defeat bug when transformed in a displayed: none context
-   _h.style.height = (_height > 2 ? _height : 80) + 'px';
-   aContainer.appendChild(_h);
-   xtdom.removeElement(_tmp);
-   return _h;   
- };
-
  var _Editor = {
 
    ////////////////////////
    // Life cycle methods //
    ////////////////////////
+   onGenerate : function ( aContainer, aXTUse, aDocument ) {
+     var _width, _height, _img, _tmp,
+         _h = xtdom.createElement(aDocument, 'div');
+     xtdom.addClassName (_h , 'axel-core-on');
+     xtdom.addClassName (_h, 'axel-core-editable');
+     _img = xtdom.createElement(aDocument, 'img');
+     _img.src = xtiger.bundles.video.tvIconURL;
+     _h.appendChild(_img);
+     // Sets handle width and height;
+     _tmp = xtdom.createElement(aDocument, 'div');
+     _tmp.style.visibility = 'hidden';
+     aDocument.getElementsByTagName('body')[0].appendChild(_tmp);
+     _tmp.appendChild(_h);
+     _width = _img.offsetWidth;
+     _height = _img.offsetHeight;
+     _h.style.width = (_width > 2 ? _width : 80) + 'px'; // defeat bug when transformed in a displayed: none context
+     _h.style.height = (_height > 2 ? _height : 80) + 'px';
+     aContainer.appendChild(_h);
+     xtdom.removeElement(_tmp);
+     return _h;   
+   },
+
    onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
      if (aDefaultData) { /* sets up initial content */
        if (this._isValidUrl(aDefaultData) || this._isCodeSnippet(aDefaultData)) {
@@ -305,7 +305,6 @@
      width: 425, /* width of the flash video player */
      height: 344 /* height of the flash video player */
    },
-   _Generator,
    _Editor
  );
  

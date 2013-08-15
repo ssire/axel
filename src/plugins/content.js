@@ -14,16 +14,6 @@
 
 (function ($axel) {
 
-  var _Generator = function ( aContainer, aXTUse, aDocument ) {
-    var htag = aXTUse.getAttribute('handle') || 'span',
-        h = xtdom.createElement(aDocument, htag),
-        t = xtdom.createTextNode(aDocument, '');
-    h.appendChild(t);
-    xtdom.addClassName(h, 'axel-core-on');
-    aContainer.appendChild(h);
-    return h;
-  };
-
   // Uses a closure to store class level private utility properties and functions
   var _Editor = (function () {
 
@@ -70,6 +60,16 @@
       ////////////////////////
       // Life cycle methods //
       ////////////////////////
+      
+      onGenerate : function ( aContainer, aXTUse, aDocument ) {
+        var htag = aXTUse.getAttribute('handle') || 'span',
+            h = xtdom.createElement(aDocument, htag),
+            t = xtdom.createTextNode(aDocument, '');
+        h.appendChild(t);
+        xtdom.addClassName(h, 'axel-core-on');
+        aContainer.appendChild(h);
+        return h;
+      },
 
       onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
         if ((! aDefaultData) || (typeof aDefaultData !== 'string')) { 
@@ -270,7 +270,6 @@
     { 
       noedit : 'false'
     },
-    _Generator,
     _Editor
   );
 }($axel));
