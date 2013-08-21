@@ -182,7 +182,7 @@
     // with the xt:head section inside the current document.
     // An optional hash configuration object may be passed to overwrite some transformation parameters.
     transform : function ( optTemplate ) {
-      var status, editor, bp, tabnav, isframe = false, config = {};
+      var form, status, editor, bp, tabnav, isframe = false, config = {};
       // initializations
       if (typeof optTemplate === 'object') { // either configuration object or XML document
         if (optTemplate.doctype) { // FIXME: test for XML / XHTML doctype ?
@@ -203,6 +203,9 @@
           try { // load and transform template
             if (this.first.nodeName.toLowerCase() === 'iframe') {
               editor = _frameDoc(this.first);
+              if (!editor) {
+                status.logError('the editor could not be generated because browser security restrictions prevented access to window iframe content');
+              }
               isframe = true;
             } else if (editor === undefined) {
               editor = typeof optTemplate === 'string' ? new xtiger.cross.loadDocument(optTemplate, status) : this.first.ownerDocument;
@@ -232,7 +235,11 @@
             if (status.inError()) {
               _raiseError(status.printErrors(), config);
             } else {
-              this.first.xttHeadLabel = form.getEditor().headLabel;
+              if (form) {
+                this.first.xttHeadLabel = form.getEditor().headLabel;
+              } else {
+                _raiseError('an unkown problem has prevented editor generation', config);
+              }
             }
           } catch (e) {
             _raiseError('exception ' + e.name + ' ' + e.message, config);
