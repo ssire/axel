@@ -32,7 +32,7 @@
       var n = document.getElementById('embedded');
       $axel.setup({ bundlesPath : '../axel/bundles', enableTabGroupNavigation: true });
       $axel(n).transform();
-      $(a[onclick]).bind('click', function(event) {  event.preventDefault(); });
+      $('a[onclick]').bind('click', function(event) {  event.preventDefault(); });
     }
     xtdom.addEventListener(window,  'load', init, false);
   </script>
@@ -51,7 +51,7 @@
  <div class="content">
   <h1>Tutorial: creating editable web pages with AXEL</h1>
 
-  <p>By S. Sire, <a href="http://www.oppidoc.fr">Oppidoc</a>,  (Last edited 2013-07-14)</p>
+  <p>By S. Sire, <a href="http://www.oppidoc.fr">Oppidoc</a>,  (Last edited 2013-08-21)</p>
 
   <p>This document describes the new API (since AXEL 1.3.2) to generate document editors inside web application pages and to interact with the editors to load and save XML data. This API is based on a <var>$axel</var> object, it supersedes the <a href="tutorial.xhtml">legacy API</a> based on the <var>xtiger.util.form</var> object.</p>
 
@@ -116,19 +116,13 @@
 
   <!-- =============== STEP 2 =============== -->
 
-  <h2><span class="step">Step 2</span> : include and initialize AXEL library inside your web application page</h2>
+  <h2><span class="step">Step 2</span> : include AXEL library inside your web application page</h2>
 
   <p>You need to include both the <code>axel.js</code> file containing the library and the corresponding <code>axel.css</code> file. In addition the <code>bundles</code> path of the AXEL distribution must be avalaible on your server (<span id="includeToggle" class="button">show</span> source)</p>
 
 <div id="include" class="sample source">
   <pre class="source">&lt;script type="text/javascript" src="{PATH-TO}/axel/axel.js">&lt;/script>
 &lt;link rel="stylesheet" href="{PATH-TO}/axel/axel.css" type="text/css">&lt;/link>
-&lt;script type="text/javascript">
-  function init() {
-    $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', enableTabGroupNavigation: true });
-  }
-  xtdom.addEventListener(window, 'load', init, false);
-&lt;/script>
   </pre>
 
   <p class="explain noprint"><span id="explainIncludeToggle" class="button">show</span> explanation</p>
@@ -137,15 +131,11 @@
 <div id="explainInclude" class="explanation">
   <p>The <code>src</code> attribute of the <code>script</code> element must point to the location where you have copied the AXEL library file <code>axel.js</code> which is distributed inside the <code>axel/</code> folder.</p>
 
-  <p>You must include the global AXEL CSS file <code>axel.css</code> which is distributed under the same <code>axel/</code> folder.</p>
+  <p>You must include the global AXEL CSS file <code>axel.css</code> which is distributed under the same <code>axel/</code> folder (<i>excepted if you are applying variant C of step 3)</i>.</p>
 
   <p>Finally you also must make the <code>axel/bundles/</code> folder of the AXEL distribution available and provide a <var>bundlesPath</var> parameter to the <code>$axel.setup</code> function with a string path (relative to your web application page) leading to the <code>bundles</code> folder of the AXEL distribution.</p>
 
-  <p>You can call the <code>$axel.setup</code> function in a page load event handler or right before generating an editor as shown in the next step. Note that you can also initialize some other globals by the same occasion, such as <var>enableTabGroupNavigation</var> to enable tab navigation between editor's fields, however this functionality is not yet fully functional on all browsers.</p>
-
     <p>You can generate a new AXEL library file with your own selection of plugins by editing the <code>scripts/build.xml</code> file and with a build.lib target with ant (<tt>cd scripts; ant build.lib</tt>). This supposes you have installed the Yahoo UI compressor and set its path into the <var>javascript.compressor</var> variable in the file <code>scripts/ant.properties</code>. Otherwise you may generate an uncompressed version of the library with the ant <code>build.debug</code> target.</p>
-
-    <p>Note that the <code>xtdom.addEventListener</code> function is an AXEL function to register event handlers, you may of course use any other function, especially since that function may be deprecated in the future.</p>
 </div>
 
   <h2><span class="step">Step 3</span> : write the template transformation code  inside your web application page</h2>
@@ -164,7 +154,10 @@
   </div>
 
   <div id="transform-a" class="sample source">
-    <pre class="source">&lt;script type="text/javascript">
+    <p>To generate the editor defined in the &lt;div id="embedded"> element
+in a web application page that is also an XTiger XML template, you can write :</p>
+
+    <pre class="source">    &lt;script type="text/javascript">
       function init() {
         var n = document.getElementById('embedded');
         $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', enableTabGroupNavigation: true });
@@ -175,17 +168,29 @@
 
     <p>Alternatively if you have included jQuery inside your web page, you can directly pass a jQuery selector string to the <code>$axel</code> object :</p>
 
-    <pre class="source">$axel('#embedded').transform()</pre>
+    <pre class="source">    &lt;script type="text/javascript">
+      function initApp() {
+        $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', enableTabGroupNavigation: true });
+        $axel('#embedded').transform();
+      }
+      jQuery(function() { initApp(); });
+    &lt;/script></pre>
 
     <p>Note that if you want to treat the whole page as a single editor, you can directly pass the <code>document</code> object to the <code>$axel</code> object such as :</p>
 
     <pre class="source">$axel(document).transform()</pre>
+    
+    <p>You can also directly pass the AXEL setup as an option hash to the <code>transform</code> method :</p>
+
+    <pre class="source">$axel('#embedded').transform({ bundlesPath : '{PATH-TO}/axel/bundles', enableTabGroupNavigation: true })</pre>
 
     <p class="explain noprint"><span id="explainTransform-aToggle" class="button">show</span> explanation</p>
   </div>
 
   <div id="explainTransform-a" class="explanation">
-    <p>The <code>$axel.setup</code> function initializes some global settings for the <var>$axel</var> object as explained in step 2. The settings are memorized so that you just need to set them once even if you use the <var>$axel</var> object multiple times.</p>
+    <p>You can call the <code>$axel.setup</code> function in a page load event handler or right before generating an editor. Note that you can also initialize some other globals by the same occasion, such as <var>enableTabGroupNavigation</var> to enable tab navigation between editor's fields, however this functionality is not yet fully functional on all browsers. The settings are memorized so that you just need to set them once even if you use the <var>$axel</var> object multiple times.</p>
+    
+    <p>Note that the <code>xtdom.addEventListener</code> function is an AXEL function to register event handlers, you may of course use any other function, especially since that function may be deprecated in the future.</p>
   </div>
 
   <!-- =============== STEP 3, variant B =============== -->
@@ -200,8 +205,15 @@
   </div>
 
   <div id="transform-b" class="sample source">
-    <pre class="source"><p>Same as variant a but pass the XTiger XML template file path to <i>transform</i> :</p>
-$axel('#placeholder').transform('Hello-world.xhtml')</pre>
+    <p>To generate the editor defined by the "Hello-world.xhtml" template
+inside the &lt;div id="placeholder"> element of a web application page, you can write :</p>
+    <pre class="source">$axel('#placeholder').transform('Hello-world.xhtml')</pre>
+    
+    <p>Once again you can also directly pass the AXEL setup as an auxiliary option hash to the <code>transform</code> method :</p>
+
+    <pre class="source">$axel('#placeholder').transform('Hello-world.xhtml', { bundlesPath : '{PATH-TO}/axel/bundles', 
+      enableTabGroupNavigation: true })</pre>
+    
     <p class="explain noprint"><span id="explainTransform-bToggle" class="button">show</span> explanation</p>
   </div>
 
@@ -215,9 +227,7 @@ $axel('#placeholder').transform('Hello-world.xhtml')</pre>
 
   <h3 id="variant-c">Variant c : your web page contains an iframe that contains an external XTiger XML template</h3>
 
-  <p><i>This variant is not implemented yet</i></p>
-
-  <p><a href="#variant-c" onclick="alert('not implemented yet')">Click</a> to transform the XTiger XML template inside the iframe below into an editor (<span id="transform-cToggle" class="button">show</span> source) :</p>
+  <p><a href="#variant-c" onclick="$axel('#iframe').transform({ injectStylesheet : '../axel/axel.css' })">Click</a> to transform the XTiger XML template inside the iframe below into an editor (<span id="transform-cToggle" class="button">show</span> source) :</p>
 
   <div class="editor" style="padding: 20px 10px 10px 10px">
       <p class="template">Template inside an iframe</p>
@@ -225,17 +235,23 @@ $axel('#placeholder').transform('Hello-world.xhtml')</pre>
   </div>
 
   <div id="transform-c" class="sample source">
-    <pre class="source"><p>Same as variant a but the first element of the wrapped set is an iframe element :</p>
-$axel('#iframe').transform()</pre>
+    <p>To generate the editor defined by the "Hello-world.xhtml" template inside the &lt;iframe id="iframe" src="Hello-world.xhtml"> element of a web application page, you can write :</p>
+    <pre class="source">$axel('#iframe').transform({ injectStylesheet : '{PATH-TO}/axel/axel.css' })</pre>
+    
+    <p>Once again you can also directly pass the AXEL setup as supplementary options in the options hash parameter of the <code>transform</code> method :</p>
+
+    <pre class="source">$axel('#iframe').transform({ bundlesPath : '{PATH-TO}/axel/bundles', 
+      enableTabGroupNavigation: true, injectStylesheet : '{PATH-TO}/axel/axel.css' })</pre>
+
     <p class="explain noprint"><span id="explainTransform-cToggle" class="button">show</span> explanation</p>
   </div>
 
   <div id="explainTransform-c" class="explanation">
-    <p>By invoking the <code>transform</code> method on an <var>$axel</var> object wrapping an <code>iframe</code> element, it will treat the content of the <code>iframe</code> as an XTiger XML template and transform it into an editor. You do not need to include the AXEL Javascript and CSS files into the XTiger XML template as using this procedure the <code>iframe</code> content will be transformed by the AXEL library of the parent window (your web application page). The CSS file will be automatically injected by the <code>$axel</code> object into the <code>iframe</code> document.</p>
+    <p>By invoking the <code>transform</code> method on an <var>$axel</var> object wrapping an <code>iframe</code> element, it will treat the content of the <code>iframe</code> as an XTiger XML template and transform it into an editor. You do not need to include the AXEL Javascript file into the XTiger XML template as using this procedure the <code>iframe</code> content will be transformed by the AXEL library of the parent window (your web application page). However you should pass an option hash to the <code>transform</code> method with an <i>injectStylesheet</i> key containing the path leading to the AXEL css file so that it will be automatically injected by the <code>$axel</code> object into the <code>iframe</code> document. You may omit this if your template directly imports the AXEL css file, but it is usually more convenient to write XTiger XML templates independent of the AXEL library code location.</p>
 
     <p>The advantage of this approach is that the XTiger XML template may include its own CSS files that you do not need to include in the parent web application page.</p>
 
-    <p>Note that you can also pass a URL/path string to the <code>transform</code> function. In that case it will set the <var>src</var> attribute of the <code>iframe</code> element to that string and register a <code>load</code> event handler on the iframe to transform its content when loaded.</p>
+    <p><i>NOT YET AVAILABLE</i> : Note that you can also pass a URL/path string to the <code>transform</code> function. In that case it will set the <var>src</var> attribute of the <code>iframe</code> element to that string and register a <code>load</code> event handler on the iframe to transform its content when loaded.</p>
 
     <p>Any eventual nested <code>iframe</code> elements inside the <code>iframe</code> document will not be transformed using this method !</p>
   </div>
@@ -267,7 +283,7 @@ $axel('#iframe').transform()</pre>
             </div>
           </td>
           <td>
-            <p><a href="#variant-c" onclick="alert('not implemented yet')">Click</a> to load data into variant c editor (<span id="feed-cToggle" class="button">show</span> source)</p>
+            <p><a href="#variant-c" onclick="$axel('#iframe').load('sample.xml')">Click</a> to load data into variant c editor (<span id="feed-cToggle" class="button">show</span> source)</p>
             <div id="feed-c" class="sample source">
               <pre>$('#iframe').load('sample.xml')</pre>
             </div>
@@ -313,7 +329,7 @@ $axel('#iframe').transform()</pre>
             </pre>
           </td>
           <td>
-            <p><a href="#xml-dump" onclick="alert('not implemented yet')">Click</a>to copy the XML data from variant a editor in the <code>#xml-c</code> div below (<span id="dump-cToggle" class="button">show</span> source)</p>
+            <p><a href="#xml-dump" onclick="$('#xml-c').text($axel('#iframe').xml())">Click</a>to copy the XML data from variant a editor in the <code>#xml-c</code> div below (<span id="dump-cToggle" class="button">show</span> source)</p>
             <div id="dump-c" class="sample source">
               <pre>$('#xml-b').text($axel('#iframe').xml())</pre>
             </div>
@@ -334,7 +350,7 @@ $axel('#iframe').transform()</pre>
 
     <h3 id="reporting"><span class="step">Note</span> : Error reporting</h3>
 
-<p>Currently the errors raised inside <code>$axel</code> functions are reported by an internal function that shows an alert with the error message. You can overwrite that function by providing a new error function handler to the <code>error</code> parameter of the global settings.</p>
+<p>Currently the errors raised inside <code>$axel</code> functions are reported by an internal function that shows an alert with the error message. You can overwrite that function by providing a new error function handler to the <code>error</code> parameter of the global settings. The function receives a single string parameter containing an error message (currently in english, the localization of error messages is on the roadmap).</p>
 
 <p>For instance <a href="#reporting" onclick="$axel('#embedded').load('not-existing.xml')">Click</a> to load the content of an unkown file inside the variant a editor using the internal XHR request: that should result in an error.</p>
 
@@ -350,9 +366,9 @@ $axel('#iframe').transform()</pre>
 
   <p>There is no extra initialization step to use the primitive editors and filters from AXEL-FORMS (e.g. 'choice' or 'input' plugins, 'select2' filter).</p>
 
-  <p>If you want to use some primitive editors from AXEL-FORMS with some filters from AXEL you may need to explicitely register them by calling  <code>$axel.filter.applyTo({ 'optional' : 'input', 'event' : 'input' })</code> before calling the <code>transform</code> function. The previous code extends AXEL-FORMS 'input' plugin with AXEL 'optional' and 'event' filters.</p>
+  <p>If you want to use some primitive editors from AXEL-FORMS with some filters from AXEL you may need to explicitely register them by calling code such as   <code>$axel.filter.applyTo({ 'optional' : 'input', 'event' : 'input' })</code> before calling the <code>transform</code> function. For instance the previous example extends AXEL-FORMS 'input' plugin with AXEL 'optional' and 'event' filters.</p>
 
-  <p>if you are using some commands and bindings from AXEL-FORMS, you SHOULD use the <a href="https://github.com/ssire/axel-forms/wiki/The-%27template%27-command">'template'</a> command to generate the editor instead of the <code>$axel.transform</code> function. This is preferable since as a side effect it will extend primitive editors from AXEL-FORMS with filters from AXEL as explained in the previous paragraph, and perform some extra initializations required by the commands and bindings. However if you still want to use the <code>transform</code> function then you should manually do those initializations immediately after the template transformation. <i>Explanation forthcoming</i>.</p>
+  <p>If you are using some commands and bindings from AXEL-FORMS, you SHOULD use the <a href="https://github.com/ssire/axel-forms/wiki/The-%27template%27-command">'template'</a> command to generate the editor instead of the <code>$axel.transform</code> function. This is preferable since as a side effect it will extend primitive editors from AXEL-FORMS with filters from AXEL as explained in the previous paragraph, and perform some extra initializations required by the commands and bindings. However if you still want to use the <code>transform</code> function then you should manually do those initializations immediately after the template transformation. <i>More explanations to come</i>.</p>
 
   <p>The roadmap is to reduce the extra initialization steps to nothing more than inclusion of <code>axel-forms.js</code>.</p>
 
@@ -362,7 +378,7 @@ $axel('#iframe').transform()</pre>
 
   <p>You can use the <code>xml</code> function to retrieve the xml content of the editor. Then you can generate a new XML document to be processed by a client-side XSLT processor such as <a href="http://www.saxonica.com/ce/index.xml" target="_blank">Saxon-CE</a>.</p>
 
-  <p>Forthcoming.</p>
+  <p><i>More explanations to come</i>.</p>
 </div>
 </body>
 </html>
