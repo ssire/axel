@@ -2,7 +2,7 @@
  *
  * author      : Stéphane Sire
  * contact     : s.sire@oppidoc.fr
- * last change : 2013-04-28
+ * last change : 2013-08-21
  *
  * AXEL demo editor
  */
@@ -155,32 +155,31 @@
   };
 
   Utility.LogWin.prototype = {
-    // Dumps a form inside this LogWin
-    // Assumes form has been configured to dump schemas
-    dumpSchema : function (form, stylesheet, template) {
+    // Dumps a form inside this LogWin using the algo which must be the schema serializer
+    dumpSchema : function (form, algo) {
       var dump = new xtiger.util.SchemaLogger ();
-      var data = form.serializeData (dump);
+      var data = form.xml ( { serializer : algo, logger : dump } );
       this.write(dump.dump('*'));
     },
-    // Dumps a form inside this LogWin
+    // LEGACY : Dumps a form inside this LogWin
     // stylesheet is an optional stylesheet filename, if present it adds a stylesheet processing instruction
     // filename is the optional name of the XML content file, if present it is added as a 'filename' attribute
     //  on the root node
-    dumpDocument : function (form, stylesheet, template) {
-      var buffer;
-      var dump = new xtiger.util.DOMLogger ();
-      form.serializeData (dump);
-      buffer = "<?xml version=\"1.0\"?>\n"; // encoding="UTF-8" ?
-      if (stylesheet) {
-        buffer += '<?xml-stylesheet type="text/xml" href="' + stylesheet + '"?>\n';
-      }
-      if (template) {
-        buffer += '<?xtiger template="' + template + '" version="1.0" ?>\n';
-      }
-      buffer += dump.dump('*');
-      this.write(buffer);
-      this.close();
-    },
+    // dumpDocument : function (form, stylesheet, template) {
+    //   var buffer;
+    //   var dump = new xtiger.util.DOMLogger ();
+    //   form.serializeData (dump);
+    //   buffer = "<?xml version=\"1.0\"?>\n"; // encoding="UTF-8" ?
+    //   if (stylesheet) {
+    //     buffer += '<?xml-stylesheet type="text/xml" href="' + stylesheet + '"?>\n';
+    //   }
+    //   if (template) {
+    //     buffer += '<?xtiger template="' + template + '" version="1.0" ?>\n';
+    //   }
+    //   buffer += dump.dump('*');
+    //   this.write(buffer);
+    //   this.close();
+    // },
     transcode : function (text) {
       var filter1 = text.replace(/</g, '&lt;');
       var filter2 = filter1.replace(/\n/g, '<br/>');
@@ -230,7 +229,7 @@
   }
 
   function viewerApp (inPath, tplModel) {
-      var std, path = inPath;
+      var std, path = inPath, that = this;
       this.templatePath = null; // path to the current templates folder
       this.templateList = null; // list of current template files in current templates folder
       this.menuModel = tplModel; // data model for templates folders / files
@@ -267,6 +266,9 @@
 
       // Event Handler used to monitor when the iframe has been loaded with a template
       this.frameLoadedHandler = $.proxy(this.frameLoaded, this);
+      
+      // Error function
+      this.errFunc = function (msg) { that.log(msg, 1) };
   }
 
   viewerApp.prototype = {
@@ -486,19 +488,24 @@
 
     // Loads the template with XHR, copies its body into the target container, then transform it
     submitPageNoFrame : function () {
-      var e = document.getElementById('formUrl');
-      var s = e.url.value;
+      var url, result, xtDoc, 
+          e = document.getElementById('formUrl'),
+          s = e.url.value;
       if (s.search(/\S/) !== -1) {
-        var url = Utility.makeURLForFile(s, this.PROXY);
-        var result = new xtiger.util.Logger();
-        var xtDoc = this.doLoadDocument(url, result);
+        url = Utility.makeURLForFile(s, this.PROXY);
+        result = new xtiger.util.Logger();
+        xtDoc = this.doLoadDocument(url, result);
         if (xtDoc) {
-          this.curForm = new xtiger.util.Form (this.xttMakeLocalURLFor(this.config.baseUrl));
-          this.curForm.setTemplateSource (xtDoc);
-          this.curForm.setTargetDocument (document, 'containerNoFrame', true);
-          this.curForm.enableTabGroupNavigation ();
-          this.curForm.transform (result);
-          this.activateDocumentCommands();
+        this.curForm = $axel('#containerNoFrame').transform(
+          xtDoc,
+          {
+          bundlesPath : this.xttMakeLocalURLFor(this.config.baseUrl),
+          enableTabGroupNavigation : true,
+          }
+          );
+          if (this.curForm.transformed()) {
+            this.activateDocumentCommands();
+          }
         }
         if (result.inError()) { this.log(result.printErrors(), 1); }
       }
@@ -521,8 +528,7 @@
     // Creates the XTiger form UI on top of the document just loaded into the frame
     frameLoaded : function () {
       var iframeDoc, e,
-          iframe = document.getElementById('container'),
-          errLog = new xtiger.util.Logger();
+          iframe = document.getElementById('container');
       xtdom.removeEventListener(iframe, 'load', this.frameLoadedHandler, false);
       // do not transform introductory page when reset after load failure
       if (window.location.href.replace('editor.xhtml', 'extras/intro.xhtml')
@@ -535,8 +541,7 @@
         iframeDoc = iframe.contentWindow.document;
       }
       if (window.frames[0].$axel) { // template already uses AXEL
-        this.curForm = xtiger.session(iframeDoc).load('form');
-        // see form.js currrently only one form per document
+        this.curForm = xtiger.session(iframeDoc).load('form'); // FIXME: could be deprecated (see wrapper.js) ?
         if (this.curForm) {
           this.log('Self-transformed template detected : the editor has managed to plug on its AXEL object', 0);
           this.activateDocumentCommands();
@@ -546,28 +551,25 @@
         }
       } else {
         if ($('div[data-template]', iframeDoc).add('body[data-template="#"]', iframeDoc).length === 0) {
-          this.curForm = new xtiger.util.Form (this.xttMakeLocalURLFor(this.config.baseUrl));
-          if (this.curForm.setTemplateSource (iframeDoc, errLog)) {
-            this.curForm.enableTabGroupNavigation ();
-            e = document.getElementById('formUrl');
-            if (e.profile.checked) {
-              console.profile();
-            }
-            if (! this.curForm.transform(errLog)) {
-              this.log('Transformation failed', 1);
-            } else {
-              this.log('Transformation success', 0);
-              // triggers completion event on main document
-              $(document).triggerHandler('axel-editor-ready', [this]);
-              $(document).triggerHandler('axel-template-transformed', [this]);
-            }
-            if (e.profile.checked) {
-              console.profileEnd();
-            }
-            if (! errLog.inError()) { // injects axel.css in iframe
-              this.curForm.injectStyleSheet(this.xttMakeLocalURLFor(this.config.xtStylesheet), errLog);
-              this.activateDocumentCommands();
-            }
+          e = document.getElementById('formUrl');
+          if (e.profile.checked) {
+            console.profile();
+          }
+          this.curForm = $axel('#container').transform({
+            bundlesPath : this.xttMakeLocalURLFor(this.config.baseUrl),
+            enableTabGroupNavigation : true,
+            injectStylesheet : this.xttMakeLocalURLFor(this.config.xtStylesheet)
+            });
+            // FIXME: setup error log function this.log('Transformation failed', 1);
+          if (e.profile.checked) {
+            console.profileEnd();
+          }
+          if (this.curForm.transformed()) {
+            this.log('Transformation success', 0);
+            // triggers completion event on main document
+            $(document).triggerHandler('axel-editor-ready', [this]);
+            $(document).triggerHandler('axel-template-transformed', [this]);
+            this.activateDocumentCommands();
           }
         } else {
           this.curForm = undefined;
@@ -575,9 +577,6 @@
           // triggers completion event on main document => forward to AXEL-FORMS
           $(document).triggerHandler('axel-editor-ready', [this]);
           $(document).triggerHandler('axel-template-transformed', [this]);
-        }
-        if (errLog.inError()) { // summarizes errors
-          alert(errLog.printErrors());
         }
         $('body', iframeDoc).bind('dragenter', dragEnterCb);
         $('body', iframeDoc).bind('dragover', dragOverCb);
@@ -623,13 +622,11 @@
       if (this.checkTemplate ()) {
         var log = new Utility.LogWin ("Template Schema", 400, 600, true);
         if (this.serializers.schema) {
-          this.curForm.setSerializer(this.serializers.schema);
           log.doc.writeln('<p><i>This is an abstract representation of the implicit schema of the template.');
           log.doc.writeln('Terminal optional elements may be false positive, this is a known bug</i>. Use it only with an empty document !</p>');
           log.doc.writeln('<ul><li>@ : attribute</li><li>* : repeatable element</li><li>| : choice alternative</li><li>? : optional element or attribute</li><li><i>anonymous</i> : complex unnamed type</ul>');
-
           log.doc.writeln('<hr/>');
-          log.dumpSchema(this.curForm);
+          log.dumpSchema(this.curForm, this.serializers.schema);
           log.doc.writeln('<hr/>');
         } else {
           alert('Missing "schema" serializer algorithm, check required source file is included !');
@@ -714,9 +711,8 @@
       if (this.checkTemplate()) {
         // var filePath = xtiger.util.fileDialog('save', "*.xml; *.xhtml; *.html", "Select a file to save XML data");
         try {
-          this.chooseSerializer();
           dump = new xtiger.util.DOMLogger ();
-          this.curForm.serializeData (dump);
+          this.curForm.xml({ serializer : this.getSerializer(), logger : dump, error : this.errFunc });
           textFileAsBlob = new Blob([dump.dump('*')], {type:'text/xml'});
           fileNameToSaveAs = prompt("How do you want to call the file ?", "document.xml");
           downloadLink = document.createElement("a");
@@ -765,8 +761,6 @@
       if (filePath) {
         url = Utility.makeAbsoluteUrl(filePath);
         if (confirm('Are your sure you want to save current data to "' + filePath + '" ?')) {
-          result = new xtiger.util.Logger();
-          this.chooseSerializer();
           if (xtiger.cross.UA.gecko && Utility.isLocalSession()) { // Uses FF local save
             this.doXPCOMSave(url, filePath);
           } else {
@@ -784,12 +778,9 @@
 
     // Dumps cur form content inside dump window
     doDumpDocument :function () {
-      var dump = new xtiger.util.DOMLogger ();
-      this.chooseSerializer();
-      if (this.curForm) {
-        this.curForm.serializeData (dump);
-      }
-      $('#input', this.dumpPopupWindow.document).val(dump.dump('*'));
+      var dump = new xtiger.util.DOMLogger (), 
+          text = this.curForm.xml({ serializer: this.getSerializer(), logger : dump, error : this.errFunc });
+      $('#input', this.dumpPopupWindow.document).val(text);
     },
 
     // HTML5 file input dialog handler that loads local file into the document
@@ -821,12 +812,12 @@
     // Implementation for "Read" command to read document using Ajax
     // FIXME: use Ajax XHR 'GET' from jQuery (?)
     doAjaxLoad : function (url, name) {
-      var dataSrc, loader, endt, duration,
+      var endt, duration,
           startt = new Date(),
           e = document.getElementById('formUrl');
       if (e.profile && e.profile.checked) { console.profile(); }
       var result = new xtiger.util.Logger();
-      var data = this.doLoadDocument(url, result);
+      var xmldoc = this.doLoadDocument(url, result);
       // FIXME: when using Ajax XHR directly check if this legacy code is still useful with FF (?)
       // if (xhr.responseXML) {
       //   this.loadData (new xtiger.util.DOMDataSource (xhr.responseXML), logger);
@@ -838,17 +829,11 @@
       //     this._report (0, 'failed to create data source for data from file ' + url + '. Most probably no documentElement', logger);
       //   }
       // }
-      if (data) {
-        dataSrc = new xtiger.util.DOMDataSource(data);
-        loader = this.getPreferredLoader();
-        if (loader) {
-          this.curForm.setLoader(loader);
-          if (this.curForm.loadData(dataSrc, result)) {
-            endt = new Date();
-            duration = endt.getTime() - startt.getTime();
-            this.log( 'File "' + name + '" loaded in ' + duration + 'ms');
-          }
-        }
+      if (xmldoc) {
+        this.curForm.load(xmldoc, { loader: this.getLoader() });
+        endt = new Date();
+        duration = endt.getTime() - startt.getTime();
+        this.log( 'File "' + name + '" loaded in ' + duration + 'ms');
       }
       if (result.inError()) { this.log(result.printErrors(), 1); }
       if (e.profile && e.profile.checked) { console.profileEnd(); }
@@ -873,7 +858,7 @@
         try {
           // converts template to a string buffer
           dump = new xtiger.util.DOMLogger ();
-          this.curForm.serializeData(dump);
+          this.curForm.xml({ serializer: this.getSerializer(), logger: dump, error: this.errFunc });
           // creates and/or saves file
           file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
           file.initWithPath(filename);
@@ -906,7 +891,7 @@
       var dump;
       // 1. converts template to a string buffer
       dump = new xtiger.util.DOMLogger ();
-      this.curForm.serializeData(dump);
+      this.curForm.xml({ serializer: this.getSerializer(), logger: dump, error: this.errFunc });
       // 2. sends it with a synchronous POST request
       try {
         xhr.open("POST", url,  false);
@@ -930,14 +915,13 @@
 
     // Loads a string representing XML data into the document
     doLoadXMLStringIntoDocument : function (data) {
+      var endt, duration,
+          startt = new Date();
       if (this.checkTemplate()) {
-        var loader = this.getPreferredLoader();
-        if (loader) {
-          this.curForm.setLoader(loader);
-          if (! this.curForm.loadDataFromString(data)) {
-            this.log (this.curForm.msg, 1);
-          }
-        }
+        this.curForm.load(data, { loader: this.getLoader(), error: this.errFunc });
+        endt = new Date();
+        duration = endt.getTime() - startt.getTime();
+        this.log( 'Data loaded in ' + duration + 'ms');
       }
     },
 
@@ -1051,22 +1035,31 @@
       return algo[i].value;
     },
 
-    getPreferredLoader : function () {
+    // Returns loader algorithm to apply
+    getLoader : function () {
       var e = document.getElementById('formUrl'),
       algo = this.getPreferredAlgo('load');
       if (algo) {
         xtiger.cross.log('debug', 'Using loader algorithm ' + algo);
-        return this.loaders[algo];
+        algo = this.loaders[algo];
+        if (! algo) {
+          xtiger.cross.log('error', 'Missing loader algorithm "' + algo + '" switching to default one instead');
+        }
       }
+      return algo || xtiger.editor.Generator.prototype.defaultLoader;
     },
 
-    // Configures the form object to use preferred serialization algo
-    chooseSerializer : function () {
+    // Returns serialization algorithm to apply
+    getSerializer : function () {
       var algo = this.getPreferredAlgo('save');
       if (algo) {
-        this.curForm.setSerializer(this.serializers[algo]);
         xtiger.cross.log('debug', 'Using serializer algorithm ' + algo);
+        algo = this.serializers[algo];
+        if (! algo) {
+          xtiger.cross.log('error', 'Missing serializer algorithm "' + algo + '" switching to default one instead');
+        }
       }
+      return algo || xtiger.editor.Generator.prototype.defaultSerializer;
     },
 
     checkFireFox : function () {

@@ -48,6 +48,10 @@
   var MAX = 10000;
   var TOTAL;
 
+  function _frameDoc ( n ) {
+    return n.contentDocument || (n.contentWindow ? n.contentWindow.document : n);
+  }
+
   // AXEL proteiform error message function (exported as $axel.error)
   function _raiseError ( msg, opt ) {
     if (typeof opt === "function") {
@@ -156,11 +160,14 @@
 
     // lazy evaluation for wrapped set node list
     _list : function () {
-      var i;
+      var i, tmp;
       // xtiger.cross.log('debug', 'reset wrapped set iteration counter (' + TOTAL + ')');
       TOTAL = 0;
       if (this.targets) {
         this.list = [];
+        if (this.first.nodeName.toLowerCase() === 'iframe') { // rewrites targets to explore inner frame document
+          this.targets = [_frameDoc(this.first)];
+        }
         for (i = 0; i < this.targets.length; i++) {
           _nodeIter(this.targets[i], this.list, this.seethrough);
         }
@@ -175,16 +182,17 @@
     // with the xt:head section inside the current document.
     // An optional hash configuration object may be passed to overwrite some transformation parameters.
     transform : function ( optTemplate ) {
-      var status, editor, bp, tabnav, config = {};
+      var status, editor, bp, tabnav, isframe = false, config = {};
       // initializations
       if (typeof optTemplate === 'object') { // either configuration object or XML document
-        if (typeof optTemplate.documentElement === 'undefined') { // FIXME: test for real XML (and not just HTML) ?
-          config = optTemplate;
-        } else {
+        if (optTemplate.doctype) { // FIXME: test for XML / XHTML doctype ?
           editor = optTemplate; // assumes an XML document
+        } else {
+          config = optTemplate;
         }
-      } else if (arguments.length > 1) { // configuration parameters in 2nd position
-        config = arguments[1];
+      }
+      if (arguments.length > 1) {
+        config = arguments[1]; // in 2nd position
       }
       bp = config.bundlesPath || settings.bundlesPath;
       tabnav = (config.enableTabGroupNavigation === true) || settings.enableTabGroupNavigation;
@@ -193,21 +201,33 @@
         if (this.first) {
           status = new xtiger.util.Logger();
           try { // load and transform template
-            editor = editor || typeof optTemplate === 'string' ? new xtiger.cross.loadDocument(optTemplate, status) : document;
+            if (this.first.nodeName.toLowerCase() === 'iframe') {
+              editor = _frameDoc(this.first);
+              isframe = true;
+            } else if (editor === undefined) {
+              editor = typeof optTemplate === 'string' ? new xtiger.cross.loadDocument(optTemplate, status) : this.first.ownerDocument;
+            }
             if (editor && !status.inError()) {
               form = new xtiger.util.Form(bp);
-              if (editor !== document) {
+              if (editor !== this.first.ownerDocument) {
                 form.setTemplateSource(editor);
-                form.setTarget(this.first, true);
+                if (!isframe) {
+                  form.setTarget(this.first, true);
+                }
               } else {
-                form.srcDoc = document;
-                form.curDoc = document;
+                form.srcDoc = this.first.ownerDocument;
+                form.curDoc = this.first.ownerDocument;
                 form.srcForm = this.first;
               }
               if (tabnav) {
                 form.enableTabGroupNavigation();
               }
               form.transform(status);
+              // overwrites latest transformed editor (mainly used in demo editor and 'photo') (TO BE DEPRECATED ?)
+              xtiger.session(this.first.ownerDocument).save('form', this);
+              if (config.injectStylesheet) {
+                form.injectStyleSheet(config.injectStylesheet);
+              }
             }
             if (status.inError()) {
               _raiseError(status.printErrors(), config);
@@ -226,55 +246,55 @@
       return this;
     },
 
-    xml : function () {
-      var algo, accu, res = '';
+    // Use options to pass options : 'serializer' : algorithm object 
+    // and/or 'logger' : a DOMLogger instance for explicit logging
+    xml : function ( options ) {
+      var algo, accu, res = '',
+          config = options || {};
       if (this.first) {
-        accu = new xtiger.util.DOMLogger();
-        algo = settings.serializer || xtiger.editor.Generator.prototype.defaultSerializer;
+        accu = config.logger || new xtiger.util.DOMLogger();
+        algo = config.serializer || settings.serializer || xtiger.editor.Generator.prototype.defaultSerializer;
         if (algo) {
-          algo.serializeData(this.first, accu, this.first.xttHeadLabel);
+          algo.serializeData((this.first.nodeName.toLowerCase() === 'iframe') ? _frameDoc(this.first) : this.first, accu, this.first.xttHeadLabel);
           res = accu.dump();
         } else {
-          _raiseError('missing XML serializer algorithm');
+          _raiseError('missing XML serializer algorithm', config);
         }
       }
       return res;
     },
 
     // Load XML data into the 1st node of the wrapped set
-    // The source may be an XML string, a URL string, or an XML document object
+    // The source may be an XML string, a URL string, an XML document object
+    // It may be followed by an optional configuration hash with a 'loader' algo object key and a 'source' key
     load : function ( source ) {
-      var algo, dataSrc, status, input = source;
+      var algo, dataSrc, status, input, config = {};
+      if (arguments.length > 1) {
+        config = arguments[1]; // in 2nd position
+      }
       if (this.first) {
-        algo = settings.loader || xtiger.editor.Generator.prototype.defaultLoader;
+        algo = config.loader || settings.loader || xtiger.editor.Generator.prototype.defaultLoader;
         status = new xtiger.util.Logger();
         if (algo) {
           if (typeof source === "string") {
-            if (source.replace(/^\s*/,'').charAt(0) === '<') { // assumes XML string
-              input = source;
-            } else { // assumes URL
-              input = xtiger.cross.loadDocument(source, status);
-              // FIXME: give a chance to interpret error message ?
-              // if (data) {
-              //   if ($('error > message', data).size() > 0) {
-              //     $axel.command.logError($('error > message', data).text());
-              //     // FIXME: disable commands targeted at this editor ?
-              //   }
+            if (source.replace(/^\s*/,'').charAt(0) !== '<') { // assumes URL
+              source = xtiger.cross.loadDocument(source, status);
             }
           } else if (! source) {
             status.logError('undefined or missing XML data source')
           }
-          if (input && !status.inError()) {
-            dataSrc = new xtiger.util.DOMDataSource(input);
-            algo.loadData(this.first, dataSrc);
+          if (source && !status.inError()) {
+            dataSrc = new xtiger.util.DOMDataSource(source);
+            // FIXME: check dataSrc is not in error (FF returns a <parseerror> element)
+            algo.loadData((this.first.nodeName.toLowerCase() === 'iframe') ? _frameDoc(this.first) : this.first, dataSrc);
           } else {
-            _raiseError(status.printErrors());
+            _raiseError(status.printErrors(), config);
           }
         } else {
-          _raiseError('missing XML serializer algorithm');
+          _raiseError('missing XML loader algorithm', config);
         }
       } else {
-        _raiseError('cannot load XML data source into empty wrapped set');
+        _raiseError('cannot load XML data source into empty wrapped set', config);
       }
       return this;
     },

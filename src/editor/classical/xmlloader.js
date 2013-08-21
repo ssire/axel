@@ -57,7 +57,7 @@ xtiger.editor.BasicLoader.prototype = {
           // cur.startRepeatedItem.reset(); // resets repeat (no data) => cannot alter it while iterating !
           if (cur.startRepeatedItem.hasLabel()) {
             var nextPoint = dataSrc.getVectorFor (cur.startRepeatedItem.dump(), point);
-            if ((nextPoint instanceof Array) && (dataSrc.lengthFor(nextPoint) > 0)) { // XML data available
+            if ((typeof nextPoint === "object") && (dataSrc.lengthFor(nextPoint) > 0)) { // XML data available
               stack.push(nextPoint); // one level deeper
               point = nextPoint;
               tmpState = this.makeRepeatState(cur.startRepeatedItem, cur.startRepeatedItem.getSize(), true, true);
@@ -89,7 +89,7 @@ xtiger.editor.BasicLoader.prototype = {
       if (cur.beginChoiceItem && (cur.beginChoiceItem != origin)) {
         var c = cur.beginChoiceItem;
         point = dataSrc.getVectorForAnyOf (c.getTypes(), point);  
-        if (point instanceof Array) { // implies (point != -1)
+        if (typeof point === "object") { // implies (point != -1)
           stack.push(point); // one level deeper
           var curItem = c.selectChoiceForName (dataSrc.nameFor(point));
           if (c.items[curItem][0] != c.items[curItem][1]) {
@@ -191,7 +191,7 @@ xtiger.editor.BasicLoader.prototype = {
       } else {
         point = dataSrc.getVectorFor(curLabel, point);
       }
-      if (attr || ((point instanceof Array) && (dataSrc.lengthFor(point) > 0))) {
+      if (attr || ((typeof point === "object") && (dataSrc.lengthFor(point) > 0))) {
         stack.push(point); // one level deeper
       } else {
         // FIXME: handle optional element it (make them turned off)

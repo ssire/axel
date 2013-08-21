@@ -30,7 +30,7 @@
     var transformed = { 'a' : true, 'b' : false, 'c' : false };
     function init() {
       var n = document.getElementById('embedded');
-      $axel.setup({ bundlesPath : '../axel/bundles', tabGroupNavigation: true });
+      $axel.setup({ bundlesPath : '../axel/bundles', enableTabGroupNavigation: true });
       $axel(n).transform();
       $(a[onclick]).bind('click', function(event) {  event.preventDefault(); });
     }
@@ -125,7 +125,7 @@
 &lt;link rel="stylesheet" href="{PATH-TO}/axel/axel.css" type="text/css">&lt;/link>
 &lt;script type="text/javascript">
   function init() {
-    $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', tabGroupNavigation: true });
+    $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', enableTabGroupNavigation: true });
   }
   xtdom.addEventListener(window, 'load', init, false);
 &lt;/script>
@@ -141,7 +141,7 @@
 
   <p>Finally you also must make the <code>axel/bundles/</code> folder of the AXEL distribution available and provide a <var>bundlesPath</var> parameter to the <code>$axel.setup</code> function with a string path (relative to your web application page) leading to the <code>bundles</code> folder of the AXEL distribution.</p>
 
-  <p>You can call the <code>$axel.setup</code> function in a page load event handler or right before generating an editor as shown in the next step. Note that you can also initialize some other globals by the same occasion, such as <var>tabGroupNavigation</var> to enable tab navigation between editor's fields, however this functionality is not yet fully functional on all browsers.</p>
+  <p>You can call the <code>$axel.setup</code> function in a page load event handler or right before generating an editor as shown in the next step. Note that you can also initialize some other globals by the same occasion, such as <var>enableTabGroupNavigation</var> to enable tab navigation between editor's fields, however this functionality is not yet fully functional on all browsers.</p>
 
     <p>You can generate a new AXEL library file with your own selection of plugins by editing the <code>scripts/build.xml</code> file and with a build.lib target with ant (<tt>cd scripts; ant build.lib</tt>). This supposes you have installed the Yahoo UI compressor and set its path into the <var>javascript.compressor</var> variable in the file <code>scripts/ant.properties</code>. Otherwise you may generate an uncompressed version of the library with the ant <code>build.debug</code> target.</p>
 
@@ -167,7 +167,7 @@
     <pre class="source">&lt;script type="text/javascript">
       function init() {
         var n = document.getElementById('embedded');
-        $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', tabGroupNavigation: true });
+        $axel.setup({ bundlesPath : '{PATH-TO}/axel/bundles', enableTabGroupNavigation: true });
         $axel(n).transform();
       }
       xtdom.addEventListener(window, 'load', init, false);
