@@ -4,8 +4,8 @@ AXEL - Adaptable XML Editing Library
 AXEL is a lightweight, open source (LGPL v2.1), Javascript library for
 generating XML authoring applications that run inside the browser. Like
 form-based systems, such as XForms, it turns a description of a Web page with
-some editable fields into an editor. Unlike form-based systems, it is targeted
-at generating *document-centric* user interfaces.
+some editable fields into an editor. Unlike *form-oriented* systems, it is targeted
+at generating semi-structured *document-oriented* user interfaces.
 
 You should also check the [AXEL-FORMS](https://github.com/ssire/axel-forms) 
 extensions to AXEL. They provide additional constructs to create more *form-oriented* 
@@ -25,10 +25,11 @@ How to test it ?
 This repository is also published as the [AXEL web site](http://ssire.github.com/axel/) 
 thanks to the Git Hub project pages mechanism. From the web site you can directly
 test AXEL inside your browser without any preliminary software installation.
-Follow the instructions of the section "For the impatient". 
+Follow the instructions of the section "AXEL for the impatient" of the `index.html` file. 
 
 The web site is regularly updated, however to really get the latest version checkout 
-the repository.
+the repository. The *master* branch is where we push AXEL more stable releases while
+the *devel* branch is where we prepare the next release.
 
 Where to start ?
 ----------------
@@ -42,10 +43,17 @@ to copy the `axel` folder to your Web server. Then you can start deploying
 your own document templates following the instructions in
 `tutorial/index.xhtml`.
 
-In all the cases, once you have cloned the main AXEL git repo by running `git
-clone git://github.com/ssire/axel.git`, you should read the `readme.html`.
+In all the cases, you should read the `readme.html` after you have cloned the 
+AXEL git repo by running :
 
-How to build the library ?   
+    git clone git://github.com/ssire/axel.git
+
+The rule of thumb is that if you checkout the *master* branch it will contain
+a built of the `axel/axel.js` library file lined up with the code. Be aware that if
+you checkout the *devel* branch, you will need to rebuild the `axel.js` file 
+following the instructions of the next section.
+
+How to build the library ?
 --------------------------
 
 The library comes with the sources concatenated and minified inside

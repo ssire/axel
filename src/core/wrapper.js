@@ -65,10 +65,25 @@
     }
   }
 
+  // Entry point when wrapped set coincide with an editor's root
+  // because _nodeIter does not traverse editor's root to skip embedded editors
+  function _nodeEditorIter (n, accu, seethrough) {
+    if (n.xttPrimitiveEditor) {
+      accu.push(n.xttPrimitiveEditor);
+    }
+    if (n.firstChild) {
+      _sliceIter(n.firstChild, n.lastChild, accu, seethrough);
+    }
+  }
+
   function _nodeIter (n, accu, seethrough) {
     if (++TOTAL > MAX) {
       xtiger.cross.log('error', 'reached iteration limit (' + MAX + ')');
       return;
+    }
+    if (n.xttHeadLabel) { 
+      xtiger.cross.log('debug', 'wrapped set stopped on internal editor boundary of ' + n.xttHeadLabel);
+       return;
     }
     if (n.xttPrimitiveEditor) {
       accu.push(n.xttPrimitiveEditor);
@@ -165,11 +180,15 @@
       TOTAL = 0;
       if (this.targets) {
         this.list = [];
-        if (this.first.nodeName.toLowerCase() === 'iframe') { // rewrites targets to explore inner frame document
+        if (this.first && this.first.nodeName.toLowerCase() === 'iframe') { // rewrites targets to explore inner frame document
           this.targets = [_frameDoc(this.first)];
         }
         for (i = 0; i < this.targets.length; i++) {
-          _nodeIter(this.targets[i], this.list, this.seethrough);
+          if ((i === 0) && this.first && this.first.xttHeadLabel) {
+            _nodeEditorIter(this.targets[i], this.list, this.seethrough);
+          } else {
+            _nodeIter(this.targets[i], this.list, this.seethrough);
+          }
         }
         delete this.targets;
       }
@@ -199,6 +218,7 @@
       // transformation
       if (bp) {
         if (this.first) {
+          delete this.first.xttHeadLabel; // reset previous transformed template info (see transformed() function)
           status = new xtiger.util.Logger();
           try { // load and transform template
             if (this.first.nodeName.toLowerCase() === 'iframe') {
@@ -308,7 +328,7 @@
 
     // Return true if the first node in wrapped set has been transformed to an editor
     transformed : function () {
-      return this.first && (typeof this.first.xttHeadLabel === 'string')
+      return this.first && (typeof this.first.xttHeadLabel === 'string');
     },
 
     length : function () {

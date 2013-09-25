@@ -14,7 +14,7 @@
 -----------------------------------------------------------------------------------
 
 Stéphane Sire
-Last update: 2013-08-03
+Last update: 2013-09-25
 
 Summary
 =======
@@ -151,9 +151,9 @@ There are 5 life cycle methods that must be implemented by each plugin class.
 onGenerate
 ~~~~~~~~~~
 
-The plugin instance must create its HTML markup inside the &lt;div> container passed as parameter. The method must return a privileged HTML node from its representation that we call the handle. AXEL will add a special property to the DOM node of the handle to point to the Javascript plugin instance managing the handle.
+The plugin instance must create its HTML markup inside the &lt;div> container passed as parameter. The method must pick up and return one HTML node from its representation that we call the handle. AXEL will add a special property to the DOM node (an expando property) of the handle to point to the Javascript plugin instance managing the handle.
 
-Note that in the current version of AXEL the plugin instance has not yet been initialized when calling onGenerate, thus you cannot read the default plugin default content or the plugin parameters with the getDefaultData or getParam methods. In general you should not need to call any of the plugin methods inside the onGenerate method as its purpose is purely to create the HTML representation and nothing else. You should postpone any other operation to the onInit or onAwake method calls.
+When calling onGenerate the plugin instance has just been initialized from its host XTiger XML element, thus you may read the plugin default content or some plugin parameters with the getDefaultData or getParam methods. In general the purpose of the onGenerate method is only to create the HTML representation and nothing else. You should postpone any other operation to the onInit or onAwake method calls.
 </pre>
 
 <pre id="onInit">
@@ -239,14 +239,14 @@ Native service methods
 These methods are common to all plugins and have a default implementation unless overwritten when registering the plugin class.
 </pre>
 
-<pre id="get-param">
+<pre id="getParam">
 getParam
 ~~~~~~~~
 
 Returns the parameter's value set on the xt:use (or xt:attribute) XTiger host element or its default value or undefined if it does not exist.
 </pre>
      
-<pre id="getUnique-key">
+<pre id="getUniqueKey">
 getUniqueKey
 ~~~~~~~~~~~~
 

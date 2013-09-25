@@ -290,6 +290,7 @@ xtiger.editor.Plugin.prototype = {
      }
      klass = this.getKlass(fsign);
      inst = new klass();
+     inst._parseFromTemplate(aXTUseAux);
      // Generates handle and editor's markup
      handle = inst.onGenerate(aContainer, aXTUse, aDocument);
      handle.xttPrimitiveEditor = inst;
@@ -305,7 +306,6 @@ xtiger.editor.Plugin.prototype = {
      }
      // Terminates editor's initialization
      inst._init(handle, aDocument, createUniqueKey(this.type));
-     inst._parseFromTemplate(aXTUseAux);
      inst.onInit(inst.getDefaultData(), inst.getOption()); // life cycle routine
      inst.onAwake(); // FIXME: separate event registration (for filters)
      if (this.spec.optional) { // optional "optionality" mixin
@@ -319,8 +319,8 @@ xtiger.editor.Plugin.prototype = {
      fsign = this.spec.filterable ? aSeed[1]['filter'] : undefined; // FIXME: how to enforce that convention ?
      klass = this.getKlass(fsign);
      inst = new klass();
-     inst._init(aClone, aDocument, createUniqueKey(this.type));
      inst._parseFromSeed(aSeed);
+     inst._init(aClone, aDocument, createUniqueKey(this.type));
      inst.onInit(inst.getDefaultData(), inst.getOption(), aRepeater); // life cycle routine
      inst.onAwake(); // FIXME: separate event registration (for filters)
      if (this.spec.optional) {

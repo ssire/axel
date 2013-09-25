@@ -26,7 +26,7 @@
   <xt:head version="1.1" templateVersion="1.0" label="WebPage">
 
   <xt:component name="t_content_type">
-    <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Parag List TitleLevel1 TitleLevel2 LinesBlock" >
+    <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Parag List TitleLevel1 TitleLevel2 LinesBlock" >
       <xt:use types="t_row"/>
     </xt:repeat>
   </xt:component>
@@ -46,34 +46,34 @@
   </xt:component>
 
   <xt:component name="t_parag" i18n="Parag">
-    <p class="x-Parag"><xt:use types="text" param="type=textarea;shape=parent;filter=wiki">Click to edit a paragraph</xt:use></p>
+    <p class="x-Parag"><xt:use types="text" param="type=textarea;shape=parent;filter=wiki optional">Click to edit a paragraph</xt:use></p>
   </xt:component>
 
   <xt:component name="t_list" i18n="List">
     <p class="x-ListHeader"><xt:use label="ListHeader" types="text" param="type=textarea;shape=parent - 75px;filter=wiki" option="unset">Click to edit a list header</xt:use><span class="xtt-hide-if-unselect"> :</span></p>
     <ul class="x-List">
       <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Item">
-          <li><xt:use types="text" label="Item" param="type=textarea;shape=parent-80px;filter=wiki">list item</xt:use><xt:menu-marker/></li>
+          <li><xt:use types="text" label="Item" param="type=textarea;shape=parent-80px;filter=wiki optional">list item</xt:use><xt:menu-marker/></li>
       </xt:repeat>
     </ul>
   </xt:component>
 
   <xt:component name="t_title1" i18n="Title1">
     <h2>
-      <xt:use types="text" param="type=textarea;shape=parent">Click to edit a Title</xt:use>
+      <xt:use types="text" param="type=textarea;shape=parent;filter=optional">Click to edit a Title</xt:use>
     </h2>
   </xt:component>
 
   <xt:component name="t_title2" i18n="Title2">
     <h3>
-      <xt:use types="text" param="type=textarea;shape=parent">Click to edit a sub-title</xt:use>
+      <xt:use types="text" param="type=textarea;shape=parent;filter=optional">Click to edit a sub-title</xt:use>
     </h3>
   </xt:component>
 
   <xt:component name="t_linesblock" i18n="Lines">
     <ul class="x-LinesBlock">
       <xt:repeat minOccurs="1" maxOccurs="*" pseudoLabel="Line">
-          <li><xt:use types="text" label="Line" param="type=textarea;shape=parent-80px;filter=wiki">Click to edit a line</xt:use><xt:menu-marker/></li>
+          <li><xt:use types="text" label="Line" param="type=textarea;shape=parent-80px;filter=wiki optional">Click to edit a line</xt:use><xt:menu-marker/></li>
       </xt:repeat>
     </ul>
   </xt:component>

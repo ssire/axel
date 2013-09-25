@@ -27,7 +27,7 @@ xtiger.editor.BasicSerializer.prototype = {
 	// Accepts an optional rootTagName for the document, uses 'document' by default
 	serializeData : function (n, logger, rootTagName) {
 		logger.openTag(rootTagName || 'data');
-		this.serializeDataIter (n, logger);
+		this.serializeDataIter (n, logger, true);
 		logger.closeTag(rootTagName || 'data');	
 	},
 	
@@ -102,8 +102,12 @@ xtiger.editor.BasicSerializer.prototype = {
 		}		
 	},
 	
-	serializeDataIter : function (n, logger) { 
+	serializeDataIter : function (n, logger, reentrant) { 
 		var curLabel;
+		if (n.xttHeadLabel && !reentrant) { 
+		  xtiger.cross.log('debug', 'avoid reentrant serialization of ' + n.xttHeadLabel);
+		  return; // exit serialization in case of editor inside editor
+		}
 		if (n.xttOpenLabel) {            
 			curLabel = n.xttOpenLabel;
 			if (curLabel.charAt(0) == '@') {
