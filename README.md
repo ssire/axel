@@ -69,7 +69,7 @@ on your system, which is already the case on many operating systems.
 This requires that you install the Yahoo UI compressor onto your machine, and
 that you edit the `scripts/ant.properties` file to point to it.
 
-You can get the Yahoo UI compressor at [http://developer.yahoo.com/yui/compressor/]()
+You can get the Yahoo UI compressor at [http://developer.yahoo.com/yui/compressor/](http://developer.yahoo.com/yui/compressor/)
 
 Alternatively the `build.debug` target simply concatenates source files
 together, so you can use it without installing the compressor.

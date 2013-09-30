@@ -387,8 +387,122 @@
         func(toHandle ? list[i].getHandle() : list[i]);
       }
       return this;
+    },
+    
+    //////////////////////////////////////////////
+    // Experimental vector (calculus) extension //
+    //////////////////////////////////////////////
+    
+    // Returns 1st value of first element with name tag in wrapped set
+    // TODO: 
+    // - short circuit when found
+    // - extend to support (partial)XPath
+    peek : function (name) {
+      var logger = new _Logger(), // FIXME: getData API
+          set = 
+            $.map(this._list(), function (e, i) { 
+              var tmp;
+              if (e.getHandle().xttOpenLabel === name) {
+                e.save(logger);
+                tmp = logger.dump();
+                logger.reset();
+                return tmp;
+              }
+            });
+      return set[0];
+    },
+
+    // Internally stores the sequence of elements with name tag in wrapped set
+    // Note: you can retrieve the vector with identity() function
+    // TODO: 
+    // - extend to support (partial)XPath
+    vector : function (name, optNeutral) {
+      var neutral, filter, logger = new _Logger(); // FIXME: getData API
+      if (optNeutral && $.isFunction(optNeutral)) {
+        filter = optNeutral;
+      } else {
+        neutral = optNeutral ? optNeutral : 0;
+        filter = function(x) { var r = parseFloat(x); return isNaN(r) ? neutral : r; }
+      }
+      if (! this._vector) {
+        this._vector = new Array();
+      }
+      this._vector.push(
+        $.map(this._list(), function (e, i) { 
+          var tmp;
+          if (e.getHandle().xttOpenLabel === name) { 
+            e.save(logger);
+            tmp = logger.dump();
+            logger.reset();
+            return filter(tmp);
+          }
+        })
+      );
+      return this;
+    },
+    
+    product : function ( konst ) {
+      var i, total, left, right, res = 0;
+      total = this._vector ? this._vector.length : 0;
+      if (total > 0) {
+        if (konst) {
+          left = this._vector[total -1];
+          total = left.length;
+          for (i = 0; i < total; i++) {
+            left[i] *= konst;
+          }
+          res = this;
+        } else if (total > 1) {
+          left = this._vector[total - 2];
+          right = this._vector.pop();
+          total = left.length;
+          for (i = 0; i < total; i++) {
+            res = right[i];
+            if (res) {
+              left[i] *=  res;
+            }
+          }
+          res = this;
+        } else {
+          res = this._vector[0].reduce(function(p,c) { return p*c });
+        }
+      }
+      return res;
+    },
+    
+    sum : function () {
+      var i, total, left, right, res = 0;
+      total = this._vector ? this._vector.length : 0;
+      if (total > 0) {
+        if (total > 1) {
+          left = this._vector[total - 2];
+          right = this._vector.pop();
+          total = left.length;
+          for (i = 0; i < total; i++) {
+            res = right[i];
+            if (res) {
+              left[i] +=  res;
+            }
+          }
+          res = this;
+        } else {
+          res = this._vector[0].reduce(function(p,c) { return p+c });
+        }
+      }
+      return res;
+    },
+    
+    identity : function (rank) {
+      var total = this._vector ? this._vector.length : 0,
+          i = rank || 0;
+      if (total > 0) {
+        i = (i > 0) ? i : total - 1 + i;
+        return this._vector[i];
+      } else {
+        return 0;
+      }
     }
-  };
+  }
 
   // Creates AXEL wrapped set function and global object
   var _axel = function axel_ws (nodes, seethrough, doc) {
