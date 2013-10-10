@@ -545,7 +545,7 @@
         if (this.curForm) {
           this.log('Self-transformed template detected : the editor has managed to plug on its AXEL object', 0);
           this.activateDocumentCommands();
-          $(document).triggerHandler('axel-template-transformed', [this]);
+          $(document).triggerHandler('__AXEL_DEMO_TEMPLATE_TRANSFORMED', [this]);
         } else {
           this.log('Self-transformed template detected : the editor has failed to plug on its AXEL object', 1);
         }
@@ -567,16 +567,16 @@
           if (this.curForm.transformed()) {
             this.log('Transformation success', 0);
             // triggers completion event on main document
-            $(document).triggerHandler('axel-editor-ready', [this]);
-            $(document).triggerHandler('axel-template-transformed', [this]);
+            $(document).triggerHandler('__AXEL_DEMO_EDITOR_READY', [this]);
+            $(document).triggerHandler('__AXEL_DEMO_TEMPLATE_TRANSFORMED', [this]);
             this.activateDocumentCommands();
           }
         } else {
           this.curForm = undefined;
           this.log('Template with embedded transformation command detected - use AXEL-FORMS editor to transform it !', 1);
           // triggers completion event on main document => forward to AXEL-FORMS
-          $(document).triggerHandler('axel-editor-ready', [this]);
-          $(document).triggerHandler('axel-template-transformed', [this]);
+          $(document).triggerHandler('__AXEL_DEMO_EDITOR_READY', [this]);
+          $(document).triggerHandler('__AXEL_DEMO_TEMPLATE_TRANSFORMED', [this]);
         }
         $('body', iframeDoc).bind('dragenter', dragEnterCb);
         $('body', iframeDoc).bind('dragover', dragOverCb);
@@ -1242,7 +1242,7 @@
       // automatic loading of data if any (bind only once to event)
       // FIXME: prevent callback execution if template fail to transform ?
       if (data) {
-        $(document).one('axel-template-transformed', function (event, controller) {
+        $(document).one('__AXEL_DEMO_TEMPLATE_TRANSFORMED', function (event, controller) {
           $('#fileName').val(data);
           controller.readDocument();
           controller.log('Loading document "' + data + '"', 0);

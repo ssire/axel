@@ -52,6 +52,14 @@
     return n.contentDocument || (n.contentWindow ? n.contentWindow.document : n);
   }
 
+  // Triggers an event
+  // Currently triggers a bubbling event using jQuery iff available
+  function _triggerEvent ( src, event, data ) {
+    if ('undefined' !== typeof window.jQuery) {
+      $(src).trigger(event, data);
+    }
+  }
+
   // AXEL proteiform error message function (exported as $axel.error)
   function _raiseError ( msg, opt ) {
     if (typeof opt === "function") {
@@ -81,7 +89,7 @@
       xtiger.cross.log('error', 'reached iteration limit (' + MAX + ')');
       return;
     }
-    if (n.xttHeadLabel) { 
+    if (n.xttHeadLabel) {
       xtiger.cross.log('debug', 'wrapped set stopped on internal editor boundary of ' + n.xttHeadLabel);
        return;
     }
@@ -201,7 +209,7 @@
     // with the xt:head section inside the current document.
     // An optional hash configuration object may be passed to overwrite some transformation parameters.
     transform : function ( optTemplate ) {
-      var form, status, editor, bp, tabnav, isframe = false, config = {};
+      var form, status, editor, bp, tabnav, isframe = false, config = {}, done = false;
       // initializations
       if (typeof optTemplate === 'object') { // either configuration object or XML document
         if (optTemplate.doctype) { // FIXME: test for XML / XHTML doctype ?
@@ -257,6 +265,7 @@
             } else {
               if (form) {
                 this.first.xttHeadLabel = form.getEditor().headLabel;
+                done = true;
               } else {
                 _raiseError('an unkown problem has prevented editor generation', config);
               }
@@ -270,10 +279,15 @@
       } else {
         _raiseError('missing "bundlesPath" to transform template', config);
       }
+      if (done) {
+        _triggerEvent(this.first,'axel-editor-ready', this);
+      } else {
+        _triggerEvent(this.first,'axel-transform-error', this);
+      }
       return this;
     },
 
-    // Use options to pass options : 'serializer' : algorithm object 
+    // Use options to pass options : 'serializer' : algorithm object
     // and/or 'logger' : a DOMLogger instance for explicit logging
     xml : function ( options ) {
       var algo, accu, res = '',
@@ -314,6 +328,7 @@
             dataSrc = new xtiger.util.DOMDataSource(source);
             // FIXME: check dataSrc is not in error (FF returns a <parseerror> element)
             algo.loadData((this.first.nodeName.toLowerCase() === 'iframe') ? _frameDoc(this.first) : this.first, dataSrc);
+            _triggerEvent(this.first,'axel-content-ready', this);
           } else {
             _raiseError(status.printErrors(), config);
           }
@@ -388,19 +403,19 @@
       }
       return this;
     },
-    
+
     //////////////////////////////////////////////
     // Experimental vector (calculus) extension //
     //////////////////////////////////////////////
-    
+
     // Returns 1st value of first element with name tag in wrapped set
-    // TODO: 
+    // TODO:
     // - short circuit when found
     // - extend to support (partial)XPath
     peek : function (name) {
       var logger = new _Logger(), // FIXME: getData API
-          set = 
-            $.map(this._list(), function (e, i) { 
+          set =
+            $.map(this._list(), function (e, i) {
               var tmp;
               if (e.getHandle().xttOpenLabel === name) {
                 e.save(logger);
@@ -414,7 +429,7 @@
 
     // Internally stores the sequence of elements with name tag in wrapped set
     // Note: you can retrieve the vector with identity() function
-    // TODO: 
+    // TODO:
     // - extend to support (partial)XPath
     vector : function (name, optNeutral) {
       var neutral, filter, logger = new _Logger(); // FIXME: getData API
@@ -428,9 +443,9 @@
         this._vector = new Array();
       }
       this._vector.push(
-        $.map(this._list(), function (e, i) { 
+        $.map(this._list(), function (e, i) {
           var tmp;
-          if (e.getHandle().xttOpenLabel === name) { 
+          if (e.getHandle().xttOpenLabel === name) {
             e.save(logger);
             tmp = logger.dump();
             logger.reset();
@@ -440,7 +455,7 @@
       );
       return this;
     },
-    
+
     product : function ( konst ) {
       var i, total, left, right, res = 0;
       total = this._vector ? this._vector.length : 0;
@@ -469,7 +484,7 @@
       }
       return res;
     },
-    
+
     sum : function () {
       var i, total, left, right, res = 0;
       total = this._vector ? this._vector.length : 0;
@@ -491,7 +506,7 @@
       }
       return res;
     },
-    
+
     identity : function (rank) {
       var total = this._vector ? this._vector.length : 0,
           i = rank || 0;

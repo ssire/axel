@@ -76,6 +76,10 @@ xtiger.editor.Repeat.prototype = {
     return this.total;
   },
 
+  getClockCount : function () {
+    return this.tickCount;
+  },
+
   // Returns the last node for the slice at index
   getLastNodeForSlice : function (index) {
     var pos = (index < this.items.length) ? index : this.items.length - 1;
