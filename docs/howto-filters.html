@@ -47,7 +47,7 @@ The choice of which methods to filter depends on the desired effects. Basically 
 
 - category A : filters with no side effect on the edited content, such filters will generally look for some specific data inside the content model and forward it to other components; such filters may build and maintain a toc, generate collaboration events outside of the application, etc. (e.g. the 'event' filter that generates a custom DOM event for some specific life cycle methods call)
 
-- category B : some filters that change the user text entry but not the handle nor the target content model; such filters may do some small typographical corrections such as capitalizing some words, expanding some abbreviations, proposing some contextual input aids while typing, etc. (e.g. the 'autocomplete' filter)
+- category B : some filters that change the user text entry but not the handle nor the target content model; such filters may do some small typographical corrections such as capitalizing some words, expanding some abbreviations, proposing some contextual input aids while typing, etc. (e.g. to implement autocomplete)
 
 - category C : some filters that change the handle and/or the target content model; such filter can improve the presentation of the edited content (e.g. displaying a video player if the input is a video URL), they can also allow to edit sub-content model using special rules to interpret the input (e.g. the 'wiki' filter in 'wiki.js', the 'date' filter that dynamically replaces the input device of a 'text' editor with a datepicker device to select a date)
 </pre>

@@ -13,7 +13,7 @@
 ----------------    AXEL integrator's FAQ   --------------------
 ----------------------------------------------------------------
 
-Last update: 2013-05-01 by S.Sire
+Last update: 2013-10-10 by S.Sire
 
 This document gives some advices for integrating AXEL into your application.
 It is presented as a FAQ. You are welcome to share your experience to improve
@@ -293,9 +293,6 @@ upload.js:    transfers a file (e.g. image file) to a server through an iframe
               requires a server that implements a corresponding communication 
               protocol
 
-autocomplete.js: communication layer for the 'autocomplete' filter
-(UNSUPPORTED)    requires a server that implements the autocomplete protocol 
-
 You need the files in "src/filters" according to the filters you use in your
 template. The only exception is "documentid.js" which can be required to use 
 the 'photo' primitive editor. For your information:
@@ -303,6 +300,8 @@ the 'photo' primitive editor. For your information:
 common.js:    'noxml' filter 
 
 documentid.js: 'documentid' filter to be used with 'photo' plugin
+
+event.js:     'event' filter to generate 'axel-update' events
 
 wiki.js:      'wiki' filter of the 'text' primitive editor
 
@@ -315,9 +314,6 @@ video.js:     YouTube 'filter' of the 'text' primitive editor, alternative to
               'video' plugin
 
 debug.js:     'debug' filter for each of the primitive editors
-
-autocomplete.js: 'autocomplete' filter for 'text' editor 
-(UNSUPPORTED)    (depends on autocomplete.js and popup.js device)
 </pre>
 
 <pre id="loading">

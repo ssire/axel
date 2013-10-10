@@ -94,7 +94,7 @@ xtiger.editor.PopupDevice.prototype = {
    * If isCancel is true the model is not updated nor set.
    */
   stopEditing : function (willEditAgain, isCancel) {
-    // Safety guard in case of consecutive stops (may arise in case of chaned device, such as with the autocomplete)
+    // Safety guard in case of consecutive stops (may arise in case of chained devices)
     if (!this._currentModel) 
       return;
     
