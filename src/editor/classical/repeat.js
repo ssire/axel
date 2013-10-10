@@ -19,7 +19,6 @@
 xtiger.editor.Repeat = function () {
   this.items = [];   
   this.curDoc = null; // will be in initFromTree or initFromSeed
-  this.originPosition = -1; // FIXME: this is a leg from PIAAC to maintain tocs,should we keep it ? 
   this.tickCount = 0;
   // this.model will be set in one of the init functions
 }         
@@ -75,17 +74,6 @@ xtiger.editor.Repeat.prototype = {
   getSize : function () {
     // return this.items.length;
     return this.total;
-  },                       
-    
-  // Returns the last position after which an item was inserted or pasted after user action
-  // Actually when the repeater is expanded as a consequence of loading XML data 
-  // the concept of origin position is undefined and it returns -1
-  getOriginPosition : function () {
-    return this.originPosition;   
-  },
-  
-  getClockCount : function () {
-    return this.tickCount;
   },
 
   // Returns the last node for the slice at index
@@ -522,7 +510,6 @@ xtiger.editor.Repeat.prototype = {
     var lastIndex = this.items.length - 1;
     var lastNode = this.getLastNodeForSlice(lastIndex);
     var index = [null, null, null, null];
-    this.originPosition = -1; // lastIndex; because currently load follows document order
     var copy = this.getOneCopy (index); // clones the model and creates a new slice
     xtdom.moveChildrenOfAfter (copy, lastNode);
     this.plantSlice (index, lastIndex);       
@@ -623,7 +610,6 @@ xtiger.editor.Repeat.prototype = {
         }
       }   
     }                                     
-    this.originPosition = position; // set up origin for event dispacthing to primitive editors
     if (saved) { // pastes the latest deleted item from this Repeater
       newIndex = saved[2];
       slice = saved[1];     
@@ -635,7 +621,6 @@ xtiger.editor.Repeat.prototype = {
       n = this.getOneCopy (newIndex, position);
       xtdom.moveChildrenOfAfter (n, preceeding[1]);
     }          
-    this.originPosition = -1;   
     this.plantSlice (newIndex, position);   
     this.total++; 
     // updates menu configuration for the 1st item, added item and last item        
@@ -677,7 +662,6 @@ xtiger.editor.Repeat.prototype = {
   // Deletes a slice (implementation)
   removeItemAtIndex : function (position, useTrash) {   
     var cur, next;
-    this.originPosition = position;     
     // must delete node between start and end
     var index = this.items[position];
     var slice = useTrash ? [] : null;
@@ -701,7 +685,6 @@ xtiger.editor.Repeat.prototype = {
       }
       index[1].parentNode.removeChild(index[1]);
     }  
-    this.originPosition = -1;   
     this.items.splice(position, 1);  
     if (useTrash) { this.trash.push([this, slice, index]); }    
     this.total--;   
