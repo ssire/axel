@@ -303,8 +303,8 @@
     },    
   
     doKeyUp : function (ev) { 
-      if (this.currentEditor && this.currentEditor.can('onkeyup')) {
-        this.currentEditor.execute('onkeyup', this.field.getHandle());
+      if (this.currentEditor && this.currentEditor.onkeyup) { // FIXME: DEPRECATED ?
+        this.currentEditor.onkeyup(this.field.getHandle());
       }
       if (this.currentEditor && (this.currentEditor.getParam('expansion') == 'grow')) {     
         if (this.field.getValue().length > (this.curLength + 1)) { // paste detection

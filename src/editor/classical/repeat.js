@@ -433,13 +433,6 @@ xtiger.editor.Repeat.prototype = {
       var factory = seed[0];      
       clone.xttPrimitiveEditor = factory.createEditorFromSeed (seed, clone, this.curDoc, this);
     }
-
-    // service cloning - DEPRECATED
-    // if (node.xttService) {
-    //   var seed = node.xttService;
-    //   var factory = seed[0];      
-    //   clone.xttService = factory.createServiceFromSeed (seed, clone, this.curDoc, this);
-    // }
   },
   
   // Creates a clone of the container including cloning of special attributes
@@ -488,8 +481,9 @@ xtiger.editor.Repeat.prototype = {
     }
     this.total = this.min;
     this.configureMenuForSlice(0);
-    this.dispatchEvent(this.items[0], 'clear');
-    this.unactivateSliceAt(0);
+    if (0 === this.min) {
+      this.unactivateSliceAt(0);
+    }
   },
   
   // Inserts a slice index into the list of slices of the repeater at a given position
@@ -532,7 +526,6 @@ xtiger.editor.Repeat.prototype = {
     var copy = this.getOneCopy (index); // clones the model and creates a new slice
     xtdom.moveChildrenOfAfter (copy, lastNode);
     this.plantSlice (index, lastIndex);       
-    this.dispatchEvent(index, 'duplicate'); // DEPRECATED
     if ($axel.binding) {
       $axel.binding.install(this.curDoc, index[0], index[1]);
     }
@@ -570,12 +563,13 @@ xtiger.editor.Repeat.prototype = {
     }
   },     
     
-  // Transition from 0 item to 1 item (was optional, becomes part of the document)   
+  // Transition from 0 item to 1 item (was optional, becomes part of the document) after user clicked menu
   // Only for repeated elements with a min of 0  !
   unsetOption : function () {
     this.total++; 
     this.configureMenuForSlice (0);
     this.activateSliceAt(0);
+    this.dispatchEvent(0, 'axel-add');    
   },           
   
   activateNodeIter : function (node, curInnerRepeat) {
@@ -583,61 +577,41 @@ xtiger.editor.Repeat.prototype = {
       xtdom.removeClassName(node, 'axel-repeat-unset'); 
     }
   },
-                       
+
   // Removes the class 'axel-repeat-unset' on all the top elements of the slice at position index
   activateSliceAt : function (index) {
     this.mapFuncToSliceAt(xtiger.editor.Repeat.prototype.activateNodeIter, index, false);
   },
 
-  // Transition from 1 item to 0 item (1st item is removed from the document)
-  // Only for repeated elements with a min of 0 ! 
-  setOption : function () {    
+  // Transition from 1 item to 0 item (1st item is removed from the document) after user clicked menu
+  // Only for repeated elements with a min of 0 !
+  setOption : function () {
     this.total--;
-    this.configureMenuForSlice (0);   
+    this.configureMenuForSlice (0);
     this.unactivateSliceAt (0);
-  },      
-  
+    this.dispatchEvent(0, 'axel-remove');
+  },
+
   unactivateNodeIter : function (node, curInnerRepat) {
-    xtdom.addClassName(node, 'axel-repeat-unset'); 
-    // if (curInnerRepat) { window.console.log('unactivate ' + curInnerRepat.label);  }
+    xtdom.addClassName(node, 'axel-repeat-unset');
   },
 
   // Adds class 'axel-repeat-unset' on all the top elements of the slice at position index
   unactivateSliceAt : function (index) {
     this.mapFuncToSliceAt(xtiger.editor.Repeat.prototype.unactivateNodeIter, index, true);
   },
-             
-  /** 
-   * Calls the method named 'action' on all the primitive editors in the 'top' tree
-   * Passes the repeater to the action
-   */
-  callPrimitiveEditors : function (top, action) {             
-    var treeWalker = xtiger.cross.makeTreeWalker (top, xtdom.NodeFilter.SHOW_ELEMENT,
-        function (n) { 
-            if (n.xttPrimitiveEditor && n.xttPrimitiveEditor.can && n.xttPrimitiveEditor.can(action)) {
-              return xtdom.NodeFilter.FILTER_ACCEPT
-            } else {
-              return xtdom.NodeFilter.FILTER_SKIP; 
-            }
-        } );
-    try {
-      while(treeWalker.nextNode()) {
-        treeWalker.currentNode.xttPrimitiveEditor.execute(action, this);
-      }   
-    } catch (e) {
-      // xtiger.cross.log('error', 'Exception in tree walker');
+
+  // Dispatches an event starting at repeat's parent node 
+  // NOTE: you need to include jQuery to trigger event dispatching in AXEL
+  dispatchEvent : function (index, name) {
+    var cur;
+    if ('undefined' !== typeof window.jQuery) {
+      cur = this.items[0][0].parentNode;
+      $(cur).trigger({ type: name, position: index }, this); // FIXME: add range parameter when axel-add ?
     }
-  }, 
-    
-  // Dispatches an event (which is converted to a builtin method call) on a slice
-  dispatchEvent : function (slice, name) {
-    var cur = slice[0];
-    do {
-      this.callPrimitiveEditors(cur, name);
-      cur = cur.nextSibling;                          
-    } while (cur && (cur != slice[1]));
-  },  
+  },
   
+  // Adds or pastes a slice after user has clicked on repeat menu
   addItem : function (mark, position, useTrash) {    
     var saved, slice, end, n, newIndex, i;
     var preceeding = this.items[position];    
@@ -670,14 +644,14 @@ xtiger.editor.Repeat.prototype = {
     }       
     this.configureMenuForSlice (position + 1); // configuration for added item            
     this.configureMenuForSlice (this.total-1); // configuration for last item   
-    this.dispatchEvent(newIndex, 'duplicate'); // DEPRECATED
     if (!saved && $axel.binding) {
       $axel.binding.install(this.curDoc, newIndex[0], newIndex[1]);
     }
+    this.dispatchEvent(position + 1, 'axel-add');
   },
   
-  // FIXME: prevoir d'iterer sur tous les editeurs (choice, repeat, primitive) et d'appeler une methode
-  // deleteEditor() pour qu'ils se désabonnent
+  // Deletes a slice after user has clicked on repeat menu
+  // FIXME: implement a delete protocol on every linked javascript objects (choice, repeat, primitive)
   deleteItem : function (mark, position, useTrash) {
     this.removeItemAtIndex (position, useTrash);
     if (this.total <= 1) {
@@ -685,8 +659,10 @@ xtiger.editor.Repeat.prototype = {
     } else {
       this.configureMenuForSlice (this.total-1); // configures menu for last item   
     }
+    this.dispatchEvent(position, 'axel-remove');
   },
 
+  // Deletes extra slices when loading XML content
   removeLastItems : function (nb) {   
     while (nb-- > 0) {
       this.removeItemAtIndex(this.total-1, false); // FIXME: block 'remove' events
@@ -698,30 +674,26 @@ xtiger.editor.Repeat.prototype = {
     }
   },
 
+  // Deletes a slice (implementation)
   removeItemAtIndex : function (position, useTrash) {   
     var cur, next;
     this.originPosition = position;     
     // must delete node between start and end
-    var index = this.items[position];    
+    var index = this.items[position];
     var slice = useTrash ? [] : null;
     if (index[0] == index[1]) { // start == end  (i.e. the repeated use was auto-wrapped)
-      if (useTrash) { slice.push (index[0]);  } 
-      // this.callPrimitiveEditors(index[0], 'remove'); // DEPRECATED
-      index[0].parentNode.removeChild(index[0]);      
+      if (useTrash) { slice.push (index[0]);  }
+      index[0].parentNode.removeChild(index[0]);
     } else {
       // deletes the forest between index[0] and index [1], including themselves
       // PRE-CONDITION: works only if index[0] and index [1] are siblings ! (should be the case by construction)       
-      // this.dispatchEvent(index, 'remove'); // DEPRECATED
-      // do the real thing      
       next = index[0].nextSibling;
       if (useTrash) { slice.push (index[0]); }
-      // this.callPrimitiveEditors(index[0], 'remove'); // DEPRECATED
       index[0].parentNode.removeChild(index[0]);
       while (next && (next != index[1])) {
         cur = next;
         next = next.nextSibling;
         if (useTrash) { slice.push (cur); }        
-        // this.callPrimitiveEditors(cur, 'remove'); // DEPRECATED
         index[1].parentNode.removeChild(cur);
       }
       if (useTrash) { 

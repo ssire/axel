@@ -156,16 +156,6 @@ xtiger.editor.Plugin.prototype = {
      return this._isModified;
    },
 
-   // DEPRECATED
-   can : function (aFunction) {
-     return typeof this[aFunction] === 'function';
-   },
-
-   // DEPRECATED
-   execute : function (aFunction, aParam) {
-     return this[aFunction](aParam);
-   },
-
    isOptional : function () {
      return false;
    },
