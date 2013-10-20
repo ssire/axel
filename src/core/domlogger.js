@@ -158,6 +158,7 @@ xtiger.util.DOMLogger = function () {
   this.stack = [];
   this.curTop = null; // current anchoring point                          
   this.curAttr = null; // can manage one attribute at a time
+  this.curAttrFlushed = false;
   this.root = null; // lazy creation in OpenTag     
 }
 
@@ -174,11 +175,14 @@ xtiger.util.DOMLogger.prototype = {
     }
   },    
   openAttribute : function (name) {
-    this.curAttr = name;    
+    this.curAttr = name;
+    this.curAttrFlushed = false;
   },   
   closeAttribute : function (name) {
     if (this.curAttr != name) {
       alert('Attempt to close an attribute ' + name + ' while in attribute ' + this.curAttr + '!');
+    } else if (! this.curAttrFlushed) {
+      this.curTop.addAttribute(this.curAttr, "");
     }
     this.curAttr = null;    
   },  
@@ -204,6 +208,7 @@ xtiger.util.DOMLogger.prototype = {
    // FIXME: sanity check this.curTop ?
     if (this.curAttr) {
       this.curTop.addAttribute(this.curAttr, text);
+      this.curAttrFlushed = true;
     } else {            
       var n = new xtiger.util.PseudoNode(xtiger.util.PseudoNode.TEXT_NODE, text);    
       this.curTop.addChild (n);
