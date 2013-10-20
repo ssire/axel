@@ -209,7 +209,7 @@
       
       // cursor positioning and initial text selection
       if (doSelectAll) {
-        if ((editor.getParam('placeholder') !== 'clear') || mouseEvent.shiftKey) {
+        if ((editor.getParam('placeholder') !== 'clear') || (mouseEvent && mouseEvent.shiftKey)) {
           xtdom.focusAndSelect(handle);
         } else {
           handle.value = '';
