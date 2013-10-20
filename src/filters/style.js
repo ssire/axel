@@ -97,8 +97,16 @@
   function _getTarget ( me, dontComplain ) {
     var rootcn = me.getParam('style_root_class'),
         targetcn = me.getParam('style_target_class'),
+        targetsel = me.getParam('style_target_selector'),
         root = rootcn ? $(me.getHandle(true)).closest('.' + rootcn) : null,
-        res = (root && targetcn) ? root.find('.' + targetcn).first() : root;
+        res = root;
+    if (root) {
+      if (targetcn) {
+        res = root.find('.' + targetcn).first();
+      } else if (targetsel) {
+        res = root.find(targetsel).first();
+      }
+    }
     if ((! res) && (! dontComplain)) {
       xtiger.cross.log('warning', "'style' filter could not find target node");
     }
