@@ -83,6 +83,9 @@
              }
 
              // copy life cycle methods
+             if (_filter.mixin.onGenerate) {
+               aPrototype.onGenerate = _filter.mixin.onGenerate;
+             }             
              if (_filter.mixin.onInit) {
                aPrototype.onInit = _filter.mixin.onInit;
              }
