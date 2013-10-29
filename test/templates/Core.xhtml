@@ -65,6 +65,16 @@
 
     <xt:component name="Repeat2"><xt:repeat minOccurs="0" maxOccurs="*" label="InnerRepeat2"><xt:use types="TextEntry" label="TextEntry"/></xt:repeat></xt:component> 
 
+    <xt:component name="Repeat3"><xt:repeat minOccurs="0" maxOccurs="1" label="OptionalRepeat">
+        <xt:attribute types="text" name="Attribute" param="placeholder=clear" default="empty" />
+    </xt:repeat></xt:component>
+
+    <xt:component name="OptionalAttributeUnset"><xt:attribute name="OptionalAttribute" type="text" option="set" default="something"/>
+    </xt:component>
+
+    <xt:component name="OptionalAttributeSet"><xt:attribute name="OptionalAttribute" type="text" option="unset" default="something"/>
+    </xt:component>
+
   </xt:head>
   
   <style type="text/css"> 
@@ -129,6 +139,11 @@
   <p><span class="info">Choice and xt:repeat xt:use with same boundary</span> : <xt:use types="Repeat1 Repeat2" label="ChoiceOnRepeat"/></p>  
 
   <p><span class="info">Choice and choice with same boundary</span> : <xt:use types="Choice1 Choice2" label="ChoiceOnChoice"/></p>  
-    
+
+  <p><span class="info">Optional attribute unset</span> : <xt:use types="OptionalAttributeUnset" label="OptionalAttributeUnset"/></p>  
+
+  <p><span class="info">Optional attribute set</span> : <xt:use types="OptionalAttributeSet" label="OptionalAttributeSet"/></p>  
+
+  <!-- <p><span class="info">Optional element with attribute</span> : <xt:use types="Repeat3"/></p>   -->
 </body>
 </html>

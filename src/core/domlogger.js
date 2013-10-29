@@ -165,7 +165,11 @@ xtiger.util.DOMLogger = function () {
 xtiger.util.DOMLogger.prototype = {
   // Declares the current node as optional if it is empty
   discardNodeIfEmpty : function () {       
-    if (this.curTop) { this.curTop.discardNodeIfEmpty() }
+    if (this.curAttr) { 
+      this.curAttrFlushed = true; 
+    } else if (this.curTop) { 
+      this.curTop.discardNodeIfEmpty();
+    }
   },              
   // Sets current node as a mixed content node
   // Pre-condition: there must be at least one node (openTag called)

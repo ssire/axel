@@ -73,4 +73,6 @@
       <ConstantD/>
     </Choice2>
   </ChoiceOnChoice>
+  <OptionalAttributeUnset/>
+  <OptionalAttributeSet OptionalAttribute="bar"/>
 </Tests>
