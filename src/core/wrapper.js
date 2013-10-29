@@ -52,11 +52,13 @@
     return n.contentDocument || (n.contentWindow ? n.contentWindow.document : n);
   }
 
-  // Triggers an event
-  // Currently triggers a bubbling event using jQuery iff available
+  // Triggers an event on the specified node iff jQuery available
+  // Non bubbling event to simplify multiple editors handling in the same page
+  // Also duplicates the event on the document
   function _triggerEvent ( src, event, data ) {
     if ('undefined' !== typeof window.jQuery) {
-      $(src).trigger(event, data);
+      $(src).triggerHandler(event, data);
+      $(src.ownerDocument).triggerHandler(event, data.first);
     }
   }
 

@@ -325,7 +325,11 @@ xtiger.editor.Repeat.prototype = {
   // This is a shallow clone because all the models set for the repeaters remain shared
   // set by XTigerTrans editor transformation algorithm
   shallowCloneIter : function (parent, node, dict) {   
-    var clone = xtdom.cloneNode (this.curDoc, node, false);
+    var clone;
+    if (node.xttNoShallowClone) {
+      return;
+    }
+    clone = xtdom.cloneNode (this.curDoc, node, false);
     this.shallowFinishCloning (clone, node, dict);    
     parent.appendChild(clone);
     for (var i = 0; i < node.childNodes.length; i++) {
@@ -520,6 +524,9 @@ xtiger.editor.Repeat.prototype = {
     if ($axel.binding) {
       $axel.binding.install(this.curDoc, index[0], index[1]);
     }
+    if ($axel.command) {
+      $axel.command.install(this.curDoc, index[0], index[1]);
+    }    
     return lastIndex + 1;  
   },
   
@@ -636,6 +643,9 @@ xtiger.editor.Repeat.prototype = {
     if (!saved && $axel.binding) {
       $axel.binding.install(this.curDoc, newIndex[0], newIndex[1]);
     }
+    if (!saved && $axel.command) {
+      $axel.command.install(this.curDoc, newIndex[0], newIndex[1]);
+    }    
     this.dispatchEvent(position + 1, 'axel-add');
   },
   
