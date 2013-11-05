@@ -480,7 +480,7 @@
             }
           }
           res = this;
-        } else {
+        } else if (this._vector[0].length > 0) {
           res = this._vector[0].reduce(function(p,c) { return p*c });
         }
       }
@@ -502,7 +502,7 @@
             }
           }
           res = this;
-        } else {
+        } else if (this._vector[0].length > 0) {
           res = this._vector[0].reduce(function(p,c) { return p+c });
         }
       }
