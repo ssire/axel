@@ -132,8 +132,14 @@ xtiger.editor.Plugin.prototype = {
      return this._option;
    },
 
-   configure : function () {
-     // TBD
+   // Dynamicall sets a parameter value
+   // TODO: manage type conversion if value is associated with a type when registering plugin
+   configure : function ( key, value ) {
+     if (value === undefined) {
+       delete this._param[key];
+     } else {
+       this._param[key] = value;
+     }
    },
 
    getUniqueKey : function () {

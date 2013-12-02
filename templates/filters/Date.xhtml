@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
-  <head>                  
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <title>The "date" filter</title>
-  
+
     <xt:head version="1.1" templateVersion="1.0" label="Demo">
     </xt:head>
 
     <!-- BEGIN transformation -->
-    <link rel="stylesheet" type="text/css" 
+    <link rel="stylesheet" type="text/css"
           href="../../3rd-part/jquery/css/ui-lightness/jquery-ui-1.8.18.custom.css"  charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../../axel/axel.css"></link>
 
@@ -19,69 +19,86 @@
     <script type="text/javascript" src="../../axel/axel.js"></script>
 
     <script type="text/javascript">
-      var form;
-      function init() {
-        var today, dates;
-        form = new xtiger.util.Form('../axel/bundles');
-        form.setTemplateSource(document);
-        form.enableTabGroupNavigation();
-        if (! form.transform()) {
-          alert(this .form.msg);
-        } else {
-          today = $.datepicker.formatDate('dd/mm/yy', new Date())
-          dates = $axel('#x-Todate');
-          dates.get(0).configure('maxDate', today);
-          dates.get(0).update(today);
+      (function () {
+        function init() {
+          $axel.setup({ bundlesPath : '../axel/bundles', enableTabGroupNavigation: true });
+          $axel('body').transform();
         }
-      }
-      xtdom.addEventListener(window,  'load', init, false);
+        jQuery(init);
+      }());
     </script>
     <!-- END transformation -->
-    
+
     <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
     <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
-    <script type="text/javascript" charset="utf-8" src="../shared/demo.js">//</script>        
+    <script type="text/javascript" charset="utf-8" src="../shared/demo.js">//</script>
   </head>
   <body>
-    
+
     <p class="warning">IMPORTANT NOTICE FOR DEVELOPERS: this is a template that can only be used with jQuery/jQuery-ui/AXEL libraries sitting directly inside the same window (and not inside a parent window such as when opening inside an iframe) because of jQuery datepicker limitations. Thus for that reason it has been written as a self-transformed template with the required libraries included as you can see in its source code.</p>
-  
+
     <h1>The "date" filter</h1>
 
     <p>The <code>"date"</code> filter turns a text entry field into a field for selecting a date using a calendar or the keyboard. It uses the <a href="http://jqueryui.com/demos/datepicker/" target="_new">jQuery UI Datepicker</a>, hence it depends on jQuery and jQuery UI. </p>
-    
+
     <p>This filter is compatible with the <code>"text"</code> plugin.</p>
-    
+
     <h2>Parameters</h2>
 
     <ul class="parameters">
       <li><var>date_region</var> (<code><b>fr</b></code>) : specifies the user interface language (currently only 'fr', but you can edit the <code>filters/date.js</code> source code to add another region)</li>
       <li><var>date_format</var> (<code><b>ISO_8601</b></code>) : specifies the date format used in XML output (read and write). You can use any datepicker date format string (e.g. 'dd/mm/yy'), or a $.datepicker constant name such as <code>ISO_8601</code> (others are <code>ATOM, COOKIE, RFC_822, RFC_850, RFC_1036, RFC_1123, RFC_2822, RSS, TICKS, TIMESTAMP, W3C</code>)</li>
-      <li><var>minDate</var> (<code>undefined</code>) : to be documented</li>
-      <li><var>maxDate</var> (<code>undefined</code>) : to be documented</li>
+      <li><var>minDate</var> (<code>undefined</code>) : lower bound on the date that can be entered (in <var>date_region</var> format), the special value <tt>today</tt> is converted to the current day</li>
+      <li><var>maxDate</var> (<code>undefined</code>) : upper bound on the date that can be entered (in <var>date_region</var> format), the special value <tt>today</tt> is converted to the current day</li>
       <li><var>beforeShow</var> (<code>undefined</code>) : to be documented</li>
     </ul>
+    
+    <p>The special default value <samp>today</samp> will cause the default value to be replaced by the current day.</p>
+
+    <h2>Javascript API</h2>
+
+    <p>The filter creates a <tt>configure</tt> method which can be used to programmaticaly set the various parameters on a given plugin instance at runtime.</p>
 
     <h2>Example with <var>maxDate</var> set to today</h2>
-  
+
     <p>In this example the calendar region (<samp>date_region</samp> parameter) and format (parameter <samp>date_format</samp>) are set to "fr" and "ISO_8601".</p>
-    
-    <p>The <var>maxDate</var> parameter is set to <kbd>today</kbd>, however it is simulated with a Javascript configuration call (see source code) since it is not yet implemented.</p>
+
+    <p>The <var>maxDate</var> parameter is set to <samp>today</samp> to set the upper limit to the current day.</p>
 
     <div class="demo extract">
-      <p id="x-Todate">Date : 
-        <xt:use types="text" label="Date1" param="filter=date;date_region=fr;date_format=ISO_8601;maxDate=today"/>
+      <p>Date :
+        <xt:use types="text" label="MaxDateToday" param="filter=date;date_region=fr;date_format=ISO_8601;maxDate=today"/>
+      </p>
+    </div>
+
+    <h2>Example with <var>minDate</var> and default value set to today</h2>
+
+    <p>The <var>minDate</var> parameter is set to <samp>today</samp> to set the lower limit to the current day and the default value is set to <samp>today</samp> so that this is the value by default.</p>
+
+    <div class="demo extract">
+      <p>Date :
+        <xt:use types="text" label="MinDateToday" param="filter=date;minDate=today">today</xt:use>
+      </p>
+    </div>
+
+    <h2>Example with <var>minDate</var> and <var>maxDate</var> set to define an interval</h2>
+
+    <p>The default date syntax must match the format defined in the <var>date_region</var>, which is not necessarily the format defined for the XML output with <var>date_format</var>.</p>
+
+    <div class="demo extract">
+      <p>Date (with min and max):
+        <xt:use types="text" label="MinMaxDate" param="filter=date;minDate=01/09/2013;maxDate=31/10/2013"/>
       </p>
     </div>
 
     <h2>Example with a default date set</h2>
-    
+
     <p>The default date syntax must match the format defined in the <var>date_region</var>, which is not necessarily the format defined for the XML output with <var>date_format</var>.</p>
-  
+
     <div class="demo extract">
-      <p id="x-Todate">Date : 
-        <xt:use types="text" label="Date2" param="filter=date">12/12/1999</xt:use>
+      <p id="x-Todate">Date :
+        <xt:use types="text" label="DateWithDefault" param="filter=date">12/12/1999</xt:use>
       </p>
     </div>
-  </body> 
+  </body>
 </html>

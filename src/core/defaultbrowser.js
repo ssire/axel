@@ -50,7 +50,8 @@ xtiger.util.countProperties = function (o) {
   return total;
 }
 
-// Two utility functions to encode/decode XML entities
+// Encode XML entities
+// Note: there is no need to decode them since they will be decoded when parsed by the browser per-XML spec
 xtiger.util.encodeEntities = function (s) {
   if (typeof(s) != "string") { // FIXME: isn't it too costly here ?
     // maybe it's a number
@@ -67,19 +68,6 @@ xtiger.util.encodeEntities = function (s) {
     res = res.replace(/>/g, '&gt;');  
   } 
   return res;
-}
-              
-// Not used yet because it seems the native XML parser converts entities on the fly when loading an XML document
-// (at least on FireFox)
-xtiger.util.decodeEntities = function (s) {
-  if (s.indexOf('&amp;') != -1) {
-    var res = s.replace(/&amp;/g, '&');
-    if (s.indexOf('<') != -1) {
-      return res.replace(/&lt;/g, '<'); 
-    }                                   
-    return res;
-  }
-  return s;
 }
 
 /**

@@ -518,7 +518,7 @@
   xtiger.editor.PhotoWrapper = function (aDoc) {  
     this.myDoc = aDoc;
     var form = xtiger.session(aDoc).load('form');
-    var root = (form && form.getRoot()) || aDoc.getElementsByTagName('body')[0]; // NOTE that body is undefined in XML document (.xtd)
+    var root = (form && form.getRoot && form.getRoot()) || aDoc.getElementsByTagName('body')[0]; // NOTE that body is undefined in XML document (.xtd)
     this.view = new xtiger.editor.PhotoViewer(xtiger.bundles.photo.lensBoxURL, aDoc, root, this); // temporary
     this.state = null;
   };
