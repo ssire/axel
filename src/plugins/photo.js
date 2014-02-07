@@ -176,10 +176,13 @@
          }
          // FIXME: in case the lens was visible at that time, it should cancel 
          // any ongoing upload first
-         this.redraw(true);      
+         this.redraw(true);    
        }
        // otherwise redraw will be called from consecutive PhotoWrapper release call
-     }
+     },
+     
+     stopEditing : function () {
+     },
      
      // onDragEnter : function (ev) {  
      //   xtdom.addClassName (this._handle, 'axel-dnd-over');
@@ -304,7 +307,8 @@
      }
      this.errMsg = null;
      this.transmission = null;
-     this.delegate.redraw ();
+      // this.delegate.redraw ();
+      this.delegate.stopEditing ();
    },
 
    onError : function (error, dontResetPhotoUrl) {
@@ -354,14 +358,15 @@
       } else { 
         throw {name : 'Error', message : 'Photo plugin initialization failed : HTTP error (' + xhr.status + ')'};
       }
-      this.formular   = doc.getElementById('xt-photo-form');
-      this.icon     = doc.getElementById('xt-photo-icon');
-      this.infobox  = doc.getElementById('xt-photo-info');
-      this.errorbox   = doc.getElementById('xt-photo-error');
-      this.filemenu   = doc.getElementById('xt-photo-form-body');
+      this.formular = doc.getElementById('xt-photo-form');
+      this.icon = doc.getElementById('xt-photo-icon');
+      this.infobox = doc.getElementById('xt-photo-info');
+      this.errorbox = doc.getElementById('xt-photo-error');
+      this.filemenu = doc.getElementById('xt-photo-form-body');
       this.btnselfile = doc.getElementById('xt-photo-file');
-      this.btnupload  = doc.getElementById('xt-photo-save');    
-      this.btncancel  = doc.getElementById('xt-photo-cancel');    
+      this.btnupload = doc.getElementById('xt-photo-save');
+      this.btncancel = doc.getElementById('xt-photo-cancel');
+      this.dismiss = doc.getElementById('xt-photo-close');
       // creates target iframe to collect server's response (Issue #19)
       tname = this.formular.getAttribute('target') || 'xt-photo-target';
       iframe = xtdom.createElement(doc, 'iframe');
@@ -370,9 +375,12 @@
       xtdom.setAttribute(iframe, 'src', 'javascript:false;');
       iframe.style.display = 'none';
       target.appendChild(iframe);
-      xtdom.addEventListener(this.btnselfile, 'click', function () { _this.startSelectCb(); }, false);
+      xtdom.addEventListener(this.btnselfile, 'change', function () { _this.startSelectCb(); }, false);
       xtdom.addEventListener(this.btnupload , 'click', function () { _this.saveCb(); }, false);
       xtdom.addEventListener(this.btncancel , 'click', function () { _this.cancelCb(); }, false);
+      if (this.dismiss) {
+        xtdom.addEventListener(this.dismiss , 'click', function () { _this.wrapper.stopEditing(); }, false);
+      }
       this.btncancel.style.display = 'none';
       this.failed = false;
       this.hide();
@@ -456,20 +464,23 @@
       this.showMessage("You can select a file and upload it");
       this.hideError();
       this.showUplButtons();
+      this.deactivateUpload();
     },
     
     complete : function (photoUrl) {
       this.showPhoto(photoUrl);
       this.hideMessage();
       this.hideError();
-      this.showUplButtons();      
+      this.showUplButtons();
+      this.deactivateUpload();
     },
     
     loading : function () {
       this.showPhoto(xtiger.bundles.photo.spiningWheelIconURL);
       this.showMessage("Wait while loading");
       this.hideError();
-      this.hideUplButtons();    
+      this.hideUplButtons();
+      this.deactivateUpload();
     },
     
     error : function (msg) {
@@ -477,6 +488,7 @@
       this.showError(msg);
       this.hideMessage();
       this.showUplButtons();
+      this.activateUpload();
     },
     
     busy : function () {
@@ -485,6 +497,7 @@
       this.hideError();
       this.showMessage('Another upload is in progress, please wait until it finishes.');
       this.hideUplButtons();
+      this.deactivateUpload();
     },
     
     activateUpload : function () {
@@ -497,6 +510,7 @@
 
     // Controller functions
     startSelectCb : function () {
+      this.activateUpload(); // sauf si cancel ?
       this.wrapper.onStartSelect();
     },
     
@@ -556,8 +570,12 @@
 
       // Terminates the wrapper installation after the lens has been made visible
       activate: function(aDevice, doSelectAll) {
-        // nope
+        this.device = aDevice; // nope
       },    
+
+      stopEditing : function () {
+        this.device.stopEditing();
+      },
 
       // Releases the wrapper, restores the handle usually on device behalf
       // Entry point to hide the lens wrapper

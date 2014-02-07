@@ -13,6 +13,22 @@
     <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
     <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="../shared/demo.js">//</script>
+    <style type="text/css" media="screen">
+      p.empty {
+        width: 100%;
+        min-height: 2em;
+        border: inset 3px #999;
+      }
+      p.empty.axel-core-editable {
+        outline: none;
+      }
+      span.empty.inline {
+        display: inline-block;
+        width: 100%;
+        min-height: 2em;
+        border: inset 3px #999;
+      }
+    </style>
   </head>
   <body>
 
@@ -23,7 +39,7 @@
     <h2>Parameters</h2>
 
     <ul class="parameters">
-      <li><var>placeholder</var> (<code><b>preserve</b>|clear</code>) : when <code>preserve</code> the default content of the plugin is treated as valid user input, it can be edited by the user and will be serialized to XML, when <code>clear</code> it is removed before the user edits the field and serialized as the empty string to XML</li>
+      <li><var>placeholder</var> (<code><b>preserve</b>|clear|empty</code>) : when <code>preserve</code> the default content of the plugin is treated as valid user input, it can be edited by the user and will be serialized to XML, when <code>clear</code> it is removed before the user edits the field and serialized as the empty string to XML, when <code>empty</code> the default content of the plugin is not shown in the input field but it is treated as valid user input</li>
       <li><var>noedit</var> (<code>true|<b>false</b></code>) : set it  to <code>true</code> to make the field read only (constant).</li>
       <li><var>class</var> (<code><i>name</i></code>) : sets a class name on the handle and on the dynamical entry field</li>
       <li><var>type</var> (<code><b>input</b>|textarea</code>) : defines the type of device to use for text entry, either an HTML <code>input</code> element or a <code>textarea</code> element</li>
@@ -46,6 +62,19 @@
     <div class="demo extract">
       <p><xt:use types="text" label="ClearPlaceHolder" param="placeholder=clear">your content here</xt:use></p>
       <p><xt:attribute types="text" name="ClearPlaceHolderAttr" param="placeholder=clear" default="your attribute content here"/></p>
+    </div>
+
+    <h2>With parameter <var>placeholder</var> set to <code>"empty"</code></h2>
+    
+    <p>Don't forget to style it so that it is visible. For that purpose you may use the <i>handle</i> parameter to generate a block-level handle, or style the handle to be an inline-block element :</p>
+
+    <div class="demo extract">
+      <div style="width:100%">
+        <xt:use types="text" handle="p" label="EmptyPlaceHolder" param="shape=parent;type=textarea;placeholder=empty;class=empty">your (empty) content here</xt:use>
+      </div>
+      <p>
+        <xt:attribute types="text" name="EmptyPlaceHolderAttr" param="shape=parent;type=textarea;placeholder=empty;class=empty inline" default="your (empty) attribute content here"/>
+      </p>
     </div>
 
     <h2>With parameter <var>type</var> set to <code>"textarea"</code></h2>

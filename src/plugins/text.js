@@ -37,7 +37,7 @@
          this._content = 'click to edit'; // FIXME: setDefaultData() ? finalize API...
        }
        this._data = this.getDefaultData(); // Quirck in case _setData is overloaded and checks getDefaultData()
-       this._setData(this._data);
+       this._setData(this.getParam('placeholder') === 'empty' ? '' : this._data);
        if (this.getParam('hasClass')) {
          xtdom.addClassName(this._handle, this.getParam('hasClass'));
        }
@@ -62,7 +62,7 @@
        if (aPoint !== -1) {
          _value = aDataSrc.getDataFor(aPoint);
          _default = this.getDefaultData();
-         this._setData(_value || _default);
+         this._setData(_value || (this.getParam('placeholder') === 'empty' ? '' : _default));
          this.setModified(_value && (_value !==  _default));
          this.set(false);
        } else {
@@ -121,8 +121,9 @@
 
        // Sets current data model and updates DOM view accordingly
        _setData : function (aData) {
-         if (this._handle.firstChild)
+         if (this._handle.firstChild) {
            this._handle.firstChild.data = aData;
+         }
          this._data = aData;
        },
 
@@ -170,7 +171,7 @@
        // Clears the model and sets its data to the default data.
        // Unsets it if it is optional and propagates the new state if asked to.
        clear : function (doPropagate) {
-         this._setData(this.getDefaultData());
+         this._setData(this.getParam('placeholder') === 'empty' ? '' : this.getDefaultData());
          this.setModified(false);
          if (this.isOptional() && this.isSet())
            this.unset(doPropagate);
