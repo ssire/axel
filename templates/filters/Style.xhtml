@@ -104,6 +104,19 @@ div.grid3 {
       <p>Please select size for the left margin of &lt;p> elements : <xt:use types="text" label="LeftMargin" option="unset" param="filter=style;style_rule=h1,h2,h3{margin-left:$_px} p{margin-left:$_px}">0</xt:use>px</p>
     </div>
 
+    <h3>Other example</h3>
+    
+    <div class="list-sample-root">
+      <p>Changing the <i>list-style-type</i> property <xt:attribute types="text" name="ListStyleType"
+          param="placeholder=empty;filter=style;style_property=list-style-type;style_root_class=list-sample-root;style_value=decimal;style_target_class=list2style" 
+          option="unset" default="decimal"/> #.</p>
+      <ul class="list2style">
+        <li>red</li>
+        <li>green</li>
+        <li>blue</li>
+      </ul>
+    </div>
+
     <h2>The "width" filter</h2>
 
     <p>NOTE: <i>this filter is DEPRECATED since it is superseded by the "style" filter above</i></p>

@@ -200,6 +200,7 @@ img.xt-file-editable {
   border: outset 3px white;
   padding: 9px;
   display: none;
+  z-index: 100;
 }
 #xt-tooltip a {
   color: white;

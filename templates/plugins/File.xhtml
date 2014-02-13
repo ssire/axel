@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>The "file" plugin</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+    </xt:head>
+
+    <style type="text/css" media="screen">
+    </style>
+
+    <!-- template enrichment : extracts and generates xt:attribute and xt:use sample code -->
+    <link rel="stylesheet" type="text/css" href="../shared/demo.css" />
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js">//</script>
+    <script type="text/javascript" src="../shared/demo.js">//</script>
+  </head>
+  <body>
+    <p class="warning">To test file upload, you must have opened this application from a web server implementing the file upload protocol</p>
+
+    <h1>The "file" plugin</h1>
+
+    <p>The <code>"file"</code> plugin uploads files to a Web server and displays the result with a as an <code>img</code> image handler.</p>
+
+    <ul class="parameters">
+      <li><var>trigger</var> (<code>mouseover|<b>click</b></code>) : user action that triggers editing mode</li>
+      <!-- <li><var>padding</var> (<code>10</code>) : internal padding of the popup window lens</li> -->
+      <li><var>photo_url</var> (<code><b>/upload</b></code>) : optional string with the URL of the web service end point managing the photo upload protocol</li>
+      <li><var>photo_class</var> (<code>undefined</code>) : optional class added to the <code>img</code> image handler when it shows an uploaded photo</li>
+      <li><var>photo_base</var> (<code>undefined</code>) : optional prefix that will be added to the image URL returned by the photo upload protocol before it is set as the <var>src</var> attribute of the <code>img</code> image handler</li>
+    </ul>
+    
+    <h2>Example</h2>
+    
+    <p>Ajoutez un fichier : 
+      <xt:use types="file" label="LinkRef"        param="file_URL=http://localhost:8080/exist/projets/coaching/cases/1/activities/1/docs/file;file_base=http://localhost:8080/exist/projets/coaching/cases/1/activities/1;file_gen_name=manual;file_type_message=Vous devez sélectionner un document PDF ou un document Microsoft Office (Word, Excel, Power Point);file_type=application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-powerpoint application/vnd.openxmlformats-officedocument.presentationml.presentation;filter=event"/>
+    </p>
+  </body>
+</html>

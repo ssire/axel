@@ -14,6 +14,7 @@
 
 ////////////////////////////////////////////
 // NOTE : this editor requires JQuery !!!
+// TODO: manage data-mime-type extra attribute to display mime-type dependant icons (?) 
 ////////////////////////////////////////////
 
 (function ($axel) {
@@ -37,7 +38,7 @@
       };
   function PURIFY_NAME (name) {
     var str = $.trim(name).toLowerCase(),
-        res = (str.indexOf('.pdf') !== -1) ? str.substring(0, str.indexOf('.pdf')) : str;
+        res = (str.lastIndexOf('.') !== -1) ? str.substring(0, str.lastIndexOf('.')) : str;
     /* Replace multi spaces with a single space */
     res = res.replace(/(\s{2,}|_)/g,' ');
     /* Replace space with a '-' symbol */
@@ -155,12 +156,22 @@
           [ xtiger.bundles.file.saveIconURL, false, xtiger.bundles.file.cancelIconURL],
           [ xtiger.bundles.file.spiningWheelIconURL, false, xtiger.bundles.file.cancelIconURL ],
           [ xtiger.bundles.file.errorIconURL, false, xtiger.bundles.file.cancelIconURL ],
-          [ xtiger.bundles.file.pdfIconURL, false, xtiger.bundles.file.dismissIconURL ],
-          [ xtiger.bundles.file.pdfIconURL, true, null ]
+          [ xtiger.bundles.file.fileIconURL, false, xtiger.bundles.file.dismissIconURL ],
+          [ xtiger.bundles.file.fileIconURL, true, null ]
         ];
         var tmp;
         var config = UI[this.model.state];
         var msg = FEEDBACK.fr[this.model.state];
+        // Manages special PDF icons
+        if (SELECTED === this.model.state) { 
+          if ('application/pdf' === this.model.file.type) { 
+            config[0] = xtiger.bundles.file.saveIconURLpdf;
+          }
+        } else if (this.model.state >= COMPLETE)  {
+          if (/\.pdf$/i.test(this.model.url) || (this.model.name && /\.pdf$/i.test(this.model.name))) {
+            config[0] = xtiger.bundles.file.fileIconURLpdf;
+          }
+        }
         // Updates widget view
         this.vIcon1.attr('src', config[0]);
         if ((this.model.state === EMPTY) || (this.model.state === READY)) {
@@ -289,7 +300,12 @@
         } else if ((this.model.state === SELECTED) || (this.model.state === ERROR)) { 
           this.model.rollback((this.model.state === ERROR));
         } else if (this.model.state === COMPLETE) {
-          this.model.gotoReady();
+          if (this.getParam('file_reset') === 'empty') {
+            this.model.reset(this.getDefaultData());
+            this.redraw(false);
+          } else {
+            this.model.gotoReady();
+          }
         }
       },
 
@@ -312,6 +328,7 @@
     { 
       file_URL : "/fileUpload",
       file_type : 'application/pdf',
+      file_type_message : 'Vous devez sélectionner un fichier PDF',
       file_gen_name : 'auto'
       // file_size_limit : 1024
     },
@@ -320,12 +337,14 @@
 
   xtiger.resources.addBundle('file', 
     { 'noFileIconURL' : 'nofile32.png', 
-      'saveIconURL' : 'save32.png', 
+      'saveIconURL' : 'blank32.png', 
+      'saveIconURLpdf' : 'save32.png', 
       'spiningWheelIconURL' : 'spiningwheel.gif',
       'errorIconURL' : 'bug48.png',
       'dismissIconURL' : 'ok16.png',
       'cancelIconURL' : 'cancel32.png',
-      'pdfIconURL' : 'pdf32.png'
+      'fileIconURL' : 'file32.png',
+      'fileIconURLpdf' : 'pdf32.png'
     } );
   
   /*****************************************************************************\
@@ -349,10 +368,10 @@
       var file = (ev.target.files.length > 0) ? ev.target.files[0] : null;
       var mtypes = this.delegate.getParam('file_type');
       if (file) {
-        if (mtypes.indexOf(file.type) !== -1) {
+        if (file.type && mtypes.indexOf(file.type) !== -1) {
           if (this.delegate) { this.delegate.doSelectFile(file); }
         } else {
-          alert('Vous devez sélectionner un fichier PDF');
+          alert(this.delegate.getParam('file_type_message'));
         }
       }
     }
@@ -456,7 +475,7 @@
         this.name = name;
       } else {
         this.state = EMPTY;
-        this.url = this.name = null;        
+        this.url = this.name = null;
       }
     },
     
@@ -467,16 +486,23 @@
     },
 
     getPayload : function () {
-      var id, payload = { 'xt-file' : this.file };
-      if (this.preflighting) {
+      var id, 
+          payload = { 
+            'xt-file' : this.file,
+            'xt-mime-type' : this.file.type
+          };
+      if (this.preflighting) { // protocol with preflight implies to send file name with submission
         payload['xt-file-id'] = this.delegate.vId.val();
         this.preflighting = false;
       }
-      return payload;      
+      return payload;
     },
     
     getPreflightOptions : function () {
-      return { 'xt-file-preflight' : this.delegate.vId.val() };
+      return { 
+        'xt-file-preflight' : this.delegate.vId.val(),
+        'xt-mime-type' : this.file.type
+        };
     },
     
     rollback : function (fromErrorState) {

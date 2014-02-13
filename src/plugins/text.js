@@ -32,12 +32,13 @@
 
      onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
        var devfactory,
-           devname = this.getParam('device');
+           devname = this.getParam('device'),
+           donthold = this.getParam('placeholder') === 'empty';
        if ((! aDefaultData) || (typeof aDefaultData !== 'string')) {
-         this._content = 'click to edit'; // FIXME: setDefaultData() ? finalize API...
+         this._content = donthold ? '' : 'click to edit'; // FIXME: i18n
        }
        this._data = this.getDefaultData(); // Quirck in case _setData is overloaded and checks getDefaultData()
-       this._setData(this.getParam('placeholder') === 'empty' ? '' : this._data);
+       this._setData(donthold ? '' : this._data);
        if (this.getParam('hasClass')) {
          xtdom.addClassName(this._handle, this.getParam('hasClass'));
        }
@@ -79,6 +80,8 @@
          if (this.isModified() || (this.getParam('placeholder') !== 'clear')) {
            aLogger.write(this._data);
          }
+       } else if (this.getParam('placeholder') === 'empty') {
+         aLogger.write(this.getDefaultData());
        }
      },
 
