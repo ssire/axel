@@ -24,10 +24,12 @@ xtiger.editor.TabGroupManager.prototype = {
 
   startEditingSession : function (editor) {
     this.curEditor = editor;
+    this.direction = 0;
   },
 
   stopEditingSession : function () {
     this.curEditor = undefined;
+    this.direction = 0;
   },
 
   // Intercepts Tab KeyDown events
