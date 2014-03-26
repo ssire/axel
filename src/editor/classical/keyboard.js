@@ -60,12 +60,17 @@ xtiger.editor.Keyboard.prototype = {
 
   // Esc does not trigger keyPress on Safari, hence we need to intercept it with keyDown
   handleKeyDown : function (ev, device) {
+    var validate;
     if (device.isEditing()) {
       if (this.tabGroupManager && this.tabGroupManager.filterKeyDown(ev)) {
         return false;
       }
       // On FF ctrlKey+ RC sends an event but the line break is not added to the textarea hence I have selected shiftKey
-      var validate = (this.allowRC && (ev.keyCode == 13) && (! ev.shiftKey)) || ((!this.allowRC) && (ev.keyCode == 13));
+      if (ev.keyCode === 13) {
+        if ((!this.allowRC) || (this.allowRC && (! this.noBlurOnRC) && (! ev.shiftKey))) {
+          validate = true;
+        }
+      }
       if (validate) {
         device.stopEditing(false);
         xtdom.preventDefault(ev); /* avoid triggering buttons in IE (e.g. Save button) */
@@ -102,11 +107,13 @@ xtiger.editor.Keyboard.prototype = {
     }
   },
 
-  enableRC : function () {
+  enableRC : function (noBlurOnRC) {
     this.allowRC = true;
+    this.noBlurOnRC = noBlurOnRC || false;
   },
 
   disableRC : function () {
     this.allowRC = false;
+    this.noBlurOnRC = false;
   }
 }
