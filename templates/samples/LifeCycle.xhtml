@@ -42,7 +42,7 @@
             .bind('axel-add', logEvent)
             .bind('axel-remove', logEvent);
     // parent.document because it will be transformed from an iframe in AXEL editor
-    parent.jQuery(parent.document).bind('axel-editor-ready', logEvent)
+    parent.jQuery('#container', parent.document).bind('axel-editor-ready', logEvent)
             .bind('axel-content-ready', logEvent);
   }
   jQuery(init);
