@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    
+    <!-- INSTRUCTIONS :
+      This requires the AXEL branch "hook"
+      This require it to be checked out side by side with AXEL-FORMS (because it uses data-template="#"
+      and the 'choice' plugin
+
+      PRE-REQUISITE: rebuild axel.js (cd scripts; ant build.lib)
+
+      WARNING: hook.js is not build in axel.js by default so you must include it separately
+     -->
+    
+    <!-- NOTE: in this demo the Styling menu is itself a secondary AXEL template (in #menu p)
+         this has been done to use the $axel wrapped set to easily encode / decode style information
+         as a forest of the form <Align>XXX</Align><Color>YYY</Color>
+         - as an alternative you may use plain HTML to create your styling menus, it is then up to you
+         to encode / decode the corresponding styling information as an XML or as a plain string
+     -->
+
+    <title>The "hook" plugin</title>
+
+    <!-- NOTE: "hook" plugin SHOULD BE labelled with a label to be able to load it's XML content model
+         by concatenating an XML serialization of all of its children, if unlabelled this is not possible 
+         except if it is the last child in its parent XML content model (see onLoad in hook.js)
+         - as a corlary its content model SHOULD BE a forest
+         - there is one exception if you decide to use a pure string model for Hook content and decode/encode
+         it by yourself in your editor's code, for instance @Style="text-align:center;color:green"  
+         with <xt:attribute types="hook" name="Style"...></xt:attribute>
+         -->
+    <xt:head version="1.1" templateVersion="1.0" label="Demo">
+      <xt:component name="t_para">
+        <p class="para">
+          <xt:use types="text" label="Text">click to edit a paragraph</xt:use>
+          <xt:menu-marker/>
+          <xt:use types="hook" label="Style" param="class=hook">[#]</xt:use>
+        </p>
+      </xt:component>
+    </xt:head>
+
+    <script type="text/javascript" src="../../3rd-part/jquery/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../../axel/axel.js"></script>
+    <!-- you may eventually rebuild axel.js with hook.js inside (check scripts/ant.properties) -->
+    <script type="text/javascript" src="../../src/plugins/hook.js"></script>
+    <script type="text/javascript" data-bundles-path="../../axel/bundles" src="../../../axel-forms/dist/axel-forms.js"></script>
+    <link rel="stylesheet" href="../../axel/axel.css" type="text/css"></link>
+'    
+    <script type="text/javascript" charset="utf-8">
+//<![CDATA[	
+      var curEd;
+      var curFocus;
+      var curSample = "<Demo> <Para> <Text>Exemple centré en vert</Text> <Style> <Align>center</Align><Color>green</Color> </Style> </Para> <Para> <Text>À droite rouge</Text> <Style> <Align>right</Align><Color>red</Color> </Style> </Para> <Para> <Text>Encore à droite rouge</Text> <Style> <Align>right</Align><Color>red</Color> </Style> </Para> <Para> <Text>Pas d'information de style</Text> </Para> <Para> <Text>Encore un rouge centré !</Text> <Style> <Align>center</Align><Color>red</Color> </Style> </Para> <Para> <Text>Encore pas de style particuliers</Text> </Para> </Demo>";
+      jQuery( function() {
+        // pure AXEL version...
+        // $axel.setup({ bundlesPath : '../../axel/bundles', enableTabGroupNavigation: true });
+        // $axel('#editor').transform();
+        // $axel('#menu').transform();
+        
+        // Reports hooks XML content into DOM
+        $('#editor').bind('axel-content-ready', function (ev) {
+          // window.console.log('on load !');
+          $('.hook').each(function (i, e) {
+              var s = $axel(e).get(0).getData(),
+                  style, align, color;
+              if (typeof s === 'string') {
+                // window.console.log('Applying XML style ' + s);
+                style = $("<x>" + s  + "</x>").get(0); // design choice - hook contains a forest
+                align = style.getElementsByTagName('Align')[0];
+                color = style.getElementsByTagName('Color')[0];
+                if (align) {
+                  $(e.parentNode).css('text-align', align.textContent);
+                }
+                if (color) {
+                  e.parentNode.style.color = color.textContent;
+                }
+              }
+              });
+        });
+        
+        // Loads current selected element style into external menu
+        $('#editor').on('click', '.hook', function (ev) {
+          // loads menu with item data
+          curEd = $axel(ev.target).get(0);
+          var style = curEd.getData();
+          if (style) {
+            $axel('#menu').load('<x>' + style +  '</x>'); // design choice - hook contains a forest
+          } else {
+            $axel('#menu').load('<demo/>'); // to reset
+          }
+          // only one item active at a time
+          $('.hook').removeClass('active');
+          $(ev.target).addClass('active');
+        });
+
+        // Loads current selected element style into external menu
+        $('#menu').bind('axel-update', function(ev, editor) { 
+          var style = editor.dump();
+          if (curEd) {
+            if ($(editor.getHandle()).hasClass('align')) {
+              $(curEd.getHandle()).parent().css('text-align', style);
+            } else {
+              $(curEd.getHandle()).parent().css('color', style);
+            }
+            curEd.update($axel('#menu p').xml()); // design choice - menu serializes an XML forest
+          }
+          });
+      });
+      function load () {
+        $axel('#editor').load(curSample);
+      };
+      function save () {
+        curSample = $axel('#editor').xml();
+      };
+      function reset () {
+        $axel('#editor').load('<reset><Para/></reset>'); // empty Para because bug in AXEL when reset with minOccurs=0
+        $('.para').css( { 'text-align' : 'left', 'color': 'black'} );
+      }
+//]]>
+    </script>
+    
+    <style type="text/css" media="screen">
+      span.hook.active {
+        color: green;
+        font-weight:bold;
+      }
+      .para.active {
+        outline: solid 1px black;
+      }
+      ul.axel-choice, ul.axel-choice > li {
+        display: inline;
+        padding-left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <p><a onclick="javascript:load()">LOAD</a> | <a onclick="javascript:save()">SAVE</a> | <a onclick="javascript:reset()">RESET</a></p>
+    
+    <div id="menu" data-template="#">
+      <p>
+        Align : 
+        <xt:use types="choice" values="left center right" label="Align" param="appearance=full;filter=event optional;class=align"/>
+        | Color :
+        <xt:use types="choice" values="black red green blue" label="Color" param="filter=event optional;class=color"/>
+      </p>      
+    </div>
+
+    <hr/>
+
+    <div id="editor" data-template="#">
+      <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="Para">
+        <xt:use types="t_para" label="Para"/>
+      </xt:repeat>
+    </div>
+  </body>
+</html>

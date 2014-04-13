@@ -30,6 +30,7 @@ xtiger.util.PseudoNode = function (type, value) {
 xtiger.util.PseudoNode.TEXT_NODE = 0;
 xtiger.util.PseudoNode.ELEMENT_NODE = 1;
 xtiger.util.PseudoNode.MIXED_NODE = 2;
+xtiger.util.PseudoNode.RAW_NODE = 3; // useful to serialize a direct string representation of an XML node
 xtiger.util.PseudoNode.NEWLINE = '\n';
 
 xtiger.util.PseudoNode.prototype = {     
@@ -101,27 +102,37 @@ xtiger.util.PseudoNode.prototype = {
   },                           
 
   // Indented (and recursive) dump method
-  dump : function (level, isMixed) {   
+  dump : function (level, isMixed) {
+    var nextLevel, newline = true;
     if (xtiger.util.PseudoNode.TEXT_NODE == this.type) {
       return xtiger.util.encodeEntities(this.content);
-    } else {    
+    } else if (xtiger.util.PseudoNode.RAW_NODE == this.type) {
+      return this.content; // does not encode (useful for direct XML inclusion)
+    } else {
       var text = this.getIndentForLevel(level, isMixed); // copy indentation string
       if (this.content) {
         // opening tag
-        text += '<';
-            text += this.name;   
-            if (this.attributes) {
-          text += this.dumpAttributes ();
+        if (this.name) {
+          nextLevel = level + 1;
+          text += '<';
+              text += this.name;   
+              if (this.attributes) {
+            text += this.dumpAttributes ();
+          }
+          text += '>';
+          newline = (this.type !== xtiger.util.PseudoNode.MIXED_NODE) && !isMixed;
+        } else { // dumps as a forest (no attributes !)
+          nextLevel = level;
+          newline = false;
         }
-        text += '>'; 
         if (this.content instanceof Array) {   
-          if ((this.type !== xtiger.util.PseudoNode.MIXED_NODE) && !isMixed) {
+          if (newline) {
             text += xtiger.util.PseudoNode.NEWLINE;  
           }
           for (var i = 0; i < this.content.length; i++) {
-            text += this.content[i].dump(level + 1, this.type === xtiger.util.PseudoNode.MIXED_NODE); 
+            text += this.content[i].dump(nextLevel, this.type === xtiger.util.PseudoNode.MIXED_NODE); 
           }                                
-          if ((this.type !== xtiger.util.PseudoNode.MIXED_NODE) && !isMixed) {
+          if (newline) {
             text += this.getIndentForLevel(level, isMixed);
           }
         } else {                      
@@ -129,9 +140,12 @@ xtiger.util.PseudoNode.prototype = {
           text += xtiger.util.encodeEntities(this.content.content); // short circuit recursive call         
         } 
         // closing tag;  
-        text += '</';
-        text += this.name;
-        text += '>';        
+        if (this.name) {
+          text += '</';
+          text += this.name;
+          text += '>';
+          newline = true;
+        }
       } else { // empty tag   
         text += '<';
         text += this.name;    
@@ -142,7 +156,7 @@ xtiger.util.PseudoNode.prototype = {
         }
         text += '/>';                  
       }                                        
-      if (!isMixed) {
+      if (!isMixed && newline) {
         text += xtiger.util.PseudoNode.NEWLINE;  
       }
       return text;
@@ -177,7 +191,7 @@ xtiger.util.DOMLogger.prototype = {
     if (this.curTop) {
       this.curTop.mix();
     }
-  },    
+  },
   openAttribute : function (name) {
     this.curAttr = name;
     this.curAttrFlushed = false;
@@ -208,13 +222,24 @@ xtiger.util.DOMLogger.prototype = {
     this.openTag(name);
     this.closeTag(name);
   },
-  write : function (text) {                                                      
+  write : function (text) {
+    var n;
    // FIXME: sanity check this.curTop ?
     if (this.curAttr) {
       this.curTop.addAttribute(this.curAttr, text);
       this.curAttrFlushed = true;
-    } else {            
-      var n = new xtiger.util.PseudoNode(xtiger.util.PseudoNode.TEXT_NODE, text);    
+    } else {
+      n = new xtiger.util.PseudoNode(xtiger.util.PseudoNode.TEXT_NODE, text);
+      this.curTop.addChild (n);
+   }
+  },
+  writeUnencoded : function (text) {
+    var n;
+    if (this.curAttr) {
+      this.curTop.addAttribute(this.curAttr, text);
+      this.curAttrFlushed = true;
+    } else {
+      n = new xtiger.util.PseudoNode(xtiger.util.PseudoNode.RAW_NODE, text);
       this.curTop.addChild (n);
    }
   },
