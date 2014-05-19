@@ -234,7 +234,7 @@
             if (this.first.nodeName.toLowerCase() === 'iframe') {
               editor = _frameDoc(this.first);
               if (!editor) {
-                status.logError('the editor could not be generated because browser security restrictions prevented access to window iframe content');
+                status.logLocaleError('errTransformIframeSecurity');
               }
               isframe = true;
             } else if (editor === undefined) {
@@ -269,17 +269,17 @@
                 this.first.xttHeadLabel = form.getEditor().headLabel;
                 done = true;
               } else {
-                _raiseError('an unkown problem has prevented editor generation', config);
+                _raiseError(xtiger.util.getLocaleString('errTransformUnknown'), config);
               }
             }
           } catch (e) {
-            _raiseError('exception ' + e.name + ' ' + e.message, config);
+            _raiseError(xtiger.util.getLocaleString('errException', { e : e}), config);
           }
         } else {
-          _raiseError('cannot load template into empty wrapped set', config);
+          _raiseError(xtiger.util.getLocaleString('errEmptySet4Template'), config);
         }
       } else {
-        _raiseError('missing "bundlesPath" to transform template', config);
+        _raiseError(xtiger.util.getLocaleString('errNoBundlesPath'), config);
       }
       if (done) {
         _triggerEvent(this.first,'axel-editor-ready', this);
@@ -301,7 +301,7 @@
           algo.serializeData((this.first.nodeName.toLowerCase() === 'iframe') ? _frameDoc(this.first) : this.first, accu, this.first.xttHeadLabel);
           res = accu.dump();
         } else {
-          _raiseError('missing XML serializer algorithm', config);
+          _raiseError(xtiger.util.getLocaleString('errNoSerializer'), config);
         }
       }
       return res;
@@ -324,7 +324,7 @@
               source = xtiger.cross.loadDocument(source, status);
             }
           } else if (! source) {
-            status.logError('undefined or missing XML data source')
+            status.logLocaleError('errDataSourceUndef')
           }
           if (source && !status.inError()) {
             dataSrc = new xtiger.util.DOMDataSource(source);
@@ -335,10 +335,10 @@
             _raiseError(status.printErrors(), config);
           }
         } else {
-          _raiseError('missing XML loader algorithm', config);
+          _raiseError(xtiger.util.getLocaleString('errNoLoader'), config);
         }
       } else {
-        _raiseError('cannot load XML data source into empty wrapped set', config);
+        _raiseError(xtiger.util.getLocaleString('errEmptySet4XML'), config);
       }
       return this;
     },

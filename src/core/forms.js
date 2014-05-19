@@ -35,13 +35,17 @@ xtiger.util.Logger.prototype = {
    return (this.errors.length > 0);
  },
 
- // If msg contains '$$$', it will be substituted with the file name contained in optional url
- logError : function (msg, url) {
-   if (msg.indexOf('$$$') != -1) {
-     this.errors.push (msg.replace('$$$', '"' + url + '"'));
+ // Deprecated API
+ logError : function (msg, data) {
+   if (key.indexOf('$$$') != -1) { 
+     this.errors.push (msg.replace('$$$', '"' + data + '"'));
    } else {
-     this.errors.push (msg);
+     this.errors.push(msg);
    }
+ },
+
+ logLocaleError : function (key, values) {
+   this.errors.push(xtiger.util.getLocaleString(key, values));
  },
 
  // Returns a concatenation of error messages
@@ -79,17 +83,19 @@ xtiger.util.Form = function (baseIconsUrl) {
 xtiger.util.Form.prototype = {
 
   // Internal log mechanism that keeps track of a status
-  _report : function (status, str, logger) {
+  _report : function (status, keyormsg, logger, values) {
     this.status = status;
-    this.msg = str;
     if (0 === this.status) {
+      this.msg = xtiger.util.getLocaleString(keyormsg, values);
       if (logger) { 
-        logger.logError(str);
+        logger.logError(this.msg);
       } else {
-        xtiger.cross.log('error', str);
+        xtiger.cross.log('error', this.msg);
       }
+    } else {
+      this.msg = keyormsg; 
     }
-  },   
+  },
   
   // Overrides default class XML loader object
   setLoader : function (l) {
@@ -133,12 +139,12 @@ xtiger.util.Form.prototype = {
         } catch (e) { /* nop */ }
       }     
       if (! this.srcForm) {
-        this._report (0, 'Could not get <body> element from the template to transform', logger);
+        this._report (0, 'errTemplateNoBody', logger);
       }
       this.curDoc = xtDoc;
       this.targetContainerId = false;
     } else {
-      this._report (0, 'The document containing the template is null or undefined', logger);
+      this._report (0, 'errTemplateUndef', logger);
     }
     this._report (1, 'template source set', logger);
     return (this.status === 1);
@@ -172,7 +178,7 @@ xtiger.util.Form.prototype = {
     var parser;
     // FIXME: check this.srcDoc is set...
     if (! this.srcForm) {
-      this._report (0, 'no template to transform', logger);
+      this._report (0, 'errNoTemplate', logger);
       return false;
     }
     this.editor = new xtiger.editor.Generator (this.baseUrl);
@@ -186,7 +192,7 @@ xtiger.util.Form.prototype = {
         xtdom.importChildOfInto (this.curDoc, this.srcForm, n);
         this.root = n;
       } else {
-        this._report (0, 'transformation aborted because target container "' + this.targetContainerId + '" not found in target document', logger);
+        this._report (0, 'errTransformNoTarget', logger, { 'id' : this.targetContainerId });
         return false;
       }
       parser.importComponentStructs (this.curDoc); // to import component definitions
@@ -231,7 +237,7 @@ xtiger.util.Form.prototype = {
       head.appendChild(link);
       this._report (1, 'stylesheet injected', logger);
     } else {
-      this._report (0, "cannot inject editor's style sheet because target document has no head section", logger);
+      this._report (0, 'errTargetNoHead', logger);
     }
     return (this.status == 1);
   },   
@@ -242,7 +248,7 @@ xtiger.util.Form.prototype = {
       this.editor.loadData (this.root, dataSrc, this.loader);
       this._report (1, 'data loaded', logger);
     } else {
-      this._report (0, 'data source empty', logger);      
+      this._report (0, 'errNoData', logger);
     }
     return (this.status == 1);
   },

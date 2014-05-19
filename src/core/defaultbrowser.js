@@ -113,28 +113,18 @@ xtiger.util.array_map = function array_map (aArray, aCallback) {
   return _buf;
 }
 
-/**
- * Implements the "filter" feature for arrays. Returns an array whose elements
- * are on the given array AND satisfies the given predicate.
- * 
- * This function does not affect the given array. It returns a freshly created one.
- * 
- * @param {[any]}
- *            An array to filter
- * @param {function(any)}
- *            A function taking a value from the array and returning a boolean
- * @return {[any]} A new array containing elements from the given array that
- *         match the predicate
- */
-xtiger.util.array_filter = function array_filter (aArray, aCallback) {
-  if (! (typeof aArray == 'object' && typeof aCallback == 'function'))
-    return aArray;
-  var _buf = [];
-  for (var _i = 0; _i < aArray.length; _i++) {
-    if (aCallback(aArray[_i]))
-      _buf.push(aArray[_i]);
+// Returns a localized string using AXEL locales conventions
+xtiger.util.getLocaleString = function getLocaleString (key, values) {
+  var locale = xtiger.defaults.locale || 'en',
+      res;
+  if (xtiger.defaults.locales[locale]) {
+    res = xtiger.defaults.locales[locale][key];
+  } else if ((locale !== 'en') && xtiger.defaults.locales.en) { // fallbacks to 'en'
+    res = xtiger.defaults.locales.en[key];
+  } else {
+    res = 'missing key: ' + key;
   }
-  return _buf;
+  return (typeof res === "function") ? res(values) : res;
 }
 
 //////////////////
@@ -180,16 +170,17 @@ xtiger.cross.loadDocument = function (url, logger) {
         return xhr.responseXML;     
         // FIXME: on FF we must test for parseerror root and first child text node err msg !!!!
       } else if (logger) {
-        logger.logError('$$$ loaded but it contains no XML data', url);
+        logger.logLocaleError('errNoXML', { url : url });
       }
     } else if (logger) { 
-      var explain = xhr.statusText ? '(' + xhr.statusText + ')' : ''; 
-      logger.logError('HTTP error while loading $$$, status code : ' + xhr.status + explain, url);
+      logger.logLocaleError('errLoadDocumentStatus', { url : url, xhr: xhr });
     }
-  } catch (e) {        
-    if (logger) { logger.logError('Exception while loading $$$ : ' + (e.message ? e.message : e.name), url); }
-  } 
-  return false; 
+  } catch (e) {
+    if (logger) {
+      logger.logLocaleError('errException', { url : url, e : e });
+    }
+  }
+  return false;
 }
 
 /**

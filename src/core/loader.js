@@ -26,14 +26,16 @@ if (typeof xtiger == "undefined" || !xtiger) {
 }
 
 // the following modules will be filled by other library files
-/** @namespace Contains parsing facilities to handle the XTiger XML language */
+/* parsing facilities to handle the XTiger XML language */
 xtiger.parser = {};
-/** @namespace Contains editors and plugins */
+/* editors and plugins */
 xtiger.editor = {};
-/** @namespace Contains utilities to make the library cross-browser */
+/* utilities to make the library cross-browser */
 xtiger.cross = {};
-/** @namespace Contains various utility methods */
+/* various utility methods */
 xtiger.util = {};
+/* defaults settings */
+xtiger.defaults = {};
 
 /**
  * Single global object that contains DOM dependent methods which may also 
