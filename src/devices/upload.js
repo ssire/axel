@@ -15,6 +15,17 @@
 
 (function () { 
 
+  // Two functions used to decode Ajax responses for preflight and file upload requests
+  // They may be overloaded by registering an xtiger.factory 'protocol.upload' object
+  var Default_Protocol = {
+    decode_success : function (xhr) {
+      return xhr.responseText;
+    },
+    decode_error : function (xhr) {
+      return xhr.responseText;
+    }
+  };
+
   // Creates and manages several potentially parallel data uploading processes
   // Manages a pool of Upload objects, queues request to upload and serve them one at a time
   // Possibility to serve in parallel (asynchronous)
@@ -32,7 +43,7 @@
   UploadManager.prototype = {
   
     _reset : function (uploader) {
-      if (this.inProgress !== uploader) { alert('Warning: attempt to close an unkown transmission !')}
+      if (this.inProgress !== uploader) { alert('Warning: attempt to close an unkown transmission !') }
       uploader.reset();
       this.available.push(uploader);
       this.inProgress = null;
@@ -72,7 +83,7 @@
         if (f && f.document && f.document.body) {
           txt = f.document.body.textContent || f.document.body.innerText;
         }
-        if (txt != 'WAITING') {
+        if ('WAITING' !== txt) {
           this.reportEoT(0, txt);
         } else {
           setTimeout(this.onPoll, 500);
@@ -109,18 +120,15 @@
     // FIXM: currently only one transmission at a time (this.inProgress)
     reportEoT : function (status, result) {
       this.stopPolling();
-      if (this.inProgress === null) { // sanity check
-        // maybe the transmission was simply cancelled hence we cannot say...
-        // alert('Warning: attempt to report an unkown file upload termination !');
-      } else {
-        if (status == 1) {
+      if (this.inProgress !== null) { // sanity check in case transmission has been cancelled
+        if (1 === status) {
           this.notifyComplete(this.inProgress, result);
         } else {
           this.notifyError(this.inProgress, 0, result); // code not used (0)
         }
       }
     },
-    
+
     notifyComplete : function (uploader, result) {
       var tmp = uploader.client;
       this._reset (uploader);
@@ -140,12 +148,12 @@
       uploader.cancel();   
       this._reset(uploader);
       tmp.onCancel(); // informs client of new state 
-    }     
-  }
+    }
+  };
 
   // Simple XHR based file upload
   // See https://developer.mozilla.org/en/Using_files_from_web_applications
-  FileUpload = function (mgr) {
+  function FileUpload (mgr) {
     this.manager = mgr; 
     this.xhr = null;   
     this.defaultUrl = "/upload"; // FIXME: default action URL
@@ -188,7 +196,7 @@
           } else if (! form.getAttribute('action')) {
             xtdom.setAttribute(form, 'action', this.defaultUrl);
           }
-          form['documentId'].value = this.client.getDocumentId() || 'noid';
+          form.documentId.value = this.client.getDocumentId() || 'noid';
           form.submit(); // Form based upload
         }   
       } catch (e) {
@@ -196,30 +204,31 @@
       }
     },
   
-    // Use this protocol to check a resource name does not already exists client side before submitting
-    // FIXME: - couldn't we use a HEAD request ?
-    //        - factorize with startXHRForm ?
+    // Optional part of the protocol to check file name is accepted client side before submitting
+    // FIXME: use a HEAD request ? factorize with startXHRForm ?
     preflight : function (client) {
+      var formData, options, k,
+          _this = this;
       this.client = client;
-      var formData, id, key, options;
       this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
       this.isCancelled = false;
-      var _this = this;
-      //xtiger.cross.debug('Start preflight request to the server...');
       this.xhr.onreadystatechange = function () {
-        if (_this.isCancelled) return;
+        var protocol;
+        if (! _this.isCancelled) {
+          protocol = xtiger.registry.hasFactoryFor('protocol.upload') ? xtiger.factory('protocol.upload').getInstance() : Default_Protocol;
           if (4 === _this.xhr.readyState) {
             if (200 === _this.xhr.status) { // OK
-              _this.manager.notifyComplete(_this, _this.xhr.responseText);
+              _this.manager.notifyComplete(_this, protocol.decode_success(_this.xhr));
             } else { // Most probably 409 for Conflict
-              _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.responseText);
+              _this.manager.notifyError(_this, _this.xhr.status, protocol.decode_error(_this.xhr));
             }
           }
-      }
+        }
+      };
       try {
         this.xhr.open("POST", this.url || this.defaultUrl, true); // asynchronous
         formData = new FormData();
-        var options = client.getPreflightOptions();
+        options = client.getPreflightOptions();
         for (k in options) {
           formData.append(k, options[k]);  
         }
@@ -231,26 +240,28 @@
   
     // Sends file with Ajax FormData API
     startXHRForm : function () {
-      var formData, id;
+      var formData, options, k,
+          _this = this;
       this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
       this.isCancelled = false;
-      var _this = this;
-      //xtiger.cross.debug('Start file upload to the server...');
       this.xhr.onreadystatechange = function () {
-        if (_this.isCancelled) return;
+        var protocol; 
+        if (! _this.isCancelled) {
+          protocol = xtiger.registry.hasFactoryFor('protocol.upload') ? xtiger.factory('protocol.upload').getInstance() : Default_Protocol;
           if (4 === _this.xhr.readyState) {
             if (201 === _this.xhr.status) { // Resource Created
               // variant: use Location header ?
-              _this.manager.notifyComplete(_this, _this.xhr.responseText);
+              _this.manager.notifyComplete(_this, protocol.decode_success(_this.xhr));
             } else {
-              _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.responseText);
+              _this.manager.notifyError(_this, _this.xhr.status, protocol.decode_error(_this.xhr));
             }
           }
-      }
+        }
+      };
       try {
         this.xhr.open("POST", this.url || this.defaultUrl, true); // asynchronous
         formData = new FormData();
-        var options = this.client.getPayload();
+        options = this.client.getPayload();
         for (k in options) {
           formData.append(k, options[k]);
         }
@@ -259,34 +270,6 @@
         this.manager.notifyError(this, e.name, e.message); // e.toString()
       }
     },
-    
-    // DEPRECATED : binary transfer
-    // startXHR : function () {    
-    //   this.xhr = new XMLHttpRequest();  // creates one request for each transmission (not sure XHRT is reusable)
-    //   var _this = this;  
-    //   this.xhr.onreadystatechange = function () {
-    //     try {
-    //       if (4 == _this.xhr.readyState) {
-    //         if (_this.xhr.status  == 201) { // Resource Created
-    //           _this.manager.notifyComplete(_this, _this.xhr.responseText);
-    //         } else {
-    //           _this.manager.notifyError(_this, _this.xhr.status, _this.xhr.statusText);             
-    //         }
-    //         _this.xhr = null; // GC ?
-    //       } 
-    //     } catch (e) {
-    //       _this.manager.notifyError(_this, e.name, e.message); // e.toString()
-    //     }
-    //   } 
-    //   this.xhr.open("POST", this.url || this.defaultUrl); // FIXME: store URL in base parameter of editor 
-    //   this.xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');  
-    //   // Document id should have been set through a 'documentId' filter 
-    //   // Document id is sent then "$$$" then photo data 
-    //   // If I knew how to send a multipart message with XMLHTTPRequest that would be cleaner !
-    //   var id = this.client.getDocumentId() || 'noid';
-    //   this.xhr.sendAsBinary(id + "$$$" + this.client.getPayload().getAsBinary());
-    //   // FIXME: encode parameters in URL ?
-    // },
     
     cancel : function () {
       if (this.xhr) {
@@ -299,7 +282,7 @@
         form.reset(); // naive trial to cancel transmission
       }
     } 
-  } 
+  };
 
   xtiger.registry.registerFactory('upload', 
     {

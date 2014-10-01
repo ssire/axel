@@ -148,6 +148,10 @@ xtiger.util.FactoryRegistry.prototype = {
     } else {
       return this.store[name];
     }
+  },
+
+  hasFactoryFor : function (name) {
+    return !!this.store[name];
   }
 }
 
