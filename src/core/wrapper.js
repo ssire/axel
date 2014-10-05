@@ -410,23 +410,62 @@
     // Experimental vector (calculus) extension //
     //////////////////////////////////////////////
 
-    // Returns 1st value of first element with name tag in wrapped set
-    // TODO:
-    // - short circuit when found
-    // - extend to support (partial)XPath
-    peek : function (name) {
+    // Returns 1st value of first element with name tag in wrapped set or undefined if no match
+    // Converts result to a float for a number, the optional neutral element (0) for an empty string,
+    // or the value itself otherwise (a string)
+    // TODO: - extend name to support (partial) XPath
+    peek : function (name, optNeutral) {
       var logger = new _Logger(), // FIXME: getData API
-          set =
-            $.map(this._list(), function (e, i) {
-              var tmp;
-              if (e.getHandle().xttOpenLabel === name) {
-                e.save(logger);
-                tmp = logger.dump();
-                logger.reset();
-                return tmp;
+          list = this._list(),
+          i, res, num;
+      for (i = 0; i < list.length; i++) {
+        if (list[i].getHandle().xttOpenLabel === name) {
+          list[i].save(logger);
+          res = logger.dump();
+          if (! isNaN(res)) {
+            num = parseFloat(res);
+            if (isNaN(num)) {
+              res = optNeutral ? optNeutral : 0
+            } else {
+              res = num;
+            }
+          }
+          return res;
+        }
+      }
+    },
+
+    // Sets value of first element with name tag in wrapped set
+    poke : function (name, value) {
+      var list = this._list(), i, h;
+      for (i = 0; i < list.length; i++) {
+        if (list[i].getHandle().xttOpenLabel === name) {
+          if (typeof value === 'object') {
+            for (var p in value){
+              if (value.hasOwnProperty(p)) {
+                if ('#val' === p) {
+                  list[i].update(value[p]+'');
+                } else {
+                  h = list[i].getHandle();
+                  if (h.style) {
+                    h.style[p] = value[p];
+                  }
+                }
               }
-            });
-      return set[0];
+            }
+          } else {
+            list[i].update(value+'');
+          }
+          break;
+        }
+      }
+      return this;
+    },
+    
+    // Removes latest computed vector from the stack
+    flush : function () {
+      this._vector.pop();
+      return this;
     },
 
     // Internally stores the sequence of elements with name tag in wrapped set
@@ -480,7 +519,7 @@
             }
           }
           res = this;
-        } else if (this._vector[0].length > 0) {
+        } else if (this._vector[0].length > 0) { // FIXME ? not chainable ?
           res = this._vector[0].reduce(function(p,c) { return p*c });
         }
       }
