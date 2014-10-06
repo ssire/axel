@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger" xml:lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <title>AXEL template with computed values sample</title>
+
+    <xt:head version="1.1" templateVersion="1.0" label="Root">
+    </xt:head>
+
+  </head>
+  <body>
+    <h1>Sample computed value demonstration</h1>
+
+    <p><span id="recompute">Total</span> : <span id="total">0</span> <xt:use types="select" label="Current" values="EUR CHF" param="noxml=true">EUR</xt:use></p>
+
+    <ul id="shopping-list">
+      <xt:repeat minOccurs="1" maxOccurs="*" label="Repetition">
+        <li class="row">Product price <xt:use types="text" label="Item" param="filter=event">price</xt:use> x Quantity: <xt:use types="text" label="Quantity" param="filter=event">1</xt:use> in Currency <xt:use types="select" label="Currency" values="EUR CHF">EUR</xt:use> (total: <xt:use label="SubTotal" types="text" param="noedit=true">-</xt:use>)<xt:menu-marker/></li>
+      </xt:repeat>
+    </ul>
+    <p><i>Due to a limitation in the 'select' plugin that does not support the 'event' filter click on Total to update the total when you change a currency; this is fixed if you use 'choice' plugin in AXEL-FORMS instead</i></p>
+    <script type="text/javascript" charset="utf-8">
+      var $, $axel, $doc;
+
+      function _refreshAll (ev) {
+        $($('li.row', $doc)).each(
+          function (i,e) {
+            var row = $axel(e);
+            row.poke('SubTotal', {
+              '#val' : row.peek('Item') * row.peek('Quantity'),
+              'color' : row.peek('Currency') === 'EUR' ? 'blue' : 'orange'
+              });
+          }
+        );
+        $($('#total',$doc)).text(_caclTotal());
+      }
+      function _caclTotal (ev) {
+        var rates = {
+                      'EUR' : { 'EUR' : 1, 'CHF' : 0.8 },
+                      'CHF' : { 'EUR' : 1.2, 'CHF' : 1 }
+                      },
+            changes = rates[$axel($('body',$doc)).peek('Current')],
+            res, row;
+        if (ev &amp;&amp; (ev.type === 'axel-update')) {
+          row = $axel(ev.target.parentNode);
+          row.poke('SubTotal', {
+            '#val' : row.peek('Item') * row.peek('Quantity'),
+            'color' : row.peek('Currency') === 'EUR' ? 'blue' : 'orange'
+            });
+        }
+        res = $axel($('#shopping-list',$doc)).vector('Item').vector('Quantity').product().vector('Currency', function(v) { return changes[v] || 1 }).product().sum();
+        return res;
+      };
+
+      function init() {
+        $ = window.parent.jQuery;
+        $axel = window.parent.$axel;
+        $doc = document;
+        $('body', document).bind('axel-update', function (ev) { $('#total',  $doc).text(_caclTotal(ev)) });
+        $('body', document).bind('axel-add', function (ev) {$('#total',  $doc).text(_caclTotal(ev)) });
+        $('body', document).bind('axel-remove', function (ev) {$('#total',  $doc).text(_caclTotal(ev)) });
+        $('#recompute', document).bind('click', _refreshAll);
+        $(window.parent.document).bind('axel-content-ready', _refreshAll);
+      }
+      
+      setTimeout(init, 1000); // otherwise fakes demo editor to believe it is self-transformed because of $axel
+    </script>
+  </body>
+</html>

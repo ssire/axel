@@ -54,6 +54,7 @@ function getDefaultTemplates () {
     files : 
       [
       "Article.xhtml",
+      "Computed.xhtml",
       "Page.xhtml",
       "Template.xhtml"
       ]
