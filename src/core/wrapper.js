@@ -422,13 +422,10 @@
         if (list[i].getHandle().xttOpenLabel === name) {
           list[i].save(logger);
           res = logger.dump();
-          if (! isNaN(res)) {
-            num = parseFloat(res);
-            if (isNaN(num)) {
-              res = optNeutral ? optNeutral : 0
-            } else {
-              res = num;
-            }
+          if ((res != '')  && ! isNaN(res)) {
+            res = parseFloat(res);
+          } else {
+            res = optNeutral ? optNeutral : 0
           }
           return res;
         }
