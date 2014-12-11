@@ -54,10 +54,10 @@
    var outFormat = editor.getParam(outSpec);
    if (inSpec === 'date_region') { // double indirection
      inFormat = REGION[inFormat] ? REGION[inFormat].dateFormat : $.datepicker.regional[''].dateFormat;
-     outFormat = $.datepicker[outFormat];
+     outFormat = $.datepicker[outFormat] || outFormat;
    }
    if (outSpec === 'date_region') { // double indirection
-     inFormat = $.datepicker[inFormat];
+     inFormat = $.datepicker[inFormat] || inFormat;
      outFormat = REGION[outFormat] ? REGION[outFormat].dateFormat : $.datepicker.regional[''].dateFormat;
    }
    var res = null;
