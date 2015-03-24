@@ -1,39 +1,22 @@
-// MUST be called after wrapper.js
+// MUST be loaded after loader.js and wrapper.js
 (function (GLOBAL) {
 
-  if (xtiger.defaults) {
-    xtiger.defaults.locales = {
-      en : {}
-    };
+  xtiger.defaults.locales = {};
+
+  _setLocale = function (lang) {
+    xtiger.defaults.locale = lang;
   }
 
-  $axel.extend (
-    xtiger.defaults.locales.en,
-    {
-      // Functions with values
-      errNoXML : function (values) { 
-        return values.url + " loaded but it contains no XML data"; },
-      errLoadDocumentStatus : function (values) { 
-        return "HTTP error while loading " + values.url + " status code " + values.xhr.status; },
-      errException : function (values) { 
-        return "exception " + values.e.name + " " + values.e.message  + (values.url ? " while loading " + values.url : ""); },
-      errTransformNoTarget : function (values) { 
-        return "transformation aborted because target container " + values.id + " not found in target document"; },
-      
-      // Simple strings
-      errTransformIframeSecurity : "the editor could not be generated because browser security restrictions prevented access to window iframe content",
-      errDataSourceUndef : "undefined or missing XML data source",
-      errEmptySet4Template : "cannot load template into empty wrapped set",
-      errNoBundlesPath : "missing bundlesPath declaration to transform template",
-      errNoSerializer : "missing XML serializer algorithm",
-      errNoLoader : "missing XML loader algorithm",
-      errEmptySet4XML : "cannot load XML data source into empty wrapped set",
-      errTemplateNoBody : "Could not get <body> element from the template to transform",
-      errTemplateUndef : "The document containing the template is null or undefined",
-      errNoTemplate : "no template to transform",
-      errTargetNoHead : "cannot inject editor's style sheet because target document has no head section",
-      errDataSourceNoData : "data source empty"
+  _addLocale = function (lang, defs) {
+    if (typeof xtiger.defaults.locales[lang] === "undefined") {
+      xtiger.defaults.locales[lang] = {};
     }
-  );
+    $axel.extend(xtiger.defaults.locales[lang], defs, false, true);
+  }
+
+  // see also xtiger.util.getLocaleString in defaultbrowser.js
+
+  GLOBAL.$axel.addLocale = _addLocale;
+  GLOBAL.$axel.setLocale = _setLocale;
 
 }(window));

@@ -117,12 +117,15 @@ xtiger.util.array_map = function array_map (aArray, aCallback) {
 xtiger.util.getLocaleString = function getLocaleString (key, values) {
   var locale = xtiger.defaults.locale || 'en',
       res;
-  if (xtiger.defaults.locales[locale]) {
+  if (xtiger.defaults.locales && xtiger.defaults.locales[locale]) {
     res = xtiger.defaults.locales[locale][key];
-  } else if ((locale !== 'en') && xtiger.defaults.locales.en) { // fallbacks to 'en'
-    res = xtiger.defaults.locales.en[key];
-  } else {
-    res = 'missing key: ' + key;
+  }
+  if (res === undefined) {
+    if ((locale !== 'en') && xtiger.defaults.locales && xtiger.defaults.locales.en) { // fallbacks to 'en'
+      res = xtiger.defaults.locales.en[key];
+    } else {
+      res = 'missing key: ' + key;
+    }
   }
   return (typeof res === "function") ? res(values) : res;
 }

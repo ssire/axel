@@ -45,9 +45,12 @@ Author(s) : Stephane Sire
 
     <filelist id="files.plugins" dir="${plugins.src.dir}"     
               files="${plugins.lib.files}"/>
-                  
+
     <filelist id="files.filters" dir="${filters.src.dir}"
               files="${filters.lib.files}"/>
+
+    <filelist id="files.locales" dir="${locales.src.dir}"
+              files="${locales.lib.files}"/>
 
     <filelist id="files.css" dir="${css.src.dir}"
               files="${css.lib.files}"/>
@@ -89,6 +92,7 @@ Author(s) : Stephane Sire
       <filelist refid="files.devices"/>
       <filelist refid="files.plugins"/>
       <filelist refid="files.filters"/>
+      <filelist refid="files.locales"/>
     </concat>
   </target>
 
