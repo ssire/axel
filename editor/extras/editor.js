@@ -1006,7 +1006,7 @@
 
     // Returns the path to the current page (which should be 'editor.xhtml') concatenatd with url
     xttMakeLocalURLFor : function (url) {
-      var m = document.location.href.match(/^(.*)\/\w+.xhtml/);
+      var m = document.location.href.match(/^([^#]*)\/\w+.xhtml/)
       if (m){
         return m[1] + '/' + url;
       }
