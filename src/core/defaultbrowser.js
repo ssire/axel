@@ -26,7 +26,7 @@
 |                                                                             |
 \*****************************************************************************/
 
-// user agent detection
+// user agent detection (since IE 11 detects IE as gecko only which is compatible)
 xtiger.cross.UA = {
   IE:   !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1),
   opera:  navigator.userAgent.indexOf('Opera') > -1,
@@ -140,9 +140,9 @@ xtiger.util.getLocaleString = function getLocaleString (key, values) {
  */
 xtiger.cross.getXHRObject = function () {
   var xhr = false;  
-  if (window.XMLHttpRequest) {
+  if (window.XMLHttpRequest) { // including IE since IE 7
      xhr = new XMLHttpRequest();
-  } else if (window.ActiveXObject) {  // IE
+  } else if (window.ActiveXObject) {  // IE 5, 6
     try {
       xhr = new ActiveXObject('Msxml2.XMLHTTP');
     } catch (e) {
@@ -155,22 +155,33 @@ xtiger.cross.getXHRObject = function () {
   if (! xhr) {
      alert("Your browser does not support XMLHTTPRequest");
   }
-  return xhr;       
-}                  
-          
+  return xhr;
+}
+
 /**
  * Loads the document at URL using the default XHR object created by the getXHRObject method
  * Accepts an optional logger (xtiger.util.Logger) object to report errors
  * Returns the document (should be a DOM Document object) or false in case of error
  */
 xtiger.cross.loadDocument = function (url, logger) {
-  var xhr = xtiger.cross.getXHRObject ();
+  var xhr = xtiger.cross.getXHRObject (), xmlDoc;
   try {  
     xhr.open("GET", url, false); // false:synchronous
     xhr.send(null);
     if ((xhr.status  == 200) || (xhr.status  == 0)) { // 0 is for loading from local file system
       if (xhr.responseXML) {
-        return xhr.responseXML;     
+        if (xhr.responseXML.childNodes.length === 0) {  // IE 7, 8 failure
+          try {
+            xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+            xmlDoc.async="false";
+            xmlDoc.loadXML(xhr.responseText);
+          } 
+          catch (e) {
+          }
+          return xmlDoc;
+        } else {
+          return xhr.responseXML;
+        }
         // FIXME: on FF we must test for parseerror root and first child text node err msg !!!!
       } else if (logger) {
         logger.logLocaleError('errNoXML', { url : url });

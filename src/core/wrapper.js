@@ -228,7 +228,7 @@
       // transformation
       if (bp) {
         if (this.first) {
-          delete this.first.xttHeadLabel; // reset previous transformed template info (see transformed() function)
+          this.first.xttHeadLabel = undefined; // reset previous transformed template expando info (see transformed() function)
           status = new xtiger.util.Logger();
           try { // load and transform template
             if (this.first.nodeName.toLowerCase() === 'iframe') {

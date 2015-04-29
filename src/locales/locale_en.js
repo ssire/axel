@@ -10,9 +10,9 @@
       errNoXML : function (values) { 
         return values.url + " loaded but it contains no XML data"; },
       errLoadDocumentStatus : function (values) { 
-        return "HTTP error while loading " + values.url + " status code " + values.xhr.status; },
+        return "HTTP error" + (values.url ? " while loading " + values.url : "") + " status code " + values.xhr.status; },
       errException : function (values) { 
-        return "exception " + values.e.name + " " + values.e.message  + (values.url ? " while loading " + values.url : ""); },
+        return "exception " + values.e.name + " " + values.e.message + (values.url ? " while loading " + values.url : "") + (values.status ? " status code " + values.xhr.status : ""); },
       errTransformNoTarget : function (values) { 
         return "transformation aborted because target container " + values.id + " not found in target document"; },
     

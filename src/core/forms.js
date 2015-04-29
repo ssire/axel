@@ -37,7 +37,7 @@ xtiger.util.Logger.prototype = {
 
  // Deprecated API
  logError : function (msg, data) {
-   if (key.indexOf('$$$') != -1) { 
+   if (msg.indexOf('$$$') != -1) { 
      this.errors.push (msg.replace('$$$', '"' + data + '"'));
    } else {
      this.errors.push(msg);

@@ -182,7 +182,7 @@
      },
      
      stopEditing : function () {
-     },
+     }
      
      // onDragEnter : function (ev) {  
      //   xtdom.addClassName (this._handle, 'axel-dnd-over');

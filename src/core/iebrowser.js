@@ -87,7 +87,10 @@ if (xtiger.cross.UA.IE) {
         if (deep && node.childNodes && node.childNodes.length > 0) // copy children (recursion)
           for (var i = 0; i < node.childNodes.length; i++) {
             copy = xtdom.importNode(doc, node.childNodes[i], deep);
-            if (copy) newNode.appendChild(copy);
+            if (copy) {
+              try { newNode.appendChild(copy); }
+              catch (e) { }
+            }
           }
         return newNode;
         break;
