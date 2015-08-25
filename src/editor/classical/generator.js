@@ -40,7 +40,7 @@ xtiger.editor.Generator.prototype = {
     }
         
     // special treatment for IE as TEXT nodes do not support custom attributes
-    if (xtiger.cross.UA.IE && (node.nodeType != xtdom.ELEMENT_NODE)) {
+    if (xtiger.cross.UA.unsafeExpando && (node.nodeType != xtdom.ELEMENT_NODE)) {
       return false;
     }
     // checks if node has already been marked for a given category

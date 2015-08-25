@@ -32,8 +32,11 @@ xtiger.cross.UA = {
   opera:  navigator.userAgent.indexOf('Opera') > -1,
   webKit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
   gecko:  navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') === -1,
-  mobileSafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/)  
+  mobileSafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/)
 };
+
+// features detection
+xtiger.cross.UA.unsafeExpando = xtiger.cross.UA.IE || (navigator.userAgent.indexOf('Trident') === -1) || (navigator.userAgent.indexOf('Edge') === -1);
 
 xtiger.cross.events = {
   DOWN: (window.Modernizr && window.Modernizr.touch) ? 'touchstart' : 'mousedown'
