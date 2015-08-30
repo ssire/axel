@@ -36,7 +36,7 @@ xtiger.cross.UA = {
 };
 
 // features detection
-xtiger.cross.UA.unsafeExpando = xtiger.cross.UA.IE || (navigator.userAgent.indexOf('Trident') === -1) || (navigator.userAgent.indexOf('Edge') === -1);
+xtiger.cross.UA.unsafeExpando = xtiger.cross.UA.IE || (navigator.userAgent.indexOf('Trident') !== -1) || (navigator.userAgent.indexOf('Edge') !== -1);
 
 xtiger.cross.events = {
   DOWN: (window.Modernizr && window.Modernizr.touch) ? 'touchstart' : 'mousedown'
