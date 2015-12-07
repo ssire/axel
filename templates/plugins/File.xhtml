@@ -22,20 +22,21 @@
 
     <h1>The "file" plugin</h1>
 
-    <p>The <code>"file"</code> plugin uploads files to a Web server and displays the result with a as an <code>img</code> image handler.</p>
+    <p>The <code>"file"</code> plugin uploads files to a server. It displays it's current content as an <code>img</code> image handler with a tooltip giving status information, including a link to download the file if available.</p>
 
     <ul class="parameters">
-      <li><var>trigger</var> (<code>mouseover|<b>click</b></code>) : user action that triggers editing mode</li>
-      <!-- <li><var>padding</var> (<code>10</code>) : internal padding of the popup window lens</li> -->
-      <li><var>photo_url</var> (<code><b>/upload</b></code>) : optional string with the URL of the web service end point managing the photo upload protocol</li>
-      <li><var>photo_class</var> (<code>undefined</code>) : optional class added to the <code>img</code> image handler when it shows an uploaded photo</li>
-      <li><var>photo_base</var> (<code>undefined</code>) : optional prefix that will be added to the image URL returned by the photo upload protocol before it is set as the <var>src</var> attribute of the <code>img</code> image handler</li>
+      <li><var>file_URL</var> (<code><b>/fileUpload</b></code>) : service endpoint address for sending file data</li>
+      <li><var>file_base</var> (<code>undefined</code>) : prefix to be added before file path to generate the link to upload the file in the tooltip</li>
+      <li><var>file_type</var> (<code><b>application/pdf</b></code>) : whitespace separated list of accepted file MIME types</li>
+      <li><var>file_type_message</var> (<code><b>'warnFileTypeDefault'</b></code> key in locales) : alert message to show on selection of a file with wrong MIME type</li>
+      <li><var>file_gen_name</var> (<code><b>auto</b></code> | manual) : when <i>manual</i> user can edit a file name to send to the server together with the file data; this edited name is first sent to the server in a preflight request; useful to let users edit file link names</li>
+      <li><var>file_size_limit</var> (<code>undefined</code>) : file size limit in KB</li>
     </ul>
     
     <h2>Example</h2>
     
     <p>Ajoutez un fichier : 
-      <xt:use types="file" label="LinkRef"        param="file_URL=http://localhost:8080/exist/projets/coaching/cases/1/activities/1/docs/file;file_base=http://localhost:8080/exist/projets/coaching/cases/1/activities/1;file_gen_name=manual;file_type_message=Vous devez sélectionner un document PDF ou un document Microsoft Office (Word, Excel, Power Point);file_type=application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-powerpoint application/vnd.openxmlformats-officedocument.presentationml.presentation;filter=event"/>
+      <xt:use types="file" label="LinkRef"        param="file_URL=http://localhost:8080/exist/projets/coaching/cases/1/activities/1/docs/file;file_base=http://localhost:8080/exist/projets/coaching/cases/1/activities/1;file_gen_name=manual;file_type_message=Vous devez sélectionner un document PDF ou un document Microsoft Office (Word, Excel, Power Point);file_type=application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-powerpoint application/vnd.openxmlformats-officedocument.presentationml.presentation;filter=event;file_size_limit=1024"/>
     </p>
   </body>
 </html>

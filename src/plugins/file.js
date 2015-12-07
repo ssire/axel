@@ -25,17 +25,18 @@
   var ERROR = 3;
   var COMPLETE = 4;
   var READY = 5;
-  var FEEDBACK = { // permanent message visible next to the icon
-      'fr' : [null, null, 'enregistrement en cours', "échec de l'enregistrement", 'enregistrement réussi', null]
+  var FEEDBACK = { // permanent message visible next to the icon as per locale_XX.js
+      'fr' : [null, null, 'infoFileSendInProgress', 'infoFileSendFailure', 'infoFileSendSuccess', null]
       };
-  var HINTS = { // tooltip message
-      'fr' : ['cliquez pour choisir un fichier',
-              ['cliquez sur “Enregistrer” pour sauvegarder “%” (%)', 'cliquez sur “Enregistrer” pour sauvegarder “%” (%)<br/>sous “%” (vous pouvez éditer le nom avant)'],
-              'enregistrement de “%” (%) en cours',
-              "échec de l'enregistrement de “%”<br/>%",
-              '“%” a été enregistré en tant que <a target="_blank" href="%">%</a>',
-              'cliquez pour remplacer <a target="_blank" href="%">%</a>' ]
+  var HINTS = { // tooltip messages as per locale_XX.js
+      'fr' : [ 'hintFileSelect',
+               ['hintFileSend', 'hintFileSendAs'],
+               'hintFileSendInProgress',
+               'hintFileSendFailure',
+               'hintFileSendSuccess',
+               'hintFileReplace' ]
       };
+
   function PURIFY_NAME (name) {
     var str = $.trim(name).toLowerCase(),
         res = (str.lastIndexOf('.') !== -1) ? str.substring(0, str.lastIndexOf('.')) : str;
@@ -46,6 +47,23 @@
     res = res.replace(/[éè]/g,'e'); // FIXME: improve
     res = res.replace(/[^a-z0-9-_]/g,'');
     return res;
+  }
+
+  function DISPLAY_FILE_SIZE (size) {
+    var tmp;
+    if (size >= 1024) {
+      kb = size >> 10;
+      if (kb >= 1024) {
+        mb = size >> 20;
+        kb = (size - (mb << 20)) >> 10;
+      } else {
+        mb = 0;
+      }
+      tmp = mb >= 1 ? mb + '.' + kb + ' MB' : kb + ' KB';
+    } else {
+      tmp = size + ' bytes'; 
+    }
+    return tmp;
   }
 
   // you may add a closure to define private properties / methods
@@ -161,7 +179,9 @@
         ];
         var tmp;
         var config = UI[this.model.state];
-        var msg = FEEDBACK.fr[this.model.state];
+        var key = FEEDBACK.fr[this.model.state];
+        var msg = key ? xtiger.util.getLocaleString(key) : '';
+        
         // Manages special PDF icons
         if (SELECTED === this.model.state) { 
           if ('application/pdf' === this.model.file.type) { 
@@ -180,7 +200,7 @@
           this.vIcon1.removeClass('xt-file-editable');
         }
         if (config[1]) { // transient feedback (file name on mouse over)
-          tmp = "“"+ (this.model.name || "pas de fichier") + "”";
+          tmp = '"'+ (this.model.name || xtiger.util.getLocaleString('infoFileNoFile')) + '"';
           this.vTrans.text(tmp);
         } else {
           this.vTrans.text('');
@@ -196,7 +216,7 @@
           this.vSave.hide();
           this.vId.hide();
         }
-        this.vPerm.text(msg || ''); // permanent feedback
+        this.vPerm.text(msg); // permanent feedback
         this.configureHints();
         if (config[2]) { // cancel / close icon
           this.vIcon2.attr('src', config[2]);
@@ -211,44 +231,22 @@
       },
 
       configureHints : function () {
-        var a, i, tmp, tokens, vars, mb, kb, spec = HINTS.fr[this.model.state];
-        if (this.model.state === SELECTED) {
-          spec = spec[ (this.getParam('file_gen_name') === 'auto') ? 0 : 1 ];
+        var tmp, args, key = HINTS.fr[this.model.state];
+        if (this.model.state === SELECTED) { // double indirection
+          key = key[ (this.getParam('file_gen_name') === 'auto') ? 0 : 1 ];
         }
-        if (spec.indexOf('%') !== -1) {
-          a = [];
-          if ((this.model.state === SELECTED) || (this.model.state === LOADING)) {
-            if (this.model.size > 1024) {
-              kb = this.model.size >> 10;
-              if (kb > 1024) {
-                mb = this.model.size >> 20;
-                kb = (this.model.size - (mb << 20)) >> 10;
-              } else {
-                mb = 0;
-              }
-              tmp = mb >= 1 ? mb + '.' + kb + ' MB' : kb + ' KB';
-            } else {
-              tmp = this.model.size; 
-            }
-            vars = [this.model.name, tmp, this.vId.val()];
-          } else if (this.model.state === ERROR) {
-            vars = [this.model.name, this.model.err];
-          } else if (this.model.state === COMPLETE) {
-            vars = [this.model.name, this.model.genFileURL(), this.model.url];
-          } else { // READY
-            vars = [this.model.genFileURL(), this.model.url];
-          }
-          tokens = spec.split('%');
-          for (i = 0; i < tokens.length; i++) { 
-            a.push(tokens[i]); 
-            if (i<vars.length) {
-               a.push(vars[i]);
-            }
-          }
-          this.model.hints = a.join('');
-        } else {
-          this.model.hints = spec;
+        // prepares args
+        if ((this.model.state === SELECTED) || (this.model.state === LOADING)) {
+          tmp = DISPLAY_FILE_SIZE(this.model.size);
+          args = { 'filename': this.model.name, 'size': tmp, 'name': this.vId.val() };
+        } else if (this.model.state === ERROR) {
+          args = { 'filename': this.model.name, 'error' : this.model.err || 'no error message' };
+        } else if (this.model.state === COMPLETE) {
+          args = { 'filename': this.model.name, 'href' : this.model.genFileURL(), 'anchor' : this.model.url };
+        } else { // READY
+          args = { 'href' : this.model.genFileURL(), 'anchor' : this.model.url };
         }
+        this.model.hints = xtiger.util.getLocaleString(key, args);
       },
 
       // Proxy method to use 'event' filter
@@ -328,9 +326,9 @@
     { 
       file_URL : "/fileUpload",
       file_type : 'application/pdf',
-      file_type_message : 'Vous devez sélectionner un fichier PDF',
-      file_gen_name : 'auto'
-      // file_size_limit : 1024
+      file_type_message : undefined,
+      file_gen_name : 'auto',
+      file_size_limit : undefined
     },
     _Editor
   );
@@ -365,18 +363,24 @@
       this.selector.click();
     },
     onChange : function (ev) {
-      var file = (ev.target.files.length > 0) ? ev.target.files[0] : null;
-      var mtypes = this.delegate.getParam('file_type');
+      var file = (ev.target.files.length > 0) ? ev.target.files[0] : null,
+          mtypes = this.delegate.getParam('file_type'),
+          limit = parseInt(this.delegate.getParam('file_size_limit'));
       if (file) {
-        if (file.type && mtypes.indexOf(file.type) !== -1) {
-          if (this.delegate) { this.delegate.doSelectFile(file); }
+        if (isNaN(limit) || (file.size && file.size <= (limit * 1024))) {
+          if (file.type && mtypes.indexOf(file.type) !== -1) {
+            if (this.delegate) { this.delegate.doSelectFile(file); }
+          } else {
+            alert(this.delegate.getParam('file_type_message')|| xtiger.util.getLocaleString('warnFileTypeDefault'));
+          }
         } else {
-          alert(this.delegate.getParam('file_type_message'));
+          alert(xtiger.util.getLocaleString('warnFileSizeLimit', 
+            { 'filename' : file.name, 'size' : DISPLAY_FILE_SIZE(file.size), 'limit' : DISPLAY_FILE_SIZE(limit * 1024) }));
         }
       }
     }
   };
-  
+
   xtiger.registry.registerFactory('fileinputsel', 
     {
       getInstance : function (doc) {
@@ -546,7 +550,7 @@
         this.delegate.redraw();
       } else {
         // FIXME: create a new state "upload will start when at least one other upload in progress will have been completed or aborted"
-        alert("D'autre(s) téléchargement(s) sont en cours, attendez qu'ils se terminent ou bien annulez en un pour pouvoir démarrer un nouveau téléchargement");
+        alert(xtiger.util.getLocaleString('warnFileTooManyUploads'));
       }
     },
     

@@ -22,7 +22,7 @@
 |  Prerequisites : none                                                       |
 |                                                                             |
 \*****************************************************************************/
-var _DebugFilter = (function _DebugFilter () {
+(function ($axel) {
 
   function _printDebugTrace (aModel, aFunction, aValue, aComment) {
     var _buf = '';
@@ -35,9 +35,9 @@ var _DebugFilter = (function _DebugFilter () {
     if (aComment)
       _buf += ' : ' + aComment;
     xtiger.cross.log('debug', _buf);
-  };
+  }
 
-  return {
+  var _DebugFilter = {
     
     onInit : function ( aDefaultData, anOptionAttr, aRepeater ) {
       var txt = '' + aDefaultData;
