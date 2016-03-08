@@ -25,8 +25,11 @@
   var ERROR = 3;
   var COMPLETE = 4;
   var READY = 5;
+  var DELETING = 6;
+  var DELERROR = 7;
+  var DELETED = 8;
   var FEEDBACK = { // permanent message visible next to the icon as per locale_XX.js
-      'fr' : [null, null, 'infoFileSendInProgress', 'infoFileSendFailure', 'infoFileSendSuccess', null]
+      'fr' : [null, null, 'infoFileSendInProgress', 'infoFileSendFailure', 'infoFileSendSuccess', null, 'infoFileDeleteInProgress', 'infoFileDeleteFailure', 'infoFileDeleted']
       };
   var HINTS = { // tooltip messages as per locale_XX.js
       'fr' : [ 'hintFileSelect',
@@ -34,7 +37,11 @@
                'hintFileSendInProgress',
                'hintFileSendFailure',
                'hintFileSendSuccess',
-               'hintFileReplace' ]
+               'hintFileReplace',
+               'hintFileDeleteInProgress',
+               'hintFileDeleteFailure',
+               'hintFileDeleteSuccess'
+             ]
       };
 
   function PURIFY_NAME (name) {
@@ -50,18 +57,20 @@
   }
 
   function DISPLAY_FILE_SIZE (size) {
-    var tmp;
-    if (size >= 1024) {
-      kb = size >> 10;
-      if (kb >= 1024) {
-        mb = size >> 20;
-        kb = (size - (mb << 20)) >> 10;
+    var tmp = '';
+    if (size) {
+      if (size >= 1024) {
+        kb = size >> 10;
+        if (kb >= 1024) {
+          mb = size >> 20;
+          kb = (size - (mb << 20)) >> 10;
+        } else {
+          mb = 0;
+        }
+        tmp = mb >= 1 ? mb + '.' + kb + ' MB' : kb + ' KB';
       } else {
-        mb = 0;
+        tmp = size + ' bytes'; 
       }
-      tmp = mb >= 1 ? mb + '.' + kb + ' MB' : kb + ' KB';
-    } else {
-      tmp = size + ' bytes'; 
     }
     return tmp;
   }
@@ -74,11 +83,14 @@
     ////////////////////////
     
     onGenerate : function ( aContainer, aXTUse, aDocument ) {
-      var viewNode; 
+      var viewNode, delstr = '';
+      if (typeof this.getParam('file_delete')  === 'string') {
+        delstr = '<button class="xt-file-del">x</button>'; // optional UI part
+      }
       viewNode = xtdom.createElement (aDocument, 'span');
       xtdom.addClassName (viewNode , 'xt-file');
       $(viewNode).html(
-        '<img class="xt-file-icon1"/><span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="Enregistrer"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
+        '<img class="xt-file-icon1"/>' + delstr + '<span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="' + xtiger.util.getLocaleString('cmdUpload') + '"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
         );
       // xtdom.addClassName (viewNode , 'axel-drop-target');
       aContainer.appendChild(viewNode);
@@ -102,6 +114,7 @@
       this.vIcon2 = $('.xt-file-icon2', this._handle);
       this.vSave = $('.xt-file-save', this._handle).hide();
       this.vId = $('.xt-file-id', this._handle).hide();
+      this.vDel = $('.xt-file-del', this._handle).hide();
       // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
       this.vIcon1.bind({
         'click' : $.proxy(_Editor.methods.onActivate, this),
@@ -111,6 +124,7 @@
       this.vIcon2.click( $.proxy(_Editor.methods.onDismiss, this) );
       this.vSave.click( $.proxy(_Editor.methods.onSave, this) );
       this.vId.change( $.proxy(_Editor.methods.onChangeId, this) );
+      this.vDel.click( $.proxy(_Editor.methods.onDelete, this) );
       // manages transient area display (works with plugin css rules)
       $(this._handle).bind({
        mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
@@ -169,13 +183,16 @@
       // FIXME: rename to _setData ?
       redraw : function (doPropagate) {
         var UI = [
-          // [ icon, true to display file name inside transient area, dismiss icon ]
-          [ xtiger.bundles.file.noFileIconURL, true, null],
-          [ xtiger.bundles.file.saveIconURL, false, xtiger.bundles.file.cancelIconURL],
-          [ xtiger.bundles.file.spiningWheelIconURL, false, xtiger.bundles.file.cancelIconURL ],
-          [ xtiger.bundles.file.errorIconURL, false, xtiger.bundles.file.cancelIconURL ],
-          [ xtiger.bundles.file.fileIconURL, false, xtiger.bundles.file.dismissIconURL ],
-          [ xtiger.bundles.file.fileIconURL, true, null ]
+          // [ icon, true to display file name inside transient area, dismiss icon, delete button ]
+          [ xtiger.bundles.file.noFileIconURL, true], // EMPTY
+          [ xtiger.bundles.file.saveIconURL, false, xtiger.bundles.file.cancelIconURL], // SELECTED
+          [ xtiger.bundles.file.spiningWheelIconURL, false, xtiger.bundles.file.cancelIconURL ], // LOADING
+          [ xtiger.bundles.file.errorIconURL, false, xtiger.bundles.file.cancelIconURL ], // ERROR
+          [ xtiger.bundles.file.fileIconURL, false, xtiger.bundles.file.dismissIconURL ], // COMPLETE
+          [ xtiger.bundles.file.fileIconURL, true, null, true ], //READY
+          [ xtiger.bundles.file.fileIconURL, false, null], //DELETING
+          [ xtiger.bundles.file.errorIconURL, false, xtiger.bundles.file.cancelIconURL ], // DELERROR
+          [ xtiger.bundles.file.noFileIconURL, false, xtiger.bundles.file.dismissIconURL ] // DELETED
         ];
         var tmp;
         var config = UI[this.model.state];
@@ -224,6 +241,11 @@
         } else {
           this.vIcon2.addClass('axel-core-off');
         }
+        if (config[3]) { // delete button
+          this.vDel.show();
+        } else {
+          this.vDel.hide();
+        }
         // auto-selection
         if ((this.model.state === COMPLETE) && (doPropagate)) {
           xtiger.editor.Repeat.autoSelectRepeatIter(this._handle);
@@ -236,15 +258,16 @@
           key = key[ (this.getParam('file_gen_name') === 'auto') ? 0 : 1 ];
         }
         // prepares args
-        if ((this.model.state === SELECTED) || (this.model.state === LOADING)) {
+        if ((this.model.state === SELECTED) || (this.model.state === LOADING) || (this.model.state === DELETING)) {
           tmp = DISPLAY_FILE_SIZE(this.model.size);
           args = { 'filename': this.model.name, 'size': tmp, 'name': this.vId.val() };
-        } else if (this.model.state === ERROR) {
+        } else if (this.model.state === ERROR || this.model.state === DELERROR) {
           args = { 'filename': this.model.name, 'error' : this.model.err || 'no error message' };
         } else if (this.model.state === COMPLETE) {
           args = { 'filename': this.model.name, 'href' : this.model.genFileURL(), 'anchor' : this.model.url };
         } else { // READY
           args = { 'href' : this.model.genFileURL(), 'anchor' : this.model.url };
+          args.delInfo = this.getParam('file_delete') ? xtiger.util.getLocaleString('hintFileDelete') : '';
         }
         this.model.hints = xtiger.util.getLocaleString(key, args);
       },
@@ -304,6 +327,11 @@
           } else {
             this.model.gotoReady();
           }
+        } else if (this.model.state === DELETED) {
+          this.model.reset(this.getDefaultData());
+          this.redraw(false);
+        } else if (this.model.state === DELERROR) {
+          this.model.rollback(true);
         }
       },
 
@@ -312,6 +340,14 @@
         this.vId.attr('size', this.vId.val().length + 2);
         this.configureHints();
         this.vId.blur();
+      },
+
+      onDelete : function () {
+        var msg = xtiger.util.getLocaleString('askFileDelete', { 'filename' : this.model.url });
+        if (confirm(msg)) {
+          this.model.gotoDeleting();
+          this.configureHints();
+        }
       },
 
       onSave : function (ev) {
@@ -532,6 +568,46 @@
       this.file = fileObj;
       this.delegate.redraw();
     },
+
+    // One shot function to delete a file
+    // Makes an synchronous POST <Delete>fileid</Delete> request to delegate's endpoint 
+    // Continue by calling either client.gotoDelError() or client.gotoDeleted()
+    // Pre-requisite: jQuery, AXEL-FORMS opidum module
+    // TODO: move somewhere else (dependency injection ?)
+    gotoDeleting : function () {
+      var _this = this,
+          endpoint = this.delegate.getParam('file_delete');
+      this.legacy = [this.state, this.url, this.name];
+      this.state = DELETING;
+      this.url = null;
+      $.ajax({
+        url : endpoint,
+        type : 'post',
+        data : '<Delete>' + this.name + '</Delete>',
+        dataType : 'xml',
+        cache : false,
+        timeout : 20000,
+        asynch : false,
+        contentType : "application/xml; charset=UTF-8",
+        success : function () { _this.gotoDeleted(); },
+        error : function (xhr, status, e) { _this.gotoDelError($axel.oppidum ? $axel.oppidum.parseError(xhr, status, e) : xhr.responseText); }
+        });
+      this.delegate.redraw();
+    },
+
+    // Directly called from gotoDeleting
+    gotoDeleted : function() {
+      this.legacy = null; // accepts current state
+      this.state = DELETED;
+      this.delegate.redraw();
+    },
+
+    // Directly called from gotoDeleting
+    gotoDelError : function(error) {
+      this.err = error;
+      this.state = DELERROR;
+      this.delegate.redraw(true); // true to autoselect
+    },
     
     gotoLoading : function () {
       // pre-check if state transition is possible
@@ -550,7 +626,7 @@
         this.delegate.redraw();
       } else {
         // FIXME: create a new state "upload will start when at least one other upload in progress will have been completed or aborted"
-        alert(xtiger.util.getLocaleString('warnFileTooManyUploads'));
+        alert(xtiger.util.getLocaleString('warnFileTooManyOperations'));
       }
     },
     

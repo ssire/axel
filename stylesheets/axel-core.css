@@ -202,4 +202,19 @@ img.xt-file-editable {
 #xt-tooltip a {
   color: white;
 }
-
+button.xt-file-del {
+  background: transparent;
+  padding: 0px;
+  cursor: pointer;
+  border: 0px none;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 12px;
+  vertical-align:top;
+  opacity:0.2;
+}
+button.xt-file-del:hover, button.xt-file-del:focus {
+  color: #000;
+  text-decoration: none;
+  opacity: 0.4;
+}

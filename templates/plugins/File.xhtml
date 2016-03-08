@@ -35,8 +35,16 @@
     
     <h2>Example</h2>
     
-    <p>Ajoutez un fichier : 
-      <xt:use types="file" label="LinkRef"        param="file_URL=http://localhost:8080/exist/projets/coaching/cases/1/activities/1/docs/file;file_base=http://localhost:8080/exist/projets/coaching/cases/1/activities/1;file_gen_name=manual;file_type_message=Vous devez sélectionner un document PDF ou un document Microsoft Office (Word, Excel, Power Point);file_type=application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-powerpoint application/vnd.openxmlformats-officedocument.presentationml.presentation;filter=event;file_size_limit=1024"/>
+    <p>Add a file : 
+      <xt:use types="file" label="LinkRef1" param="file_URL=test;file_gen_name=manual;file_type_message=Vous devez sélectionner un document PDF ou un document Microsoft Office (Word, Excel, Power Point);file_type=application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet application/vnd.ms-powerpoint application/vnd.openxmlformats-officedocument.presentationml.presentation;filter=event;file_size_limit=1024"/>
     </p>
+    
+    <h2>With 'file_delete' option</h2>
+    
+    <p>Add a file : 
+      <xt:use types="file" label="LinkRef2" param="file_URL=test;file_base=test;file_delete=delete;filter=event;file_size_limit=1024"/>
+    </p>
+    
+    
   </body>
 </html>
