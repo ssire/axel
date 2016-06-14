@@ -83,14 +83,18 @@
     ////////////////////////
     
     onGenerate : function ( aContainer, aXTUse, aDocument ) {
-      var viewNode, delstr = '';
+      var viewNode, delstr = '', btnstr = '',
+          klass = this.getParam('file_button_class');
+      if (klass) {
+        btnstr = '<button class="xt-file-upload ' + klass + '">' + xtiger.util.getLocaleString('cmdSelectFile') + '</button>';
+      }
       if (typeof this.getParam('file_delete')  === 'string') {
         delstr = '<button class="xt-file-del">x</button>'; // optional UI part
       }
       viewNode = xtdom.createElement (aDocument, 'span');
       xtdom.addClassName (viewNode , 'xt-file');
       $(viewNode).html(
-        '<img class="xt-file-icon1"/>' + delstr + '<span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save" type="button" value="' + xtiger.util.getLocaleString('cmdUpload') + '"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
+        btnstr + '<img class="xt-file-icon1"/>' + delstr + '<span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save' + (klass ? ' ' + klass : '') + '" type="button" value="' + xtiger.util.getLocaleString('cmdUpload') + '"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
         );
       // xtdom.addClassName (viewNode , 'axel-drop-target');
       aContainer.appendChild(viewNode);
@@ -108,6 +112,7 @@
 
     // Awakes the editor to DOM's events, registering the callbacks for them
     onAwake : function () {
+      this.vBtn = $('.xt-file-upload', this._handle);
       this.vIcon1 = $('.xt-file-icon1', this._handle);
       this.vTrans = $('.xt-file-trans', this._handle);
       this.vPerm = $('.xt-file-perm', this._handle);
@@ -115,6 +120,7 @@
       this.vSave = $('.xt-file-save', this._handle).hide();
       this.vId = $('.xt-file-id', this._handle).hide();
       this.vDel = $('.xt-file-del', this._handle).hide();
+      this.vBtn.click($.proxy(_Editor.methods.onActivate, this));
       // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
       this.vIcon1.bind({
         'click' : $.proxy(_Editor.methods.onActivate, this),
@@ -210,7 +216,14 @@
           }
         }
         // Updates widget view
-        this.vIcon1.attr('src', config[0]);
+        if ((this.model.state === 0) && (this.vBtn.size() === 1)) {
+          this.vBtn.show();
+          this.vIcon1.hide();
+        } else {
+          this.vBtn.hide();          
+          this.vIcon1.show();
+          this.vIcon1.attr('src', config[0]);  
+        }
         if ((this.model.state === EMPTY) || (this.model.state === READY)) {
           this.vIcon1.addClass('xt-file-editable');
         } else {

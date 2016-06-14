@@ -36,6 +36,12 @@
       errTargetNoHead : "cannot inject editor's style sheet because target document has no head section",
       errDataSourceNoData : "data source empty",
 
+      //////////////
+      //  Labels  //
+      //////////////
+      cmdSelectFile : "Sélectionner",
+      cmdUpload : "Enregistrer",
+
       /////////////////////
       //  'file' module  //
       /////////////////////

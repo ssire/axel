@@ -39,6 +39,7 @@
       //////////////
       //  Labels  //
       //////////////
+      cmdSelectFile : "Upload",
       cmdUpload : "Save",
 
       /////////////////////
