@@ -409,6 +409,7 @@
   fileInputSelector.prototype = {
     showFileSelectionDialog : function ( editor ) {
       this.delegate = editor;
+      $(this.selector).attr({ 'accept' : this.delegate.getParam('file_type') });
       this.selector.click();
     },
     onChange : function (ev) {
@@ -417,7 +418,7 @@
           limit = parseInt(this.delegate.getParam('file_size_limit'));
       if (file) {
         if (isNaN(limit) || (file.size && file.size <= (limit * 1024))) {
-          if (file.type && mtypes.indexOf(file.type) !== -1) {
+          if (file.type && ((file.type.indexOf("download") !== -1) || (mtypes.indexOf(file.type) !== -1))) {
             if (this.delegate) { this.delegate.doSelectFile(file); }
           } else {
             alert(this.delegate.getParam('file_type_message')|| xtiger.util.getLocaleString('warnFileTypeDefault'));
