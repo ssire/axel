@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css" media="screen">
+      body {
+        overflow: hidden;
+      }
+
+      #editor {
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      } 
+    </style>
+  </head>
+
+  <body>
+    <div id="editor"></div> 
+    <script src="../3rd-part/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      // FIXME: an XHTML mode would be better, but there exists no such built-in mode
+      editor.getSession().setMode("ace/mode/xml");
+      editor.setReadOnly(true);
+      // read the relative URL to the template file in the main window
+      var relativeUrl = window.opener.document.getElementById("url").value;
+      window.document.title = "Source of '" + relativeUrl + "'";
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', relativeUrl);
+      xhr.addEventListener('readystatechange', function () {
+        // xhr.status === 0 is useful for local testing with no HTTP server
+        if (xhr.readyState === XMLHttpRequest.DONE && (xhr.status === 200 || xhr.status === 0)) {
+          /* could use xhr.responseXML, since we read an xhtml file. But for insertion into the ace
+           * editor, we use the response as text
+           */
+          editor.setValue(xhr.responseText, -1);
+        }
+      });
+      xhr.send(null);
+    </script>
+  </body>
+</html>
