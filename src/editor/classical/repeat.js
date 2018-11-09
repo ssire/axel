@@ -468,10 +468,11 @@ xtiger.editor.Repeat.prototype = {
     return this.deepClone(this.model, index);
   },   
       
-  // Keeps only one slice and updates this.total
-  // TODO: clear all primitive editors in slice
-  reset : function () {
-    var i = this.total;
+  // Recursively keeps only one slice and updates this.total
+  reset : function (aDataSrc) {
+    var slice = [],
+        cur,
+        i = this.total;
     while (i-- > 1) {
       this.removeItemAtIndex(this.total-1, false);
     }
@@ -480,7 +481,40 @@ xtiger.editor.Repeat.prototype = {
     if (0 === this.min) {
       this.unactivateSliceAt(0);
     }
+    // recursively clear all primitive editors in the first slice and reset embedded repeat
+    if (this.items[0][0] != this.items[0][1]) {
+      cur = this.items[0][0].nextSibling;
+      while (cur && (cur != this.items[0][1])) {
+        slice.push(cur);
+        cur = cur.nextSibling;
+      }
+      this.skipRepeartIter(slice, aDataSrc || new xtiger.util.DOMDataSource());
+    }
   },
+  
+  skipRepeartIter : function ( nodes, aDataSrc ) {
+    var next, innerR, blacklist;
+    if (nodes && nodes.length > 0) {
+      filter = $axel.defaults.domWhiteListFunc;
+      next = nodes[0];
+      while (next) {
+        if (next.startRepeatedItem) {
+          innerR = next.startRepeatedItem;
+          next = next.startRepeatedItem.items[next.startRepeatedItem.items.length-1].nextSibling; 
+          innerR.reset();
+        } else {
+          if (next.xttPrimitiveEditor) {
+            next.xttPrimitiveEditor.load(-1, aDataSrc);
+          }
+          if (xtdom.ELEMENT_NODE == next.nodeType && (!filter || filter(next))) {
+            this.skipRepeartIter(next.childNodes, aDataSrc);
+          }
+          next = next.nextSibling;
+        }
+      }
+    }
+  },
+  
   
   // Inserts a slice index into the list of slices of the repeater at a given position
   // to be called after the slice nodes have been inserted into the DOM

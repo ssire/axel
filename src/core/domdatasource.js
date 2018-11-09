@@ -23,7 +23,7 @@ xtiger.util.DOMDataSource = function (source) {
   this.stack = [];  
   if (typeof source === "string") {
     this.initFromString(source);
-  } else {
+  } else if (source) {
     this.initFromDocument(source);
   }
 }
