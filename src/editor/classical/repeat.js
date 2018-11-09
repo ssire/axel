@@ -488,12 +488,12 @@ xtiger.editor.Repeat.prototype = {
         slice.push(cur);
         cur = cur.nextSibling;
       }
-      this.skipRepeartIter(slice, aDataSrc || new xtiger.util.DOMDataSource());
+      this.skipRepeatIter(slice, aDataSrc || new xtiger.util.DOMDataSource());
     }
   },
   
-  skipRepeartIter : function ( nodes, aDataSrc ) {
-    var next, innerR, blacklist;
+  skipRepeatIter : function ( nodes, aDataSrc ) {
+    var next, innerR, filter;
     if (nodes && nodes.length > 0) {
       filter = $axel.defaults.domWhiteListFunc;
       next = nodes[0];
@@ -507,7 +507,7 @@ xtiger.editor.Repeat.prototype = {
             next.xttPrimitiveEditor.load(-1, aDataSrc);
           }
           if (xtdom.ELEMENT_NODE == next.nodeType && (!filter || filter(next))) {
-            this.skipRepeartIter(next.childNodes, aDataSrc);
+            this.skipRepeatIter(next.childNodes, aDataSrc);
           }
           next = next.nextSibling;
         }
