@@ -590,14 +590,17 @@
     // TODO: move somewhere else (dependency injection ?)
     gotoDeleting : function () {
       var _this = this,
-          endpoint = this.delegate.getParam('file_delete');
+          key = this.url,
+          del = this.delegate.getParam('file_delete'),
+          endpoint = del ? del.replace('$_', key) : del,
+          verb = this.delegate.getParam('file_delete_verb') || 'POST',
+          req;
       this.legacy = [this.state, this.url, this.name];
       this.state = DELETING;
       this.url = null;
-      $.ajax({
+      req = {
         url : endpoint,
-        type : 'post',
-        data : '<Delete>' + this.name + '</Delete>',
+        type : verb,
         dataType : 'xml',
         cache : false,
         timeout : 20000,
@@ -605,7 +608,11 @@
         contentType : "application/xml; charset=UTF-8",
         success : function () { _this.gotoDeleted(); },
         error : function (xhr, status, e) { _this.gotoDelError($axel.oppidum ? $axel.oppidum.parseError(xhr, status, e) : xhr.responseText); }
-        });
+        };
+      if (verb == 'POST') {
+        req['data'] = '<Delete Key="' + key + '">' + this.name + '</Delete>';
+      }
+      $.ajax(req);
       this.delegate.redraw();
     },
 
@@ -691,12 +698,15 @@
 
     // FIXME: handle more complex response protocol (e.g. with resourceId)
     onComplete : function (response) {
+      var msg;
       if (this.preflighting) {
         // do not change state - proceed with upload (which may also fail on conflict !)
         this.gotoLoading();
       } else {
         this.gotoComplete($.trim(response));
         this.transmission = null;
+        msg = this.delegate.getParam('success');
+        if (msg) { alert(msg) };
       }
     },
 
