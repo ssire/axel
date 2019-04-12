@@ -63,7 +63,7 @@
       hintFileDeleteFailure : function (args) {
         return 'Failed to delete "' + args.filename + '" because :<br/><i>' + args.error + '</i>'; },
       warnFileSizeLimit : function (args) {
-        return 'File "' + args.filename + '  " too big (' + args.size + ') ! Please select a file below ' + args.limit; },
+        return 'File "' + args.filename + '  " is too large (' + args.size + ') ! Please select a file below ' + args.limit; },
       askFileDelete : function (args) {
         return 'Are you sure you want to delete "' + args.filename + '" from the server ?'; },
 
