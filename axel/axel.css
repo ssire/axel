@@ -205,8 +205,22 @@ img.xt-file-editable {
 #xt-tooltip a {
   color: white;
 }
-
-/* * AXEL style sheet * */
+button.xt-file-del {
+  background: transparent;
+  padding: 0px;
+  cursor: pointer;
+  border: 0px none;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 12px;
+  vertical-align:top;
+  opacity:0.2;
+}
+button.xt-file-del:hover, button.xt-file-del:focus {
+  color: #000;
+  text-decoration: none;
+  opacity: 0.4;
+}/* * AXEL style sheet * */
 
 /* This file decribes the visual styles used by the AXEL library to improve and decorate the transformed
    template (the user interface). It includes (among others) color styles, borders and constomizable
