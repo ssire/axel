@@ -27,9 +27,24 @@ thanks to the Git Hub project pages mechanism. From the web site you can directl
 test AXEL inside your browser without any preliminary software installation.
 Follow the instructions of the section "AXEL for the impatient" of the `index.html` file. 
 
-The web site is regularly updated, however to really get the latest version checkout 
-the repository. The *master* branch is where we push AXEL more stable releases while
-the *devel* branch is where we prepare the next release.
+
+Compatibility and Branches
+--------
+
+The core of AXEL is written in plain Javascript and should not depend on other libraries. 
+
+Some plugins, filters and demos may require the jQuery library available in the 3rd-part folder. The Date filter also requires the jQuery-UI library. It is apparently compatible with jquery-ui-1.12.1 (although third part contains an older version).
+
+The *master* branch is the stable release branch, it currently uses jquery-1.7.1 for some plugins, filters or demos
+
+The *devel* branch is the development branch of current version, it currently uses jquery-1.7.1 for some plugins, filters or demos
+
+Some versions have been tagged when we upgraded some components :
+
+* version **1.4** uses jquery-1.7.1 for some plugins, filters or demos
+* version **1.5** brings very few changes over version 1.5, however it is the last one using jquery-1.7.1 for some plugins, filters or demos
+
+Note: current version should be edited in `distrib/release-nb.txt`, this is the number used when generating the library file
 
 Where to start ?
 ----------------
@@ -56,20 +71,21 @@ following the instructions of the next section.
 How to build the library ?
 --------------------------
 
-The library comes with the sources concatenated and minified inside
-`axel/axel.js`. However it is wised to make a fresh version by running the
+The library comes with the sources of the latest master branch concatenated 
+and minified inside `axel/axel.js`. However it is wised to make a fresh version by running the
 `build.lib` target in the scripts directory:
 
     cd scripts
     ant build.lib
 
-This requires that you have the [ant](http://ant.apache.org/) tool available
-on your system, which is already the case on many operating systems.
+You need to have or to install the [ant](http://ant.apache.org/) tool, 
+which is already available on many operating systems. Ant is easy to install, 
+you just need to copy its jars somewhere and to have it into your `$PATH`.
 
-This requires that you install the Yahoo UI compressor onto your machine, and
-that you edit the `scripts/ant.properties` file to point to it.
+You also need to install the Yahoo UI compressor onto your machine (jar file), and
+to edit the `scripts/ant.properties` file to point to it.
 
-You can get the Yahoo UI compressor at [http://developer.yahoo.com/yui/compressor/](http://developer.yahoo.com/yui/compressor/)
+You can get the Yahoo UI compressor at [https://github.com/yui/yuicompressor](https://github.com/yui/yuicompressor)
 
 Alternatively the `build.debug` target simply concatenates source files
 together, so you can use it without installing the compressor.
