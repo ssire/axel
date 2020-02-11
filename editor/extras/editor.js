@@ -208,9 +208,9 @@
   // Set "Transform" button state (enabled or disbabled) depending on template file entry field content
   function updateTransform () {
     if ($.trim($('#url').val()).length > 0) {
-      $('#transform').removeAttr('disabled');
+      $('#transform').prop('disabled', false);
     } else {
-      $('#transform').attr('disabled', 'disabled');
+      $('#transform').prop('disabled', true);
     }
   }
 
@@ -296,50 +296,50 @@
       // Disable some UI controls based on browser's type and editor's state
       updateTransform();
       $('input.editing').attr('disabled', 'disabled');
-      if (! $.browser.mozilla) {
+      if ($.browser && (! $.browser.mozilla)) {
        $('input.mozilla').hide();
       }
 
       // Install template selection handlers
-      $('#url').bind('change blur', function() { updateTransform(); });
-      $('#foldersList').bind('change', $.proxy(this.changePreselectionMenu, this));
-      $('#templatesList').bind('change', $.proxy(this.updateTemplateFile, this));
-      $('#browseTemplate').bind('click', $.proxy(
+      $('#url').on('change blur', function() { updateTransform(); });
+      $('#foldersList').on('change', $.proxy(this.changePreselectionMenu, this));
+      $('#templatesList').on('change', $.proxy(this.updateTemplateFile, this));
+      $('#browseTemplate').on('click', $.proxy(
         function () { this.fileDialog("open", "*.xtd; *.xhtml; *.html; *.xml", "Select an XTiger Forms template", "url"); },
         this)
       );
 
       // Install transform handler
       if ($('body').hasClass('noframe')) {
-       $('#formUrl').bind('submit', $.proxy(this.submitPageNoFrame, this));
+       $('#formUrl').on('submit', $.proxy(this.submitPageNoFrame, this));
       } else {
-       $('#formUrl').bind('submit', $.proxy(this.submitPage, this));
+       $('#formUrl').on('submit', $.proxy(this.submitPage, this));
       }
 
       // Install reset handler
-      $('#reset').bind('click', $.proxy(this.resetEditor, this));
+      $('#reset').on('click', $.proxy(this.resetEditor, this));
 
       // Install current template command handlers
-      $('#sourceTemplate').bind('click', $.proxy(this.viewTemplateSource, this));
-      $('#dumpSchema').bind('click', $.proxy(this.dumpSchema, this));
+      $('#sourceTemplate').on('click', $.proxy(this.viewTemplateSource, this));
+      $('#dumpSchema').on('click', $.proxy(this.dumpSchema, this));
 
       // Install document command handlers
-      $('#preview').bind('click', $.proxy(this.toggleViewMode, this));
-      $('#dump').bind('click', $.proxy(this.dumpDocument, this));
-      $('#download').bind('click', $.proxy(this.downloadDocument, this));
-      $('#input').bind('click', $.proxy(this.inputDocument, this));
-      $('#load').bind('click', $.proxy(this.loadDocument, this));
-      $('#new').bind('click', $.proxy(this.newDocument, this));
+      $('#preview').on('click', $.proxy(this.toggleViewMode, this));
+      $('#dump').on('click', $.proxy(this.dumpDocument, this));
+      $('#download').on('click', $.proxy(this.downloadDocument, this));
+      $('#input').on('click', $.proxy(this.inputDocument, this));
+      $('#load').on('click', $.proxy(this.loadDocument, this));
+      $('#new').on('click', $.proxy(this.newDocument, this));
 
       // Install preferences handlers
-      $('#preferences').bind('click', $.proxy(this.openPreferences, this));
-      $('#setTemplateFolder').bind('click', $.proxy(this.saveCustomTemplate, this));
-      $('#browseTemplateFolder').bind('click', $.proxy(
+      $('#preferences').on('click', $.proxy(this.openPreferences, this));
+      $('#setTemplateFolder').on('click', $.proxy(this.saveCustomTemplate, this));
+      $('#browseTemplateFolder').on('click', $.proxy(
         function () { this.fileDialog("folder", null, "Select a folder that contains some XTiger Forms templates", "templateRepos"); },
         this)
       );
-      $('#write').bind('click', $.proxy(this.writeDocument, this));
-      $('#read').bind('click', $.proxy(this.readDocument, this));
+      $('#write').on('click', $.proxy(this.writeDocument, this));
+      $('#read').on('click', $.proxy(this.readDocument, this));
 
       // HTML5 optional features
       if (typeof window.FileReader === "undefined") { // load
@@ -348,7 +348,7 @@
       if ((typeof window.webkitURL === "undefined")) { // save
        $('#download').hide();
       }
-      $('#fileToLoad').bind('change', $.proxy(this.doLoadLocalFileIntoDocument, this)); // HTML5 file loading
+      $('#fileToLoad').on('change', $.proxy(this.doLoadLocalFileIntoDocument, this)); // HTML5 file loading
 
       // Hash shortcut to automagically transform a preselection
       this.loadFromHash();
@@ -367,7 +367,7 @@
     /*****************************************************/
 
     activateDocumentCommands : function () {
-      $('input.editing').removeAttr('disabled'); // enable editor's commands
+      $('input.editing').prop('disabled', false); // enable editor's commands
     },
 
     resetEditor : function () {
@@ -578,9 +578,9 @@
           $(document).triggerHandler('__AXEL_DEMO_EDITOR_READY', [this]);
           $(document).triggerHandler('__AXEL_DEMO_TEMPLATE_TRANSFORMED', [this]);
         }
-        $('body', iframeDoc).bind('dragenter', dragEnterCb);
-        $('body', iframeDoc).bind('dragover', dragOverCb);
-        $('body', iframeDoc).bind('drop', cancelDropCb);
+        $('body', iframeDoc).on('dragenter', dragEnterCb);
+        $('body', iframeDoc).on('dragover', dragOverCb);
+        $('body', iframeDoc).on('drop', cancelDropCb);
       }
     },
 

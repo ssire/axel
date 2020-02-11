@@ -39,10 +39,10 @@ The *master* branch is the stable release branch, it currently uses jquery-1.7.1
 
 The *devel* branch is the development branch of current version, it currently uses jquery-1.7.1 for some plugins, filters or demos
 
-Some versions have been tagged when we upgraded some components :
+Some versions have been / will be tagged when we upgraded some components :
 
 * version **1.4** uses jquery-1.7.1 for some plugins, filters or demos
-* version **1.5** brings very few changes over version 1.5, however it is the last one using jquery-1.7.1 for some plugins, filters or demos
+* version **1.5** brings very few changes over version 1.4, it is the last one using jquery-1.7.1 for some plugins, filters or demos
 
 Note: current version should be edited in `distrib/release-nb.txt`, this is the number used when generating the library file
 

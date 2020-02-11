@@ -334,7 +334,7 @@
         var handle = this.getHandle(), 
             wrapper = $('img', handle), 
             w, h, rw, rh, z;                
-        if (wrapper.size() > 0) { // sanity check
+        if (wrapper.length > 0) { // sanity check
           w = wrapper.width();
           h = wrapper.height();
           rw = this.image_maxWidth ? this.image_maxWidth / w : undefined;
@@ -362,7 +362,7 @@
         var handle = this.getHandle(), 
             wrapper = $('img', handle), 
             w, h, rw, rh, z;                
-        if (wrapper.size() > 0) { // sanity check
+        if (wrapper.length > 0) { // sanity check
           w = wrapper.width();
           h = wrapper.height();
           rw = this.image_minWidth ? this.image_minWidth / w : undefined;

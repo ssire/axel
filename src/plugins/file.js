@@ -120,25 +120,24 @@
       this.vSave = $('.xt-file-save', this._handle).hide();
       this.vId = $('.xt-file-id', this._handle).hide();
       this.vDel = $('.xt-file-del', this._handle).hide();
-      this.vBtn.click($.proxy(_Editor.methods.onActivate, this));
+      this.vBtn.on('click', $.proxy(_Editor.methods.onActivate, this));
       // FIXME: we could remove this.vId in case file_gen_name param is 'auto'
-      this.vIcon1.bind({
+      this.vIcon1.on({
         'click' : $.proxy(_Editor.methods.onActivate, this),
         'mouseenter' : $.proxy(_Editor.methods.onEnterIcon, this),
         'mouseleave' : $.proxy(_Editor.methods.onLeaveIcon, this)
       });
-      this.vIcon2.click( $.proxy(_Editor.methods.onDismiss, this) );
-      this.vSave.click( $.proxy(_Editor.methods.onSave, this) );
-      this.vId.change( $.proxy(_Editor.methods.onChangeId, this) );
-      this.vDel.click( $.proxy(_Editor.methods.onDelete, this) );
+      this.vIcon2.on('click', $.proxy(_Editor.methods.onDismiss, this));
+      this.vSave.on('click', $.proxy(_Editor.methods.onSave, this));
+      this.vId.on('change', $.proxy(_Editor.methods.onChangeId, this));
+      this.vDel.on('clcik', $.proxy(_Editor.methods.onDelete, this));
       // manages transient area display (works with plugin css rules)
-      $(this._handle).bind({
+      $(this._handle).on({
        mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
        // 'over' is set inside onEnterIcon
       });
       this.model.reset(this.getDefaultData());
-      this.redraw(false);
-      
+      this.redraw(false);      
     },
 
     onLoad : function (aPoint, aDataSrc) {
@@ -216,7 +215,7 @@
           }
         }
         // Updates widget view
-        if ((this.model.state === 0) && (this.vBtn.size() === 1)) {
+        if ((this.model.state === 0) && (this.vBtn.length === 1)) {
           this.vBtn.show();
           this.vIcon1.hide();
         } else {
@@ -352,7 +351,7 @@
         this.vId.val(PURIFY_NAME(this.vId.val()));
         this.vId.attr('size', this.vId.val().length + 2);
         this.configureHints();
-        this.vId.blur();
+        this.vId.trigger('blur');
       },
 
       onDelete : function () {
@@ -402,7 +401,9 @@
   \*****************************************************************************/
   var fileInputSelector = function ( doc ) {
     this.selector = xtdom.createElement(doc, 'input');
-    $(this.selector).attr( { 'id' :  'xt-file-input', 'type' : 'file' } ).change( $.proxy(fileInputSelector.prototype.onChange, this) );
+    $(this.selector)
+      .attr( { 'id' :  'xt-file-input', 'type' : 'file' } )
+      .on('change', $.proxy(fileInputSelector.prototype.onChange, this));
     $('body', doc).append(this.selector);
   };
   
@@ -455,8 +456,10 @@
     $(tip).attr('id', 'xt-tooltip');
     $('body', doc).append(tip);
     this.tooltip = $(tip);
-    this.tooltip.mouseleave($.proxy(tooltipDevice.prototype.onLeaveTooltip, this));
-    this.tooltip.mouseenter($.proxy(tooltipDevice.prototype.onEnterTooltip, this));
+    this.tooltip.on({
+      'mouseleave' : $.proxy(tooltipDevice.prototype.onLeaveTooltip, this),
+      'mouseenter' : $.proxy(tooltipDevice.prototype.onEnterTooltip, this)
+      });
     this.doHideCb = $.proxy(tooltipDevice.prototype.doHide, this);
   };
   

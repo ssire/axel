@@ -50,6 +50,8 @@
             'color' : row.peek('Currency') === 'EUR' ? 'blue' : 'orange'
             });
         }
+        // FIXME: peek returns 0 (wrong API) even if not number (see wrapper.js)
+        alert('Demo broken, to be fixed');
         res = $axel($('#shopping-list',$doc)).vector('Item').vector('Quantity').product().vector('Currency', function(v) { return changes[v] || 1 }).product().sum();
         return res;
       };
