@@ -588,32 +588,17 @@
     // Other template commands
     /////////////////////////////////////////////
 
-    // Opens a window with an iframe to display the current template source code
-    // It uses the view-source: URL protocol with relative URLs, so currently it works
-    // only with Firefox (chrome does not seem to like relative URLs)
-    // FIXME: show the template with a full source code editor and add a test command
-    // (see for instance http://javascript.info/play/html)
+    // Opens a window that displays the current template source code,
+    // using the Ace editor (https://ace.c9.io/)
+    // FIXME: allow users to modify templates in the editor window, then
+    // to reload the code in the main window and transform it.
     viewTemplateSource : function () {
-      var location, win, div;
       if (this.checkTemplate()) {
-        location = "view-source:" + document.getElementById("url").value;
-        win = window.open(null, "Template source", 'width=800,height=800,location=no,toolbar=no,menubar=no');
-        win.focus();
-        // creates a document in popup window and default message for unsupported browsers
-        win.document.open();
-        win.document.write('To actually see the template source code in this window you must use a browser supporting the view-source protocol');
-        win.document.close();
-        win.document.title = "Source of '" + document.getElementById("url").value + "'";
-        div = win.document.createElement('div');
-        div.innerHTML = '<iframe src="' + "javaScript:'To actually see the template source code in this window you must use a browser supporting the view-source protocol with relative URLs like Firefox'" + '" frameborder="0" style="width:100%;height:100%"><iframe>';
-        win.document.body.replaceChild( div, win.document.body.firstChild );
-        win.document.body.style.margin = "0";
-        win.onload = function() {
-          var doc = win.frames[0].document;
-          $('pre', doc).css('white-space', 'pre-wrap'); // trick to wrap lines (Firefox)
-        };
-        // actually instructs to view template source
-        $('iframe', div).attr('src',location);
+        var newWindow = window.open("view-template-source.html", "Template source", "resizable");
+        /* the second argument of window.open does *not* specify the title of the new window.
+         * We set it in the script of the new window itself. The window features (third arg)
+         * are often overriden by browsers (by default or configurable). */
+        newWindow.focus();
       }
     },
 

@@ -2,3 +2,6 @@
 *.diff
 *.patch
 .DS_Store
+axel/axel.js
+ace/
+
