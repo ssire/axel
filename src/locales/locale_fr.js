@@ -40,6 +40,7 @@
       //  Labels  //
       //////////////
       cmdSelectFile : "Sélectionner",
+      cmdDeleteFile : "Supprimer",
       cmdUpload : "Enregistrer",
 
       /////////////////////

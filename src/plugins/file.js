@@ -84,18 +84,33 @@
     
     onGenerate : function ( aContainer, aXTUse, aDocument ) {
       var viewNode, delstr = '', btnstr = '',
-          klass = this.getParam('file_button_class');
+          klass = this.getParam('file_button_class'),
+          displayklass = this.getParam('file_anchor_class');
+          
+      this.full = typeof displayklass === 'string' && displayklass.length > 0; // full mode always shows anchor to download file
+      this.showDelHint = false;
       if (klass) {
         btnstr = '<button class="xt-file-upload ' + klass + '">' + xtiger.util.getLocaleString('cmdSelectFile') + '</button>';
       }
-      if (typeof this.getParam('file_delete')  === 'string') {
-        delstr = '<button class="xt-file-del">x</button>'; // optional UI part
+      if (typeof this.getParam('file_delete')  === 'string') {  // optional UI delete command
+        if (klass) {
+          delstr = '<button class="xt-file-del ' + klass + '">' + xtiger.util.getLocaleString('cmdDeleteFile') + '</button>';
+        } else {
+          delstr = '<button class="xt-file-del">x</button>';
+          this.showDelHint = true;
+        }
       }
       viewNode = xtdom.createElement (aDocument, 'span');
       xtdom.addClassName (viewNode , 'xt-file');
-      $(viewNode).html(
-        btnstr + '<img class="xt-file-icon1"/>' + delstr + '<span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save' + (klass ? ' ' + klass : '') + '" type="button" value="' + xtiger.util.getLocaleString('cmdUpload') + '"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
-        );
+      if (this.full) {
+        $(viewNode).html(
+          btnstr + '<img class="xt-file-icon1"/>' + delstr + '<input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save' + (klass ? ' ' + klass : '') + '" type="button" value="' + xtiger.util.getLocaleString('cmdUpload') + '"/><span class="xt-file-perm"/><img class="xt-file-icon2"/><a target="_blank" class="xt-file-trans ' + displayklass + '"/>'
+          );
+      } else {
+        $(viewNode).html(
+          btnstr + '<img class="xt-file-icon1"/>' + delstr + '<span class="xt-file-trans"/><input class="xt-file-id" type="text" value="nom"/><input class="xt-file-save' + (klass ? ' ' + klass : '') + '" type="button" value="' + xtiger.util.getLocaleString('cmdUpload') + '"/><span class="xt-file-perm"/><img class="xt-file-icon2"/>'
+          );
+      }
       // xtdom.addClassName (viewNode , 'axel-drop-target');
       aContainer.appendChild(viewNode);
       return viewNode;
@@ -130,7 +145,7 @@
       this.vIcon2.on('click', $.proxy(_Editor.methods.onDismiss, this));
       this.vSave.on('click', $.proxy(_Editor.methods.onSave, this));
       this.vId.on('change', $.proxy(_Editor.methods.onChangeId, this));
-      this.vDel.on('clcik', $.proxy(_Editor.methods.onDelete, this));
+      this.vDel.on('click', $.proxy(_Editor.methods.onDelete, this));
       // manages transient area display (works with plugin css rules)
       $(this._handle).on({
        mouseleave : function (ev) { $(ev.currentTarget).removeClass('over'); }
@@ -229,10 +244,22 @@
           this.vIcon1.removeClass('xt-file-editable');
         }
         if (config[1]) { // transient feedback (file name on mouse over)
-          tmp = '"'+ (this.model.name || xtiger.util.getLocaleString('infoFileNoFile')) + '"';
+          tmp = this.model.name || xtiger.util.getLocaleString('infoFileNoFile');
+          if (!this.full) {
+            tmp = '"'+ tmp + '"';
+          }
           this.vTrans.text(tmp);
+          if (this.full) {
+            if (this.model.name) {
+              this.vTrans.attr('href', this.model.genFileURL());
+            }
+            this.vTrans.show();
+          }
         } else {
           this.vTrans.text('');
+          if (this.full) {
+            this.vTrans.hide();
+          }
         }
         if (this.model.state === SELECTED) { // save button
           if (this.getParam('file_gen_name') !== 'auto') {
@@ -279,7 +306,7 @@
           args = { 'filename': this.model.name, 'href' : this.model.genFileURL(), 'anchor' : this.model.url };
         } else { // READY
           args = { 'href' : this.model.genFileURL(), 'anchor' : this.model.url };
-          args.delInfo = this.getParam('file_delete') ? xtiger.util.getLocaleString('hintFileDelete') : '';
+          args.delInfo = this.showDelHint ? xtiger.util.getLocaleString('hintFileDelete') : '';
         }
         this.model.hints = xtiger.util.getLocaleString(key, args);
       },
